@@ -32,7 +32,12 @@ const ADDRESS_LINES = [
   "BB2 6SD",
 ];
 // Include country to improve Google Maps resolution
-const MAPS_QUERY = encodeURIComponent(`${ADDRESS_LINES.join(", ")}, United Kingdom`);
+const MAPS_QUERY = encodeURIComponent(`${ADDRESS_LINES.join(", ")}`);
+
+// Brand assets in Vite's public/ folder so they deploy at site root
+// Add your final files as: public/logo.svg (preferred) and/or public/logo.png
+const LOGO_URL = "/logo.svg";
+const LOGO_PNG_FALLBACK = "/logo.png";
 
 // EmailJS (automatic email, no backend required)
 const EMAILJS_SERVICE_ID = "service_oh51win"; // from your EmailJS dashboard
@@ -403,7 +408,7 @@ function Header({ brand, query, setQuery, itemsCount, openCart }: { brand: strin
   return (
     <header className="sticky top-0 z-40 backdrop-blur bg-white/80 border-b border-slate-200">
       <div className="mx-auto max-w-6xl px-4 py-3 flex items-center gap-4">
-        <Logo brand={brand} />
+        <BrandMark brand={brand} />
         <nav className="hidden md:flex gap-6 ml-6 text-sm">
           <a href="#shop" className="hover:text-slate-900">Shop</a>
           <a href="#visit" className="hover:text-slate-900">Collect</a>
@@ -650,7 +655,7 @@ function ConfirmationPage({ brand, confirmation, onReset }: { brand: string; con
     <main className="min-h-screen bg-gradient-to-b from-white to-slate-50 text-slate-800">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
-          <Logo brand={brand} />
+          <BrandMark brand={brand} />
           <a href="#shop" onClick={onReset} className="text-sm underline">Back to shop</a>
         </div>
       </header>
@@ -699,7 +704,7 @@ function Footer({ brand }: { brand: string }) {
     <footer className="border-top border-slate-200 mt-12 py-10">
       <div className="mx-auto max-w-6xl px-4 grid md:grid-cols-3 gap-6 text-sm">
         <div>
-          <Logo brand={brand} />
+          <BrandMark brand={brand} />
           <p className="mt-2 text-slate-600">Reserve online. Pay on collection (cash or card).</p>
         </div>
         <div>
@@ -818,5 +823,24 @@ function DevTests() {
         </div>
       </div>
     </section>
+  );
+}
+
+
+// BrandMark: renders your new logo image (SVG preferred) with graceful fallback
+function BrandMark({ brand }:{ brand:string }) {
+  return (
+    <a href="#" className="flex items-center gap-3">
+      <picture>
+        <source srcSet={LOGO_URL} type="image/svg+xml" />
+        <img
+          src={LOGO_PNG_FALLBACK}
+          alt={brand}
+          className="h-9 w-auto"
+          onError={(e)=>{ (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+        />
+      </picture>
+      <span className="font-extrabold tracking-tight hidden sm:inline">{brand}</span>
+    </a>
   );
 }
