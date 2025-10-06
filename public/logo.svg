@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="580" viewBox="0 0 900 580">
+  <rect width="900" height="580" fill="#ffffff"/>
+  <g fill="none" stroke="#000" stroke-width="14" stroke-linecap="square">
+    <path d="M80 110 v120" />
+    <path d="M80 110 h140" />
+    <path d="M830 460 v-120" />
+    <path d="M830 460 h-140" />
+  </g>
+  <g font-family="Inter, Helvetica, Arial, sans-serif" fill="#000" font-size="120" font-weight="500">
+    <text x="140" y="210">Yoghurt</text>
+    <text x="140" y="320">Of</text>
+    <text x="140" y="430">Youth</text>
+  </g>
+  <!-- tummy icon vector -->
+  <g transform="translate(620,220)" fill="none" stroke="#000" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M70 20 c40 0 70 30 70 70 0 25-8 34-20 40-16 8-34 8-50 6"/>
+    <path d="M120 30 c10 10 15 20 18 30"/>
+    <path d="M0 170 h110 a20 20 0 0 0 0-40 H20 a20 20 0 0 1 0-40 h90 a20 20 0 0 0 0-40 H40" />
+    <path d="M0 210 h90" />
+  </g>
+</svg>
