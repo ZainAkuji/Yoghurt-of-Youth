@@ -61,13 +61,13 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 
 const PRODUCTS = [
   { id:"Precision", name:"Precision", price:2.0, size:"250 mL",
-    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17648. Targets H Pylori.", tags:["standard","DSM 17648"], img: placeholder("Precision","#f1f5f9","#334155") },
+    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["standard","DSM 17648"], img: placeholder("Precision","#f1f5f9","#334155") },
   { id:"Precision LF", name:"Precision LF", price:2.0, size:"250 mL",
-    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17648. Targets H Pylori.", tags:["lactose‑free","DSM 17648"], img: placeholder("Precision","#ecfeff","#075985") },
+    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["lactose‑free","DSM 17648"], img: placeholder("Precision LF","#ecfeff","#075985") },
   { id:"Broad Spectrum", name:"Broad Spectrum", price:2.0, size:"250 mL",
-    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including Candida.", tags:["standard","DSM 17938"], img: placeholder("Broad Spectrum","#fff1f2","#9f1239") },
+    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["standard","DSM 17938"], img: placeholder("Broad Spectrum","#fff1f2","#9f1239") },
   { id:"Broad Spectrum LF", name:"Broad Spectrum LF", price:2.0, size:"250 mL",
-    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17938. Targets harmful microbes including Candida.", tags:["lactose‑free","DSM 17938"], img: placeholder("Broad Spectrum","#f0fdf4","#166534") },
+    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["lactose‑free","DSM 17938"], img: placeholder("Broad Spectrum LF","#f0fdf4","#166534") },
 ];
 
 function computeTotals(cart: Record<string, number>) {
@@ -147,61 +147,20 @@ function AboutSection() {
           microbiome influences:
         </p>
 
-        <div className="mt-4 grid sm:grid-cols-2 gap-x-6 gap-y-2 text-sm text-slate-700">
-          <ul className="space-y-1 list-disc list-inside">
-            <li>
-              <strong>General wellbeing &amp; energy</strong> – balanced
-              digestion and reduced bloating promote comfort and nutrient
-              absorption.
-            </li>
-            <li>
-              <strong>IBS &amp; IBD</strong> – dysbiosis and intestinal
-              inflammation are central to these conditions; balanced flora can
-              help stabilise the gut environment.
-            </li>
-            <li>
-              <strong>Nutrient deficiencies</strong> – microbial imbalances can
-              impair absorption of iron, B-vitamins, and magnesium.
-            </li>
-            <li>
-              <strong>Chronic inflammation &amp; disease</strong> – microbial
-              metabolites regulate immune signalling throughout the body.
-            </li>
-            <li>
-              <strong>Cardiovascular health</strong> – balanced gut flora
-              correlates with healthy blood pressure and cholesterol.
-            </li>
-            <li>
-              <strong>Kidney stones &amp; gout</strong> – certain microbes
-              degrade oxalate and uric acid, helping the body excrete them
-              safely.
-            </li>
-            <li>
-              <strong>Bile sludge &amp; fat digestion</strong> – microbial
-              enzymes aid bile circulation and emulsify fats efficiently.
-            </li>
-            <li>
-              <strong>Obesity &amp; blood sugar</strong> – gut composition
-              affects insulin sensitivity and energy storage.
-            </li>
-            <li>
-              <strong>Cancer prevention</strong> – research connects gut
-              integrity with reduced inflammation and improved detoxification.
-            </li>
-            <li>
-              <strong>Mental health &amp; cognition</strong> – the gut–brain
-              axis influences mood, clarity, and focus. Studies link dysbiosis
-              with depression, anxiety, and brain fog.
-            </li>
-            <li>
-              <strong>Stress &amp; sleep</strong> – gut microbes help regulate
-              serotonin and melatonin production.
-            </li>
-            <li>
-              <strong>Ageing &amp; inflammaging</strong> – balanced microbiota
-              reduce chronic low-grade inflammation, the driver of premature
-              ageing.
-            </li>
+        <div className="mt-4 text-sm text-slate-700 leading-relaxed">
+          <ul className="list-disc list-inside space-y-2">
+            <li><strong>General wellbeing &amp; energy</strong> – balanced digestion and reduced bloating promote comfort and nutrient absorption.</li>
+            <li><strong>IBS &amp; IBD</strong> – dysbiosis and intestinal inflammation are central to these conditions; balanced flora can help stabilise the gut environment.</li>
+            <li><strong>Nutrient deficiencies</strong> – microbial imbalances can impair absorption of iron, B-vitamins, and magnesium.</li>
+            <li><strong>Chronic inflammation &amp; disease</strong> – microbial metabolites regulate immune signalling throughout the body.</li>
+            <li><strong>Cardiovascular health</strong> – balanced gut flora correlates with healthy blood pressure and cholesterol.</li>
+            <li><strong>Kidney stones &amp; gout</strong> – certain microbes degrade oxalate and uric acid, helping the body excrete them safely.</li>
+            <li><strong>Bile sludge &amp; fat digestion</strong> – microbial enzymes aid bile circulation and emulsify fats efficiently.</li>
+            <li><strong>Obesity &amp; blood sugar</strong> – gut composition affects insulin sensitivity and energy storage.</li>
+            <li><strong>Cancer prevention</strong> – research connects gut integrity with reduced inflammation and improved detoxification.</li>
+            <li><strong>Mental health &amp; cognition</strong> – the gut–brain axis influences mood, clarity, and focus. Studies link dysbiosis with depression, anxiety, and brain fog.</li>
+            <li><strong>Stress &amp; sleep</strong> – gut microbes help regulate serotonin and melatonin production.</li>
+            <li><strong>Ageing &amp; inflammaging</strong> – balanced microbiota reduce chronic low-grade inflammation, the driver of premature ageing.</li>
           </ul>
         </div>
 
