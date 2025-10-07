@@ -274,7 +274,7 @@ export default function App(){
             Small‑batch fermented at 37 °C with <em>L. reuteri</em> (DSM 17648 & DSM 17938). Reserve online, pay on collection.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href="#shop" className="rounded-2xl bg-slate-900 text-white px-5 py-3 text-sm font-semibold hover:bg-slate-800">Browse flavours</a>
+            <a href="#shop" className="rounded-2xl bg-slate-900 text-white px-5 py-3 text-sm font-semibold hover:bg-slate-800">Browse yoghurts</a>
             <a href="#visit" className="rounded-2xl border border-slate-300 px-5 py-3 text-sm font-semibold hover:bg-white">Find us</a>
           </div>
           <div className="mt-4 text-xs text-slate-500">Pay cash or card at collection · Mix & match bundles available</div>
