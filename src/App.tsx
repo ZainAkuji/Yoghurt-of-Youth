@@ -680,7 +680,6 @@ function BrandMark() {
   );
 }
 
-<ContactSection />
 function ContactSection() {
   return (
     <section id="contact" className="mx-auto max-w-6xl px-4 py-10">
@@ -708,6 +707,8 @@ function ContactSection() {
     </section>
   );
 }
+
+<ContactSection />
 
 function Footer({ brand }:{ brand:string }) {
   return (
