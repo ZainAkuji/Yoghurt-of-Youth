@@ -136,7 +136,7 @@ export default function App(){
               <img
                 src="/logo.png?v=2"
                 alt="Yoghurt of Youth"
-                className="mx-auto w-72 max-h-56 h-auto"
+                className="mx-auto w-[90%] max-w-[600px] h-auto object-contain"
                 style={{ display: "block" }}
               />
             </div>
