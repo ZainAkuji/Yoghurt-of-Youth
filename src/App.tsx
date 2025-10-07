@@ -88,6 +88,101 @@ function nextBundleHint(qtyTotal:number){
   return `Add ${need} more to unlock the 7‑for‑£10 bundle.`;
 }
 
+function AboutSection(){
+  return (
+    <section id="about" className="mx-auto max-w-6xl px-4 py-10">
+      <div className="grid md:grid-cols-2 gap-6 items-start">
+        <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6">
+          <h2 className="text-2xl font-bold">About Yoghurt of Youth</h2>
+          <p className="mt-3 text-slate-700">
+            We craft small-batch yoghurts at 37&nbsp;°C using live <em>Lactobacillus reuteri</em> cultures studied for their unique properties.
+            Slow fermentation preserves vitality, flavour, and the character of a living food.
+          </p>
+
+          <div className="mt-5 space-y-4">
+            <div>
+              <h3 className="font-semibold">Precision — DSM 17648</h3>
+              <p className="text-slate-700 text-sm mt-1">
+                A precision-targeted strain shown in clinical research to bind and reduce <em>Helicobacter pylori</em> in the stomach,
+                supporting a calmer digestive environment.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold">Broad Spectrum — DSM 17938</h3>
+              <p className="text-slate-700 text-sm mt-1">
+                A broad-acting strain observed to help limit unwanted microbes, including <em>Candida</em> species, while coexisting with
+                beneficial flora — contributing to microbial balance throughout the gut.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6">
+          <h3 className="font-semibold">Why gut balance matters</h3>
+          <ul className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-slate-700">
+            <li>General wellbeing &amp; energy</li>
+            <li>IBS &amp; IBD</li>
+            <li>Nutrient deficiencies</li>
+            <li>Chronic inflammation</li>
+            <li>Chronic disease</li>
+            <li>Blood pressure</li>
+            <li>Cholesterol</li>
+            <li>Kidney stones</li>
+            <li>Gout</li>
+            <li>Bile sludge</li>
+            <li>Obesity</li>
+            <li>Blood sugar</li>
+            <li>Cancer</li>
+            <li>Mental health</li>
+            <li>Depression &amp; anxiety</li>
+            <li>Stress &amp; sleep</li>
+            <li>Cognition &amp; brain fog</li>
+            <li>Irritability &amp; mood</li>
+            <li>Dementia</li>
+            <li>Inflammaging</li>
+          </ul>
+          <p className="mt-3 text-xs text-slate-500">
+            These topics reflect active areas of research into the gut–body axis.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function StudiesSection(){
+  return (
+    <section id="studies" className="mx-auto max-w-6xl px-4 py-10">
+      <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6">
+        <h2 className="text-2xl font-bold">Scientific studies</h2>
+        <p className="mt-2 text-slate-700 text-sm">
+          Independent research exploring the strains we use:
+        </p>
+
+        <ol className="list-decimal pl-5 mt-3 space-y-2 text-sm text-slate-700">
+          <li>
+            <span className="font-medium">Holz et&nbsp;al., 2015 (Beneficial Microbes):</span>
+            &nbsp;<em>L. reuteri</em> DSM&nbsp;17648 reduced <em>H. pylori</em> colonisation in humans.
+          </li>
+          <li>
+            <span className="font-medium">Indrio et&nbsp;al., 2014 (Journal of Pediatrics):</span>
+            &nbsp;DSM&nbsp;17938 supported gastrointestinal function in infants; widely studied for tolerance and safety.
+          </li>
+          <li>
+            <span className="font-medium">Savino et&nbsp;al., 2020 (BMC Gastroenterology):</span>
+            &nbsp;Reviews on <em>L. reuteri</em> and microbial balance.
+          </li>
+        </ol>
+
+        <p className="mt-3 text-xs text-slate-500">
+          We summarise published research on bacterial strains used in our fermented foods. This is not medical advice.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 export default function App(){
   const [confirmation, setConfirmation] = useState<null|any>(null);
   const [query, setQuery] = useState("");
@@ -113,7 +208,7 @@ export default function App(){
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-slate-50 text-slate-800">
+    <div className="scroll-smooth min-h-screen bg-gradient-to-b from-white to-slate-50 text-slate-800">
       <Header brand={BRAND} query={query} setQuery={setQuery} itemsCount={qtyTotal} openCart={()=>setDrawerOpen(true)} />
 
       <section className="mx-auto max-w-6xl px-4 pt-16 pb-10 grid md:grid-cols-2 gap-10 items-center">
@@ -181,6 +276,12 @@ export default function App(){
         </div>
       </section>
 
+      {/* About */}
+      <AboutSection />
+      
+      {/* Scientific Studies */}
+      <StudiesSection />
+
       <section id="visit" className="mx-auto max-w-6xl px-4 py-10">
         <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6 md:p-8 grid md:grid-cols-2 gap-6 items-center">
           <div>
@@ -241,8 +342,9 @@ function Header({ brand, query, setQuery, itemsCount, openCart }:{
         <BrandMark />
         <nav className="hidden md:flex gap-6 ml-6 text-sm">
           <a href="#shop" className="hover:text-slate-900">Shop</a>
+          <a href="#about" className="hover:text-slate-900">About</a>
+          <a href="#studies" className="hover:text-slate-900">Scientific studies</a>
           <a href="#visit" className="hover:text-slate-900">Collect</a>
-          <a href="#contact" className="hover:text-slate-900">Contact</a>
         </nav>
         <div className="ml-auto flex items-center gap-3">
           <input
@@ -530,6 +632,9 @@ function Footer({ brand }:{ brand:string }) {
         <div>
           <BrandMark />
           <p className="mt-2 text-slate-600">Reserve online. Pay on collection (cash or card).</p>
+          <p className="mt-4 text-xs text-slate-500">
+            Disclaimer: This site summarises published research about bacterial strains used in our fermented foods. It is not medical advice.
+          </p>
         </div>
         <div>
           <h4 className="font-semibold text-slate-900">Visit us</h4>
