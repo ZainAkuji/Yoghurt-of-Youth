@@ -371,6 +371,8 @@ export default function App(){
         </div>
       </section>
 
+      <ContactSection />
+
       <Footer brand={BRAND} />
 
       <Drawer open={drawerOpen} onClose={()=>setDrawerOpen(false)} title="Your Basket">
@@ -707,8 +709,6 @@ function ContactSection() {
     </section>
   );
 }
-
-<ContactSection />
 
 function Footer({ brand }:{ brand:string }) {
   return (
