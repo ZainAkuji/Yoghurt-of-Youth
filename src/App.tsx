@@ -24,6 +24,10 @@ const EMAILJS_SERVICE_ID = "service_oh51win";
 const EMAILJS_TEMPLATE_ID = "template_yoghurtofyouth";
 const EMAILJS_PUBLIC_KEY = "-Ko2GYKHx1EYIJgM5";
 
+// Logo
+const LOGO_URL = "/logo.svg?v=2";
+const LOGO_PNG_FALLBACK = "/logo.png?v=2";
+
 // ---------- Utils ----------
 const gbp = (n: number) => new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(n);
 const cn = (...a: (string | false | null | undefined)[]) => a.filter(Boolean).join(" ");
