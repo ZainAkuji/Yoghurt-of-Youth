@@ -679,6 +679,37 @@ function BrandMark() {
   );
 }
 
+{/* Contact */}
+<section id="contact" className="mx-auto max-w-6xl px-4 py-10">
+  <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6 md:p-10">
+    <h2 className="text-2xl font-bold text-slate-900">Contact Us</h2>
+    <p className="mt-3 text-slate-700 text-sm leading-relaxed">
+      For personalised support or product advice, get in touch below.
+    </p>
+
+    <div className="mt-5 space-y-3 text-slate-700 text-sm">
+      <p>
+        📧 Email:{" "}
+        <a
+          href="mailto:support@yoghurtofyouth.co.uk"
+          className="underline hover:text-slate-900"
+        >
+          support@yoghurtofyouth.co.uk
+        </a>
+      </p>
+      <p>
+        📞 Phone:{" "}
+        <a href="tel:+447756231844" className="underline hover:text-slate-900">
+          07756 231 844
+        </a>
+      </p>
+      <p className="text-xs text-slate-500">
+        We aim to respond to all messages within one working day.
+      </p>
+    </div>
+  </div>
+</section>
+
 function Footer({ brand }:{ brand:string }) {
   return (
     <footer className="border-t border-slate-200 mt-12 py-10">
