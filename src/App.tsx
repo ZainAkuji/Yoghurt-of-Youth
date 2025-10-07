@@ -60,14 +60,14 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  { id:"17648-standard", name:"Standard – DSM 17648", price:2.0, size:"250 mL",
-    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17648.", tags:["standard","DSM 17648"], img: placeholder("17648 – Standard","#f1f5f9","#334155") },
-  { id:"17648-lactosefree", name:"Lactose‑Free – DSM 17648", price:2.0, size:"250 mL",
-    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17648.", tags:["lactose‑free","DSM 17648"], img: placeholder("17648 – Lactose‑Free","#ecfeff","#075985") },
-  { id:"17938-standard", name:"Standard – DSM 17938", price:2.0, size:"250 mL",
-    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17938.", tags:["standard","DSM 17938"], img: placeholder("17938 – Standard","#fff1f2","#9f1239") },
-  { id:"17938-lactosefree", name:"Lactose‑Free – DSM 17938", price:2.0, size:"250 mL",
-    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17938.", tags:["lactose‑free","DSM 17938"], img: placeholder("17938 – Lactose‑Free","#f0fdf4","#166534") },
+  { id:"Precision", name:"Precision", price:2.0, size:"250 mL",
+    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17648. Targets H Pylori.", tags:["standard","DSM 17648"], img: placeholder("Precision","#f1f5f9","#334155") },
+  { id:"Precision LF", name:"Precision LF", price:2.0, size:"250 mL",
+    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17648. Targets H Pylori.", tags:["lactose‑free","DSM 17648"], img: placeholder("Precision","#ecfeff","#075985") },
+  { id:"Broad Spectrum", name:"Broad Spectrum", price:2.0, size:"250 mL",
+    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including Candida.", tags:["standard","DSM 17938"], img: placeholder("Broad Spectrum","#fff1f2","#9f1239") },
+  { id:"Broad Spectrum LF", name:"Broad Spectrum LF", price:2.0, size:"250 mL",
+    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17938. Targets harmful microbes including Candida.", tags:["lactose‑free","DSM 17938"], img: placeholder("Broad Spectrum","#f0fdf4","#166534") },
 ];
 
 function computeTotals(cart: Record<string, number>) {
@@ -88,64 +88,159 @@ function nextBundleHint(qtyTotal:number){
   return `Add ${need} more to unlock the 7‑for‑£10 bundle.`;
 }
 
-function AboutSection(){
+function AboutSection() {
   return (
     <section id="about" className="mx-auto max-w-6xl px-4 py-10">
-      <div className="grid md:grid-cols-2 gap-6 items-start">
-        <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6">
-          <h2 className="text-2xl font-bold">About Yoghurt of Youth</h2>
-          <p className="mt-3 text-slate-700">
-            We craft small-batch yoghurts at 37&nbsp;°C using live <em>Lactobacillus reuteri</em> cultures studied for their unique properties.
-            Slow fermentation preserves vitality, flavour, and the character of a living food.
-          </p>
+      <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6 md:p-10">
+        <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
+          About Yoghurt of Youth
+        </h2>
+        <h3 className="mt-1 text-lg md:text-xl font-medium text-slate-700">
+          Cultures with Purpose
+        </h3>
 
-          <div className="mt-5 space-y-4">
-            <div>
-              <h3 className="font-semibold">Precision — DSM 17648</h3>
-              <p className="text-slate-700 text-sm mt-1">
-                A precision-targeted strain shown in clinical research to bind and reduce <em>Helicobacter pylori</em> in the stomach,
-                supporting a calmer digestive environment.
-              </p>
-            </div>
+        <p className="mt-4 text-slate-700">
+          Each of our yoghurts is crafted with live{" "}
+          <em>Lactobacillus reuteri</em> strains that have been studied for
+          their unique, health-supporting properties.
+        </p>
 
-            <div>
-              <h3 className="font-semibold">Broad Spectrum — DSM 17938</h3>
-              <p className="text-slate-700 text-sm mt-1">
-                A broad-acting strain observed to help limit unwanted microbes, including <em>Candida</em> species, while coexisting with
-                beneficial flora — contributing to microbial balance throughout the gut.
-              </p>
-            </div>
+        <div className="mt-6 space-y-6">
+          <div>
+            <h4 className="font-semibold text-slate-900">
+              Precision — DSM 17648
+            </h4>
+            <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+              A precision-targeted strain shown in clinical research to bind to
+              and reduce populations of <em>Helicobacter pylori</em>, a
+              bacterium linked to stomach discomfort and ulcers. By helping
+              clear <em>H. pylori</em> from the stomach lining, this culture
+              supports a calmer, more balanced digestive environment.
+            </p>
           </div>
-        </div>
 
-        <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6">
-          <h3 className="font-semibold">Why gut balance matters</h3>
-          <ul className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-slate-700">
-            <li>General wellbeing &amp; energy</li>
-            <li>IBS &amp; IBD</li>
-            <li>Nutrient deficiencies</li>
-            <li>Chronic inflammation</li>
-            <li>Chronic disease</li>
-            <li>Blood pressure</li>
-            <li>Cholesterol</li>
-            <li>Kidney stones</li>
-            <li>Gout</li>
-            <li>Bile sludge</li>
-            <li>Obesity</li>
-            <li>Blood sugar</li>
-            <li>Cancer</li>
-            <li>Mental health</li>
-            <li>Depression &amp; anxiety</li>
-            <li>Stress &amp; sleep</li>
-            <li>Cognition &amp; brain fog</li>
-            <li>Irritability &amp; mood</li>
-            <li>Dementia</li>
-            <li>Inflammaging</li>
-          </ul>
-          <p className="mt-3 text-xs text-slate-500">
-            These topics reflect active areas of research into the gut–body axis.
+          <div>
+            <h4 className="font-semibold text-slate-900">
+              Broad Spectrum — DSM 17938
+            </h4>
+            <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+              A broad-acting <em>L. reuteri</em> strain observed in studies to
+              help limit unwanted microbes, including{" "}
+              <em>Candida</em> species, while coexisting peacefully with
+              beneficial flora. It contributes to microbial balance throughout
+              the gut and is widely recognised for its excellent safety record.
+            </p>
+          </div>
+
+          <p className="text-slate-700 text-sm leading-relaxed">
+            Both cultures are fermented slowly at 37&nbsp;°C — body temperature
+            — to preserve their vitality and activity.
           </p>
         </div>
+
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">
+          Why Gut Health Matters
+        </h3>
+        <p className="mt-3 text-slate-700 text-sm leading-relaxed">
+          Modern research consistently links gut balance to nearly every aspect
+          of wellbeing. Scientific studies suggest that a well-functioning
+          microbiome influences:
+        </p>
+
+        <div className="mt-4 grid sm:grid-cols-2 gap-x-6 gap-y-2 text-sm text-slate-700">
+          <ul className="space-y-1 list-disc list-inside">
+            <li>
+              <strong>General wellbeing &amp; energy</strong> – balanced
+              digestion and reduced bloating promote comfort and nutrient
+              absorption.
+            </li>
+            <li>
+              <strong>IBS &amp; IBD</strong> – dysbiosis and intestinal
+              inflammation are central to these conditions; balanced flora can
+              help stabilise the gut environment.
+            </li>
+            <li>
+              <strong>Nutrient deficiencies</strong> – microbial imbalances can
+              impair absorption of iron, B-vitamins, and magnesium.
+            </li>
+            <li>
+              <strong>Chronic inflammation &amp; disease</strong> – microbial
+              metabolites regulate immune signalling throughout the body.
+            </li>
+            <li>
+              <strong>Cardiovascular health</strong> – balanced gut flora
+              correlates with healthy blood pressure and cholesterol.
+            </li>
+            <li>
+              <strong>Kidney stones &amp; gout</strong> – certain microbes
+              degrade oxalate and uric acid, helping the body excrete them
+              safely.
+            </li>
+            <li>
+              <strong>Bile sludge &amp; fat digestion</strong> – microbial
+              enzymes aid bile circulation and emulsify fats efficiently.
+            </li>
+            <li>
+              <strong>Obesity &amp; blood sugar</strong> – gut composition
+              affects insulin sensitivity and energy storage.
+            </li>
+            <li>
+              <strong>Cancer prevention</strong> – research connects gut
+              integrity with reduced inflammation and improved detoxification.
+            </li>
+            <li>
+              <strong>Mental health &amp; cognition</strong> – the gut–brain
+              axis influences mood, clarity, and focus. Studies link dysbiosis
+              with depression, anxiety, and brain fog.
+            </li>
+            <li>
+              <strong>Stress &amp; sleep</strong> – gut microbes help regulate
+              serotonin and melatonin production.
+            </li>
+            <li>
+              <strong>Ageing &amp; inflammaging</strong> – balanced microbiota
+              reduce chronic low-grade inflammation, the driver of premature
+              ageing.
+            </li>
+          </ul>
+        </div>
+
+        <p className="mt-4 text-slate-700 text-sm leading-relaxed">
+          Restoring microbial balance can therefore ripple through every system
+          of the body.
+        </p>
+
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">
+          The Power of <em>Lactobacillus reuteri</em>
+        </h3>
+        <p className="mt-3 text-slate-700 text-sm leading-relaxed">
+          When harmful microbes dominate the gut or stomach, inflammation and
+          discomfort follow. Our two <em>L. reuteri</em> strains address this at
+          the source:
+        </p>
+        <ul className="mt-2 list-disc list-inside text-sm text-slate-700 space-y-1">
+          <li>
+            <strong>DSM 17648 (“Precision”)</strong> selectively binds{" "}
+            <em>H. pylori</em>, helping to remove it naturally from the stomach.
+          </li>
+          <li>
+            <strong>DSM 17938 (“Broad Spectrum”)</strong> helps restrain a wide
+            range of opportunistic species — including <em>Candida</em> —
+            promoting equilibrium and resilience in the gut ecosystem.
+          </li>
+        </ul>
+        <p className="mt-4 text-slate-700 text-sm leading-relaxed">
+          Together they create a foundation for genuine digestive harmony and
+          whole-body wellbeing.
+        </p>
+
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">Disclaimer</h3>
+        <p className="mt-3 text-slate-500 text-xs leading-relaxed">
+          This information summarises findings from independent scientific
+          research on the bacterial strains used. It is provided for educational
+          purposes and is not medical advice. Our products are fermented foods
+          intended to support natural gut balance as part of a healthy lifestyle.
+        </p>
       </div>
     </section>
   );
