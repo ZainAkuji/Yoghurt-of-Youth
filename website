@@ -36,8 +36,8 @@ const MAPS_QUERY = encodeURIComponent(`${ADDRESS_LINES.join(", ")}`);
 
 // Brand assets in Vite's public/ folder so they deploy at site root
 // Add your final files as: public/logo.svg (preferred) and/or public/logo.png
-const LOGO_URL = "/logo.svg";
-const LOGO_PNG_FALLBACK = "/logo.png";
+const LOGO_URL = "/logo.svg?v=2";
+const LOGO_PNG_FALLBACK = "/logo.png?v=2";
 
 // EmailJS (automatic email, no backend required)
 const EMAILJS_SERVICE_ID = "service_oh51win"; // from your EmailJS dashboard
