@@ -132,9 +132,13 @@ export default function App(){
         </div>
         <div className="relative">
           <div className="aspect-[4/3] w-full rounded-3xl bg-white shadow-xl ring-1 ring-slate-200 overflow-hidden grid place-items-center">
-            <div className="text-center p-8">
-              <div className="text-7xl">🥣</div>
-              <p className="mt-2 text-slate-500">Swap these placeholders with your brand photography later.</p>
+            <div className="p-6 grid place-items-center">
+              <img
+                src="/logo.png?v=2"
+                alt="Yoghurt of Youth"
+                className="mx-auto w-72 max-h-56 h-auto"
+                style={{ display: "block" }}
+              />
             </div>
           </div>
         </div>
@@ -228,22 +232,37 @@ export default function App(){
   );
 }
 
-function Header({ brand, query, setQuery, itemsCount, openCart }:{ brand:string; query:string; setQuery:(v:string)=>void; itemsCount:number; openCart:()=>void; }) {
+function Header({ brand, query, setQuery, itemsCount, openCart }:{
+  brand:string; query:string; setQuery:(v:string)=>void; itemsCount:number; openCart:()=>void;
+}) {
   return (
     <header className="sticky top-0 z-40 backdrop-blur bg-white/80 border-b border-slate-200">
       <div className="mx-auto max-w-6xl px-4 py-3 flex items-center gap-4">
-        <Logo brand={brand} />
+        <BrandMark />
         <nav className="hidden md:flex gap-6 ml-6 text-sm">
           <a href="#shop" className="hover:text-slate-900">Shop</a>
           <a href="#visit" className="hover:text-slate-900">Collect</a>
           <a href="#contact" className="hover:text-slate-900">Contact</a>
         </nav>
         <div className="ml-auto flex items-center gap-3">
-          <input aria-label="Search flavours" placeholder="Search flavours…" value={query} onChange={(e)=>setQuery(e.target.value)} className="hidden sm:block w-56 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300" />
-          <button onClick={openCart} className="relative rounded-xl border border-slate-300 px-4 py-2 text-sm hover:bg-white">
+          <input
+            aria-label="Search flavours"
+            placeholder="Search flavours…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="hidden sm:block w-56 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"
+          />
+          <button
+            onClick={openCart}
+            className="relative rounded-xl border border-slate-300 px-4 py-2 text-sm hover:bg-white"
+          >
             <span role="img" aria-label="basket">🧺</span>
             <span className="ml-2">Basket</span>
-            {itemsCount > 0 && <span className="ml-2 rounded-full bg-slate-900 text-white text-xs px-2 py-0.5">{itemsCount}</span>}
+            {itemsCount > 0 && (
+              <span className="ml-2 rounded-full bg-slate-900 text-white text-xs px-2 py-0.5">
+                {itemsCount}
+              </span>
+            )}
           </button>
         </div>
       </div>
@@ -488,12 +507,28 @@ function ConfirmationPage({ brand, confirmation, onReset }:{ brand:string; confi
   );
 }
 
+function BrandMark() {
+  return (
+    <a href="#" className="flex items-center gap-3">
+      <img
+        src="/logo.png?v=2"
+        alt="Yoghurt of Youth"
+        className="h-9 w-auto"
+        style={{ display: "block" }}
+      />
+      <span className="font-extrabold tracking-tight hidden sm:inline">
+        Yoghurt of Youth
+      </span>
+    </a>
+  );
+}
+
 function Footer({ brand }:{ brand:string }) {
   return (
     <footer className="border-t border-slate-200 mt-12 py-10">
       <div className="mx-auto max-w-6xl px-4 grid md:grid-cols-3 gap-6 text-sm">
         <div>
-          <Logo brand={brand} />
+          <BrandMark />
           <p className="mt-2 text-slate-600">Reserve online. Pay on collection (cash or card).</p>
         </div>
         <div>
