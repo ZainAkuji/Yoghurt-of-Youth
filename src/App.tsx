@@ -82,9 +82,9 @@ function computeTotals(cart: Record<string, number>) {
 }
 
 function nextBundleHint(qtyTotal:number){
+  if (qtyTotal===0) return "Bundle: 7 bottles for £10 (mix & match).";
   const need = (7 - (qtyTotal % 7)) % 7;
   if (need===0) return "You’re on a bundle – great value!";
-  if (qtyTotal===0) return "Deal: 7 bottles for £10 (mix & match).";
   return `Add ${need} more to unlock the 7‑for‑£10 bundle.`;
 }
 
@@ -268,16 +268,13 @@ export default function App(){
       <section className="mx-auto max-w-6xl px-4 pt-16 pb-10 grid md:grid-cols-2 gap-10 items-center">
         <div>
           <h1 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight">
-            Live‑culture yoghurts, crafted for <span className="text-slate-900">health</span> & <span className="text-slate-900">flavour</span>.
+            It isn't hard to tell.
           </h1>
-          <p className="mt-4 text-slate-600 text-lg">
-            Small‑batch fermented at 37 °C with <em>L. reuteri</em> (DSM 17648 & DSM 17938). Reserve online, pay on collection.
-          </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a href="#shop" className="rounded-2xl bg-slate-900 text-white px-5 py-3 text-sm font-semibold hover:bg-slate-800">Browse yoghurts</a>
             <a href="#visit" className="rounded-2xl border border-slate-300 px-5 py-3 text-sm font-semibold hover:bg-white">Find us</a>
           </div>
-          <div className="mt-4 text-xs text-slate-500">Pay cash or card at collection · Mix & match bundles available</div>
+          <div className="mt-4 text-xs text-slate-500">Reserve online, pay on collection · Bundle deal available</div>
         </div>
         <div className="relative">
           <div className="aspect-[4/3] w-full rounded-3xl bg-white shadow-xl ring-1 ring-slate-200 overflow-hidden grid place-items-center">
@@ -290,12 +287,6 @@ export default function App(){
               />
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-4">
-        <div className="rounded-2xl bg-amber-50 ring-1 ring-amber-200 text-amber-900 p-4 text-sm">
-          <strong>Bundle deal:</strong> 7 bottles for £10 (mix & match). Otherwise bottles are £2 each.
         </div>
       </section>
 
