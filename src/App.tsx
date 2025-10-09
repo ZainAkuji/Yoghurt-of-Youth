@@ -60,14 +60,14 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  { id:"Precision", name:"Precision", price:2.0, size:"250 mL",
-    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["standard","DSM 17648"], img: placeholder("Precision","#f1f5f9","#334155") },
-  { id:"Precision LF", name:"Precision LF", price:2.0, size:"250 mL",
-    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["lactose‑free","DSM 17648"], img: placeholder("Precision LF","#ecfeff","#075985") },
-  { id:"Broad Spectrum", name:"Broad Spectrum", price:2.0, size:"250 mL",
-    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["standard","DSM 17938"], img: placeholder("Broad Spectrum","#fff1f2","#9f1239") },
-  { id:"Broad Spectrum LF", name:"Broad Spectrum LF", price:2.0, size:"250 mL",
-    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["lactose‑free","DSM 17938"], img: placeholder("Broad Spectrum LF","#f0fdf4","#166534") },
+  { id:"PRCXN", name:"PRCXN", price:2.0, size:"250 mL",
+    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["standard","DSM 17648"], img: placeholder("PRCXN","#f1f5f9","#334155") },
+  { id:"PRCXN LF", name:"PRCXN LF", price:2.0, size:"250 mL",
+    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["lactose‑free","DSM 17648"], img: placeholder("PRCXN LF","#ecfeff","#075985") },
+  { id:"SPCTRL", name:"SPCTRL", price:2.0, size:"250 mL",
+    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["standard","DSM 17938"], img: placeholder("SPCTRL","#fff1f2","#9f1239") },
+  { id:"SPCTRL LF", name:"SPCTRL LF", price:2.0, size:"250 mL",
+    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["lactose‑free","DSM 17938"], img: placeholder("SPCTRL LF","#f0fdf4","#166534") },
 ];
 
 function computeTotals(cart: Record<string, number>) {
@@ -108,7 +108,7 @@ function AboutSection() {
         <div className="mt-6 space-y-6">
           <div>
             <h4 className="font-semibold text-slate-900">
-              Precision — DSM 17648
+              PRCXN — DSM 17648
             </h4>
             <p className="mt-2 text-slate-700 text-sm leading-relaxed">
               A precision-targeted strain shown in clinical research to bind to
@@ -121,7 +121,7 @@ function AboutSection() {
 
           <div>
             <h4 className="font-semibold text-slate-900">
-              Broad Spectrum — DSM 17938
+              SPCTRL — DSM 17938
             </h4>
             <p className="mt-2 text-slate-700 text-sm leading-relaxed">
               A broad-acting <em>L. reuteri</em> strain observed in studies to
@@ -179,11 +179,11 @@ function AboutSection() {
         </p>
         <ul className="mt-2 list-disc list-inside text-sm text-slate-700 space-y-1">
           <li>
-            <strong>DSM 17648 (“Precision”)</strong> selectively binds{" "}
+            <strong>DSM 17648 (“PRCXN”)</strong> selectively binds{" "}
             <em>H. pylori</em>, helping to remove it naturally from the stomach.
           </li>
           <li>
-            <strong>DSM 17938 (“Broad Spectrum”)</strong> helps restrain a wide
+            <strong>DSM 17938 (“SPCTRL”)</strong> helps restrain a wide
             range of opportunistic species — including <em>Candida</em> —
             promoting equilibrium and resilience in the gut ecosystem.
           </li>
