@@ -746,19 +746,6 @@ function ContactSection() {
   );
 }
 
-function BrandMark() {
-  return (
-    <a href="#" className="flex items-center">
-      <img
-        src="logo.png"
-        alt="Yoghurt of Youth logo"
-        className="h-10 w-auto object-contain"
-      />
-      <span className="sr-only">Yoghurt of Youth</span>
-    </a>
-  );
-}
-
 function Footer({ brand }:{ brand:string }) {
   return (
     <footer className="border-t border-slate-200 mt-12 py-10">
