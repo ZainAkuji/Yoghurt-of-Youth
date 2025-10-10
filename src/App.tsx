@@ -425,44 +425,54 @@ function Header({ brand, itemsCount, openCart }) {
   const [scrolled, setScrolled] = React.useState(false);
 
   React.useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 100);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 100);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-in-out
-        bg-[url('skyline.png')] bg-cover bg-center bg-no-repeat
-        ${scrolled ? 'h-20' : 'h-32'}
-      `}
-      style={{
-        backgroundPositionY: scrolled ? '-20px' : '0px',
-      }}
-    >
-      <div className="mx-auto max-w-6xl px-4 h-full flex items-end justify-between pb-2">
-        <a href="#" className="flex items-center">
-          <img
-            src="/brand/logo.png"
-            alt="Yoghurt of Youth logo"
-            className={`transition-all duration-500 object-contain ${
-              scrolled ? 'h-10 md:h-12' : 'h-14 md:h-16'
-            }`}
-          />
-        </a>
-        <nav className="flex gap-6 text-white font-medium text-sm md:text-base mb-1">
-          <a href="#shop" className="hover:text-amber-300 transition-colors">Shop</a>
-          <a href="#about" className="hover:text-amber-300 transition-colors">About</a>
-          <a href="#contact" className="hover:text-amber-300 transition-colors">Contact</a>
-          <button
-            onClick={openCart}
-            className="ml-4 border border-white/70 px-4 py-2 rounded-xl hover:bg-white/10 transition-all"
-          >
-            🧺 Basket {itemsCount > 0 && <span>({itemsCount})</span>}
-          </button>
-        </nav>
+    <header className="sticky top-0 z-50 transition-all duration-500 ease-in-out">
+      {/* Background */}
+      <div
+        className={`relative transition-all duration-500 ${scrolled ? "h-20" : "h-32"}`}
+        style={{
+          backgroundImage: "url('skyline.png')",
+          backgroundSize: "cover",
+          backgroundPosition: `center ${scrolled ? "-20px" : "0px"}`,
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Darken bottom for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-black/55 pointer-events-none" />
+
+        {/* Content anchored to bottom (so shrink is from top) */}
+        <div className="relative mx-auto max-w-6xl px-4 h-full flex items-end">
+          <div className="w-full flex items-center justify-between pb-2">
+            <a href="#" className="flex items-center">
+              <img
+                src="logo.png"
+                alt="Yoghurt of Youth logo"
+                className={`object-contain transition-all duration-500 ${
+                  scrolled ? "h-10 md:h-12" : "h-14 md:h-16"
+                }`}
+              />
+            </a>
+
+            <nav className="flex gap-6 text-white font-medium text-sm md:text-base mb-1">
+              <a href="#shop" className="hover:text-amber-300 transition-colors">Shop</a>
+              <a href="#about" className="hover:text-amber-300 transition-colors">About</a>
+              <a href="#studies" className="hover:text-amber-300 transition-colors">Scientific studies</a>
+              <a href="#visit" className="hover:text-amber-300 transition-colors">Collect</a>
+              <a href="#contact" className="hover:text-amber-300 transition-colors">Contact</a>
+              <button
+                onClick={openCart}
+                className="ml-2 border border-white/70 px-4 py-2 rounded-xl hover:bg-white/10 transition-all"
+              >
+                🧺 Basket {itemsCount > 0 && <span>({itemsCount})</span>}
+              </button>
+            </nav>
+          </div>
+        </div>
       </div>
     </header>
   );
