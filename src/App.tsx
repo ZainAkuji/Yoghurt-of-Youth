@@ -24,10 +24,6 @@ const EMAILJS_SERVICE_ID = "service_oh51win";
 const EMAILJS_TEMPLATE_ID = "template_yoghurtofyouth";
 const EMAILJS_PUBLIC_KEY = "-Ko2GYKHx1EYIJgM5";
 
-// Logo
-const LOGO_URL = "/logo.svg?v=2";
-const LOGO_PNG_FALLBACK = "/logo.png?v=2";
-
 // ---------- Utils ----------
 const gbp = (n: number) => new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(n);
 const cn = (...a: (string | false | null | undefined)[]) => a.filter(Boolean).join(" ");
@@ -754,7 +750,7 @@ function Footer({ brand }:{ brand:string }) {
   return (
     <footer className="border-t border-slate-200 mt-12 py-10">
       <div className="mx-auto max-w-6xl px-4 grid md:grid-cols-3 gap-6 text-sm">
-        <a href="#" className="flex items-center">
+        <div href="#" className="flex items-center">
           <img
             src="logo.png"
             alt="Yoghurt of Youth logo"
@@ -762,7 +758,7 @@ function Footer({ brand }:{ brand:string }) {
               scrolled ? "h-10 md:h-12" : "h-14 md:h-16"
             }`}
           />
-        </a>
+        </div>
 
         <div className="mx-auto max-w-6xl px-4 mt-6 text-xs text-slate-500">© {new Date().getFullYear()} {brand}. All rights reserved.</div>
 
