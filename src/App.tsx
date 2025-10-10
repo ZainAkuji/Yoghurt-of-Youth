@@ -445,19 +445,18 @@ function Header({ brand, query, setQuery, itemsCount, openCart }) {
               <a href="#contact" className="text-white/90 hover:text-white">Contact</a>
             </nav>
 
-              <button
-                onClick={openCart}
-                className="relative rounded-xl border border-white/30 bg-white/10 text-white px-4 py-2 text-sm hover:bg-white/20"
-              >
-                <span role="img" aria-label="basket">🧺</span>
-                <span className="ml-2">Basket</span>
-                {itemsCount > 0 && (
-                  <span className="ml-2 rounded-full bg-white/90 text-slate-900 text-xs px-2 py-0.5">
-                    {itemsCount}
-                  </span>
-                )}
-              </button>
-            </div>
+            <button
+              onClick={openCart}
+              className="relative rounded-xl border border-white/30 bg-white/10 text-white px-4 py-2 text-sm hover:bg-white/20"
+            >
+              <span role="img" aria-label="basket">🧺</span>
+              <span className="ml-2">Basket</span>
+              {itemsCount > 0 && (
+                <span className="ml-2 rounded-full bg-white/90 text-slate-900 text-xs px-2 py-0.5">
+                  {itemsCount}
+                </span>
+              )}
+            </button>
           </div>
         </div>
       </div>
