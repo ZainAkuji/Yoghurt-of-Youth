@@ -74,7 +74,7 @@ const GROUPED = [
   {
     key: "prcxn",
     title: "PRCXN",
-    blurb: "Yoghurt cultured with <em>L. reuteri</em> DSM 17648. Targets <em>H. pylori</em>.",
+    blurb: "Yoghurt cultured with <i>L. reuteri</i> DSM 17648. Targets <i>H. pylori</i>.",
     img: "/prcxn.png",
     variants: [
       { id: "PRCXN", label: "PRCXN" },
@@ -84,7 +84,7 @@ const GROUPED = [
   {
     key: "spctrl",
     title: "SPCTRL",
-    blurb: "Yoghurt cultured with <em>L. reuteri</em> DSM 17938. Targets harmful microbes including <em>Candida</em>.",
+    blurb: "Yoghurt cultured with <i>L. reuteri</i> DSM 17938. Targets harmful microbes including <i>Candida</i>.",
     img: "spctrl.png",
     variants: [
       { id: "SPCTRL", label: "SPCTRL" },
