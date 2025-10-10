@@ -74,7 +74,7 @@ const GROUPED = [
   {
     key: "prcxn",
     title: "PRCXN",
-    blurb: "Precision culture (DSM 17648).",
+    blurb: "Yoghurt cultured with *L. reuteri* DSM 17648. Targets *H. pylori*.",
     img: "/prcxn.png",
     variants: [
       { id: "PRCXN", label: "Classic" },
@@ -84,7 +84,7 @@ const GROUPED = [
   {
     key: "spctrl",
     title: "SPCTRL",
-    blurb: "Broad spectrum culture (DSM 17938).",
+    blurb: "Yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
     img: "spctrl.png",
     variants: [
       { id: "SPCTRL", label: "Classic" },
@@ -251,10 +251,6 @@ function StudiesSection(){
             &nbsp;Reviews on <em>L. reuteri</em> and microbial balance.
           </li>
         </ol>
-
-        <p className="mt-3 text-xs text-slate-500">
-          We summarise published research on bacterial strains used in our fermented foods. This is not medical advice.
-        </p>
       </div>
     </section>
   );
@@ -313,7 +309,7 @@ export default function App(){
         </div>
       </section>
 
-     <div className="grid sm:grid-cols-2 gap-6">
+     <div className="grid sm:grid-cols-2 gap-4 md:gap-5">
         {GROUPED
           .filter(g => {
             const q = (query || "").toLowerCase();
@@ -321,31 +317,41 @@ export default function App(){
                    g.variants.some(v => v.label.toLowerCase().includes(q));
           })
           .map(g => (
-            <article key={g.key} className="group rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm overflow-hidden flex flex-col">
+            <article
+              key={g.key}
+              className="group rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm overflow-hidden flex flex-col"
+            >
               <div className="relative">
-                <img src={g.img} alt={g.title} className="w-full aspect-[4/3] object-cover"/>
+                <img
+                  src={g.img}
+                  alt={g.title}
+                  className="w-full aspect-[3/2] object-cover"
+                />
               </div>
-              <div className="p-5 flex-1 flex flex-col">
-                <h3 className="text-lg font-semibold text-slate-900">{g.title}</h3>
+      
+              <div className="p-4 flex-1 flex flex-col">
+                <h3 className="text-base font-semibold text-slate-900">
+                  {g.title}
+                </h3>
                 <p className="text-sm text-slate-600 mt-1">{g.blurb}</p>
       
-                <div className="mt-4 grid grid-cols-2 gap-2">
+                <div className="mt-3 grid grid-cols-2 gap-2">
                   {g.variants.map(v => (
                     <button
                       key={v.id}
                       onClick={() => add(v.id)}
-                      className="rounded-xl bg-slate-900 text-white px-3 py-2 text-sm font-semibold hover:bg-slate-800"
+                      className="rounded-lg bg-slate-900 text-white px-3 py-1.5 text-sm font-medium hover:bg-slate-800 transition"
                     >
                       + {v.label}
                     </button>
                   ))}
                 </div>
       
-                <div className="mt-4 text-xs text-slate-500">
+                <div className="mt-3 text-xs text-slate-500">
                   £2 per bottle · <strong>7 for £10</strong> (mix &amp; match)
                 </div>
       
-                <div className="mt-3 rounded-xl bg-slate-50 p-3 text-xs text-slate-600">
+                <div className="mt-2 rounded-xl bg-slate-50 p-2 text-xs text-slate-600">
                   {g.variants.map(v => (
                     <div key={v.id} className="flex justify-between">
                       <span>{v.label}</span>
@@ -357,6 +363,7 @@ export default function App(){
             </article>
         ))}
       </div>
+
 
 
       {/* About */}
@@ -746,9 +753,6 @@ function Footer({ brand }:{ brand:string }) {
         <div>
           <BrandMark />
           <p className="mt-2 text-slate-600">Reserve online. Pay on collection (cash or card).</p>
-          <p className="mt-4 text-xs text-slate-500">
-            Disclaimer: This site summarises published research about bacterial strains used in our fermented foods. It is not medical advice.
-          </p>
         </div>
         <div>
           <h4 className="font-semibold text-slate-900">Visit us</h4>
