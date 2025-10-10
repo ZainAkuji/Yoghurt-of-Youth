@@ -438,7 +438,7 @@ function Header({ brand, itemsCount, openCart }) {
         style={{
           backgroundImage: "url('skyline.png')",
           backgroundSize: "cover",
-          backgroundPosition: `center ${scrolled ? "-20px" : "0px"}`,
+          backgroundPosition: `center ${scrolled ? "38%" : "45%"}`, // tweak for horizon
           backgroundRepeat: "no-repeat",
         }}
       >
@@ -446,7 +446,7 @@ function Header({ brand, itemsCount, openCart }) {
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-black/55 pointer-events-none" />
 
         {/* Content anchored to bottom (so shrink is from top) */}
-        <div className="relative mx-auto max-w-6xl px-4 h-full flex items-end">
+        <div className="relative mx-auto max-w-6xl px-4 h-full flex items-center justify-between">
           <div className="w-full flex items-center justify-between pb-2">
             <a href="#" className="flex items-center">
               <img
