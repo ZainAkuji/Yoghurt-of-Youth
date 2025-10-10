@@ -421,7 +421,61 @@ export default function App(){
   );
 }
 
-function Header({ brand, query, setQuery, itemsCount, openCart }:{
+function Header({ brand, query, setQuery, itemsCount, openCart }) {
+  return (
+    <header className="sticky top-0 z-40">
+      {/* Background image layer */}
+      <div
+        className="relative bg-cover bg-center"
+        style={{ backgroundImage: "url('/brand/skyline.png')" }}
+      >
+        {/* Darkening / readability overlay (bottom heavier) */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/35 to-black/55" />
+
+        {/* Content anchored to the bottom so it sits on the darker part */}
+        <div className="relative mx-auto max-w-6xl px-4 h-28 md:h-36 flex items-end">
+          <div className="w-full py-3 flex items-center gap-4">
+            <Logo brand={brand} onDark />
+
+            <nav className="hidden md:flex gap-6 ml-6 text-sm">
+              <a href="#shop" className="text-white/90 hover:text-white">Shop</a>
+              <a href="#about" className="text-white/90 hover:text-white">About</a>
+              <a href="#studies" className="text-white/90 hover:text-white">Scientific studies</a>
+              <a href="#visit" className="text-white/90 hover:text-white">Collect</a>
+              <a href="#contact" className="text-white/90 hover:text-white">Contact</a>
+            </nav>
+
+            <div className="ml-auto flex items-center gap-3">
+              <input
+                aria-label="Search flavours"
+                placeholder="Search flavours…"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="hidden sm:block w-56 rounded-xl border border-white/30 bg-white/85 text-slate-900 placeholder-slate-600 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-white"
+              />
+
+              <button
+                onClick={openCart}
+                className="relative rounded-xl border border-white/30 bg-white/10 text-white px-4 py-2 text-sm hover:bg-white/20"
+              >
+                <span role="img" aria-label="basket">🧺</span>
+                <span className="ml-2">Basket</span>
+                {itemsCount > 0 && (
+                  <span className="ml-2 rounded-full bg-white/90 text-slate-900 text-xs px-2 py-0.5">
+                    {itemsCount}
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+
+/*function Header({ brand, query, setQuery, itemsCount, openCart }:{
   brand:string; query:string; setQuery:(v:string)=>void; itemsCount:number; openCart:()=>void;
 }) {
   return (
@@ -459,7 +513,7 @@ function Header({ brand, query, setQuery, itemsCount, openCart }:{
       </div>
     </header>
   );
-}
+}*/
 
 function Logo({ brand }:{ brand:string }) {
   return (
