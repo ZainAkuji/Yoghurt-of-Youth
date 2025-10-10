@@ -55,7 +55,7 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
   return `data:image/svg+xml;utf8,${svg}`;
 }
 
-/*const PRODUCTS = [
+const PRODUCTS = [
   { id:"PRCXN", name:"PRCXN", price:2.0, size:"250 mL",
     desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["Classic","DSM 17648"], img: "/prcxn.png" },
   { id:"PRCXN LF", name:"PRCXN LF", price:2.0, size:"250 mL",
@@ -64,7 +64,7 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
     desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["Classic","DSM 17938"], img: "/spctrl.png" },
   { id:"SPCTRL LF", name:"SPCTRL LF", price:2.0, size:"250 mL",
     desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["Lactose‑free","DSM 17938"], img: "/spctrl.png" },
-];*/
+];
 
 const GROUPED = [
   {
