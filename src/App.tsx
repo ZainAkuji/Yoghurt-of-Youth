@@ -421,18 +421,62 @@ export default function App(){
   );
 }
 
-function Header({ brand, query, setQuery, itemsCount, openCart }) {
+function Header({ brand, itemsCount, openCart }) {
+  const [scrolled, setScrolled] = React.useState(false);
+
+  React.useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 100);
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <header
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-in-out
+        bg-[url('skyline.png')] bg-cover bg-center bg-no-repeat
+        ${scrolled ? 'h-20' : 'h-32'}
+      `}
+      style={{
+        backgroundPositionY: scrolled ? '-20px' : '0px',
+      }}
+    >
+      <div className="mx-auto max-w-6xl px-4 h-full flex items-end justify-between pb-2">
+        <a href="#" className="flex items-center">
+          <img
+            src="/brand/logo.png"
+            alt="Yoghurt of Youth logo"
+            className={`transition-all duration-500 object-contain ${
+              scrolled ? 'h-10 md:h-12' : 'h-14 md:h-16'
+            }`}
+          />
+        </a>
+        <nav className="flex gap-6 text-white font-medium text-sm md:text-base mb-1">
+          <a href="#shop" className="hover:text-amber-300 transition-colors">Shop</a>
+          <a href="#about" className="hover:text-amber-300 transition-colors">About</a>
+          <a href="#contact" className="hover:text-amber-300 transition-colors">Contact</a>
+          <button
+            onClick={openCart}
+            className="ml-4 border border-white/70 px-4 py-2 rounded-xl hover:bg-white/10 transition-all"
+          >
+            🧺 Basket {itemsCount > 0 && <span>({itemsCount})</span>}
+          </button>
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+/*function Header({ brand, query, setQuery, itemsCount, openCart }) {
   return (
     <header className="sticky top-0 z-40">
-      {/* Background image layer */}
       <div
         className="relative bg-cover bg-center"
         style={{ backgroundImage: "url('skyline.png')" }}
       >
-        {/* Darkening / readability overlay (bottom heavier) */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/35 to-black/55" />
 
-        {/* Content anchored to the bottom so it sits on the darker part */}
         <div className="relative mx-auto max-w-6xl px-4 h-28 md:h-36 flex items-end">
           <div className="w-full py-3 flex items-center gap-4">
             <a href="#" className="flex items-center">
@@ -466,47 +510,6 @@ function Header({ brand, query, setQuery, itemsCount, openCart }) {
               </button>
             </div>
           </div>
-        </div>
-      </div>
-    </header>
-  );
-}
-
-
-/*function Header({ brand, query, setQuery, itemsCount, openCart }:{
-  brand:string; query:string; setQuery:(v:string)=>void; itemsCount:number; openCart:()=>void;
-}) {
-  return (
-    <header className="sticky top-0 z-40 backdrop-blur bg-white/80 border-b border-slate-200">
-      <div className="mx-auto max-w-6xl px-4 py-3 flex items-center gap-4">
-        <BrandMark />
-        <nav className="hidden md:flex gap-6 ml-6 text-sm">
-          <a href="#shop" className="hover:text-slate-900">Shop</a>
-          <a href="#about" className="hover:text-slate-900">About</a>
-          <a href="#studies" className="hover:text-slate-900">Scientific studies</a>
-          <a href="#visit" className="hover:text-slate-900">Collect</a>
-          <a href="#contact" className="hover:text-slate-900">Contact</a>
-        </nav>
-        <div className="ml-auto flex items-center gap-3">
-          <input
-            aria-label="Search flavours"
-            placeholder="Search flavours…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="hidden sm:block w-56 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"
-          />
-          <button
-            onClick={openCart}
-            className="relative rounded-xl border border-slate-300 px-4 py-2 text-sm hover:bg-white"
-          >
-            <span role="img" aria-label="basket">🧺</span>
-            <span className="ml-2">Basket</span>
-            {itemsCount > 0 && (
-              <span className="ml-2 rounded-full bg-slate-900 text-white text-xs px-2 py-0.5">
-                {itemsCount}
-              </span>
-            )}
-          </button>
         </div>
       </div>
     </header>
