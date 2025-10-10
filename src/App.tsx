@@ -435,7 +435,13 @@ function Header({ brand, query, setQuery, itemsCount, openCart }) {
         {/* Content anchored to the bottom so it sits on the darker part */}
         <div className="relative mx-auto max-w-6xl px-4 h-28 md:h-36 flex items-end">
           <div className="w-full py-3 flex items-center gap-4">
-            <BrandMark />
+            <a href="#" className="flex items-center">
+              <img
+                src="logo.png"
+                alt="Yoghurt of Youth logo"
+                className="h-14 md:h-16 w-auto object-contain"
+              />
+            </a>
 
             <nav className="hidden md:flex gap-6 ml-6 text-sm">
               <a href="#shop" className="text-white/90 hover:text-white">Shop</a>
