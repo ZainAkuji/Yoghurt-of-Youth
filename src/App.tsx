@@ -295,7 +295,7 @@ export default function App(){
           <div className="aspect-[4/3] w-full rounded-3xl bg-white shadow-xl ring-1 ring-slate-200 overflow-hidden grid place-items-center">
             <div className="p-6 grid place-items-center">
               <img
-                src="/logo.png?v=2"
+                src="logo.png"
                 alt="Yoghurt of Youth"
                 className="mx-auto w-[90%] max-w-[600px] h-auto object-contain"
                 style={{ display: "block" }}
