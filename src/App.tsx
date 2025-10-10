@@ -762,8 +762,9 @@ function Footer({ brand }:{ brand:string }) {
               scrolled ? "h-10 md:h-12" : "h-14 md:h-16"
             }`}
           />
-          <div className="mx-auto max-w-6xl px-4 mt-6 text-xs text-slate-500">© {new Date().getFullYear()} {brand}. All rights reserved.</div>
         </a>
+
+        <div className="mx-auto max-w-6xl px-4 mt-6 text-xs text-slate-500">© {new Date().getFullYear()} {brand}. All rights reserved.</div>
 
         <div>
           <h4 className="font-semibold text-slate-900">Visit us</h4>
