@@ -750,7 +750,7 @@ function BrandMark() {
   return (
     <a href="#" className="flex items-center">
       <img
-        src="/brand/logo.png"
+        src="logo.png"
         alt="Yoghurt of Youth logo"
         className="h-10 w-auto object-contain"
       />
