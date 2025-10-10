@@ -445,15 +445,6 @@ function Header({ brand, query, setQuery, itemsCount, openCart }) {
               <a href="#contact" className="text-white/90 hover:text-white">Contact</a>
             </nav>
 
-            <div className="ml-auto flex items-center gap-3">
-              <input
-                aria-label="Search flavours"
-                placeholder="Search flavours…"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="hidden sm:block w-56 rounded-xl border border-white/30 bg-white/85 text-slate-900 placeholder-slate-600 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-white"
-              />
-
               <button
                 onClick={openCart}
                 className="relative rounded-xl border border-white/30 bg-white/10 text-white px-4 py-2 text-sm hover:bg-white/20"
@@ -474,6 +465,14 @@ function Header({ brand, query, setQuery, itemsCount, openCart }) {
   );
 }
 
+/*<div className="ml-auto flex items-center gap-3">
+              <input
+                aria-label="Search flavours"
+                placeholder="Search flavours…"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="hidden sm:block w-56 rounded-xl border border-white/30 bg-white/85 text-slate-900 placeholder-slate-600 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-white"
+              />*/
 
 /*function Header({ brand, query, setQuery, itemsCount, openCart }:{
   brand:string; query:string; setQuery:(v:string)=>void; itemsCount:number; openCart:()=>void;
@@ -515,14 +514,29 @@ function Header({ brand, query, setQuery, itemsCount, openCart }) {
   );
 }*/
 
-function Logo({ brand }:{ brand:string }) {
+function Logo({ brand, onDark = false }) {
+  const box = onDark
+    ? "bg-white text-slate-900"
+    : "bg-slate-900 text-white";
+  const label = onDark ? "text-white" : "text-slate-900";
+
+  return (
+    <a href="#" className="flex items-center gap-3">
+      <div className={`grid place-items-center w-9 h-9 rounded-2xl ${box}`}>Y</div>
+      <span className={`font-extrabold tracking-tight ${label}`}>{brand}</span>
+    </a>
+  );
+}
+
+
+/*function Logo({ brand }:{ brand:string }) {
   return (
     <a href="#" className="flex items-center gap-3">
       <div className="grid place-items-center w-9 h-9 rounded-2xl bg-slate-900 text-white text-lg">Y</div>
       <span className="font-extrabold tracking-tight">{brand}</span>
     </a>
   );
-}
+}*/
 
 function Drawer({ open, onClose, title, children }:{ open:boolean; onClose:()=>void; title:string; children:React.ReactNode; }) {
   return (
