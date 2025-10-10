@@ -722,22 +722,6 @@ function ConfirmationPage({ brand, confirmation, onReset }:{ brand:string; confi
   );
 }
 
-function BrandMark() {
-  return (
-    <a href="#" className="flex items-center gap-3">
-      <img
-        src="/logo.png?v=2"
-        alt="Yoghurt of Youth"
-        className="h-9 w-auto"
-        style={{ display: "block" }}
-      />
-      <span className="font-extrabold tracking-tight hidden sm:inline">
-        Yoghurt of Youth
-      </span>
-    </a>
-  );
-}
-
 function ContactSection() {
   return (
     <section id="contact" className="mx-auto max-w-6xl px-4 py-10">
@@ -770,10 +754,17 @@ function Footer({ brand }:{ brand:string }) {
   return (
     <footer className="border-t border-slate-200 mt-12 py-10">
       <div className="mx-auto max-w-6xl px-4 grid md:grid-cols-3 gap-6 text-sm">
-        <div>
-          <BrandMark />
-          <p className="mt-2 text-slate-600">Reserve online. Pay on collection (cash or card).</p>
-        </div>
+        <a href="#" className="flex items-center">
+          <img
+            src="logo.png"
+            alt="Yoghurt of Youth logo"
+            className={`object-contain transition-all duration-500 ${
+              scrolled ? "h-10 md:h-12" : "h-14 md:h-16"
+            }`}
+          />
+          <div className="mx-auto max-w-6xl px-4 mt-6 text-xs text-slate-500">© {new Date().getFullYear()} {brand}. All rights reserved.</div>
+        </a>
+
         <div>
           <h4 className="font-semibold text-slate-900">Visit us</h4>
           <address className="not-italic mt-2 text-slate-600">
@@ -781,15 +772,7 @@ function Footer({ brand }:{ brand:string }) {
           </address>
           <a className="mt-1 inline-block text-slate-600 underline" href={`https://www.google.com/maps/search/?api=1&query=${MAPS_QUERY}`} target="_blank" rel="noreferrer">Open in Google Maps</a>
         </div>
-        <div>
-          <h4 className="font-semibold text-slate-900">Legal</h4>
-          <ul className="mt-2 space-y-1 text-slate-600">
-            <li><a href="#" className="hover:text-slate-900">Privacy</a></li>
-            <li><a href="#" className="hover:text-slate-900">Terms</a></li>
-          </ul>
-        </div>
       </div>
-      <div className="mx-auto max-w-6xl px-4 mt-6 text-xs text-slate-500">© {new Date().getFullYear()} {brand}. All rights reserved.</div>
     </footer>
   );
 }
