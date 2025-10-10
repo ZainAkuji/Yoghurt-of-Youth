@@ -458,19 +458,24 @@ function Header({ brand, itemsCount, openCart }) {
               />
             </a>
 
-            <nav className="flex gap-6 text-white font-medium text-sm md:text-base mb-1">
+            <nav className="flex items-center gap-6 text-white font-medium text-sm md:text-base">
+            <div className="flex items-center gap-6 leading-none">
               <a href="#shop" className="hover:text-amber-300 transition-colors">Shop</a>
               <a href="#about" className="hover:text-amber-300 transition-colors">About</a>
               <a href="#studies" className="hover:text-amber-300 transition-colors">Scientific studies</a>
               <a href="#visit" className="hover:text-amber-300 transition-colors">Collect</a>
               <a href="#contact" className="hover:text-amber-300 transition-colors">Contact</a>
-              <button
-                onClick={openCart}
-                className="ml-2 border border-white/70 px-4 py-2 rounded-xl hover:bg-white/10 transition-all"
-              >
-                🧺 Basket {itemsCount > 0 && <span>({itemsCount})</span>}
-              </button>
-            </nav>
+            </div>
+
+            {/* Basket button perfectly aligned */}
+            <button
+              onClick={openCart}
+              className="flex items-center gap-1 border border-white/70 px-4 py-2 rounded-xl hover:bg-white/10 transition-all leading-none"
+            >
+              <span role="img" aria-label="basket">🧺</span>
+              <span>Basket</span>
+              {itemsCount > 0 && <span>({itemsCount})</span>}
+            </button>
           </div>
         </div>
       </div>
