@@ -750,16 +750,7 @@ function Footer({ brand }:{ brand:string }) {
   return (
     <footer className="border-t border-slate-200 mt-12 py-10">
       <div className="mx-auto max-w-6xl px-4 grid md:grid-cols-3 gap-6 text-sm">
-        <a href="#" className="flex items-center">
-          <img
-            src="logo.png"
-            alt="Yoghurt of Youth logo"
-            className={`object-contain transition-all duration-500 ${
-              scrolled ? "h-10 md:h-12" : "h-14 md:h-16"
-            }`}
-          />
-        </a>
-        
+                
         <div className="mx-auto max-w-6xl px-4 mt-6 text-xs text-slate-500">© {new Date().getFullYear()} {brand}. All rights reserved.</div>
 
         <div>
