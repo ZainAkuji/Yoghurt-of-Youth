@@ -309,7 +309,7 @@ export default function App(){
         </div>
       </section>
 
-     <div className="mx-auto max-w-6xl px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 justify-items-center">
+     <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
         {GROUPED
           .filter(g => {
             const q = (query || "").toLowerCase();
