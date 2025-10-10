@@ -480,6 +480,7 @@ function Header({ brand, itemsCount, openCart }) {
             </nav>
           </div>
         </div>
+      </div>
     </header>
   );
 }
