@@ -74,7 +74,7 @@ const GROUPED = [
   {
     key: "prcxn",
     title: "PRCXN",
-    blurb: "Yoghurt cultured with <em>L. reuteri DSM 17648</em>. Targets <em>H. pylori</em>.",
+    blurb: "Yoghurt cultured with <em>L. reuteri</em> DSM 17648. Targets <em>H. pylori</em>.",
     img: "/prcxn.png",
     variants: [
       { id: "PRCXN", label: "PRCXN" },
