@@ -74,21 +74,21 @@ const GROUPED = [
   {
     key: "prcxn",
     title: "PRCXN",
-    blurb: "Yoghurt cultured with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    blurb: "Yoghurt cultured with <em>L. reuteri DSM 17648</em>. Targets <em>H. pylori</em>.",
     img: "/prcxn.png",
     variants: [
-      { id: "PRCXN", label: "Classic" },
-      { id: "PRCXN LF", label: "Lactose-Free" },
+      { id: "PRCXN", label: "PRCXN" },
+      { id: "PRCXN LF", label: "PRCXN LF" },
     ],
   },
   {
     key: "spctrl",
     title: "SPCTRL",
-    blurb: "Yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    blurb: "Yoghurt cultured with <em>L. reuteri</em> DSM 17938. Targets harmful microbes including <em>Candida</em>.",
     img: "spctrl.png",
     variants: [
-      { id: "SPCTRL", label: "Classic" },
-      { id: "SPCTRL LF", label: "Lactose-Free" },
+      { id: "SPCTRL", label: "SPCTRL" },
+      { id: "SPCTRL LF", label: "SPCTRL LF" },
     ],
   },
 ];
@@ -309,7 +309,7 @@ export default function App(){
         </div>
       </section>
 
-     <div className="grid sm:grid-cols-2 gap-4 md:gap-5">
+     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
         {GROUPED
           .filter(g => {
             const q = (query || "").toLowerCase();
@@ -319,20 +319,18 @@ export default function App(){
           .map(g => (
             <article
               key={g.key}
-              className="group rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm overflow-hidden flex flex-col"
+              className="group rounded-2xl bg-white ring-1 ring-slate-200 shadow-sm overflow-hidden flex flex-col"
             >
               <div className="relative">
                 <img
                   src={g.img}
                   alt={g.title}
-                  className="w-full aspect-[3/2] object-cover"
+                  className="w-full aspect-square object-contain bg-white"
                 />
               </div>
       
               <div className="p-4 flex-1 flex flex-col">
-                <h3 className="text-base font-semibold text-slate-900">
-                  {g.title}
-                </h3>
+                <h3 className="text-base font-semibold text-slate-900">{g.title}</h3>
                 <p className="text-sm text-slate-600 mt-1">{g.blurb}</p>
       
                 <div className="mt-3 grid grid-cols-2 gap-2">
@@ -363,8 +361,6 @@ export default function App(){
             </article>
         ))}
       </div>
-
-
 
       {/* About */}
       <AboutSection />
