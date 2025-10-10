@@ -309,59 +309,59 @@ export default function App(){
         </div>
       </section>
 
-      <div className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-        {GROUPED
-          .filter(g => {
-            const q = (query || "").toLowerCase();
-            return !q || g.title.toLowerCase().includes(q) ||
-                   g.variants.some(v => v.label.toLowerCase().includes(q));
-          })
-          .map(g => (
-            <article
-              key={g.key}
-              className="group rounded-2xl bg-white ring-1 ring-slate-200 shadow-sm overflow-hidden flex flex-col"
-            >
-              <div className="relative">
-                <img
-                  src={g.img}
-                  alt={g.title}
-                  className="w-full aspect-square object-contain bg-white"
-                />
-              </div>
-      
-              <div className="p-4 flex-1 flex flex-col">
-                <h3 className="text-base font-semibold text-slate-900">{g.title}</h3>
-                <p className="text-sm text-slate-600 mt-1">{g.blurb}</p>
-      
-                <div className="mt-3 grid grid-cols-2 gap-2">
-                  {g.variants.map(v => (
-                    <button
-                      key={v.id}
-                      onClick={() => add(v.id)}
-                      className="rounded-lg bg-slate-900 text-white px-3 py-1.5 text-sm font-medium hover:bg-slate-800 transition"
-                    >
-                      + {v.label}
-                    </button>
-                  ))}
+          {GROUPED
+            .filter(g => {
+              const q = (query || "").toLowerCase();
+              return !q || g.title.toLowerCase().includes(q) ||
+                     g.variants.some(v => v.label.toLowerCase().includes(q));
+            })
+            .map(g => (
+              <article
+                key={g.key}
+                className="group rounded-2xl bg-white ring-1 ring-slate-200 shadow-sm overflow-hidden flex flex-col"
+              >
+                <div className="relative">
+                  <img
+                    src={g.img}
+                    alt={g.title}
+                    className="w-full aspect-square object-contain bg-white"
+                  />
                 </div>
-      
-                <div className="mt-3 text-xs text-slate-500">
-                  £2 per bottle · <strong>7 for £10</strong> (mix &amp; match)
+        
+                <div className="p-4 flex-1 flex flex-col">
+                  <h3 className="text-base font-semibold text-slate-900">{g.title}</h3>
+                  <p className="text-sm text-slate-600 mt-1">{g.blurb}</p>
+        
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    {g.variants.map(v => (
+                      <button
+                        key={v.id}
+                        onClick={() => add(v.id)}
+                        className="rounded-lg bg-slate-900 text-white px-3 py-1.5 text-sm font-medium hover:bg-slate-800 transition"
+                      >
+                        + {v.label}
+                      </button>
+                    ))}
+                  </div>
+        
+                  <div className="mt-3 text-xs text-slate-500">
+                    £2 per bottle · <strong>7 for £10</strong> (mix &amp; match)
+                  </div>
+        
+                  <div className="mt-2 rounded-xl bg-slate-50 p-2 text-xs text-slate-600">
+                    {g.variants.map(v => (
+                      <div key={v.id} className="flex justify-between">
+                        <span>{v.label}</span>
+                        <span>× {(cart[v.id] || 0)}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-      
-                <div className="mt-2 rounded-xl bg-slate-50 p-2 text-xs text-slate-600">
-                  {g.variants.map(v => (
-                    <div key={v.id} className="flex justify-between">
-                      <span>{v.label}</span>
-                      <span>× {(cart[v.id] || 0)}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </article>
-        ))}
-      </div>
+              </article>
+          ))}
+        </div>
       </div>
 
       {/* About */}
