@@ -427,7 +427,7 @@ function Header({ brand, query, setQuery, itemsCount, openCart }) {
       {/* Background image layer */}
       <div
         className="relative bg-cover bg-center"
-        style={{ backgroundImage: "url('/brand/skyline.png')" }}
+        style={{ backgroundImage: "url('skyline.png')" }}
       >
         {/* Darkening / readability overlay (bottom heavier) */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/35 to-black/55" />
