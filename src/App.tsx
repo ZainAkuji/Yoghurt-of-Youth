@@ -61,13 +61,36 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 
 const PRODUCTS = [
   { id:"PRCXN", name:"PRCXN", price:2.0, size:"250 mL",
-    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["standard","DSM 17648"], img: placeholder("PRCXN","#f1f5f9","#334155") },
+    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["Classic","DSM 17648"], img: "/prcxn.png" },
   { id:"PRCXN LF", name:"PRCXN LF", price:2.0, size:"250 mL",
-    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["lactose‑free","DSM 17648"], img: placeholder("PRCXN LF","#ecfeff","#075985") },
+    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["Lactose‑free","DSM 17648"], img: "/prcxn.png" },
   { id:"SPCTRL", name:"SPCTRL", price:2.0, size:"250 mL",
-    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["standard","DSM 17938"], img: placeholder("SPCTRL","#fff1f2","#9f1239") },
+    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["Classic","DSM 17938"], img: "/spctrl.png" },
   { id:"SPCTRL LF", name:"SPCTRL LF", price:2.0, size:"250 mL",
-    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["lactose‑free","DSM 17938"], img: placeholder("SPCTRL LF","#f0fdf4","#166534") },
+    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["Lactose‑free","DSM 17938"], img: "/spctrl.png" },
+];
+
+const GROUPED = [
+  {
+    key: "prcxn",
+    title: "PRCXN",
+    blurb: "Precision culture (DSM 17648).",
+    img: "/prcxn.png",
+    variants: [
+      { id: "PRCXN", label: "Classic" },
+      { id: "PRCXN LF", label: "Lactose-Free" },
+    ],
+  },
+  {
+    key: "spctrl",
+    title: "SPCTRL",
+    blurb: "Broad spectrum culture (DSM 17938).",
+    img: "spctrl.png",
+    variants: [
+      { id: "SPCTRL", label: "Classic" },
+      { id: "SPCTRL LF", label: "Lactose-Free" },
+    ],
+  },
 ];
 
 function computeTotals(cart: Record<string, number>) {
@@ -290,36 +313,51 @@ export default function App(){
         </div>
       </section>
 
-      <section id="shop" className="mx-auto max-w-6xl px-4 py-8">
-        <div className="flex items-end justify-between gap-4 mb-4">
-          <h2 className="text-2xl font-bold">Shop Yoghurt</h2>
-          <button onClick={()=>setDrawerOpen(true)} className="rounded-xl border border-slate-300 px-4 py-2 text-sm hover:bg-white">View Basket ({qtyTotal})</button>
-        </div>
-        <p className="text-sm text-slate-600 mb-4">{nextBundleHint(qtyTotal)}</p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {results.map(p=>(
-            <article key={p.id} className="group rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm overflow-hidden flex flex-col">
-              <div className="relative"><img src={p.img} alt={p.name} className="w-full aspect-[4/3] object-cover"/></div>
+     <div className="grid sm:grid-cols-2 gap-6">
+        {GROUPED
+          .filter(g => {
+            const q = (query || "").toLowerCase();
+            return !q || g.title.toLowerCase().includes(q) ||
+                   g.variants.some(v => v.label.toLowerCase().includes(q));
+          })
+          .map(g => (
+            <article key={g.key} className="group rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm overflow-hidden flex flex-col">
+              <div className="relative">
+                <img src={g.img} alt={g.title} className="w-full aspect-[4/3] object-cover"/>
+              </div>
               <div className="p-5 flex-1 flex flex-col">
-                <h3 className="text-lg font-semibold text-slate-900">{p.name}</h3>
-                <p className="text-sm text-slate-600 mt-1 flex-1" dangerouslySetInnerHTML={{ __html: toHTMLFromSimpleMarkdown(p.desc) }} />
-                <div className="mt-3 flex items-center gap-2 text-xs text-slate-500">
-                  <span className="rounded-full bg-slate-100 px-2 py-0.5">{p.size}</span>
-                  {p.tags.map(t => <span key={t} className="rounded-full bg-slate-100 px-2 py-0.5">{t}</span>)}
+                <h3 className="text-lg font-semibold text-slate-900">{g.title}</h3>
+                <p className="text-sm text-slate-600 mt-1">{g.blurb}</p>
+      
+                <div className="mt-4 grid grid-cols-2 gap-2">
+                  {g.variants.map(v => (
+                    <button
+                      key={v.id}
+                      onClick={() => add(v.id)}
+                      className="rounded-xl bg-slate-900 text-white px-3 py-2 text-sm font-semibold hover:bg-slate-800"
+                    >
+                      + {v.label}
+                    </button>
+                  ))}
                 </div>
-                <div className="mt-4 flex items-center justify-between">
-                  <div className="text-base font-semibold">£2 each</div>
-                  <div className="flex items-center gap-2">
-                    <button onClick={()=>sub(p.id)} className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700">−</button>
-                    <span className="w-8 text-center text-sm">{cart[p.id] || 0}</span>
-                    <button onClick={()=>add(p.id)} className="w-8 h-8 rounded-lg bg-slate-900 text-white">+</button>
-                  </div>
+      
+                <div className="mt-4 text-xs text-slate-500">
+                  £2 per bottle · <strong>7 for £10</strong> (mix &amp; match)
+                </div>
+      
+                <div className="mt-3 rounded-xl bg-slate-50 p-3 text-xs text-slate-600">
+                  {g.variants.map(v => (
+                    <div key={v.id} className="flex justify-between">
+                      <span>{v.label}</span>
+                      <span>× {(cart[v.id] || 0)}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </article>
-          ))}
-        </div>
-      </section>
+        ))}
+      </div>
+
 
       {/* About */}
       <AboutSection />
