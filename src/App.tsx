@@ -55,7 +55,7 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
   return `data:image/svg+xml;utf8,${svg}`;
 }
 
-const PRODUCTS = [
+/*const PRODUCTS = [
   { id:"PRCXN", name:"PRCXN", price:2.0, size:"250 mL",
     desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["Classic","DSM 17648"], img: "/prcxn.png" },
   { id:"PRCXN LF", name:"PRCXN LF", price:2.0, size:"250 mL",
@@ -64,13 +64,13 @@ const PRODUCTS = [
     desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["Classic","DSM 17938"], img: "/spctrl.png" },
   { id:"SPCTRL LF", name:"SPCTRL LF", price:2.0, size:"250 mL",
     desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["Lactose‑free","DSM 17938"], img: "/spctrl.png" },
-];
+];*/
 
 const GROUPED = [
   {
     key: "prcxn",
     title: "PRCXN",
-    blurb: "Yoghurt cultured with <i>L. reuteri</i> DSM 17648. Targets <i>H. pylori</i>.",
+    blurb: <>Yoghurt cultured with <em>L. reuteri</em> DSM 17648. Targets <em>H. pylori</em>.</>,
     img: "/prcxn.png",
     variants: [
       { id: "PRCXN", label: "PRCXN" },
@@ -80,7 +80,7 @@ const GROUPED = [
   {
     key: "spctrl",
     title: "SPCTRL",
-    blurb: "Yoghurt cultured with <i>L. reuteri</i> DSM 17938. Targets harmful microbes including <i>Candida</i>.",
+    blurb: <>Yoghurt cultured with <em>L. reuteri</em> DSM 17938. Targets harmful microbes including <em>Candida</em>.</>,
     img: "spctrl.png",
     variants: [
       { id: "SPCTRL", label: "SPCTRL" },
@@ -746,20 +746,11 @@ function ContactSection() {
   );
 }
 
-function Footer({ brand }:{ brand:string }) {
+/*function Footer({ brand }:{ brand:string }) {
   return (
     <footer className="border-t border-slate-200 mt-12 py-10">
       <div className="mx-auto max-w-6xl px-4 grid md:grid-cols-3 gap-6 text-sm">
-        <div href="#" className="flex items-center">
-          <img
-            src="logo.png"
-            alt="Yoghurt of Youth logo"
-            className={`object-contain transition-all duration-500 ${
-              scrolled ? "h-10 md:h-12" : "h-14 md:h-16"
-            }`}
-          />
-        </div>
-
+        
         <div className="mx-auto max-w-6xl px-4 mt-6 text-xs text-slate-500">© {new Date().getFullYear()} {brand}. All rights reserved.</div>
 
         <div>
@@ -772,4 +763,4 @@ function Footer({ brand }:{ brand:string }) {
       </div>
     </footer>
   );
-}
+}*/
