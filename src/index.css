@@ -3,3 +3,16 @@
 @tailwind utilities;
 
 html, body, #root { height: 100%; }
+
+@keyframes qtyFlash {
+  0%   { background: rgba(34, 197, 94, 0.20); transform: scale(1.06); }
+  60%  { background: rgba(34, 197, 94, 0.08); transform: scale(1.02); }
+  100% { background: transparent;            transform: scale(1.00); }
+}
+
+.qty-flash {
+  display: inline-block;
+  padding: 0.125rem 0.25rem; /* subtle pill */
+  border-radius: 0.5rem;
+  animation: qtyFlash 380ms ease-out;
+}
