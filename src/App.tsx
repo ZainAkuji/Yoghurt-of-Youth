@@ -749,7 +749,7 @@ function ContactSection() {
 function Footer() {
   return (
     <footer
-      className="relative bg-cover bg-center text-white h-34 md:h-24 flex items-center"
+      className="relative bg-cover bg-center text-white h-32 flex items-center"
       style={{
         backgroundImage: "url('skyline_reflected.png')",
       }}
