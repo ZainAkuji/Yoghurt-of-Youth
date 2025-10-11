@@ -752,6 +752,7 @@ function Footer() {
       className="relative bg-cover bg-center text-white h-32 flex items-center"
       style={{
         backgroundImage: "url('skyline_reflected.png')",
+        backgroundPosition: "center 70%",
       }}
     >
       {/* Overlay for slight darkness to make text pop */}
