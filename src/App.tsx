@@ -336,28 +336,27 @@ export default function App(){
                         <div key={v.id} className="flex items-center gap-2">
                           <button
                             onClick={() => sub(v.id)}
-                            className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition"
+                            className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition"
                             aria-label={`Remove one ${v.label}`}
                           >
                             −
                           </button>
-                  
-                          {/* qty flashes when it changes */}
+                          
                           <span
-                            key={`${v.id}-${qty}`}  // re-mount to retrigger animation
+                            key={`${v.id}-${qty}`}
                             className="min-w-[2rem] text-center text-sm qty-flash"
                           >
                             {qty}
                           </span>
-                  
+                          
                           <button
                             onClick={() => add(v.id)}
-                            className="w-8 h-8 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition"
+                            className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition"
                             aria-label={`Add one ${v.label}`}
                           >
                             +
                           </button>
-                  
+                          
                           <span className="ml-1 text-xs text-slate-600">{v.label}</span>
                         </div>
                       );
