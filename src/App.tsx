@@ -330,16 +330,40 @@ export default function App(){
                   <p className="text-sm text-slate-600 mt-1">{g.blurb}</p>
         
                   <div className="mt-3 grid grid-cols-2 gap-2">
-                    {g.variants.map(v => (
-                      <button
-                        key={v.id}
-                        onClick={() => add(v.id)}
-                        className="rounded-lg bg-slate-900 text-white px-3 py-1.5 text-sm font-medium hover:bg-slate-800 transition"
-                      >
-                        + {v.label}
-                      </button>
-                    ))}
+                    {g.variants.map((v) => {
+                      const qty = cart[v.id] || 0;
+                      return (
+                        <div key={v.id} className="flex items-center gap-2">
+                          <button
+                            onClick={() => sub(v.id)}
+                            className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition"
+                            aria-label={`Remove one ${v.label}`}
+                          >
+                            −
+                          </button>
+                  
+                          {/* qty flashes when it changes */}
+                          <span
+                            key={`${v.id}-${qty}`}  // re-mount to retrigger animation
+                            className="min-w-[2rem] text-center text-sm qty-flash"
+                          >
+                            {qty}
+                          </span>
+                  
+                          <button
+                            onClick={() => add(v.id)}
+                            className="w-8 h-8 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition"
+                            aria-label={`Add one ${v.label}`}
+                          >
+                            +
+                          </button>
+                  
+                          <span className="ml-1 text-xs text-slate-600">{v.label}</span>
+                        </div>
+                      );
+                    })}
                   </div>
+
         
                   <div className="mt-3 text-xs text-slate-500">
                     £2 per bottle · <strong>7 for £10</strong> (mix &amp; match)
