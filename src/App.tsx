@@ -801,4 +801,3 @@ function Footer() {
     </footer>
   );
 }
-}
