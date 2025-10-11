@@ -109,7 +109,7 @@ function nextBundleHint(qtyTotal:number){
 
 function AboutSection() {
   return (
-    <section id="about" className="mx-auto max-w-6xl px-4 py-10">
+    <section id="about"   className="scroll-mt-32 md:scroll-mt-24 mx-auto max-w-6xl px-4 py-10">
       <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6 md:p-10">
         <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
           About Yoghurt of Youth
@@ -226,7 +226,7 @@ function AboutSection() {
 
 function StudiesSection(){
   return (
-    <section id="studies" className="mx-auto max-w-6xl px-4 py-10">
+    <section id="studies" className="scroll-mt-32 md:scroll-mt-24 mx-auto max-w-6xl px-4 py-10">
       <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6">
         <h2 className="text-2xl font-bold">Scientific studies</h2>
         <p className="mt-2 text-slate-700 text-sm">
@@ -305,82 +305,98 @@ export default function App(){
         </div>
       </section>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 px-4 max-w-6xl mx-auto justify-items-center">
-          {GROUPED
-            .filter(g => {
-              const q = (query || "").toLowerCase();
-              return !q || g.title.toLowerCase().includes(q) ||
-                     g.variants.some(v => v.label.toLowerCase().includes(q));
-            })
-            .map(g => (
-              <article
-                key={g.key}
-                className="group rounded-2xl bg-white ring-1 ring-slate-200 shadow-sm overflow-hidden flex flex-col"
-              >
-                <div className="relative">
-                  <img
-                    src={g.img}
-                    alt={g.title}
-                    className="w-full aspect-square object-contain bg-white"
-                  />
-                </div>
-        
-                <div className="p-4 flex-1 flex flex-col">
-                  <h3 className="text-base font-semibold text-slate-900">{g.title}</h3>
-                  <p className="text-sm text-slate-600 mt-1">{g.blurb}</p>
-        
-                  <div className="mt-3 grid grid-cols-2 gap-2">
-                    {g.variants.map((v) => {
-                      const qty = cart[v.id] || 0;
-                      return (
-                        <div key={v.id} className="flex items-center gap-2">
-                          <button
-                            onClick={() => sub(v.id)}
-                            className="w-8 h-8 grid place-items-center rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition leading-none"
-                            aria-label={`Remove one ${v.label}`}
-                          >
-                            <span className="translate-y-[-1.5px] text-base font-semibold">−</span>
-                          </button>
-                          
-                          <span
-                            key={`${v.id}-${qty}`}
-                            className="min-w-[2rem] text-center text-sm qty-flash"
-                          >
-                            {qty}
-                          </span>
-                          
-                          <button
-                            onClick={() => add(v.id)}
-                            className="w-8 h-8 grid place-items-center rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition leading-none"
-                            aria-label={`Add one ${v.label}`}
-                          >
-                            <span className="translate-y-[-1.5px] text-base font-semibold">+</span>
-                          </button>
-
-                          
-                          <span className="ml-1 text-xs text-slate-600">{v.label}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-        
-                  <div className="mt-3 text-xs text-slate-500">
-                    £2 per bottle · <strong>7 for £10</strong> (mix &amp; match)
-                  </div>
-        
-                  <div className="mt-2 rounded-xl bg-slate-50 p-2 text-xs text-slate-600">
-                    {g.variants.map(v => (
-                      <div key={v.id} className="flex justify-between">
-                        <span>{v.label}</span>
-                        <span>× {(cart[v.id] || 0)}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </article>
-          ))}
+      {/* SHOP */}
+      <section id="shop" className="scroll-mt-32 md:scroll-mt-24 mx-auto max-w-6xl px-4 py-8">
+        <div className="flex items-end justify-between gap-4 mb-4">
+          <h2 className="text-2xl font-bold">Shop Yoghurt</h2>
+          <button
+            onClick={() => setDrawerOpen(true)}
+            className="rounded-xl border border-slate-300 px-4 py-2 text-sm hover:bg-white"
+          >
+            View Basket ({qtyTotal})
+          </button>
         </div>
+
+        <p className="text-sm text-slate-600 mb-4">{nextBundleHint(qtyTotal)}</p>
+
+        {/* your grouped grid goes here */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 px-4 max-w-6xl mx-auto justify-items-center">
+            {GROUPED
+              .filter(g => {
+                const q = (query || "").toLowerCase();
+                return !q || g.title.toLowerCase().includes(q) ||
+                       g.variants.some(v => v.label.toLowerCase().includes(q));
+              })
+              .map(g => (
+                <article
+                  key={g.key}
+                  className="group rounded-2xl bg-white ring-1 ring-slate-200 shadow-sm overflow-hidden flex flex-col"
+                >
+                  <div className="relative">
+                    <img
+                      src={g.img}
+                      alt={g.title}
+                      className="w-full aspect-square object-contain bg-white"
+                    />
+                  </div>
+          
+                  <div className="p-4 flex-1 flex flex-col">
+                    <h3 className="text-base font-semibold text-slate-900">{g.title}</h3>
+                    <p className="text-sm text-slate-600 mt-1">{g.blurb}</p>
+          
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                      {g.variants.map((v) => {
+                        const qty = cart[v.id] || 0;
+                        return (
+                          <div key={v.id} className="flex items-center gap-2">
+                            <button
+                              onClick={() => sub(v.id)}
+                              className="w-8 h-8 grid place-items-center rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition leading-none"
+                              aria-label={`Remove one ${v.label}`}
+                            >
+                              <span className="translate-y-[-1.5px] text-base font-semibold">−</span>
+                            </button>
+                            
+                            <span
+                              key={`${v.id}-${qty}`}
+                              className="min-w-[2rem] text-center text-sm qty-flash"
+                            >
+                              {qty}
+                            </span>
+                            
+                            <button
+                              onClick={() => add(v.id)}
+                              className="w-8 h-8 grid place-items-center rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition leading-none"
+                              aria-label={`Add one ${v.label}`}
+                            >
+                              <span className="translate-y-[-1.5px] text-base font-semibold">+</span>
+                            </button>
+  
+                            
+                            <span className="ml-1 text-xs text-slate-600">{v.label}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+  
+          
+                    <div className="mt-3 text-xs text-slate-500">
+                      £2 per bottle · <strong>7 for £10</strong> (mix &amp; match)
+                    </div>
+          
+                    <div className="mt-2 rounded-xl bg-slate-50 p-2 text-xs text-slate-600">
+                      {g.variants.map(v => (
+                        <div key={v.id} className="flex justify-between">
+                          <span>{v.label}</span>
+                          <span>× {(cart[v.id] || 0)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+            ))}
+          </div>
+      </section>
 
       {/* About */}
       <AboutSection />
@@ -388,7 +404,7 @@ export default function App(){
       {/* Scientific Studies */}
       <StudiesSection />
 
-      <section id="visit" className="mx-auto max-w-6xl px-4 py-10">
+      <section id="visit"   className="scroll-mt-32 md:scroll-mt-24 mx-auto max-w-6xl px-4 py-10">
         <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6 md:p-8 grid md:grid-cols-2 gap-6 items-center">
           <div>
             <h2 className="text-2xl font-bold">Collect your order</h2>
@@ -744,7 +760,7 @@ function ConfirmationPage({ brand, confirmation, onReset }:{ brand:string; confi
 
 function ContactSection() {
   return (
-    <section id="contact" className="mx-auto max-w-6xl px-4 py-10">
+    <section id="contact" className="scroll-mt-32 md:scroll-mt-24 mx-auto max-w-6xl px-4 py-10">
       <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6 md:p-10">
         <h2 className="text-2xl font-bold text-slate-900">Contact Us</h2>
         <p className="mt-3 text-slate-700 text-sm leading-relaxed">
