@@ -336,10 +336,10 @@ export default function App(){
                         <div key={v.id} className="flex items-center gap-2">
                           <button
                             onClick={() => sub(v.id)}
-                            className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition"
+                            className="w-8 h-8 grid place-items-center rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition leading-none"
                             aria-label={`Remove one ${v.label}`}
                           >
-                            −
+                            <span className="translate-y-[1px] text-base font-semibold">−</span>
                           </button>
                           
                           <span
@@ -351,11 +351,12 @@ export default function App(){
                           
                           <button
                             onClick={() => add(v.id)}
-                            className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition"
+                            className="w-8 h-8 grid place-items-center rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition leading-none"
                             aria-label={`Add one ${v.label}`}
                           >
-                            +
+                            <span className="translate-y-[1px] text-base font-semibold">+</span>
                           </button>
+
                           
                           <span className="ml-1 text-xs text-slate-600">{v.label}</span>
                         </div>
