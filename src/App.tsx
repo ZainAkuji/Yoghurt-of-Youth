@@ -70,7 +70,7 @@ const GROUPED = [
   {
     key: "prcxn",
     title: "PRCXN",
-    blurb: <>Yoghurt cultured with <em>L. reuteri</em> DSM 17648. Targets <em>H. pylori</em>. Lactose-free available.</>,
+    blurb: <>Yoghurt cultured with <em>L. reuteri</em> DSM 17648. Targets <em>H. pylori</em>.<br/>Lactose-free available.</>,
     img: "prcxn.png",
     variants: [
       { id: "PRCXN", label: "PRCXN" },
@@ -80,7 +80,7 @@ const GROUPED = [
   {
     key: "spctrl",
     title: "SPCTRL",
-    blurb: <>Yoghurt cultured with <em>L. reuteri</em> DSM 17938. Targets harmful microbes including <em>Candida</em>. Lactose-free available.</>,
+    blurb: <>Yoghurt cultured with <em>L. reuteri</em> DSM 17938. Targets harmful microbes including <em>Candida</em>.<br/>Lactose-free available.</>,
     img: "spctrl.png",
     variants: [
       { id: "SPCTRL", label: "SPCTRL" },
@@ -320,7 +320,7 @@ export default function App(){
         <p className="text-sm text-slate-600 mb-4">{nextBundleHint(qtyTotal)}</p>
 
         {/* your grouped grid goes here */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 px-4 max-w-6xl mx-auto justify-items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 max-w-6xl mx-auto justify-items-center">
             {GROUPED
               .filter(g => {
                 const q = (query || "").toLowerCase();
