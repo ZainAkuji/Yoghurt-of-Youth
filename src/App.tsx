@@ -746,21 +746,59 @@ function ContactSection() {
   );
 }
 
-function Footer({ brand }:{ brand:string }) {
+function Footer() {
   return (
-    <footer className="border-t border-slate-200 mt-12 py-10">
-      <div className="mx-auto max-w-6xl px-4 grid md:grid-cols-3 gap-6 text-sm">
-                
-        <div className="mx-auto max-w-6xl px-4 mt-6 text-xs text-slate-500">© {new Date().getFullYear()} {brand}. All rights reserved.</div>
+    <footer
+      className="relative bg-cover bg-center text-white py-20"
+      style={{
+        backgroundImage: "url('skyline_reflected.png')",
+      }}
+    >
+      {/* Overlay for slight darkness to make text pop */}
+      <div className="absolute inset-0 bg-black/35"></div>
 
-        <div>
-          <h4 className="font-semibold text-slate-900">Visit us</h4>
-          <address className="not-italic mt-2 text-slate-600">
-            {ADDRESS_LINES.map((l,i)=> <div key={i}>{l}</div>)}
-          </address>
-          <a className="mt-1 inline-block text-slate-600 underline" href={`https://www.google.com/maps/search/?api=1&query=${MAPS_QUERY}`} target="_blank" rel="noreferrer">Open in Google Maps</a>
+      <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6 items-center text-center md:text-left">
+        
+        {/* Logo */}
+        <div className="flex justify-center md:justify-start">
+          <img
+            src="logo.png"
+            alt="Yoghurt of Youth Logo"
+            className="h-16 w-auto object-contain"
+          />
         </div>
+
+        {/* All rights reserved */}
+        <div>
+          <p className="text-sm">
+            © {new Date().getFullYear()} Yoghurt of Youth.<br />All rights reserved.
+          </p>
+        </div>
+
+        {/* Address */}
+        <div>
+          <address className="not-italic text-sm leading-relaxed">
+            11 Billinge Avenue<br />
+            Blackburn<br />
+            Lancashire<br />
+            BB2 6SD
+          </address>
+        </div>
+
+        {/* Google Maps link */}
+        <div>
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=11+Billinge+Avenue,+Blackburn,+Lancashire,+BB2+6SD"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-block bg-white/10 hover:bg-white/20 text-white text-sm px-4 py-2 rounded-lg border border-white/20 transition"
+          >
+            Open in Google Maps
+          </a>
+        </div>
+
       </div>
     </footer>
   );
+}
 }
