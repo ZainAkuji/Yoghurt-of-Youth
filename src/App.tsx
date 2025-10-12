@@ -280,30 +280,35 @@ export default function App(){
     <div className="scroll-smooth min-h-screen bg-gradient-to-b from-white to-slate-50 text-slate-800">
       <Header brand={BRAND} query={query} setQuery={setQuery} itemsCount={qtyTotal} openCart={()=>setDrawerOpen(true)} />
 
-      <section className="mx-auto max-w-6xl px-4 pt-16 pb-10 grid md:grid-cols-2 gap-10 items-center">
-        <div>
-          <h1 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight">
-            It isn't hard to tell.
-          </h1>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <a href="#shop" className="rounded-2xl bg-slate-900 text-white px-5 py-3 text-sm font-semibold hover:bg-slate-800">Browse yoghurts</a>
-            <a href="#visit" className="rounded-2xl border border-slate-300 px-5 py-3 text-sm font-semibold hover:bg-white">Find us</a>
-          </div>
-          <div className="mt-4 text-xs text-slate-500">Reserve online, pay on collection · Bundle deal available</div>
-        </div>
-        <div className="relative">
-          <div className="aspect-[4/3] w-full rounded-3xl bg-white shadow-xl ring-1 ring-slate-200 overflow-hidden grid place-items-center">
-            <div className="p-6 grid place-items-center">
-              <img
-                src="logo.png"
-                alt="Yoghurt of Youth"
-                className="mx-auto w-[90%] max-w-[600px] h-auto object-contain"
-                style={{ display: "block" }}
-              />
-            </div>
-          </div>
+      {/* Hero Section */}
+      <section
+        id="hero"
+        className="relative w-full overflow-hidden bg-black"
+        style={{ aspectRatio: "16 / 9" }} // keeps proportions clean during load
+      >
+        {/* Video background */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src="/breaking.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+      
+        {/* Optional dark overlay for logo contrast */}
+        <div className="absolute inset-0 bg-black/25" />
+      
+        {/* Logo overlay */}
+        <div className="relative z-10 flex items-center justify-center h-full">
+          <img
+            src="/logo_inverted_transparent.png"
+            alt="Yoghurt of Youth logo"
+            className="w-auto h-48 md:h-60 lg:h-72"
+          />
         </div>
       </section>
+
 
       {/* SHOP */}
       <section id="shop" className="scroll-mt-32 md:scroll-mt-24 mx-auto max-w-6xl px-4 py-8">
