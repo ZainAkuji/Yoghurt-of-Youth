@@ -486,7 +486,7 @@ function Header({ brand, itemsCount, openCart }) {
           <div className="w-full flex items-center justify-between pb-2">
             <a href="#" className="flex items-center">
               <img
-                src="logo.png"
+                src="logo_inverted_transparent.png"
                 alt="Yoghurt of Youth logo"
                 className={`object-contain transition-all duration-500 ${
                   scrolled ? "h-10 md:h-12" : "h-14 md:h-16"
@@ -803,7 +803,7 @@ function Footer() {
         {/* Logo */}
         <div className="flex justify-center md:justify-start">
           <img
-            src="logo.png"
+            src="logo_inverted_transparent.png"
             alt="Yoghurt of Youth Logo"
             className="h-16 w-auto object-contain"
           />
