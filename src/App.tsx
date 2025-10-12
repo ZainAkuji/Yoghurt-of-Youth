@@ -479,7 +479,7 @@ function Header({ brand, itemsCount, openCart }) {
         style={{
           backgroundImage: "url('skyline.png')",
           backgroundSize: "cover",
-          backgroundPosition: `center ${scrolled ? "45%" : "45%"}`, // tweak for horizon
+          backgroundPosition: `center ${scrolled ? "50%" : "50%"}`, // tweak for horizon
           backgroundRepeat: "no-repeat",
         }}
       >
