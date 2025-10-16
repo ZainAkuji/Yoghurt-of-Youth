@@ -212,22 +212,6 @@ function AboutSection() {
           whole-body wellbeing.
         </p>
 
-        <h3 className="mt-8 text-xl font-semibold text-slate-900">Disclaimer</h3>
-        <p className="mt-3 text-slate-500 text-xs leading-relaxed">
-          This information summarises findings from independent scientific
-          research on the bacterial strains used. It is provided for educational
-          purposes and is not medical advice. Our products are fermented foods
-          intended to support natural gut balance as part of a healthy lifestyle.
-        </p>
-      </div>
-    </section>
-  );
-}
-
-function StudiesSection(){
-  return (
-    <section id="studies" className="scroll-mt-32 md:scroll-mt-24 mx-auto max-w-6xl px-4 py-10">
-      <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6">
         <h2 className="text-2xl font-bold">Scientific studies</h2>
         <p className="mt-2 text-slate-700 text-sm">
           Independent research exploring the strains we use:
@@ -247,6 +231,14 @@ function StudiesSection(){
             &nbsp;Reviews on <em>L. reuteri</em> and microbial balance.
           </li>
         </ol>
+
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">Disclaimer</h3>
+        <p className="mt-3 text-slate-500 text-xs leading-relaxed">
+          This information summarises findings from independent scientific
+          research on the bacterial strains used. It is provided for educational
+          purposes and is not medical advice. Our products are fermented foods
+          intended to support natural gut balance as part of a healthy lifestyle.
+        </p>
       </div>
     </section>
   );
@@ -405,9 +397,6 @@ export default function App(){
 
       {/* About */}
       <AboutSection />
-      
-      {/* Scientific Studies */}
-      <StudiesSection />
 
       <section id="visit"   className="scroll-mt-32 md:scroll-mt-24 mx-auto max-w-6xl px-4 py-10">
         <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6 md:p-8 grid md:grid-cols-2 gap-6 items-center">
@@ -504,7 +493,6 @@ function Header({ brand, itemsCount, openCart }) {
               <div className="flex items-center gap-6 leading-none">
                 <a href="#shop" className="hover:text-amber-300 transition-colors">Shop</a>
                 <a href="#about" className="hover:text-amber-300 transition-colors">About</a>
-                <a href="#studies" className="hover:text-amber-300 transition-colors">Scientific studies</a>
                 <a href="#visit" className="hover:text-amber-300 transition-colors">Collect</a>
                 <a href="#contact" className="hover:text-amber-300 transition-colors">Contact</a>
               </div>
