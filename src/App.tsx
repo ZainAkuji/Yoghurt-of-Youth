@@ -27,18 +27,42 @@ const EMAILJS_PUBLIC_KEY = "-Ko2GYKHx1EYIJgM5";
 // ---------- Utils ----------
 const gbp = (n: number) => new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(n);
 const cn = (...a: (string | false | null | undefined)[]) => a.filter(Boolean).join(" ");
+const LEAD_TIME_MIN = 30; // minutes from now before the earliest allowed slot
 
 function todayISO() { const d = new Date(); d.setHours(0,0,0,0); return d.toISOString().slice(0,10); }
 
-function timeSlotsArray(startHour: number, endHour: number, intervalMin: number) {
-  const slots: string[] = [];
-  const start = startHour * 60;
-  const end = endHour * 60;
-  for (let t = start; t <= end; t += intervalMin) {
-    const h = Math.floor(t / 60); const m = t % 60;
-    slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
+function* timeSlots(startHour: number, endHour: number, intervalMin: number) {
+  for (let h = startHour; h <= endHour; h++) {
+    for (let m = 0; m < 60; m += intervalMin) {
+      yield `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+    }
   }
-  return slots;
+}
+
+// New: return only *future* slots for the selected date
+function timeSlotsForDate(dateISO: string) {
+  const now = new Date();
+  const selected = new Date(dateISO + "T00:00:00");
+
+  const slots = [...timeSlots(PICKUP_START_HOUR, PICKUP_END_HOUR, PICKUP_INTERVAL_MIN)];
+
+  // If not today, all slots are OK
+  const isToday =
+    now.getFullYear() === selected.getFullYear() &&
+    now.getMonth() === selected.getMonth() &&
+    now.getDate() === selected.getDate();
+
+  if (!isToday) return slots;
+
+  // If today: filter out anything before (now + lead time)
+  const cutoff = new Date(now.getTime() + LEAD_TIME_MIN * 60_000);
+
+  return slots.filter((hhmm) => {
+    const [h, m] = hhmm.split(":").map((x) => parseInt(x, 10));
+    const slot = new Date(selected);
+    slot.setHours(h, m, 0, 0);
+    return slot >= cutoff;
+  });
 }
 
 function toHTMLFromSimpleMarkdown(s: string) {
@@ -241,6 +265,40 @@ function AboutSection() {
           purposes and is not medical advice. Our products are fermented foods
           intended to support natural gut balance as part of a healthy lifestyle.
         </p>
+
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">Instructions &amp; Storage</h3>
+        <p className="mt-3 text-slate-700 text-sm leading-relaxed">
+          <li>Shake well before use.</li>
+          <li>Keep refrigerated.</li>
+          <li>Consume within 3 days of opening.</li>
+        </p>
+
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">Instructions &amp; Storage</h3>
+        <p className="mt-3 text-slate-700 text-sm leading-relaxed">
+          <li>Shake well before use.</li>
+          <li>Keep refrigerated.</li>
+          <li>Consume within 3 days of opening.</li>
+        </p>
+
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">Contact</h3>
+        <p className="mt-3 text-slate-700 text-sm leading-relaxed">
+          For personalised support or product advice, get in touch below.
+        </p>
+        <div className="mt-5 space-y-3 text-slate-700 text-sm">
+          <p>
+            📧 Email:{" "}
+            <a href="mailto:support@yoghurtofyouth.co.uk" className="underline hover:text-slate-900">
+              support@yoghurtofyouth.co.uk
+            </a>
+          </p>
+          <p>
+            📞 Phone:{" "}
+            <a href="tel:+447756231844" className="underline hover:text-slate-900">
+              07756 231 844
+            </a>
+          </p>
+          <p className="text-xs text-slate-500">We aim to respond within one working day.</p>
+        </div>
       </div>
     </section>
   );
@@ -435,8 +493,6 @@ export default function App(){
         </div>
       </section>
 
-      <ContactSection />
-
       <Footer brand={BRAND} />
 
       <Drawer open={drawerOpen} onClose={()=>setDrawerOpen(false)} title="Your Basket">
@@ -496,7 +552,6 @@ function Header({ brand, itemsCount, openCart }) {
                 <a href="#shop" className="hover:text-amber-300 transition-colors">Shop</a>
                 <a href="#about" className="hover:text-amber-300 transition-colors">About</a>
                 <a href="#visit" className="hover:text-amber-300 transition-colors">Collect</a>
-                <a href="#contact" className="hover:text-amber-300 transition-colors">Contact</a>
               </div>
   
               {/* Basket button perfectly aligned */}
@@ -750,34 +805,6 @@ function ConfirmationPage({ brand, confirmation, onReset }:{ brand:string; confi
 
       <Footer brand={brand} />
     </main>
-  );
-}
-
-function ContactSection() {
-  return (
-    <section id="contact" className="scroll-mt-32 md:scroll-mt-24 mx-auto max-w-6xl px-4 py-10">
-      <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6 md:p-10">
-        <h2 className="text-2xl font-bold text-slate-900">Contact Us</h2>
-        <p className="mt-3 text-slate-700 text-sm leading-relaxed">
-          For personalised support or product advice, get in touch below.
-        </p>
-        <div className="mt-5 space-y-3 text-slate-700 text-sm">
-          <p>
-            📧 Email:{" "}
-            <a href="mailto:support@yoghurtofyouth.co.uk" className="underline hover:text-slate-900">
-              support@yoghurtofyouth.co.uk
-            </a>
-          </p>
-          <p>
-            📞 Phone:{" "}
-            <a href="tel:+447756231844" className="underline hover:text-slate-900">
-              07756 231 844
-            </a>
-          </p>
-          <p className="text-xs text-slate-500">We aim to respond within one working day.</p>
-        </div>
-      </div>
-    </section>
   );
 }
 
