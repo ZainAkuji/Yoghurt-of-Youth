@@ -212,7 +212,9 @@ function AboutSection() {
           whole-body wellbeing.
         </p>
 
-        <h2 className="text-2xl font-bold">Scientific studies</h2>
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">
+          Scientific Studies
+        </h3>
         <p className="mt-2 text-slate-700 text-sm">
           Independent research exploring the strains we use:
         </p>
