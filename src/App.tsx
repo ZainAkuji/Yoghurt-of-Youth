@@ -653,7 +653,7 @@ function formatDateUK(iso: string) {
   // iso expected like "2025-03-07"
   if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso || "";
   const [y, m, d] = iso.split("-");
-  return `${d}/${m}/${y}`; // dd-mm-yyyy
+  return `${d}/${m}/${y}`; // dd/mm/yyyy
 }
 
 // Round current time up to next 30-minute boundary
@@ -772,9 +772,9 @@ function ReserveModal({ onClose, cart, totals, onConfirmed }: {
           customer_name: name,
           customer_email: email,
           customer_phone: phone,
-          pickup_date: formattedDate,
+          pickup_date: formattedDate,         // UK format in email
           pickup_time: time,
-          order_lines: lines.join("\\n"),
+          order_lines: lines.join("\n"),      // real newlines
           bottles: qtyTotal,
           bundles,
           remainder,
@@ -789,8 +789,17 @@ function ReserveModal({ onClose, cart, totals, onConfirmed }: {
       );
 
       const payload = {
-        orderId, name, email, phone, formattedDate, time, lines,
-        qtyTotal, bundles, remainder, total: gbp(total),
+        orderId,
+        name,
+        email,
+        phone,
+        formattedDate, // <-- send UK date to confirmation page
+        time,
+        lines,
+        qtyTotal,
+        bundles,
+        remainder,
+        total: gbp(total),
         address: [...ADDRESS_LINES],
       };
       setSent(true);
@@ -894,7 +903,7 @@ function Modal({ onClose, title, children }:{ onClose:()=>void; title:string; ch
 }
 
 function ConfirmationPage({ brand, confirmation, onReset }:{ brand:string; confirmation:any; onReset:()=>void; }) {
-  const { orderId, name, date, time, lines, qtyTotal, bundles, remainder, total, address } = confirmation;
+  const { orderId, name, formattedDate, time, lines, qtyTotal, bundles, remainder, total, address } = confirmation;
   return (
     <main className="min-h-screen bg-gradient-to-b from-white to-slate-50 text-slate-800">
       <header className="border-b border-slate-200 bg-white">
