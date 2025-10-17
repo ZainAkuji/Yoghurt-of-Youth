@@ -30,14 +30,6 @@ const cn = (...a: (string | false | null | undefined)[]) => a.filter(Boolean).jo
 
 function todayISO() { const d = new Date(); d.setHours(0,0,0,0); return d.toISOString().slice(0,10); }
 
-function* timeSlots(startHour: number, endHour: number, intervalMin: number) {
-  for (let h = startHour; h <= endHour; h++) {
-    for (let m = 0; m < 60; m += intervalMin) {
-      yield `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-    }
-  }
-}
-
 // How many minutes from "now" the earliest pickup can be
 const LEAD_TIME_MIN = 30;
 
