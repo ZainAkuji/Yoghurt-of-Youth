@@ -143,9 +143,6 @@ function AboutSection() {
         <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
           About Yoghurt of Youth
         </h2>
-        <h3 className="mt-1 text-lg md:text-xl font-medium text-slate-700">
-          Cultures with Purpose
-        </h3>
 
         <p className="mt-4 text-slate-700">
           Each of our yoghurts is efficiently fermented with live{" "}
@@ -184,14 +181,14 @@ function AboutSection() {
         <h3 className="mt-8 text-xl font-semibold text-slate-900">
           Why Gut Health Matters
         </h3>
-        <p className="mt-3 text-slate-700 text-sm leading-relaxed">
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
           Modern research consistently links gut balance to nearly every aspect
           of wellbeing. Scientific studies suggest that a well-functioning
           microbiome influences:
         </p>
 
-        <div className="mt-4 text-sm text-slate-700 leading-relaxed">
-          <ul className="list-disc list-inside space-y-2">
+        <div className="mt-3 text-sm text-slate-700 leading-relaxed">
+          <ul className="list-disc list-inside space-y-1">
             <li><strong>General wellbeing &amp; energy</strong> – balanced digestion and reduced bloating promote comfort and nutrient absorption.</li>
             <li><strong>IBS &amp; IBD</strong> – dysbiosis and intestinal inflammation are central to these conditions; balanced flora can help stabilise the gut environment.</li>
             <li><strong>Nutrient deficiencies</strong> – microbial imbalances can impair absorption of iron, B-vitamins, and magnesium.</li>
@@ -207,7 +204,7 @@ function AboutSection() {
           </ul>
         </div>
 
-        <p className="mt-4 text-slate-700 text-sm leading-relaxed">
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
           Restoring microbial balance can therefore ripple through every system
           of the body.
         </p>
@@ -215,12 +212,12 @@ function AboutSection() {
         <h3 className="mt-8 text-xl font-semibold text-slate-900">
           The Power of <em>Lactobacillus reuteri</em>
         </h3>
-        <p className="mt-3 text-slate-700 text-sm leading-relaxed">
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
           When harmful microbes dominate the gut or stomach, inflammation and
           discomfort follow. Our two <em>L. reuteri</em> strains address this at
           the source:
         </p>
-        <ul className="mt-2 list-disc list-inside text-sm text-slate-700 space-y-1">
+        <ul className="mt-3 list-disc list-inside text-sm text-slate-700 space-y-1">
           <li>
             <strong>DSM 17648 (“PRCXN”)</strong> selectively binds{" "}
             <em>H. pylori</em>, helping to remove it naturally from the stomach.
@@ -231,12 +228,12 @@ function AboutSection() {
             promoting equilibrium and resilience in the gut ecosystem.
           </li>
         </ul>
-        <p className="mt-4 text-slate-700 text-sm leading-relaxed">
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
           Together they create a foundation for genuine digestive harmony and
           whole-body wellbeing.
         </p>
 
-        <p className="mt-4 text-slate-700 text-sm leading-relaxed">
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
           Pair with NAC for considerable extra support.
         </p>
 
@@ -247,7 +244,7 @@ function AboutSection() {
           Independent research exploring the strains we use:
         </p>
 
-        <ol className="list-decimal pl-5 mt-3 space-y-2 text-sm text-slate-700">
+        <ol className="list-decimal pl-5 mt-3 space-y-1 text-sm text-slate-700">
           <li>
             <span className="font-medium">Holz et&nbsp;al., 2015 (Beneficial Microbes):</span>
             &nbsp;<em>L. reuteri</em> DSM&nbsp;17648 reduced <em>H. pylori</em> colonisation in humans.
@@ -272,12 +269,12 @@ function AboutSection() {
         <h3 className="mt-8 text-xl font-semibold text-slate-900">
           Instructions
         </h3>
-        <p className="mt-3 text-slate-700 text-sm leading-relaxed">
-          It is advised to do the following
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          It is advised to do the following:
         </p>
 
-        <div className="mt-4 text-sm text-slate-700 leading-relaxed">
-          <ul className="list-disc list-inside space-y-2">
+        <div className="mt-3 text-sm text-slate-700 leading-relaxed">
+          <ul className="list-disc list-inside space-y-1">
             <li>Shake well before use.</li>
             <li>Keep refrigerated.</li>
             <li>Consume within 3 days of opening.</li>
@@ -285,10 +282,10 @@ function AboutSection() {
         </div>
 
         <h3 className="mt-8 text-xl font-semibold text-slate-900">Contact</h3>
-        <p className="mt-3 text-slate-700 text-sm leading-relaxed">
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
           For personalised support or product advice, get in touch below.
         </p>
-        <div className="mt-5 space-y-2 text-slate-700 text-sm">
+        <div className="mt-3 space-y-1 text-slate-700 text-sm">
           <p>
             📧 Email:{" "}
             <a href="mailto:support@yoghurtofyouth.co.uk" className="underline hover:text-slate-900">
