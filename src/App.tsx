@@ -65,9 +65,14 @@ function timeSlotsForDate(dateISO: string) {
   });
 }
 
-toHTMLFromSimpleMarkdown(s: string) {
-  const escaped = s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\\"/g,"&quot;").replace(/'/g,"&#39;");
-  return escaped.replace(/\*([^*]+)\*/g,"<em>$1</em>");
+function toHTMLFromSimpleMarkdown(s) {
+  const escaped = s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+  return escaped.replace(/\*([^*]+)\*/g, "<em>$1</em>");
 }
 
 function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
