@@ -269,14 +269,7 @@ function AboutSection() {
           intended to support natural gut balance as part of a healthy lifestyle.
         </p>
 
-        <h3 className="mt-8 text-xl font-semibold text-slate-900">Instructions &amp; Storage</h3>
-        <p className="mt-3 text-slate-700 text-sm leading-relaxed">
-          <li>Shake well before use.</li>
-          <li>Keep refrigerated.</li>
-          <li>Consume within 3 days of opening.</li>
-        </p>
-
-        <h3 className="mt-8 text-xl font-semibold text-slate-900">Instructions &amp; Storage</h3>
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">Instructions</h3>
         <p className="mt-3 text-slate-700 text-sm leading-relaxed">
           <li>Shake well before use.</li>
           <li>Keep refrigerated.</li>
