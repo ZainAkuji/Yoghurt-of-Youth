@@ -329,12 +329,7 @@ export default function App(){
   const clear = ()=> setCart({});
 
   if (confirmation) {
-    return (
-    <>
-      <Header brand={BRAND} itemsCount={0} openCart={() => {}} />
-      <OrderConfirmation details={payload} onBack={reset} />
-      <Footer brand={BRAND} />
-    </>
+    return <ConfirmationPage brand={BRAND} confirmation={confirmation} onReset={()=>{ setConfirmation(null); }} />;
   }
 
   return (
@@ -907,53 +902,120 @@ function Modal({ onClose, title, children }:{ onClose:()=>void; title:string; ch
   );
 }
 
-function ConfirmationPage({ brand, confirmation, onReset }:{ brand:string; confirmation:any; onReset:()=>void; }) {
-  const { orderId, name, formattedDate, time, lines, qtyTotal, bundles, remainder, total, address } = confirmation;
+function ConfirmationPage({
+  brand,
+  confirmation,
+  onReset,
+}: {
+  brand: string;
+  confirmation: any;
+  onReset: () => void;
+}) {
+  const {
+    orderId,
+    name,
+    formattedDate, // dd/mm/yyyy (from ReserveModal payload)
+    time,
+    lines,
+    qtyTotal,
+    bundles,
+    remainder,
+    total,
+    address,
+  } = confirmation;
+
+  // Scroll to top when confirmation mounts (so header shows correctly)
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+  }, []);
+
+  // Return to shop and scroll to #shop after resetting
+  function handleBackToShop() {
+    onReset();
+    requestAnimationFrame(() => {
+      const el = document.querySelector("#shop");
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-slate-50 text-slate-800">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
-          <Logo brand={brand} />
-          <a href="#shop" onClick={onReset} className="text-sm underline">Back to shop</a>
-        </div>
-      </header>
+    <>
+      {/* Reuse the site header (skyline + shrink on scroll).
+          Basket is disabled on this view, so pass 0 and a no-op. */}
+      <Header brand={brand} itemsCount={0} openCart={() => {}} />
 
-      <section className="mx-auto max-w-3xl px-4 py-10">
-        <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6">
-          <h1 className="text-2xl font-bold">Order confirmed</h1>
-          <p className="mt-1 text-slate-600">Thanks, {name}! Your reservation has been received.</p>
+      <main className="min-h-screen bg-gradient-to-b from-white to-slate-50 text-slate-800">
+        <section className="mx-auto max-w-3xl px-4 py-10">
+          <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6">
+            <h1 className="text-2xl font-bold">Order confirmed</h1>
+            <p className="mt-1 text-slate-600">
+              Thanks, {name}! Your reservation has been received and a confirmation email has been sent.
+            </p>
 
-          <div className="mt-4 grid gap-2 text-sm">
-            <div><span className="font-semibold">Order ID:</span> {orderId}</div>
-            <div><span className="font-semibold">Pickup:</span> {time} on {formattedDate}</div>
-            <div><span className="font-semibold">Bottles:</span> {qtyTotal} (bundles {bundles} · remainder {remainder})</div>
-            <div><span className="font-semibold">Total due at collection:</span> {total}</div>
+            <div className="mt-4 grid gap-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-slate-500">Order ID</span>
+                <span className="font-medium">{orderId}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Pickup</span>
+                <span className="font-medium">
+                  {time} on {formattedDate}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Bottles</span>
+                <span className="font-medium">
+                  {qtyTotal} (bundles {bundles} · remainder {remainder})
+                </span>
+              </div>
+              <div className="flex justify-between border-t pt-2 mt-2">
+                <span className="font-semibold">Total due at collection</span>
+                <span className="font-semibold">{total}</span>
+              </div>
+            </div>
+
+            <div className="mt-5">
+              <div className="font-semibold mb-1">Items</div>
+              <ul className="list-disc pl-5 text-sm text-slate-700">
+                {lines.map((l: string, i: number) => (
+                  <li key={i}>{l}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="mt-5 text-sm">
+              <div className="font-semibold">Collect at</div>
+              <address className="not-italic text-slate-700">
+                {address.map((l: string, i: number) => (
+                  <div key={i}>{l}</div>
+                ))}
+              </address>
+              <p className="mt-2 text-slate-600">Payment on collection (cash or card).</p>
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-2">
+              <button
+                onClick={handleBackToShop}
+                className="rounded-2xl bg-slate-900 text-white px-5 py-3 text-sm font-semibold hover:bg-slate-800"
+              >
+                Place another order
+              </button>
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${MAPS_QUERY}`}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-2xl border border-slate-300 px-5 py-3 text-sm font-semibold hover:bg-white"
+              >
+                Open in Google Maps
+              </a>
+            </div>
           </div>
-
-          <div className="mt-5">
-            <div className="font-semibold mb-1">Items</div>
-            <ul className="list-disc pl-5 text-sm text-slate-700">
-              {lines.map((l: string, i: number) => <li key={i}>{l}</li>)}
-            </ul>
-          </div>
-
-          <div className="mt-5 text-sm">
-            <div className="font-semibold">Collect at</div>
-            <address className="not-italic text-slate-700">
-              {address.map((l: string, i: number) => <div key={i}>{l}</div>)}
-            </address>
-            <p className="mt-2 text-slate-600">Payment on collection (cash or card).</p>
-          </div>
-
-          <div className="mt-6 flex gap-2">
-            <button onClick={onReset} className="rounded-2xl bg-slate-900 text-white px-5 py-3 text-sm font-semibold hover:bg-slate-800">Place another order</button>
-            <a href={`https://www.google.com/maps/search/?api=1&query=${MAPS_QUERY}`} target="_blank" rel="noreferrer" className="rounded-2xl border border-slate-300 px-5 py-3 text-sm font-semibold hover:bg-white">Open in Google Maps</a>
-          </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
       <Footer brand={brand} />
-    </main>
+    </>
   );
 }
 
