@@ -646,7 +646,14 @@ function todayLocalISO() {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
-  return `${day}-${m}-${y}`;
+  return `${y}-${m}-${day}`;
+}
+
+function formatDateUK(iso: string) {
+  // iso expected like "2025-03-07"
+  if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso || "";
+  const [y, m, d] = iso.split("-");
+  return `${d}/${m}/${y}`; // dd-mm-yyyy
 }
 
 // Round current time up to next 30-minute boundary
@@ -700,6 +707,7 @@ function ReserveModal({ onClose, cart, totals, onConfirmed }: {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [date, setDate] = useState(todayLocalISO());
+  const formattedDate = formatDateUK(date);
 
   const initialTime = (() => {
     const opts = timeSlotsForDate(todayLocalISO());
@@ -717,7 +725,7 @@ function ReserveModal({ onClose, cart, totals, onConfirmed }: {
     return `${p?.name} × ${qty}`;
   });
 
-  const subjectBase = `${BRAND} reservation – ${date} ${time} – ${name}`;
+  const subjectBase = `${BRAND} reservation – ${formattedDate} ${time} – ${name}`;
   const valid = name && email && phone && qtyTotal > 0 && date && time;
 
   async function sendEmail() {
@@ -764,7 +772,7 @@ function ReserveModal({ onClose, cart, totals, onConfirmed }: {
           customer_name: name,
           customer_email: email,
           customer_phone: phone,
-          pickup_date: date,
+          pickup_date: formattedDate,
           pickup_time: time,
           order_lines: lines.join("\\n"),
           bottles: qtyTotal,
@@ -903,7 +911,7 @@ function ConfirmationPage({ brand, confirmation, onReset }:{ brand:string; confi
 
           <div className="mt-4 grid gap-2 text-sm">
             <div><span className="font-semibold">Order ID:</span> {orderId}</div>
-            <div><span className="font-semibold">Pickup:</span> {date} at {time}</div>
+            <div><span className="font-semibold">Pickup:</span> {time} on {formattedDate}</div>
             <div><span className="font-semibold">Bottles:</span> {qtyTotal} (bundles {bundles} · remainder {remainder})</div>
             <div><span className="font-semibold">Total due at collection:</span> {total}</div>
           </div>
