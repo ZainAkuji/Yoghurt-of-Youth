@@ -245,7 +245,7 @@ function AboutSection() {
         </div>
 
         <p className="mt-2 text-slate-700 text-sm leading-relaxed">
-          The SPCTRL yoghurt can be used to make a powerful, natural mask that takes advantage of its antibacterial and antifungal properties topically. To do that, follow these steps:
+          The SPCTRL yoghurt can be used to make a powerful, natural <strong>mask</strong> that takes advantage of its antibacterial and antifungal properties topically. To do that, follow these steps:
         </p>
 
         <div className="mt-2 text-sm text-slate-700 leading-relaxed">
@@ -266,7 +266,7 @@ function AboutSection() {
         </p>
 
         <p className="mt-2 text-slate-700 text-sm leading-relaxed">
-          The SPCTRL yoghurt can also be used to make a powerful, natural mouthwash that similarly takes advantage of its antibacterial and antifungal properties except now orally. To do that, follow these steps:
+          The SPCTRL yoghurt can also be used to make a powerful, natural <strong>mouthwash</strong> that similarly takes advantage of its antibacterial and antifungal properties except now orally. To do that, follow these steps:
         </p>
 
         <div className="mt-2 text-sm text-slate-700 leading-relaxed">
@@ -646,7 +646,7 @@ function todayLocalISO() {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
+  return `${day}-${m}-${y}`;
 }
 
 // Round current time up to next 30-minute boundary
