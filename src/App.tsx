@@ -789,7 +789,7 @@ function ReserveModal({ onClose, cart, totals, onConfirmed }: {
       );
 
       const payload = {
-        orderId, name, email, phone, date, time, lines,
+        orderId, name, email, phone, formattedDate, time, lines,
         qtyTotal, bundles, remainder, total: gbp(total),
         address: [...ADDRESS_LINES],
       };
