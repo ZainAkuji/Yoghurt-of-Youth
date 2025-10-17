@@ -28,43 +28,6 @@ const EMAILJS_PUBLIC_KEY = "-Ko2GYKHx1EYIJgM5";
 const gbp = (n: number) => new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(n);
 const cn = (...a: (string | false | null | undefined)[]) => a.filter(Boolean).join(" ");
 
-function todayISO() { const d = new Date(); d.setHours(0,0,0,0); return d.toISOString().slice(0,10); }
-
-// Minutes from now before earliest pickup
-const LEAD_TIME_MIN = 30;
-
-// Return only valid time slots for a given date (future-only when date === today)
-function timeSlotsForDate(dateISO: string) {
-  const slots: string[] = [];
-
-  // Build all slots from opening to closing hours
-  for (let h = PICKUP_START_HOUR; h <= PICKUP_END_HOUR; h++) {
-    for (let m = 0; m < 60; m += PICKUP_INTERVAL_MIN) {
-      slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
-    }
-  }
-
-  const now = new Date();
-  const selected = new Date(`${dateISO}T00:00:00`);
-
-  const isToday =
-    now.getFullYear() === selected.getFullYear() &&
-    now.getMonth() === selected.getMonth() &&
-    now.getDate() === selected.getDate();
-
-  if (!isToday) return slots; // all slots valid if not today
-
-  // Exclude times in the past (including lead time)
-  const cutoff = new Date(now.getTime() + LEAD_TIME_MIN * 60_000);
-
-  return slots.filter((hhmm) => {
-    const [h, m] = hhmm.split(":").map((x) => parseInt(x, 10));
-    const slot = new Date(selected);
-    slot.setHours(h, m, 0, 0);
-    return slot >= cutoff;
-  });
-}
-
 function toHTMLFromSimpleMarkdown(s) {
   const escaped = s
     .replace(/&/g, "&amp;")
@@ -637,12 +600,54 @@ function Basket({ items, qtyTotal, bundles, remainder, total, savings, add, sub,
   );
 }
 
-function ReserveModal({
-  onClose,
-  cart,
-  totals,
-  onConfirmed,
-}: {
+// ---- helper functions ----
+function todayLocalISO() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+// Round current time up to next 30-minute boundary
+function roundUpToNextSlot(date: Date) {
+  const d = new Date(date);
+  d.setSeconds(0, 0);
+  const minutes = d.getMinutes();
+  const remainder = minutes % PICKUP_INTERVAL_MIN;
+  if (remainder !== 0) d.setMinutes(minutes + (PICKUP_INTERVAL_MIN - remainder));
+  return d;
+}
+
+// Build list of valid time slots (today excludes past/too-soon)
+function timeSlotsForDate(dateISO: string) {
+  const slots: string[] = [];
+  for (let h = PICKUP_START_HOUR; h <= PICKUP_END_HOUR; h++) {
+    for (let m = 0; m < 60; m += PICKUP_INTERVAL_MIN) {
+      slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
+    }
+  }
+
+  const now = new Date();
+  const selected = new Date(`${dateISO}T00:00:00`);
+  const isToday =
+    now.getFullYear() === selected.getFullYear() &&
+    now.getMonth() === selected.getMonth() &&
+    now.getDate() === selected.getDate();
+
+  if (!isToday) return slots;
+
+  const cutoff = roundUpToNextSlot(now);
+  return slots.filter((hhmm) => {
+    const [h, m] = hhmm.split(":").map((x) => parseInt(x, 10));
+    const slot = new Date(selected);
+    slot.setHours(h, m, 0, 0);
+    return slot >= cutoff;
+  });
+}
+
+// ---- main component ----
+function ReserveModal({ onClose, cart, totals, onConfirmed }: {
   onClose: () => void;
   cart: Record<string, number>;
   totals: any;
@@ -650,20 +655,22 @@ function ReserveModal({
 }) {
   const { qtyTotal, bundles, remainder, total } = totals;
 
+  // form state
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [date, setDate] = useState(todayLocalISO());
 
-  const [date, setDate] = useState(todayISO());
-
-  // Initialise time to the first valid slot for today (or a sensible default)
   const initialTime = (() => {
-    const options = timeSlotsForDate(todayISO());
-    return options[0] || "09:00";
+    const opts = timeSlotsForDate(todayLocalISO());
+    return opts[0] || "09:00";
   })();
   const [time, setTime] = useState(initialTime);
-
   const [note, setNote] = useState("");
+
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
 
   const lines = Object.entries(cart).map(([id, qty]) => {
     const p = PRODUCTS.find((p) => p.id === id);
@@ -671,10 +678,7 @@ function ReserveModal({
   });
 
   const subjectBase = `${BRAND} reservation – ${date} ${time} – ${name}`;
-  const valid = !!(name && email && phone && qtyTotal > 0 && date && time);
-  const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState("");
+  const valid = name && email && phone && qtyTotal > 0 && date && time;
 
   async function sendEmail() {
     if (!valid) {
@@ -682,16 +686,24 @@ function ReserveModal({
       return;
     }
 
-    // Final guard: selected pickup must be at/after (now + lead time)
-    const [hh, mm] = time.split(":").map(Number);
+    // extra validation: prevent yesterday / past times
+    const [hh, mm] = (time || "00:00").split(":").map(Number);
     const pickupAt = new Date(`${date}T00:00:00`);
-    pickupAt.setHours(hh, mm, 0, 0);
+    pickupAt.setHours(hh || 0, mm || 0, 0, 0);
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (pickupAt < today) {
+      setError("Please choose today or a future date.");
+      return;
+    }
     const now = new Date();
-    const cutoff = new Date(now.getTime() + LEAD_TIME_MIN * 60_000);
-
-    if (pickupAt < cutoff) {
-      setError(`Please choose a time at least ${LEAD_TIME_MIN} minutes from now.`);
+    const isSameDay =
+      now.getFullYear() === pickupAt.getFullYear() &&
+      now.getMonth() === pickupAt.getMonth() &&
+      now.getDate() === pickupAt.getDate();
+    if (isSameDay && pickupAt < roundUpToNextSlot(now)) {
+      setError("Please choose the next available half-hour slot or later.");
       return;
     }
 
@@ -714,7 +726,7 @@ function ReserveModal({
           customer_phone: phone,
           pickup_date: date,
           pickup_time: time,
-          order_lines: lines.join("\n"),
+          order_lines: lines.join("\\n"),
           bottles: qtyTotal,
           bundles,
           remainder,
@@ -729,17 +741,8 @@ function ReserveModal({
       );
 
       const payload = {
-        orderId,
-        name,
-        email,
-        phone,
-        date,
-        time,
-        lines,
-        qtyTotal,
-        bundles,
-        remainder,
-        total: gbp(total),
+        orderId, name, email, phone, date, time, lines,
+        qtyTotal, bundles, remainder, total: gbp(total),
         address: [...ADDRESS_LINES],
       };
       setSent(true);
@@ -754,89 +757,45 @@ function ReserveModal({
     }
   }
 
-  // Recompute valid times when date changes; pick the first available
-  function onDateChange(newISO: string) {
-    setDate(newISO);
-    const options = timeSlotsForDate(newISO);
-    setTime(options[0] || "");
-  }
-
-  const timeOptions = timeSlotsForDate(date);
-  const noSlotsToday = timeOptions.length === 0;
-
   return (
     <Modal onClose={onClose} title="Reserve & Collect">
       <p className="text-sm text-slate-600">
-        Fill in your details and choose a collection slot. You’ll receive an email confirmation, and you pay on collection (cash or card).
+        Fill in your details and choose a collection slot. You’ll receive an
+        email confirmation, and you pay on collection (cash or card).
       </p>
 
       <div className="mt-4 grid md:grid-cols-2 gap-4">
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          placeholder="Full name"
-          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"
-        />
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          type="email"
-          placeholder="Email"
-          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"
-        />
-        <input
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          required
-          type="tel"
-          placeholder="Mobile number"
-          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"
-        />
-
-        {/* Date: block past days */}
+        <input value={name} onChange={e => setName(e.target.value)} required placeholder="Full name"
+          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"/>
+        <input value={email} onChange={e => setEmail(e.target.value)} required type="email" placeholder="Email"
+          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"/>
+        <input value={phone} onChange={e => setPhone(e.target.value)} required type="tel" placeholder="Mobile number"
+          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"/>
         <input
           value={date}
-          onChange={(e) => onDateChange(e.target.value)}
+          onChange={(e) => {
+            const newDate = e.target.value;
+            setDate(newDate);
+            const opts = timeSlotsForDate(newDate);
+            setTime(opts[0] || "");
+          }}
           required
           type="date"
-          min={todayISO()}
+          min={todayLocalISO()}
           className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"
         />
-
-        {/* Time: only future slots for today */}
-        <select
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
-          required
-          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"
-        >
-          {noSlotsToday ? (
-            <option value="" disabled>
-              No slots left today — please choose another date
-            </option>
-          ) : (
-            timeOptions.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))
-          )}
+        <select value={time} onChange={e => setTime(e.target.value)}
+          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300">
+          {timeSlotsForDate(date).map(t => <option key={t} value={t}>{t}</option>)}
         </select>
-
-        <input
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          placeholder="Order note (optional)"
-          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"
-        />
+        <input value={note} onChange={e => setNote(e.target.value)} placeholder="Order note (optional)"
+          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"/>
       </div>
 
       <div className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm">
         <div className="font-semibold mb-2">Summary</div>
         <div className="grid sm:grid-cols-2 gap-2">
-          <div>{lines.map((l, i) => <div key={i}>• {l}</div>)}</div>
+          <div>{lines.map((l,i)=><div key={i}>• {l}</div>)}</div>
           <div>
             <div>Bottles: {qtyTotal}</div>
             <div>Bundles: {bundles} × £10</div>
@@ -849,26 +808,21 @@ function ReserveModal({
       {error && <p className="mt-3 text-sm text-rose-700">{error}</p>}
 
       <div className="mt-5 flex flex-wrap gap-2">
-        <button
-          onClick={sendEmail}
-          className={cn(
-            "inline-flex rounded-2xl px-5 py-3 text-sm font-semibold",
-            valid ? "bg-slate-900 text-white hover:bg-slate-800" : "bg-slate-200 text-slate-500 cursor-not-allowed"
-          )}
-          disabled={!valid || sending}
-        >
+        <button onClick={sendEmail}
+          className={cn("inline-flex rounded-2xl px-5 py-3 text-sm font-semibold",
+            valid? "bg-slate-900 text-white hover:bg-slate-800":"bg-slate-200 text-slate-500 cursor-not-allowed")}
+          disabled={!valid || sending}>
           {sending ? "Sending…" : sent ? "Sent ✓" : "Confirm reservation"}
         </button>
-        <button
-          onClick={onClose}
-          className="inline-flex rounded-2xl border border-slate-300 px-5 py-3 text-sm font-semibold hover:bg-white"
-        >
+        <button onClick={onClose}
+          className="inline-flex rounded-2xl border border-slate-300 px-5 py-3 text-sm font-semibold hover:bg-white">
           Close
         </button>
       </div>
 
       <p className="mt-4 text-xs text-slate-500">
-        By reserving you agree to collect at the chosen time and pay on collection (cash or card). If you need to change your slot, please reply to the confirmation email.
+        By reserving you agree to collect at the chosen time and pay on collection (cash or card).
+        If you need to change your slot, please reply to the confirmation email.
       </p>
     </Modal>
   );
