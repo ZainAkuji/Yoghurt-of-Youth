@@ -329,7 +329,12 @@ export default function App(){
   const clear = ()=> setCart({});
 
   if (confirmation) {
-    return <ConfirmationPage brand={BRAND} confirmation={confirmation} onReset={()=>{ setConfirmation(null); }} />;
+    return (
+    <>
+      <Header brand={BRAND} itemsCount={0} openCart={() => {}} />
+      <OrderConfirmation details={payload} onBack={reset} />
+      <Footer brand={BRAND} />
+    </>
   }
 
   return (
