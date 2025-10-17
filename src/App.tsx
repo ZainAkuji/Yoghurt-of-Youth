@@ -197,7 +197,7 @@ function AboutSection() {
         </p>
 
         <p className="mt-2 text-slate-700 text-sm leading-relaxed">
-          Pair with NAC for considerable extra support.
+          Pair with <strong>NAC</strong> for considerable extra support.
         </p>
 
         <h3 className="mt-8 text-xl font-semibold text-slate-900">
