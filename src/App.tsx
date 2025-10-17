@@ -148,7 +148,7 @@ function AboutSection() {
         </h3>
 
         <p className="mt-4 text-slate-700">
-          Each of our yoghurts is crafted with live{" "}
+          Each of our yoghurts is efficiently fermented with live{" "}
           <em>Lactobacillus reuteri</em> strains that have been studied for
           their unique, health-supporting properties.
         </p>
@@ -179,11 +179,6 @@ function AboutSection() {
               the gut and is widely recognised for its excellent safety record.
             </p>
           </div>
-
-          <p className="text-slate-700 text-sm leading-relaxed">
-            Both cultures are fermented slowly at 37&nbsp;°C — body temperature
-            — to preserve their vitality and activity.
-          </p>
         </div>
 
         <h3 className="mt-8 text-xl font-semibold text-slate-900">
@@ -242,7 +237,7 @@ function AboutSection() {
         </p>
 
         <p className="mt-4 text-slate-700 text-sm leading-relaxed">
-          Pair with NAC for extra support. It makes a big difference.
+          Pair with NAC for considerable extra support.
         </p>
 
         <h3 className="mt-8 text-xl font-semibold text-slate-900">
@@ -274,18 +269,26 @@ function AboutSection() {
           intended to support natural gut balance as part of a healthy lifestyle.
         </p>
 
-        <h3 className="mt-8 text-xl font-semibold text-slate-900">Instructions</h3>
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">
+          Instructions
+        </h3>
         <p className="mt-3 text-slate-700 text-sm leading-relaxed">
-          <li>Shake well before use.</li>
-          <li>Keep refrigerated.</li>
-          <li>Consume within 3 days of opening.</li>
+          It is advised to do the following
         </p>
+
+        <div className="mt-4 text-sm text-slate-700 leading-relaxed">
+          <ul className="list-disc list-inside space-y-2">
+            <li>Shake well before use.</li>
+            <li>Keep refrigerated.</li>
+            <li>Consume within 3 days of opening.</li>
+          </ul>
+        </div>
 
         <h3 className="mt-8 text-xl font-semibold text-slate-900">Contact</h3>
         <p className="mt-3 text-slate-700 text-sm leading-relaxed">
           For personalised support or product advice, get in touch below.
         </p>
-        <div className="mt-5 space-y-3 text-slate-700 text-sm">
+        <div className="mt-5 space-y-2 text-slate-700 text-sm">
           <p>
             📧 Email:{" "}
             <a href="mailto:support@yoghurtofyouth.co.uk" className="underline hover:text-slate-900">
