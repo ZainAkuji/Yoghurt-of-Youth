@@ -150,7 +150,7 @@ function AboutSection() {
           microbiome influences:
         </p>
 
-        <div className="mt-3 text-sm text-slate-700 leading-relaxed">
+        <div className="mt-2 text-sm text-slate-700 leading-relaxed">
           <ul className="list-disc list-inside space-y-1">
             <li><strong>General wellbeing &amp; energy</strong> – balanced digestion and reduced bloating promote comfort and nutrient absorption.</li>
             <li><strong>IBS &amp; IBD</strong> – dysbiosis and intestinal inflammation are central to these conditions; balanced flora can help stabilise the gut environment.</li>
@@ -180,7 +180,7 @@ function AboutSection() {
           discomfort follow. Our two <em>L. reuteri</em> strains address this at
           the source:
         </p>
-        <ul className="mt-3 list-disc list-inside text-sm text-slate-700 space-y-1">
+        <ul className="mt-2 list-disc list-inside text-sm text-slate-700 space-y-1">
           <li>
             <strong>DSM 17648 (“PRCXN”)</strong> selectively binds{" "}
             <em>H. pylori</em>, helping to remove it naturally from the stomach.
@@ -207,7 +207,7 @@ function AboutSection() {
           Independent research exploring the strains we use:
         </p>
 
-        <ol className="list-decimal pl-5 mt-3 space-y-1 text-sm text-slate-700">
+        <ol className="list-decimal pl-5 mt-2 space-y-1 text-sm text-slate-700">
           <li>
             <span className="font-medium">Holz et&nbsp;al., 2015 (Beneficial Microbes):</span>
             &nbsp;<em>L. reuteri</em> DSM&nbsp;17648 reduced <em>H. pylori</em> colonisation in humans.
@@ -236,7 +236,7 @@ function AboutSection() {
           It is advised to do the following:
         </p>
 
-        <div className="mt-3 text-sm text-slate-700 leading-relaxed">
+        <div className="mt-2 text-sm text-slate-700 leading-relaxed">
           <ul className="list-disc list-inside space-y-1">
             <li>Shake well before use.</li>
             <li>Keep refrigerated.</li>
@@ -244,11 +244,51 @@ function AboutSection() {
           </ul>
         </div>
 
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          The SPCTRL yoghurt can be used to make a powerful, natural mask that takes advantage of its antibacterial and antifungal properties topically. To do that, follow these steps:
+        </p>
+
+        <div className="mt-2 text-sm text-slate-700 leading-relaxed">
+          <ul className="list-disc list-inside space-y-1">
+            <li>Add 1 tbsp of yoghurt into a cup.</li>
+            <li>Add 3 heaped tsp of cornflour into the cup.</li>
+            <li>Mix until the mixture is thick and sticky.</li>
+            <li>Apply a thick layer on the face or any skin that requires treating until the skin is concealed under the mask.</li>
+            <li>Leave on the skin for an hour.</li>
+            <li>Peel off the dried mask; it will be brittle so it should just crack off easily.</li>
+            <li>Leave the powdery residue on.</li>
+            <li>Avoid washing the are for as long as possible to maximise health benefit.</li>
+          </ul>
+        </div>
+
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          Do that everyday for as long as you may to see significant dermal health benefits.
+        </p>
+
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          The SPCTRL yoghurt can also be used to make a powerful, natural mouthwash that similarly takes advantage of its antibacterial and antifungal properties except now orally. To do that, follow these steps:
+        </p>
+
+        <div className="mt-2 text-sm text-slate-700 leading-relaxed">
+          <ul className="list-disc list-inside space-y-1">
+            <li>Add 1 tbsp of yoghurt into a cup.</li>
+            <li>Add 1/8 tsp of baking soda into the cup.</li>
+            <li>Mix until the mixture is foamy.</li>
+            <li>Rinse the mouth with this mixture for 2 minutes.</li>
+            <li>Spit the liquid out.</li>
+            <li>Avoid rinsing the mouth with water for at least 30 minutes.</li>
+          </ul>
+        </div>
+
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          Do that everyday for as long as you may to see significant oral health benefits.
+        </p>
+
         <h3 className="mt-8 text-xl font-semibold text-slate-900">Contact</h3>
         <p className="mt-2 text-slate-700 text-sm leading-relaxed">
           For personalised support or product advice, get in touch below.
         </p>
-        <div className="mt-3 space-y-1 text-slate-700 text-sm">
+        <div className="mt-2 space-y-2 text-slate-700 text-sm">
           <p>
             📧 Email:{" "}
             <a href="mailto:support@yoghurtofyouth.co.uk" className="underline hover:text-slate-900">
