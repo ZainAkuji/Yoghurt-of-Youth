@@ -30,12 +30,19 @@ const cn = (...a: (string | false | null | undefined)[]) => a.filter(Boolean).jo
 
 function todayISO() { const d = new Date(); d.setHours(0,0,0,0); return d.toISOString().slice(0,10); }
 
-// How many minutes from "now" the earliest pickup can be
+// Minutes from now before earliest pickup
 const LEAD_TIME_MIN = 30;
 
 // Return only valid time slots for a given date (future-only when date === today)
 function timeSlotsForDate(dateISO: string) {
-  const slots = timeSlotsArray(PICKUP_START_HOUR, PICKUP_END_HOUR, PICKUP_INTERVAL_MIN);
+  const slots: string[] = [];
+
+  // Build all slots from opening to closing hours
+  for (let h = PICKUP_START_HOUR; h <= PICKUP_END_HOUR; h++) {
+    for (let m = 0; m < 60; m += PICKUP_INTERVAL_MIN) {
+      slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
+    }
+  }
 
   const now = new Date();
   const selected = new Date(`${dateISO}T00:00:00`);
@@ -45,8 +52,9 @@ function timeSlotsForDate(dateISO: string) {
     now.getMonth() === selected.getMonth() &&
     now.getDate() === selected.getDate();
 
-  if (!isToday) return slots;
+  if (!isToday) return slots; // all slots valid if not today
 
+  // Exclude times in the past (including lead time)
   const cutoff = new Date(now.getTime() + LEAD_TIME_MIN * 60_000);
 
   return slots.filter((hhmm) => {
