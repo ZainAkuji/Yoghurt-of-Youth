@@ -354,7 +354,14 @@ export default function App(){
       
         {/* Optional dark overlay for logo contrast */}
         <div className="absolute inset-0 bg-black/25" />
-      
+
+        {/* Slogan (top-left corner) */}
+        <div className="absolute top-6 left-8 z-20">
+          <h1 className="text-white text-4xl md:text-6xl font-extrabold leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]">
+            It isn't hard to tell.
+          </h1>
+        </div>
+            
         {/* Logo overlay */}
         <div className="relative z-10 flex items-center justify-center h-full">
           <img
