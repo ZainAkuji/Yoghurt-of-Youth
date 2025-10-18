@@ -1046,7 +1046,7 @@ function Footer() {
           gap-3 sm:gap-4 md:gap-8
           px-3 sm:px-4 md:px-6
           items-center
-          text-center md:text-left
+          text-left md:text-left
           text-[10px] sm:text-xs md:text-sm
           leading-tight
           w-full
