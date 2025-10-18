@@ -197,7 +197,7 @@ function AboutSection() {
         </p>
 
         <p className="mt-2 text-slate-700 text-sm leading-relaxed">
-          Pair with <strong>NAC</strong> for considerable extra support.
+          Pair with <strong>NAC</strong> (N-acetyl cysteine) for considerable extra support.
         </p>
 
         <h3 className="mt-8 text-xl font-semibold text-slate-900">
@@ -356,23 +356,23 @@ export default function App(){
         <div className="absolute inset-0 bg-black/25" />
 
         {/* Slogan (top-left corner) */}
-        <div className="absolute top-6 left-8 z-20">
-          <h1 className="text-white text-4xl md:text-6xl font-mono font-bold leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]">
+        <div className="absolute top-3 left-4 sm:top-6 sm:left-8 z-20">
+          <h1 className="text-white font-mono font-bold text-xl sm:text-3xl md:text-5xl leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]">
             It isn't hard to tell.
           </h1>
         </div>
-            
+        
         {/* Logo overlay */}
         <div className="relative z-10 flex items-center justify-center h-full">
           <img
             src="/logo_inverted_transparent.png"
             alt="Yoghurt of Youth logo"
-            className="w-auto h-48 md:h-60 lg:h-72"
+            className="w-auto h-24 sm:h-36 md:h-56 lg:h-72 max-w-[88%] object-contain"
           />
         </div>
+
       </section>
-
-
+      
       {/* SHOP */}
       <section id="shop" className="scroll-mt-32 md:scroll-mt-24 mx-auto max-w-6xl px-4 py-8">
         <div className="flex items-end justify-between gap-4 mb-4">
