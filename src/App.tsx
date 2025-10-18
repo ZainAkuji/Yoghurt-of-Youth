@@ -357,7 +357,7 @@ export default function App(){
 
         {/* Slogan (top-left corner) */}
         <div className="absolute top-3 left-4 sm:top-6 sm:left-8 z-20">
-          <h1 className="text-white font-mono font-bold text-xl sm:text-3xl md:text-5xl leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]">
+          <h1 className="text-white font-mono font-bold text-xl sm:text-3xl md:text-6xl leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.5)]">
             It isn't hard to tell.
           </h1>
         </div>
