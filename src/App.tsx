@@ -1033,50 +1033,58 @@ function Footer() {
       style={{
         backgroundImage: "url('skyline_reflected.png')",
         backgroundPosition: "center 75%",
-        height: "8rem", // same as header height
+        height: "8rem", // same height as header (adjust if you like)
       }}
     >
-      {/* Overlay for contrast */}
-      <div className="absolute inset-0 bg-black/35"></div>
+      {/* Dark overlay for contrast */}
+      <div className="absolute inset-0 bg-black/35" />
 
       <div
         className="
           relative z-10 mx-auto max-w-6xl
           grid grid-cols-4
-          gap-2 sm:gap-4 md:gap-8
-          px-2 sm:px-4 md:px-6
-          items-center text-center md:text-left
-          text-[9px] sm:text-[10px] md:text-xs lg:text-sm
+          gap-3 sm:gap-4 md:gap-8
+          px-3 sm:px-4 md:px-6
+          items-center
+          text-center md:text-left
+          text-[10px] sm:text-xs md:text-sm
           leading-tight
+          w-full
         "
       >
         {/* Logo */}
-        <div className="flex justify-center md:justify-start">
+        <div className="flex justify-center md:justify-start min-w-0">
           <img
             src="logo_inverted_transparent.png"
             alt="Yoghurt of Youth Logo"
-            className="h-8 sm:h-10 md:h-12 lg:h-16 w-auto object-contain"
+            className="h-10 sm:h-12 md:h-16 w-auto object-contain"
           />
         </div>
 
-        {/* Rights */}
-        <div className="truncate">
-          <p>
-            © {new Date().getFullYear()} Yoghurt of Youth.<br className="hidden lg:block" />
+        {/* Rights (wraps instead of truncating) */}
+        <div className="min-w-0">
+          <p className="break-words">
+            © {new Date().getFullYear()} Yoghurt of Youth.
+            <br />
             All rights reserved.
           </p>
         </div>
 
-        {/* Address */}
-        <div className="truncate">
-          <address className="not-italic">
-            11 Billinge Avenue, Blackburn<br className="hidden lg:block" />
-            Lancashire, BB2 6SD
+        {/* Address – 4 lines */}
+        <div className="min-w-0">
+          <address className="not-italic leading-tight">
+            11 Billinge Avenue
+            <br />
+            Blackburn
+            <br />
+            Lancashire
+            <br />
+            BB2 6SD
           </address>
         </div>
 
         {/* Google Maps link */}
-        <div className="flex justify-center md:justify-end">
+        <div className="flex justify-center md:justify-end min-w-0">
           <a
             href="https://www.google.com/maps/search/?api=1&query=11+Billinge+Avenue,+Blackburn,+Lancashire,+BB2+6SD"
             target="_blank"
@@ -1085,10 +1093,10 @@ function Footer() {
               inline-block
               bg-white/10 hover:bg-white/20
               text-white
-              text-[9px] sm:text-[10px] md:text-xs lg:text-sm
-              px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2
+              px-3 md:px-4 py-1.5 md:py-2
               rounded-lg border border-white/20
               transition
+              whitespace-normal break-words
             "
           >
             Open in Google Maps
