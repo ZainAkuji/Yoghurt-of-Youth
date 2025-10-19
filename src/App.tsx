@@ -62,7 +62,12 @@ const GROUPED = [
   {
     key: "prcxn",
     title: "PRCXN",
-    blurb: <>Yoghurt cultured with <em>L. reuteri</em> DSM 17648.<br/>Targets <em>H. pylori</em>.<br/>Lactose-free available.</>,
+    blurb: <>Yoghurt cultured with <em>L. reuteri</em> DSM 17648.
+      <br/>Contains 1 trillion CFU.
+      <br/>Targets <em>H. pylori</em>.
+      <br/>Best paired with SPCTRL for full-spectrum microbial balance.
+      <br/>Lactose-free available.
+      <br/>250ml</>,
     img: "prcxn.png",
     variants: [
       { id: "PRCXN", label: "PRCXN" },
@@ -72,7 +77,12 @@ const GROUPED = [
   {
     key: "spctrl",
     title: "SPCTRL",
-    blurb: <>Yoghurt cultured with <em>L. reuteri</em> DSM 17938.<br/>Targets harmful microbes including <em>Candida</em>.<br/>Lactose-free available.</>,
+    blurb: <>Yoghurt cultured with <em>L. reuteri</em> DSM 17938.
+      <br/>Contains 1 trillion CFU.
+      <br/>Targets pathogens including <em>Candida</em>.
+      <br/>Best paired with PRCXN for full-spectrum microbial balance.
+      <br/>Lactose-free available.
+      <br/>250ml</>,
     img: "spctrl.png",
     variants: [
       { id: "SPCTRL", label: "SPCTRL" },
@@ -209,6 +219,28 @@ function AboutSection() {
           laying a foundation for lasting digestive harmony and whole-body wellbeing.
         </p>
 
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          Each bottle of <strong>Yoghurt of Youth</strong> contains 250&nbsp;ml,
+          delivering live counts on the order of <strong>one trillion CFU</strong> — a level consistent
+          with genuine biological effect. For best results, enjoy one serving on an empty stomach,
+          around <strong>60&nbsp;minutes before a meal</strong>, to allow the beneficial bacteria to reach
+          the gut unimpeded.
+        </p>
+        
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          During the first few days, some people notice mild digestive changes such as increased movement,
+          temporary bloating, or mild warmth in the stomach. These signs usually indicate that the
+          probiotics are <strong>actively displacing unwanted microbes</strong> and restoring balance.
+          Such effects are normal and typically pass within a short time.
+        </p>
+        
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          Everyone’s microbiome is unique — and so is their response.
+          If you experience stronger sensations or would like <strong>personalised guidance</strong>
+          on how to ease the transition, please reach out to us.
+          We’re happy to help you find the rhythm that suits your body best.
+        </p>
+
         {/* NAC adjunct info */}
         <h3 className="mt-8 text-xl font-semibold text-slate-900">
           Optional: NAC alongside your yoghurt
@@ -225,8 +257,19 @@ function AboutSection() {
           has been tested as an adjunct to standard eradication regimens. Results vary by protocol,
           but the biofilm mechanism is consistently described in the literature.<span className="text-slate-500">†</span>
         </p>
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          NAC is best taken on an empty stomach, around <strong>30 – 60 minutes before meals</strong>.
+          This timing allows it to reach the stomach mucosa before food buffers its effect.
+        </p>
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          Scientific studies exploring NAC for <em>H.&nbsp;pylori</em> biofilm disruption commonly use
+          daily amounts in the range of <strong>600 – 1200 mg</strong>, divided into one or two servings.
+          For example, many individuals take <strong>600 mg twice daily</strong> — once in the morning and once
+          in the late afternoon or evening — though exact routines can vary depending on tolerance
+          and professional guidance.
+        </p>
         <p className="mt-3 text-slate-500 text-xs leading-relaxed">
-          <em>Note:</em> NAC is a food-supplement ingredient and not a medicine. This information is educational only and
+          <em>Note:</em> NAC is a supplement and not a medicine. This information is educational only and
           not medical advice. If you are on medication (e.g., anticoagulants) or pregnant/breast-feeding, seek professional
           guidance before using NAC.
         </p>
@@ -294,8 +337,8 @@ function AboutSection() {
         <div className="mt-2 text-sm text-slate-700 leading-relaxed">
           <ul className="list-disc list-inside space-y-1">
             <li>Add 1 tbsp of yoghurt into a cup.</li>
-            <li>Add 3 heaped tsp of cornflour into the cup.</li>
-            <li>Mix until the mixture is thick and sticky.</li>
+            <li>Add 3 slightly heaped tsp of cornflour into the cup.</li>
+            <li>Mix until the mixture is thick and sticky (take care not to overdo).</li>
             <li>Apply a thick layer on the face or any skin that requires treating until the skin is concealed under the mask.</li>
             <li>Leave on the skin for an hour.</li>
             <li>Peel off the dried mask; it will be brittle so it should just crack off easily.</li>
@@ -316,7 +359,7 @@ function AboutSection() {
           <ul className="list-disc list-inside space-y-1">
             <li>Add 1 tbsp of yoghurt into a cup.</li>
             <li>Add 1/8 tsp of baking soda into the cup.</li>
-            <li>Mix until the mixture is foamy.</li>
+            <li>Mix until the mixture is slightly foamy.</li>
             <li>Rinse the mouth with this mixture for 2 minutes.</li>
             <li>Spit the liquid out.</li>
             <li>Avoid rinsing the mouth with water for at least 30 minutes.</li>
