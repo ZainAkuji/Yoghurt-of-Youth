@@ -210,20 +210,22 @@ function AboutSection() {
         </p>
 
         {/* NAC adjunct info */}
-        <h3 className="text-lg md:text-xl font-semibold text-slate-900">Optional: NAC alongside your yoghurt</h3>
-        <p className="mt-2 text-slate-700 text-sm md:text-base">
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">
+          Optional: NAC alongside your yoghurt
+        </h3>
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
           <strong>N-acetylcysteine (NAC)</strong> is a mucolytic antioxidant that can help
           <em> disrupt microbial biofilms</em> in the stomach — including those formed by
           <em> Helicobacter pylori</em>. By breaking disulfide bonds in the mucus layer and
           loosening biofilm structure, NAC may improve access for the body’s defenses and for
           antimicrobials where used.<span className="text-slate-500">†</span>
         </p>
-        <p className="mt-2 text-slate-700 text-sm md:text-base">
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
           Clinical studies and reviews have reported that NAC can destabilise <em>H. pylori</em> biofilms and
           has been tested as an adjunct to standard eradication regimens. Results vary by protocol,
           but the biofilm mechanism is consistently described in the literature.<span className="text-slate-500">†</span>
         </p>
-        <p className="mt-2 text-slate-600 text-xs md:text-sm">
+        <p className="mt-3 text-slate-500 text-xs leading-relaxed">
           <em>Note:</em> NAC is a food-supplement ingredient and not a medicine. This information is educational only and
           not medical advice. If you are on medication (e.g., anticoagulants) or pregnant/breast-feeding, seek professional
           guidance before using NAC.
@@ -252,7 +254,7 @@ function AboutSection() {
           </li>
           <li>
             <span className="font-medium">Cammarota et&nbsp;al., 2022 (World Journal of Gastroenterology):</span>
-            &nbsp;<strong>N-acetylcysteine (NAC)</strong> shown to disrupt <em>H.&nbsp;pylori</em> biofilms and enhance antimicrobial access by
+            &nbsp;N-acetylcysteine (NAC) shown to disrupt <em>H.&nbsp;pylori</em> biofilms and enhance antimicrobial access by
             cleaving disulfide bonds in the mucous layer.
           </li>
           <li>
