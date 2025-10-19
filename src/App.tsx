@@ -175,30 +175,60 @@ function AboutSection() {
         <h3 className="mt-8 text-xl font-semibold text-slate-900">
           The Power of <em>Lactobacillus reuteri</em>
         </h3>
+        
         <p className="mt-2 text-slate-700 text-sm leading-relaxed">
-          When harmful microbes dominate the gut or stomach, inflammation and
-          discomfort follow. Our two <em>L. reuteri</em> strains address this at
-          the source:
+          When harmful microbes dominate the gut or stomach, inflammation and discomfort follow.
+          Our two <em>L. reuteri</em> strains address this at the source — each through a complementary mechanism:
         </p>
+        
         <ul className="mt-2 list-disc list-inside text-sm text-slate-700 space-y-1">
           <li>
-            <strong>DSM 17648 (“PRCXN”)</strong> selectively binds{" "}
-            <em>H. pylori</em>, helping to remove it naturally from the stomach.
+            <strong>DSM&nbsp;17648 (“PRCXN”)</strong> selectively binds <em>Helicobacter pylori</em>
+            in the stomach, forming harmless complexes that are naturally cleared through digestion.
+            This physical binding reduces bacterial load and supports mucosal recovery.
           </li>
           <li>
-            <strong>DSM 17938 (“SPCTRL”)</strong> helps restrain a wide
-            range of opportunistic species — including <em>Candida</em> —
-            promoting equilibrium and resilience in the gut ecosystem.
+            <strong>DSM&nbsp;17938 (“SPCTRL”)</strong> promotes a balanced gut environment by
+            limiting the overgrowth of opportunistic species — including <em>Candida</em> —
+            while reinforcing a healthy microbial community along the intestinal tract.
           </li>
         </ul>
+        
         <p className="mt-2 text-slate-700 text-sm leading-relaxed">
-          Together they create a foundation for genuine digestive harmony and
-          whole-body wellbeing.
+          Used together — for example by alternating them daily or weekly —
+          <strong>PRCXN and SPCTRL act in synergy</strong>:
+          one targets <em>H.&nbsp;pylori</em> directly in the stomach, while the other restores microbial
+          diversity and suppresses residual pathogens downstream. This dual approach
+          helps reduce the microbial imbalance that allows <em>H.&nbsp;pylori</em> and similar organisms
+          to persist, supporting both gastric comfort and long-term gut stability.
+        </p>
+        
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          When both yoghurts are taken in rotation, they help create a more resilient digestive ecosystem —
+          one less prone to chronic irritation, reflux, bloating, and secondary infections —
+          laying a foundation for lasting digestive harmony and whole-body wellbeing.
         </p>
 
-        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
-          Pair with <strong>NAC</strong> (N-acetyl cysteine) for considerable extra support.
+        {/* NAC adjunct info */}
+        <h3 className="text-lg md:text-xl font-semibold text-slate-900">Optional: NAC alongside your yoghurt</h3>
+        <p className="mt-2 text-slate-700 text-sm md:text-base">
+          <strong>N-acetylcysteine (NAC)</strong> is a mucolytic antioxidant that can help
+          <em> disrupt microbial biofilms</em> in the stomach — including those formed by
+          <em> Helicobacter pylori</em>. By breaking disulfide bonds in the mucus layer and
+          loosening biofilm structure, NAC may improve access for the body’s defenses and for
+          antimicrobials where used.<span className="text-slate-500">†</span>
         </p>
+        <p className="mt-2 text-slate-700 text-sm md:text-base">
+          Clinical studies and reviews have reported that NAC can destabilise <em>H. pylori</em> biofilms and
+          has been tested as an adjunct to standard eradication regimens. Results vary by protocol,
+          but the biofilm mechanism is consistently described in the literature.<span className="text-slate-500">†</span>
+        </p>
+        <p className="mt-2 text-slate-600 text-xs md:text-sm">
+          <em>Note:</em> NAC is a food-supplement ingredient and not a medicine. This information is educational only and
+          not medical advice. If you are on medication (e.g., anticoagulants) or pregnant/breast-feeding, seek professional
+          guidance before using NAC.
+        </p>
+
 
         <h3 className="mt-8 text-xl font-semibold text-slate-900">
           Scientific Studies
@@ -220,12 +250,23 @@ function AboutSection() {
             <span className="font-medium">Savino et&nbsp;al., 2020 (BMC Gastroenterology):</span>
             &nbsp;Reviews on <em>L. reuteri</em> and microbial balance.
           </li>
+          <li>
+            <span className="font-medium">Cammarota et&nbsp;al., 2022 (World Journal of Gastroenterology):</span>
+            &nbsp;<strong>N-acetylcysteine (NAC)</strong> shown to disrupt <em>H.&nbsp;pylori</em> biofilms and enhance antimicrobial access by
+            cleaving disulfide bonds in the mucous layer.
+          </li>
+          <li>
+            <span className="font-medium">Su et&nbsp;al., 2023 (Frontiers in Microbiology):</span>
+            &nbsp;Review describing how combining probiotic strains with complementary mechanisms
+            enhances suppression of <em>H.&nbsp;pylori</em> and supports restoration of healthy microbiota.
+          </li>
         </ol>
         
         <p className="mt-3 text-slate-500 text-xs leading-relaxed">
           Disclaimer: This information summarises findings from independent scientific
           research on the bacterial strains used. It is provided for educational
-          purposes and is not medical advice. Our products are fermented foods
+          purposes and is not medical advice. Original publications available via 
+          PubMed and other open scientific databases. Our products are fermented foods
           intended to support natural gut balance as part of a healthy lifestyle.
         </p>
 
