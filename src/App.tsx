@@ -67,7 +67,7 @@ const GROUPED = [
       <br/>Targets <em>H. pylori</em>.
       <br/>Best paired with SPCTRL for full-spectrum microbial balance.
       <br/>Lactose-free available.
-      <br/>250ml</>,
+      <br/>250ml.</>,
     img: "prcxn.png",
     variants: [
       { id: "PRCXN", label: "PRCXN" },
@@ -82,7 +82,7 @@ const GROUPED = [
       <br/>Targets pathogens including <em>Candida</em>.
       <br/>Best paired with PRCXN for full-spectrum microbial balance.
       <br/>Lactose-free available.
-      <br/>250ml</>,
+      <br/>250ml.</>,
     img: "spctrl.png",
     variants: [
       { id: "SPCTRL", label: "SPCTRL" },
@@ -220,7 +220,7 @@ function AboutSection() {
         </p>
 
         <p className="mt-2 text-slate-700 text-sm leading-relaxed">
-          Each bottle of <strong>Yoghurt of Youth</strong> contains 250&nbsp;ml,
+          Each bottle of yoghurt contains 250&nbsp;ml,
           delivering live counts on the order of <strong>one trillion CFU</strong> — a level consistent
           with genuine biological effect. For best results, enjoy one serving on an empty stomach,
           around <strong>60&nbsp;minutes before a meal</strong>, to allow the beneficial bacteria to reach
