@@ -228,16 +228,17 @@ function AboutSection() {
         </p>
         
         <p className="mt-2 text-slate-700 text-sm leading-relaxed">
-          During the first few days, some people notice mild digestive changes such as increased movement,
+          During the first few days, some people may notice mild digestive upsets such as increased movement,
           temporary bloating, or mild warmth in the stomach. These signs usually indicate that the
           probiotics are <strong>actively displacing unwanted microbes</strong> and restoring balance.
-          Such effects are normal and typically pass within a short time.
+          Such effects are normal and typically fade early on, with health benefits gradually appearing
+          over a longer time frame so long as the yoghurt is consistently taken.
         </p>
         
         <p className="mt-2 text-slate-700 text-sm leading-relaxed">
           Everyone’s microbiome is unique — and so is their response.
-          If you experience stronger sensations or would like <strong>personalised guidance</strong>
-          on how to ease the transition, please reach out to us.
+          If you experience stronger sensations, please try the <strong>lactose-free</strong> options.
+          If you would like personalised guidance on how to ease the transition, please reach out to us.
           We’re happy to help you find the rhythm that suits your body best.
         </p>
 
@@ -269,7 +270,7 @@ function AboutSection() {
           and professional guidance.
         </p>
         <p className="mt-3 text-slate-500 text-xs leading-relaxed">
-          <em>Note:</em> NAC is a supplement and not a medicine. This information is educational only and
+          Note: NAC is a supplement and not a medicine. This information is educational only and
           not medical advice. If you are on medication (e.g., anticoagulants) or pregnant/breast-feeding, seek professional
           guidance before using NAC.
         </p>
