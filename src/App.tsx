@@ -1110,7 +1110,7 @@ function Footer() {
       <div
         className="
           relative z-10 mx-auto max-w-6xl
-          grid grid-cols-5
+          grid grid-cols-4
           gap-3 sm:gap-4 md:gap-8
           px-3 sm:px-4 md:px-6
           items-center
@@ -1136,19 +1136,6 @@ function Footer() {
             <br />
             All rights reserved.
           </p>
-        </div>
-
-        {/* Address – 4 lines */}
-        <div className="min-w-0">
-          <address className="not-italic leading-tight">
-            11 Billinge Avenue
-            <br />
-            Blackburn
-            <br />
-            Lancashire
-            <br />
-            BB2 6SD
-          </address>
         </div>
 
         {/* Social Media */}
