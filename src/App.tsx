@@ -352,25 +352,6 @@ function AboutSection() {
           Do that everyday for as long as you may to see significant dermal health benefits.
         </p>
 
-        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
-          The SPCTRL yoghurt can also be used to make a powerful, natural <strong>mouthwash</strong> that similarly takes advantage of its antibacterial and antifungal properties except now orally. To do that, follow these steps:
-        </p>
-
-        <div className="mt-2 text-sm text-slate-700 leading-relaxed">
-          <ul className="list-disc list-inside space-y-1">
-            <li>Add 1 tbsp of yoghurt into a cup.</li>
-            <li>Add 1/8 tsp of baking soda into the cup.</li>
-            <li>Mix until the mixture is slightly foamy.</li>
-            <li>Rinse the mouth with this mixture for 2 minutes.</li>
-            <li>Spit the liquid out.</li>
-            <li>Avoid rinsing the mouth with water for at least 30 minutes.</li>
-          </ul>
-        </div>
-
-        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
-          Do that everyday for as long as you may to see significant oral health benefits.
-        </p>
-
         <h3 className="mt-8 text-xl font-semibold text-slate-900">Contact</h3>
         <p className="mt-2 text-slate-700 text-sm leading-relaxed">
           For personalised support or product advice, get in touch below.
