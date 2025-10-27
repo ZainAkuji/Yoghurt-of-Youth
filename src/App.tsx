@@ -1110,7 +1110,7 @@ function Footer() {
       <div
         className="
           relative z-10 mx-auto max-w-6xl
-          grid grid-cols-4
+          grid grid-cols-5
           gap-3 sm:gap-4 md:gap-8
           px-3 sm:px-4 md:px-6
           items-center
@@ -1151,23 +1151,34 @@ function Footer() {
           </address>
         </div>
 
+        {/* Social Media */}
+        <div className="flex justify-center md:justify-center gap-4">
+          {/* Instagram */}
+          <a
+            href="https://www.instagram.com/yoghurtofyouth?igsh=MW1pdzg3amU4NGtvcQ=="
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img
+              src="instagram_icon.png"
+              alt="Instagram"
+              className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 opacity-90 hover:opacity-100 transition"
+            />
+          </a>
+        </div>
+
         {/* Google Maps link */}
-        <div className="flex justify-center md:justify-end min-w-0">
+        <div className="flex justify-center md:justify-end">
           <a
             href="https://www.google.com/maps/search/?api=1&query=11+Billinge+Avenue,+Blackburn,+Lancashire,+BB2+6SD"
             target="_blank"
             rel="noreferrer"
-            className="
-              inline-block
-              bg-white/10 hover:bg-white/20
-              text-white
-              px-3 md:px-4 py-1.5 md:py-2
-              rounded-lg border border-white/20
-              transition
-              whitespace-normal break-words
-            "
           >
-            Open in Google Maps
+            <img
+              src="maps_icon.png"
+              alt="Google Maps"
+              className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 opacity-90 hover:opacity-100 transition"
+            />
           </a>
         </div>
       </div>
