@@ -1110,7 +1110,7 @@ function Footer() {
       <div
         className="
           relative z-10 mx-auto max-w-6xl
-          grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5
+          grid grid-cols-5
           gap-3 sm:gap-4 md:gap-8
           px-3 sm:px-4 md:px-6
           items-center
