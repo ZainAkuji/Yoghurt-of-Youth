@@ -486,9 +486,22 @@ export default function App(){
                       <p className="text-xs uppercase tracking-[0.2em] text-white/70 mb-1">
                         {idx === 0 ? "Targeted" : "Broad-acting"}
                       </p>
-                      <h3 className="text-3xl md:text-4xl font-bold text-white drop-shadow">
-                        {g.title}
-                      </h3>
+                      {g.key === "prcxn" ? (
+                        <img
+                          src="/prcxn_logo.png"
+                          alt="PRCXN"
+                          className="h-20 md:h-28 w-auto drop-shadow-lg"
+                        />
+                      ) : g.key === "spctrl" ? (
+                        <img
+                          src="/spctrl_logo.png"
+                          alt="SPCTRL"
+                          className="h-20 md:h-28 w-auto drop-shadow-lg"
+                        />
+                      ) : (
+                        <h3 className="text-3xl font-bold text-white drop-shadow-md">{g.title}</h3>
+                      )}
+
                       <p className="mt-2 text-sm md:text-base text-white/90 max-w-md leading-relaxed">
                         {g.blurb}
                       </p>
