@@ -483,7 +483,7 @@ export default function App(){
                   <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-8">
                     {/* title + blurb */}
                     <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-white/70 mb-1">
+                      <p className="text-xs uppercase tracking-[0.2em] text-white mb-1">
                         {idx === 0 ? "Targeted" : "Broad-acting"}
                       </p>
                       {g.key === "prcxn" ? (
@@ -502,7 +502,7 @@ export default function App(){
                         <h3 className="text-3xl font-bold text-white drop-shadow-md">{g.title}</h3>
                       )}
 
-                      <p className="mt-2 text-sm md:text-base text-white/90 max-w-md leading-relaxed">
+                      <p className="mt-2 text-sm md:text-base text-white max-w-md leading-relaxed">
                         {g.blurb}
                       </p>
                     </div>
@@ -548,7 +548,7 @@ export default function App(){
                               </button>
       
                               {/* label */}
-                              <span className="ml-1 text-xs md:text-sm text-white/90">
+                              <span className="ml-1 text-xs md:text-sm text-white">
                                 {v.label}
                               </span>
                             </div>
@@ -556,7 +556,7 @@ export default function App(){
                         })}
                       </div>
       
-                      <div className="text-xs text-white/80">
+                      <div className="text-xs text-white">
                         £2 per bottle · <strong>7 for £10</strong> (mix &amp; match)
                         {groupTotal > 0 && (
                           <span className="ml-2 inline-block bg-white/10 px-2 py-0.5 rounded">
