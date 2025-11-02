@@ -442,22 +442,7 @@ export default function App(){
       </section>
       
       {/* SHOP */}
-      <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full">
-        {/* top bar (kept constrained) */}
-        <div className="mx-auto max-w-6xl px-4 pt-8 pb-4 flex items-end justify-between gap-4">
-          <h2 className="text-2xl font-bold">Shop yoghurt</h2>
-          <button
-            onClick={() => setDrawerOpen(true)}
-            className="rounded-xl border border-slate-300 px-4 py-2 text-sm hover:bg-white"
-          >
-            View basket ({qtyTotal})
-          </button>
-        </div>
-      
-        <p className="mx-auto max-w-6xl px-4 text-sm text-slate-600 mb-4">
-          {nextBundleHint(qtyTotal)}
-        </p>
-      
+      <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full">      
         {/* full-width panels */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0 w-full">
           {GROUPED
