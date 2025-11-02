@@ -113,8 +113,18 @@ function AboutSection() {
   return (
     <section
       id="about"
-      className="scroll-mt-32 md:scroll-mt-24 bg-black text-white py-12"
+      className="relative scroll-mt-32 md:scroll-mt-24 text-white py-12"
+      style={{
+        backgroundImage: "url('/about_bg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
     >
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-black/70" />
+      <div className="relative mx-auto max-w-6xl px-4">
+
       <div className="mx-auto max-w-6xl px-4">
         <h2 className="text-2xl md:text-3xl font-bold text-white">
           About Yoghurt of Youth
@@ -374,10 +384,8 @@ function AboutSection() {
           </p>
           <p className="text-xs text-white/50">We aim to respond within one working day.</p>
         </div>
-      </div>
-    </section>
-  );
-}
+  </div> {/* end of content wrapper */}
+</section>
 
 export default function App(){
   const [confirmation, setConfirmation] = useState<null|any>(null);
