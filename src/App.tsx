@@ -116,11 +116,11 @@ function AboutSection() {
       className="scroll-mt-32 md:scroll-mt-24 bg-black text-white py-12"
     >
       <div className="mx-auto max-w-6xl px-4">
-        <h2 className="text-3xl font-bold tracking-tight text-white">
+        <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
           About Yoghurt of Youth
         </h2>
 
-        <p className="mt-4 text-white/80">
+        <p className="mt-4 text-slate-700">
           Each of our yoghurts is efficiently fermented with live{" "}
           <em>Lactobacillus reuteri</em> strains that have been studied for
           their unique, health-supporting properties.
@@ -128,10 +128,10 @@ function AboutSection() {
 
         <div className="mt-6 space-y-6">
           <div>
-            <h4 className="font-semibold text-white">
+            <h4 className="font-semibold text-slate-900">
               PRCXN — DSM 17648
             </h4>
-            <p className="mt-2 text-white/80 text-sm leading-relaxed">
+            <p className="mt-2 text-slate-700 text-sm leading-relaxed">
               A precision-targeted strain shown in clinical research to bind to
               and reduce populations of <em>Helicobacter pylori</em>, a
               bacterium linked to stomach discomfort and ulcers. By helping
@@ -141,10 +141,10 @@ function AboutSection() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-white">
+            <h4 className="font-semibold text-slate-900">
               SPCTRL — DSM 17938
             </h4>
-            <p className="mt-2 text-white/80 text-sm leading-relaxed">
+            <p className="mt-2 text-slate-700 text-sm leading-relaxed">
               A broad-acting <em>L. reuteri</em> strain observed in studies to
               help limit unwanted microbes, including{" "}
               <em>Candida</em> species, while coexisting peacefully with
@@ -154,82 +154,226 @@ function AboutSection() {
           </div>
         </div>
 
-        <h3 className="mt-10 text-xl font-semibold text-white">
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">
           Why Gut Health Matters
         </h3>
-        <p className="mt-2 text-white/80 text-sm leading-relaxed">
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
           Modern research consistently links gut balance to nearly every aspect
           of wellbeing. Scientific studies suggest that a well-functioning
           microbiome influences:
         </p>
 
-        <ul className="mt-3 list-disc list-inside text-sm text-white/80 space-y-1">
-          <li><strong>General wellbeing &amp; energy</strong> – balanced digestion and reduced bloating promote comfort and nutrient absorption.</li>
-          <li><strong>IBS &amp; IBD</strong> – balanced flora help stabilise intestinal inflammation.</li>
-          <li><strong>Nutrient deficiencies</strong> – microbiota influence absorption of iron, B-vitamins, and magnesium.</li>
-          <li><strong>Chronic inflammation &amp; disease</strong> – microbial metabolites regulate immune signalling throughout the body.</li>
-          <li><strong>Cardiovascular health</strong> – balanced gut flora correlates with healthy blood pressure and cholesterol.</li>
-          <li><strong>Kidney stones &amp; gout</strong> – some microbes degrade oxalate and uric acid, helping the body excrete them safely.</li>
-          <li><strong>Obesity &amp; blood sugar</strong> – gut composition affects insulin sensitivity and energy storage.</li>
-          <li><strong>Mental health &amp; cognition</strong> – the gut–brain axis influences mood, clarity, and focus.</li>
-          <li><strong>Stress &amp; sleep</strong> – microbes help regulate serotonin and melatonin production.</li>
-          <li><strong>Ageing &amp; inflammaging</strong> – balanced microbiota reduce chronic low-grade inflammation, slowing biological ageing.</li>
-        </ul>
+        <div className="mt-2 text-sm text-slate-700 leading-relaxed">
+          <ul className="list-disc list-inside space-y-1">
+            <li><strong>General wellbeing &amp; energy</strong> – balanced digestion and reduced bloating promote comfort and nutrient absorption.</li>
+            <li><strong>IBS &amp; IBD</strong> – dysbiosis and intestinal inflammation are central to these conditions; balanced flora can help stabilise the gut environment.</li>
+            <li><strong>Nutrient deficiencies</strong> – microbial imbalances can impair absorption of iron, B-vitamins, and magnesium.</li>
+            <li><strong>Chronic inflammation &amp; disease</strong> – microbial metabolites regulate immune signalling throughout the body.</li>
+            <li><strong>Cardiovascular health</strong> – balanced gut flora correlates with healthy blood pressure and cholesterol.</li>
+            <li><strong>Kidney stones &amp; gout</strong> – certain microbes degrade oxalate and uric acid, helping the body excrete them safely.</li>
+            <li><strong>Bile sludge &amp; fat digestion</strong> – microbial enzymes aid bile circulation and emulsify fats efficiently.</li>
+            <li><strong>Obesity &amp; blood sugar</strong> – gut composition affects insulin sensitivity and energy storage.</li>
+            <li><strong>Cancer prevention</strong> – research connects gut integrity with reduced inflammation and improved detoxification.</li>
+            <li><strong>Mental health &amp; cognition</strong> – the gut–brain axis influences mood, clarity, and focus. Studies link dysbiosis with depression, anxiety, and brain fog.</li>
+            <li><strong>Stress &amp; sleep</strong> – gut microbes help regulate serotonin and melatonin production.</li>
+            <li><strong>Ageing &amp; inflammaging</strong> – balanced microbiota reduce chronic low-grade inflammation, the driver of premature ageing.</li>
+          </ul>
+        </div>
 
-        <h3 className="mt-10 text-xl font-semibold text-white">
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          Restoring microbial balance can therefore ripple through every system
+          of the body.
+        </p>
+
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">
           The Power of <em>Lactobacillus reuteri</em>
         </h3>
-        <p className="mt-2 text-white/80 text-sm leading-relaxed">
-          When harmful microbes dominate the gut or stomach, inflammation and
-          discomfort follow. Our two <em>L. reuteri</em> strains address this at
-          the source — each through a complementary mechanism:
+        
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          When harmful microbes dominate the gut or stomach, inflammation and discomfort follow.
+          Our two <em>L. reuteri</em> strains address this at the source — each through a complementary mechanism:
         </p>
-
-        <ul className="mt-2 list-disc list-inside text-sm text-white/80 space-y-1">
+        
+        <ul className="mt-2 list-disc list-inside text-sm text-slate-700 space-y-1">
           <li>
-            <strong>DSM 17648 (“PRCXN”)</strong> binds <em>Helicobacter pylori</em>
-            in the stomach, forming harmless complexes that are cleared naturally.
+            <strong>DSM&nbsp;17648 (“PRCXN”)</strong> selectively binds <em>Helicobacter pylori</em>
+            in the stomach, forming harmless complexes that are naturally cleared through digestion.
+            This physical binding reduces bacterial load and supports mucosal recovery.
           </li>
           <li>
-            <strong>DSM 17938 (“SPCTRL”)</strong> promotes intestinal balance by
-            limiting opportunists such as <em>Candida</em> while strengthening
-            beneficial species.
+            <strong>DSM&nbsp;17938 (“SPCTRL”)</strong> promotes a balanced gut environment by
+            limiting the overgrowth of opportunistic species — including <em>Candida</em> —
+            while reinforcing a healthy microbial community along the intestinal tract.
           </li>
         </ul>
-
-        <p className="mt-2 text-white/80 text-sm leading-relaxed">
-          Taken in rotation, they act in synergy — one clearing the stomach,
-          the other rebalancing the gut — creating a stable, resilient
-          digestive ecosystem.
+        
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          Used together — for example by alternating them daily or weekly —
+          <strong>PRCXN and SPCTRL act in synergy</strong>:
+          one targets <em>H.&nbsp;pylori</em> directly in the stomach, while the other restores microbial
+          diversity and suppresses residual pathogens downstream. This dual approach
+          helps reduce the microbial imbalance that allows <em>H.&nbsp;pylori</em> and similar organisms
+          to persist, supporting both gastric comfort and long-term gut stability.
+        </p>
+        
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          When both yoghurts are taken in rotation, they help create a more resilient digestive ecosystem —
+          one less prone to chronic irritation, reflux, bloating, and secondary infections —
+          laying a foundation for lasting digestive harmony and whole-body wellbeing.
         </p>
 
-        <h3 className="mt-10 text-xl font-semibold text-white">
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          Each bottle of yoghurt contains 250&nbsp;ml,
+          delivering live counts on the order of <strong>one trillion CFU</strong> — a level consistent
+          with genuine biological effect. For best results, enjoy one serving on an empty stomach,
+          around <strong>60&nbsp;minutes before a meal</strong>, to allow the beneficial bacteria to reach
+          the gut unimpeded.
+        </p>
+        
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          During the first few days, some people may notice mild digestive upsets such as increased movement,
+          temporary bloating, or mild warmth in the stomach. These signs usually indicate that the
+          probiotics are <strong>actively displacing unwanted microbes</strong> and restoring balance.
+          Such effects are normal and typically fade early on, with health benefits gradually appearing
+          over a longer time frame so long as the yoghurt is consistently taken.
+        </p>
+        
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          Everyone’s microbiome is unique — and so is their response.
+          If you experience stronger sensations, please try the <strong>lactose-free</strong> options.
+          If you would like personalised guidance on how to ease the transition, please reach out to us.
+          We’re happy to help you find the rhythm that suits your body best.
+        </p>
+
+        {/* NAC adjunct info */}
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">
           Optional: NAC alongside your yoghurt
         </h3>
-        <p className="mt-2 text-white/80 text-sm leading-relaxed">
-          <strong>N-acetylcysteine (NAC)</strong> helps loosen microbial biofilms,
-          improving access for both gastric acid and probiotics.
-          Typical nutritional use: 600 mg once or twice daily, taken
-          30–60 minutes before meals, separate from yoghurt.
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          <strong>N-acetylcysteine (NAC)</strong> is a mucolytic antioxidant that can help
+          <em> disrupt microbial biofilms</em> in the stomach — including those formed by
+          <em> Helicobacter pylori</em>. By breaking disulfide bonds in the mucus layer and
+          loosening biofilm structure, NAC may improve access for the body’s defenses and for
+          antimicrobials where used.<span className="text-slate-500">†</span>
         </p>
-        <p className="mt-2 text-xs text-white/50">
-          Ref: Cammarota et al., 2022 (WJG); Zaterka et al., 2012 (Helicobacter) —
-          NAC shown to disrupt H. pylori biofilms and enhance probiotic synergy.
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          Clinical studies and reviews have reported that NAC can destabilise <em>H. pylori</em> biofilms and
+          has been tested as an adjunct to standard eradication regimens. Results vary by protocol,
+          but the biofilm mechanism is consistently described in the literature.<span className="text-slate-500">†</span>
+        </p>
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          NAC is best taken on an empty stomach, around <strong>30 – 60 minutes before meals</strong>.
+          This timing allows it to reach the stomach mucosa before food buffers its effect.
+        </p>
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          Scientific studies exploring NAC for <em>H.&nbsp;pylori</em> biofilm disruption commonly use
+          daily amounts in the range of <strong>600 – 1200 mg</strong>, divided into one or two servings.
+          For example, many individuals take <strong>600 mg twice daily</strong> — once in the morning and once
+          in the late afternoon or evening — though exact routines can vary depending on tolerance
+          and professional guidance.
+        </p>
+        <p className="mt-3 text-slate-500 text-xs leading-relaxed">
+          Note: NAC is a supplement and not a medicine. This information is educational only and
+          not medical advice. If you are on medication (e.g., anticoagulants) or pregnant/breast-feeding, seek professional
+          guidance before using NAC.
         </p>
 
-        <h3 className="mt-10 text-xl font-semibold text-white">
+
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">
+          Scientific Studies
+        </h3>
+        <p className="mt-2 text-slate-700 text-sm">
+          Independent research exploring the strains we use:
+        </p>
+
+        <ol className="list-decimal pl-5 mt-2 space-y-1 text-sm text-slate-700">
+          <li>
+            <span className="font-medium">Holz et&nbsp;al., 2015 (Beneficial Microbes):</span>
+            &nbsp;<em>L. reuteri</em> DSM&nbsp;17648 reduced <em>H. pylori</em> colonisation in humans.
+          </li>
+          <li>
+            <span className="font-medium">Indrio et&nbsp;al., 2014 (Journal of Pediatrics):</span>
+            &nbsp;DSM&nbsp;17938 supported gastrointestinal function in infants; widely studied for tolerance and safety.
+          </li>
+          <li>
+            <span className="font-medium">Savino et&nbsp;al., 2020 (BMC Gastroenterology):</span>
+            &nbsp;Reviews on <em>L. reuteri</em> and microbial balance.
+          </li>
+          <li>
+            <span className="font-medium">Cammarota et&nbsp;al., 2022 (World Journal of Gastroenterology):</span>
+            &nbsp;N-acetylcysteine (NAC) shown to disrupt <em>H.&nbsp;pylori</em> biofilms and enhance antimicrobial access by
+            cleaving disulfide bonds in the mucous layer.
+          </li>
+          <li>
+            <span className="font-medium">Su et&nbsp;al., 2023 (Frontiers in Microbiology):</span>
+            &nbsp;Review describing how combining probiotic strains with complementary mechanisms
+            enhances suppression of <em>H.&nbsp;pylori</em> and supports restoration of healthy microbiota.
+          </li>
+        </ol>
+        
+        <p className="mt-3 text-slate-500 text-xs leading-relaxed">
+          Disclaimer: This information summarises findings from independent scientific
+          research on the bacterial strains used. It is provided for educational
+          purposes and is not medical advice. Original publications available via 
+          PubMed and other open scientific databases. Our products are fermented foods
+          intended to support natural gut balance as part of a healthy lifestyle.
+        </p>
+
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">
           Instructions
         </h3>
-        <ul className="mt-3 list-disc list-inside text-sm text-white/80 space-y-1">
-          <li>Shake well before use.</li>
-          <li>Keep refrigerated.</li>
-          <li>Consume within 3 days of opening.</li>
-        </ul>
-
-        <p className="mt-10 text-xs text-white/50">
-          Disclaimer: This material summarises independent research and is for
-          educational purposes only. It is not medical advice.
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          It is advised to do the following:
         </p>
+
+        <div className="mt-2 text-sm text-slate-700 leading-relaxed">
+          <ul className="list-disc list-inside space-y-1">
+            <li>Shake well before use.</li>
+            <li>Keep refrigerated.</li>
+            <li>Consume within 3 days of opening.</li>
+          </ul>
+        </div>
+
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          The SPCTRL yoghurt can be used to make a powerful, natural <strong>mask</strong> that takes advantage of its antibacterial and antifungal properties topically. To do that, follow these steps:
+        </p>
+
+        <div className="mt-2 text-sm text-slate-700 leading-relaxed">
+          <ul className="list-disc list-inside space-y-1">
+            <li>Add 1 tbsp of yoghurt into a cup.</li>
+            <li>Add 3 slightly heaped tsp of cornflour into the cup.</li>
+            <li>Mix until the mixture is thick and sticky (take care not to overdo).</li>
+            <li>Apply a thick layer on the face or any skin that requires treating until the skin is concealed under the mask.</li>
+            <li>Leave on the skin for an hour.</li>
+            <li>Peel off the dried mask; it will be brittle so it should just crack off easily.</li>
+            <li>Leave the powdery residue on.</li>
+            <li>Avoid washing the are for as long as possible to maximise health benefit.</li>
+          </ul>
+        </div>
+
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          Do that everyday for as long as you may to see significant dermal health benefits.
+        </p>
+
+        <h3 className="mt-8 text-xl font-semibold text-slate-900">Contact</h3>
+        <p className="mt-2 text-slate-700 text-sm leading-relaxed">
+          For personalised support or product advice, get in touch below.
+        </p>
+        <div className="mt-2 space-y-2 text-slate-700 text-sm">
+          <p>
+            📧 Email:{" "}
+            <a href="mailto:support@yoghurtofyouth.co.uk" className="underline hover:text-slate-900">
+              support@yoghurtofyouth.co.uk
+            </a>
+          </p>
+          <p>
+            📞 Phone:{" "}
+            <a href="tel:+447756231844" className="underline hover:text-slate-900">
+              07756 231 844
+            </a>
+          </p>
+          <p className="text-xs text-slate-500">We aim to respond within one working day.</p>
+        </div>
       </div>
     </section>
   );
