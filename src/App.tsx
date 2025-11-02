@@ -442,97 +442,135 @@ export default function App(){
       </section>
       
       {/* SHOP */}
-      <section id="shop" className="scroll-mt-32 md:scroll-mt-24 mx-auto max-w-6xl px-4 py-8">
-        <div className="flex items-end justify-between gap-4 mb-4">
-          <h2 className="text-2xl font-bold">Shop Yoghurt</h2>
+      <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full">
+        {/* top bar (kept constrained) */}
+        <div className="mx-auto max-w-6xl px-4 pt-8 pb-4 flex items-end justify-between gap-4">
+          <h2 className="text-2xl font-bold">Shop yoghurt</h2>
           <button
             onClick={() => setDrawerOpen(true)}
             className="rounded-xl border border-slate-300 px-4 py-2 text-sm hover:bg-white"
           >
-            View Basket ({qtyTotal})
+            View basket ({qtyTotal})
           </button>
         </div>
-
-        <p className="text-sm text-slate-600 mb-4">{nextBundleHint(qtyTotal)}</p>
-
-        {/* your grouped grid goes here */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 max-w-6xl mx-auto justify-items-center">
-            {GROUPED
-              .filter(g => {
-                const q = (query || "").toLowerCase();
-                return !q || g.title.toLowerCase().includes(q) ||
-                       g.variants.some(v => v.label.toLowerCase().includes(q));
-              })
-              .map(g => (
+      
+        <p className="mx-auto max-w-6xl px-4 text-sm text-slate-600 mb-4">
+          {nextBundleHint(qtyTotal)}
+        </p>
+      
+        {/* full-width panels */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 w-full">
+          {GROUPED
+            .filter((g) => {
+              const q = (query || "").toLowerCase();
+              return (
+                !q ||
+                g.title.toLowerCase().includes(q) ||
+                g.variants.some((v) => v.label.toLowerCase().includes(q))
+              );
+            })
+            .map((g, idx) => {
+              // how many of this group are in basket (for the small summary)
+              const groupTotal = g.variants.reduce(
+                (sum, v) => sum + (cart[v.id] || 0),
+                0
+              );
+      
+              return (
                 <article
                   key={g.key}
-                  className="group rounded-2xl bg-white ring-1 ring-slate-200 shadow-sm overflow-hidden flex flex-col"
+                  className="relative h-[360px] md:h-[420px] w-full overflow-hidden"
                 >
-                  <div className="relative">
-                    <img
-                      src={g.img}
-                      alt={g.title}
-                      className="w-full aspect-square object-contain bg-white"
-                    />
-                  </div>
-          
-                  <div className="p-4 flex-1 flex flex-col">
-                    <h3 className="text-base font-semibold text-slate-900">{g.title}</h3>
-                    <p className="text-sm text-slate-600 mt-1">{g.blurb}</p>
-          
-                    <div className="mt-3 grid grid-cols-2 gap-2">
-                      {g.variants.map((v) => {
-                        const qty = cart[v.id] || 0;
-                        return (
-                          <div key={v.id} className="flex items-center gap-2">
-                            <button
-                              onClick={() => sub(v.id)}
-                              className="w-8 h-8 grid place-items-center rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition leading-none"
-                              aria-label={`Remove one ${v.label}`}
-                            >
-                              <span className="translate-y-[-1.5px] text-base font-semibold">−</span>
-                            </button>
-                            
-                            <span
-                              key={`${v.id}-${qty}`}
-                              className="min-w-[2rem] text-center text-sm qty-flash"
-                            >
-                              {qty}
-                            </span>
-                            
-                            <button
-                              onClick={() => add(v.id)}
-                              className="w-8 h-8 grid place-items-center rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition leading-none"
-                              aria-label={`Add one ${v.label}`}
-                            >
-                              <span className="translate-y-[-1.5px] text-base font-semibold">+</span>
-                            </button>
-  
-                            
-                            <span className="ml-1 text-xs text-slate-600">{v.label}</span>
-                          </div>
-                        );
-                      })}
+                  {/* background image */}
+                  <img
+                    src={g.img}
+                    alt={g.title}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+      
+                  {/* dark overlay for readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+      
+                  {/* content overlay */}
+                  <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-8">
+                    {/* title + blurb */}
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.2em] text-white/70 mb-1">
+                        {idx === 0 ? "Targeted" : "Broad-acting"}
+                      </p>
+                      <h3 className="text-3xl md:text-4xl font-bold text-white drop-shadow">
+                        {g.title}
+                      </h3>
+                      <p className="mt-2 text-sm md:text-base text-white/90 max-w-md leading-relaxed">
+                        {g.blurb}
+                      </p>
                     </div>
-  
-          
-                    <div className="mt-3 text-xs text-slate-500">
-                      £2 per bottle · <strong>7 for £10</strong> (mix &amp; match)
-                    </div>
-          
-                    <div className="mt-2 rounded-xl bg-slate-50 p-2 text-xs text-slate-600">
-                      {g.variants.map(v => (
-                        <div key={v.id} className="flex justify-between">
-                          <span>{v.label}</span>
-                          <span>× {(cart[v.id] || 0)}</span>
-                        </div>
-                      ))}
+      
+                    {/* buttons + bundle note */}
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-md">
+                        {g.variants.map((v) => {
+                          const qty = cart[v.id] || 0;
+                          return (
+                            <div
+                              key={v.id}
+                              className="flex items-center gap-2 bg-black/25 rounded-lg px-2 py-1.5 backdrop-blur-sm"
+                            >
+                              {/* minus */}
+                              <button
+                                onClick={() => sub(v.id)}
+                                className="w-8 h-8 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
+                                aria-label={`Remove one ${v.label}`}
+                              >
+                                <span className="translate-y-[-1px] text-base font-semibold">
+                                  −
+                                </span>
+                              </button>
+      
+                              {/* qty */}
+                              <span
+                                key={`${v.id}-${qty}`}
+                                className="min-w-[2rem] text-center text-sm text-white font-semibold qty-flash"
+                              >
+                                {qty}
+                              </span>
+      
+                              {/* plus */}
+                              <button
+                                onClick={() => add(v.id)}
+                                className="w-8 h-8 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                                aria-label={`Add one ${v.label}`}
+                              >
+                                <span className="translate-y-[-1px] text-base font-semibold">
+                                  +
+                                </span>
+                              </button>
+      
+                              {/* label */}
+                              <span className="ml-1 text-xs md:text-sm text-white/90">
+                                {v.label}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+      
+                      <div className="text-xs text-white/80">
+                        £2 per bottle · <strong>7 for £10</strong> (mix &amp; match)
+                        {groupTotal > 0 && (
+                          <span className="ml-2 inline-block bg-white/10 px-2 py-0.5 rounded">
+                            In basket: {groupTotal}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </article>
-            ))}
-          </div>
+              );
+            })}
+        </div>
       </section>
+
 
       {/* About */}
       <AboutSection />
