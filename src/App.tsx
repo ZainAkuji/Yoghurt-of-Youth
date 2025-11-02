@@ -467,7 +467,7 @@ export default function App(){
               return (
                 <article
                   key={g.key}
-                  className="relative aspect-square w-full overflow-hidden"
+                  className="relative aspect-[3/2] w-full overflow-hidden"
                 >
                   {/* background image */}
                   <img
