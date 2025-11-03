@@ -589,7 +589,7 @@ export default function App(){
         className="relative scroll-mt-32 md:scroll-mt-24 py-16 text-white"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/visit_bg.png')",
+            "linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/visit_bg.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -600,7 +600,7 @@ export default function App(){
           <div>
             <h2 className="text-3xl font-bold mb-3">Collect your order</h2>
       
-            <address className="not-italic text-white/90 text-sm leading-relaxed space-y-1">
+            <address className="not-italic text-white text-sm leading-relaxed space-y-1">
               <div className="font-semibold text-white">{BRAND}</div>
               {ADDRESS_LINES.map((l, i) => (
                 <div key={i}>{l}</div>
@@ -616,7 +616,7 @@ export default function App(){
               Open in Google Maps
             </a>
       
-            <p className="mt-4 text-sm text-white/80 leading-relaxed max-w-md">
+            <p className="mt-4 text-sm text-white leading-relaxed max-w-md">
               Open daily. Collection slots available from 09:00 to 18:00 in 30-minute
               intervals.
             </p>
