@@ -1351,15 +1351,21 @@ function Modal({
 }) {
   return (
     <div className="fixed inset-0 z-50">
-      {/* Dark blurred backdrop */}
+      {/* Dim / blur the page behind */}
       <div
         onClick={onClose}
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
       />
 
       {/* Centered frosted panel */}
-      <div className="absolute inset-0 grid place-items-center p-4">
-        <div className="w-full max-w-lg rounded-2xl bg-black/80 border border-white/15 text-white shadow-2xl p-6 backdrop-blur-lg">
+      <div className="absolute inset-0 flex items-center justify-center p-4">
+        <div
+          className="w-full max-w-lg rounded-2xl border border-white/20 shadow-2xl p-6 text-white backdrop-blur-lg"
+          style={{
+            // REAL transparency – same vibe as the drawer
+            backgroundColor: "rgba(0, 0, 0, 0.45)",
+          }}
+        >
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">{title}</h3>
             <button
@@ -1370,6 +1376,7 @@ function Modal({
               ✕
             </button>
           </div>
+
           <div className="mt-3">{children}</div>
         </div>
       </div>
