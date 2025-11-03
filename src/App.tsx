@@ -117,13 +117,13 @@ function AboutSection() {
       style={{
         backgroundImage: "linear-gradient(rgba(0,0,0,0.40), rgba(0,0,0,0.40)), url('/about_bg.png')",
         backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundPosition: "70% center",
         backgroundRepeat: "no-repeat",
       }}
     >
       
       
-      <div className="max-w-6xl">
+      <div className="max-w-6xl px-1">
         <h2 className="text-2xl md:text-3xl font-bold text-white">
           About Yoghurt of Youth
         </h2>
