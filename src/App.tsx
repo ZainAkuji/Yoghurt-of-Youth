@@ -769,13 +769,13 @@ function Drawer({
   return (
     <div
       aria-hidden={!open}
-      className={cn("fixed inset-0 z-50", open ? "" : "pointer-events-none")}
+      className={cn("fixed inset-0 z-50 transition-all duration-500", open ? "" : "pointer-events-none")}
     >
-      {/* Dimmed background overlay */}
+      {/* Dim background overlay */}
       <div
         onClick={onClose}
         className={cn(
-          "absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity",
+          "absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-500",
           open ? "opacity-100" : "opacity-0"
         )}
       />
@@ -783,14 +783,13 @@ function Drawer({
       {/* Drawer panel */}
       <aside
         className={cn(
-          "absolute right-0 top-0 h-full w-full max-w-md shadow-2xl p-6 transition-transform border-l border-white/10",
-          "bg-black text-white",
+          "absolute right-0 top-0 h-full w-full max-w-md bg-black/80 backdrop-blur-md text-white shadow-2xl border-l border-white/10 p-6 transition-transform duration-500 ease-in-out",
           open ? "translate-x-0" : "translate-x-full"
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-3">
-          <h3 className="text-lg font-semibold tracking-tight">{title}</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold">{title}</h3>
           <button
             onClick={onClose}
             aria-label="Close"
