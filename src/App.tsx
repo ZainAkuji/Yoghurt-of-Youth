@@ -584,40 +584,89 @@ export default function App(){
       {/* About */}
       <AboutSection />
 
-      <section id="visit"   className="scroll-mt-32 md:scroll-mt-24 mx-auto max-w-6xl px-4 py-10">
-        <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6 md:p-8 grid md:grid-cols-2 gap-6 items-center">
+      <section
+        id="visit"
+        className="relative scroll-mt-32 md:scroll-mt-24 py-16 text-white"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/visit_bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <div className="mx-auto max-w-6xl px-4 grid md:grid-cols-2 gap-10 items-center">
+          {/* Left: address & info */}
           <div>
-            <h2 className="text-2xl font-bold">Collect your order</h2>
-            <address className="not-italic mt-3 text-slate-700">
-              <div className="font-semibold">{BRAND}</div>
-              {ADDRESS_LINES.map((l,i)=> <div key={i}>{l}</div>)}
+            <h2 className="text-3xl font-bold mb-3">Collect your order</h2>
+      
+            <address className="not-italic text-white/90 text-sm leading-relaxed space-y-1">
+              <div className="font-semibold text-white">{BRAND}</div>
+              {ADDRESS_LINES.map((l, i) => (
+                <div key={i}>{l}</div>
+              ))}
             </address>
-            <a className="mt-3 inline-block text-sm text-slate-700 underline" href={`https://www.google.com/maps/search/?api=1&query=${MAPS_QUERY}`} target="_blank" rel="noreferrer">Open in Google Maps</a>
-            <p className="mt-4 text-sm text-slate-600">Open daily. Collection slots available from 09:00 to 18:00 in 30‑minute intervals.</p>
+      
+            <a
+              className="mt-3 inline-block text-sm text-white underline hover:text-amber-300 transition-colors"
+              href={`https://www.google.com/maps/search/?api=1&query=${MAPS_QUERY}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open in Google Maps
+            </a>
+      
+            <p className="mt-4 text-sm text-white/80 leading-relaxed max-w-md">
+              Open daily. Collection slots available from 09:00 to 18:00 in 30-minute
+              intervals.
+            </p>
           </div>
-          <div className="rounded-2xl bg-slate-50 p-5">
-            <h3 className="font-semibold">Your basket</h3>
-            <div className="mt-3 space-y-2 max-h-44 overflow-auto pr-1">
-              {items.length === 0 && <div className="text-sm text-slate-500">No items yet.</div>}
-              {items.map(i=>(
-                <div key={i.id} className="flex items-center justify-between text-sm">
+      
+          {/* Right: basket summary */}
+          <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-5 md:p-6 shadow-lg border border-white/10">
+            <h3 className="font-semibold text-lg mb-2">Your basket</h3>
+      
+            <div className="mt-2 space-y-2 max-h-44 overflow-auto pr-1 text-sm">
+              {items.length === 0 && (
+                <div className="text-white/70">No items yet.</div>
+              )}
+              {items.map((i) => (
+                <div key={i.id} className="flex items-center justify-between">
                   <span>{i.name} × {i.qty}</span>
                   <span>£{(i.qty * 2).toFixed(2)}</span>
                 </div>
               ))}
             </div>
-            <div className="mt-3 border-t pt-3 text-sm">
+      
+            <div className="mt-3 border-t border-white/20 pt-3 text-sm space-y-1">
               <div className="flex justify-between"><span>Bottles</span><span>{qtyTotal}</span></div>
               <div className="flex justify-between"><span>Bundles</span><span>{bundles} × £10</span></div>
               <div className="flex justify-between"><span>Remainder</span><span>{remainder} × £2</span></div>
               <div className="flex justify-between"><span>Full price</span><span>{gbp(plainSubtotal)}</span></div>
-              <div className="flex justify-between text-emerald-700"><span>You save</span><span>−{gbp(savings)}</span></div>
-              <div className="flex justify-between font-semibold text-slate-900"><span>Total due at collection</span><span>{gbp(total)}</span></div>
+              <div className="flex justify-between text-emerald-400">
+                <span>You save</span><span>−{gbp(savings)}</span>
+              </div>
+              <div className="flex justify-between font-semibold">
+                <span>Total due at collection</span><span>{gbp(total)}</span>
+              </div>
             </div>
-            <button onClick={()=> setReserveOpen(true)} disabled={qtyTotal===0} className={cn("mt-4 w-full rounded-xl px-4 py-2 text-sm font-semibold", qtyTotal? "bg-slate-900 text-white hover:bg-slate-800" : "bg-slate-200 text-slate-500 cursor-not-allowed")}>Reserve & choose collection time</button>
+      
+            <button
+              onClick={() => setReserveOpen(true)}
+              disabled={qtyTotal === 0}
+              className={cn(
+                "mt-4 w-full rounded-xl px-4 py-2 text-sm font-semibold transition",
+                qtyTotal
+                  ? "bg-white text-slate-900 hover:bg-amber-300"
+                  : "bg-white/20 text-white/50 cursor-not-allowed"
+              )}
+            >
+              Reserve & choose collection time
+            </button>
           </div>
         </div>
       </section>
+
 
       <Footer brand={BRAND} />
 
