@@ -804,7 +804,7 @@ function Drawer({
           </button>
         </div>
 
-        <div className="mt-4 text-white/90 overflow-y-auto max-h-[calc(100%-5rem)] pr-2">
+        <div className="mt-4 text-white overflow-y-auto max-h-[calc(100%-5rem)] pr-2">
           {children}
         </div>
       </aside>
@@ -812,42 +812,124 @@ function Drawer({
   );
 }
 
-function Basket({ items, qtyTotal, bundles, remainder, total, savings, add, sub, remove, clear, onReserve }:{ items:any[]; qtyTotal:number; bundles:number; remainder:number; total:number; savings:number; add:(id:string)=>void; sub:(id:string)=>void; remove:(id:string)=>void; clear:()=>void; onReserve:()=>void; }) {
+function Basket({
+  items,
+  qtyTotal,
+  bundles,
+  remainder,
+  total,
+  savings,
+  add,
+  sub,
+  remove,
+  clear,
+  onReserve,
+}: {
+  items: any[];
+  qtyTotal: number;
+  bundles: number;
+  remainder: number;
+  total: number;
+  savings: number;
+  add: (id: string) => void;
+  sub: (id: string) => void;
+  remove: (id: string) => void;
+  clear: () => void;
+  onReserve: () => void;
+}) {
   return (
-    <div className="space-y-4">
-      {items.length === 0 && <p className="text-sm text-slate-500">Your basket is empty.</p>}
-      {items.map(i => (
+    <div className="space-y-4 text-white">
+      {items.length === 0 && (
+        <p className="text-sm text-white/60">Your basket is empty.</p>
+      )}
+
+      {items.map((i) => (
         <div key={i.id} className="flex gap-3">
-          <img src={i.img} alt="" className="w-16 h-12 rounded-lg ring-1 ring-slate-200 object-cover"/>
+          <img
+            src={i.img}
+            alt=""
+            className="w-16 h-12 rounded-lg ring-1 ring-white/20 object-cover"
+          />
           <div className="flex-1">
             <div className="flex justify-between text-sm">
               <div>
-                <div className="font-medium text-slate-900">{i.name}</div>
-                <div className="text-slate-500">{i.size}</div>
+                <div className="font-medium text-white">{i.name}</div>
+                <div className="text-white/60">{i.size}</div>
               </div>
-              <div className="font-medium">£{(i.qty * 2).toFixed(2)}</div>
+              <div className="font-medium text-white/90">
+                £{(i.qty * 2).toFixed(2)}
+              </div>
             </div>
+
             <div className="mt-2 flex items-center gap-2">
-              <button onClick={()=>sub(i.id)} className="w-7 h-7 rounded-lg bg-slate-100 text-slate-700">−</button>
+              <button
+                onClick={() => sub(i.id)}
+                className="w-7 h-7 rounded-lg bg-white/10 text-white hover:bg-white/20 transition"
+              >
+                −
+              </button>
               <span className="w-8 text-center text-sm">{i.qty}</span>
-              <button onClick={()=>add(i.id)} className="w-7 h-7 rounded-lg bg-slate-900 text-white">+</button>
-              <button onClick={()=>remove(i.id)} className="ml-auto text-xs text-slate-500 hover:text-slate-700">Remove</button>
+              <button
+                onClick={() => add(i.id)}
+                className="w-7 h-7 rounded-lg bg-white text-slate-900 font-semibold hover:bg-amber-300 transition"
+              >
+                +
+              </button>
+              <button
+                onClick={() => remove(i.id)}
+                className="ml-auto text-xs text-white/60 hover:text-white transition"
+              >
+                Remove
+              </button>
             </div>
           </div>
         </div>
       ))}
 
-      <div className="border-t pt-4 space-y-2 text-sm">
-        <div className="flex justify-between"><span>Bottles</span><span>{qtyTotal}</span></div>
-        <div className="flex justify-between"><span>Bundles</span><span>{bundles} × £10</span></div>
-        <div className="flex justify-between"><span>Remainder</span><span>{remainder} × £2</span></div>
-        <div className="flex justify-between text-emerald-700"><span>You save</span><span>−{gbp(savings)}</span></div>
-        <div className="flex justify-between font-semibold text-slate-900"><span>Total due at collection</span><span>{gbp(total)}</span></div>
+      {/* Totals */}
+      <div className="border-t border-white/20 pt-4 space-y-2 text-sm text-white/80">
+        <div className="flex justify-between">
+          <span>Bottles</span>
+          <span>{qtyTotal}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Bundles</span>
+          <span>{bundles} × £10</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Remainder</span>
+          <span>{remainder} × £2</span>
+        </div>
+        <div className="flex justify-between text-emerald-400">
+          <span>You save</span>
+          <span>−{gbp(savings)}</span>
+        </div>
+        <div className="flex justify-between font-semibold text-white">
+          <span>Total due at collection</span>
+          <span>{gbp(total)}</span>
+        </div>
       </div>
 
+      {/* Buttons */}
       <div className="flex gap-2">
-        <button onClick={onReserve} disabled={qtyTotal===0} className={cn("flex-1 rounded-2xl px-5 py-3 text-sm font-semibold", qtyTotal? "bg-slate-900 text-white hover:bg-slate-800" : "bg-slate-200 text-slate-500 cursor-not-allowed")}>Reserve & choose collection time</button>
-        <button onClick={clear} className="rounded-2xl border border-slate-300 px-5 py-3 text-sm font-semibold hover:bg-white">Clear</button>
+        <button
+          onClick={onReserve}
+          disabled={qtyTotal === 0}
+          className={cn(
+            "flex-1 rounded-2xl px-5 py-3 text-sm font-semibold transition",
+            qtyTotal
+              ? "bg-white text-slate-900 hover:bg-amber-300"
+              : "bg-white/10 text-white/40 cursor-not-allowed"
+          )}
+        >
+          Reserve & choose collection time
+        </button>
+        <button
+          onClick={clear}
+          className="rounded-2xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
+        >
+          Clear
+        </button>
       </div>
     </div>
   );
