@@ -480,7 +480,7 @@ export default function App(){
                   />
       
                   {/* dark overlay for readability */}
-                  <div className="absolute inset-0 bg-black/50" />
+                  <div className="absolute inset-0 bg-black/40" />
       
                   {/* content overlay */}
                   <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-8">
