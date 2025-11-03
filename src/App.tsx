@@ -115,7 +115,7 @@ function AboutSection() {
       id="about"
       className="relative scroll-mt-32 md:scroll-mt-24 text-white py-12"
       style={{
-        backgroundImage: "linear-gradient(rgba(0,0,0,0.70), rgba(0,0,0,0.70)), url('/about_bg.png')",
+        backgroundImage: "linear-gradient(rgba(0,0,0,0.90), rgba(0,0,0,0.90)), url('/about_bg.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
