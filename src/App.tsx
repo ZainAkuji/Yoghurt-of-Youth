@@ -571,6 +571,8 @@ export default function App(){
                         In basket: {groupTotal}
                       </span>
                     </div>
+
+                    <div className="text-xs text-white flex items-center"> </div>
                     
                   </div>
                 </article>
