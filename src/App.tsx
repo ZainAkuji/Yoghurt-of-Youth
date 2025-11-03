@@ -556,20 +556,20 @@ export default function App(){
                           </div>
                         );
                       })}
-      
-                      <div className="text-xs text-white flex items-center">
-                        £2 per bottle · 7 for £10 (mix &amp; match)
-                        <span
-                          className={cn(
-                            "ml-2 inline-block bg-white/10 px-2 py-0.5 rounded transition-opacity duration-150",
-                            groupTotal > 0 ? "opacity-100" : "opacity-0"
-                          )}
-                        >
-                          In basket: {groupTotal}
-                        </span>
-                      </div>
-
                     </div>
+
+                    <div className="text-xs text-white flex items-center">
+                      £2 per bottle · 7 for £10 (mix &amp; match)
+                      <span
+                        className={cn(
+                          "ml-2 inline-block bg-white/10 px-2 py-0.5 rounded transition-opacity duration-150",
+                          groupTotal > 0 ? "opacity-100" : "opacity-0"
+                        )}
+                      >
+                        In basket: {groupTotal}
+                      </span>
+                    </div>
+                    
                   </div>
                 </article>
               );
