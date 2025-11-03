@@ -123,7 +123,7 @@ function AboutSection() {
     >
       
       
-      <div className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl">
         <h2 className="text-2xl md:text-3xl font-bold text-white">
           About Yoghurt of Youth
         </h2>
