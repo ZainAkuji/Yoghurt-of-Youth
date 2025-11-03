@@ -364,7 +364,7 @@ function AboutSection() {
         </p>
 
         <h3 className="mt-8 text-xl font-semibold text-white">Contact</h3>
-        <p className="mt-2 text-white/80 text-sm leading-relaxed">
+        <p className="mt-2 text-white text-sm leading-relaxed">
           For personalised support or product advice, get in touch below.
         </p>
         <div className="mt-2 space-y-2 text-white text-sm">
@@ -483,79 +483,81 @@ export default function App(){
                   <div className="absolute inset-0 bg-black/30" />
       
                   {/* content overlay */}
-                  <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-8">
-                    {/* title + blurb */}
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-white mb-1">
-                        {idx === 0 ? "Targeted" : "Broad-acting"}
-                      </p>
-                      {g.key === "prcxn" ? (
-                        <img
-                          src="/prcxn_logo.png"
-                          alt="PRCXN"
-                          className="h-20 md:h-28 w-auto drop-shadow-lg"
-                        />
-                      ) : g.key === "spctrl" ? (
-                        <img
-                          src="/spctrl_logo.png"
-                          alt="SPCTRL"
-                          className="h-20 md:h-28 w-auto drop-shadow-lg"
-                        />
-                      ) : (
-                        <h3 className="text-3xl font-bold text-white drop-shadow-md">{g.title}</h3>
-                      )}
-
-                      <p className="mt-2 text-sm md:text-base text-white max-w-md leading-relaxed">
-                        {g.blurb}
-                      </p>
-                    </div>
+                  <div className="absolute inset-0 flex flex-col justify-between text-center p-6 z-10">
+                    <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-8">
+                      {/* title + blurb */}
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.2em] text-white mb-1">
+                          {idx === 0 ? "Targeted" : "Broad-acting"}
+                        </p>
+                        {g.key === "prcxn" ? (
+                          <img
+                            src="/prcxn_logo.png"
+                            alt="PRCXN"
+                            className="h-20 md:h-28 w-auto drop-shadow-lg"
+                          />
+                        ) : g.key === "spctrl" ? (
+                          <img
+                            src="/spctrl_logo.png"
+                            alt="SPCTRL"
+                            className="h-20 md:h-28 w-auto drop-shadow-lg"
+                          />
+                        ) : (
+                          <h3 className="text-3xl font-bold text-white drop-shadow-md">{g.title}</h3>
+                        )}
+  
+                        <p className="mt-2 text-sm md:text-base text-white max-w-md leading-relaxed">
+                          {g.blurb}
+                        </p>
+                      </div>
+        
+                      {/* buttons + bundle note */}
+                      <div className="grid grid-cols-2 gap-2 max-w-md">
+                        {g.variants.map((v) => {
+                          const qty = cart[v.id] || 0;
+                          return (
+                            <div
+                              key={v.id}
+                              className="flex items-center gap-2 bg-black/25 rounded-lg px-2 py-1.5 backdrop-blur-sm"
+                            >
+                              {/* minus */}
+                              <button
+                                onClick={() => sub(v.id)}
+                                className="w-8 h-8 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
+                                aria-label={`Remove one ${v.label}`}
+                              >
+                                <span className="translate-y-[-1px] text-base font-semibold">
+                                  −
+                                </span>
+                              </button>
       
-                    {/* buttons + bundle note */}
-                    <div className="grid grid-cols-2 gap-2 max-w-md">
-                      {g.variants.map((v) => {
-                        const qty = cart[v.id] || 0;
-                        return (
-                          <div
-                            key={v.id}
-                            className="flex items-center gap-2 bg-black/25 rounded-lg px-2 py-1.5 backdrop-blur-sm"
-                          >
-                            {/* minus */}
-                            <button
-                              onClick={() => sub(v.id)}
-                              className="w-8 h-8 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
-                              aria-label={`Remove one ${v.label}`}
-                            >
-                              <span className="translate-y-[-1px] text-base font-semibold">
-                                −
+                              {/* qty */}
+                              <span
+                                key={`${v.id}-${qty}`}
+                                className="min-w-[2rem] text-center text-sm text-white font-semibold qty-flash"
+                              >
+                                {qty}
                               </span>
-                            </button>
-    
-                            {/* qty */}
-                            <span
-                              key={`${v.id}-${qty}`}
-                              className="min-w-[2rem] text-center text-sm text-white font-semibold qty-flash"
-                            >
-                              {qty}
-                            </span>
-    
-                            {/* plus */}
-                            <button
-                              onClick={() => add(v.id)}
-                              className="w-8 h-8 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                              aria-label={`Add one ${v.label}`}
-                            >
-                              <span className="translate-y-[-1px] text-base font-semibold">
-                                +
+      
+                              {/* plus */}
+                              <button
+                                onClick={() => add(v.id)}
+                                className="w-8 h-8 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                                aria-label={`Add one ${v.label}`}
+                              >
+                                <span className="translate-y-[-1px] text-base font-semibold">
+                                  +
+                                </span>
+                              </button>
+      
+                              {/* label */}
+                              <span className="ml-1 text-xs md:text-sm text-white">
+                                {v.label}
                               </span>
-                            </button>
-    
-                            {/* label */}
-                            <span className="ml-1 text-xs md:text-sm text-white">
-                              {v.label}
-                            </span>
-                          </div>
-                        );
-                      })}
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
 
                     <div className="text-xs text-white flex items-center">
