@@ -483,7 +483,7 @@ export default function App(){
                   <div className="absolute inset-0 bg-black/30" />
       
                   {/* content overlay */}
-                  <div className="absolute inset-0 flex flex-col justify-between text-center p-6 z-10">
+                  <div className="absolute inset-0 flex flex-col justify-between">
                     <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-8">
                       {/* title + blurb */}
                       <div>
