@@ -117,7 +117,7 @@ function AboutSection() {
       style={{
         backgroundImage: "linear-gradient(rgba(0,0,0,0.40), rgba(0,0,0,0.40)), url('/about_bg.png')",
         backgroundSize: "cover",
-        backgroundPosition: "calc(50% + 100px) center",
+        backgroundPosition: "90% center",
         backgroundRepeat: "no-repeat",
       }}
     >
