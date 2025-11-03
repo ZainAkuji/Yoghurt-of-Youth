@@ -560,7 +560,7 @@ export default function App(){
                       </div>
       
                       <div className="text-xs text-white flex items-center">
-                        £2 per bottle · <strong>7 for £10</strong> (mix &amp; match)
+                        £2 per bottle · <strong> 7 for £10 </strong> (mix &amp; match)
                         <span
                           className={cn(
                             "ml-2 inline-block bg-white/10 px-2 py-0.5 rounded transition-opacity duration-150",
