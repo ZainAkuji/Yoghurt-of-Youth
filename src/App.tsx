@@ -388,7 +388,6 @@ function AboutSection() {
 }
 
 export default function App(){
-  const [confirmation, setConfirmation] = useState<null|any>(null);
   const [query, setQuery] = useState("");
   const [cart, setCart] = useState<Record<string,number>>(()=>{ try{ return JSON.parse(localStorage.getItem("yoy_cart") || "{}"); }catch{ return {}; }});
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -406,10 +405,6 @@ export default function App(){
   const sub = (id:string)=> setCart(c=>{ const n={...c}; if(!n[id]) return n; n[id]--; if(n[id]<=0) delete n[id]; return n; });
   const remove = (id:string)=> setCart(c=>{ const n={...c}; delete n[id]; return n; });
   const clear = ()=> setCart({});
-
-  if (confirmation) {
-    return <ConfirmationPage brand={BRAND} confirmation={confirmation} onReset={()=>{ setConfirmation(null); }} />;
-  }
 
   return (
     <div className="scroll-smooth min-h-screen bg-gradient-to-b from-white to-slate-50 text-slate-800">
@@ -677,9 +672,13 @@ export default function App(){
       </Drawer>
 
       {reserveOpen && (
-        <ReserveModal onClose={()=>setReserveOpen(false)} cart={cart} totals={{ qtyTotal, bundles, remainder, total, savings }}
-          onConfirmed={(payload)=>{ setReserveOpen(false); setConfirmation(payload); setCart({}); }} />
+        <ReserveModal
+          onClose={() => setReserveOpen(false)}
+          cart={cart}
+          totals={{ qtyTotal, bundles, remainder, total, savings, plainSubtotal }}
+        />
       )}
+
     </div>
   );
 }
@@ -989,13 +988,19 @@ function timeSlotsForDate(dateISO: string) {
 }
 
 // ---- main component ----
-function ReserveModal({ onClose, cart, totals, onConfirmed }: {
+function ReserveModal({
+  onClose,
+  cart,
+  totals,
+}: {
   onClose: () => void;
   cart: Record<string, number>;
   totals: any;
-  onConfirmed: (payload: any) => void;
 }) {
   const { qtyTotal, bundles, remainder, total } = totals;
+
+  // mode: "form" for booking, "confirmed" after success
+  const [mode, setMode] = useState<"form" | "confirmed">("form");
 
   // form state
   const [name, setName] = useState("");
@@ -1012,8 +1017,21 @@ function ReserveModal({ onClose, cart, totals, onConfirmed }: {
   const [note, setNote] = useState("");
 
   const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
+
+  // for showing confirmation details inside the same modal
+  const [orderInfo, setOrderInfo] = useState<null | {
+    orderId: string;
+    formattedDate: string;
+    time: string;
+    lines: string[];
+    qtyTotal: number;
+    bundles: number;
+    remainder: number;
+    totalText: string;
+    address: string[];
+    name: string;
+  }>(null);
 
   const lines = Object.entries(cart).map(([id, qty]) => {
     const p = PRODUCTS.find((p) => p.id === id);
@@ -1040,11 +1058,13 @@ function ReserveModal({ onClose, cart, totals, onConfirmed }: {
       setError("Please choose today or a future date.");
       return;
     }
+
     const now = new Date();
     const isSameDay =
       now.getFullYear() === pickupAt.getFullYear() &&
       now.getMonth() === pickupAt.getMonth() &&
       now.getDate() === pickupAt.getDate();
+
     if (isSameDay && pickupAt < roundUpToNextSlot(now)) {
       setError("Please choose the next available half-hour slot or later.");
       return;
@@ -1052,6 +1072,7 @@ function ReserveModal({ onClose, cart, totals, onConfirmed }: {
 
     setSending(true);
     setError("");
+
     try {
       const { default: emailjs } = await import("@emailjs/browser");
       const orderId = `YOY-${Date.now().toString().slice(-6)}`;
@@ -1067,9 +1088,9 @@ function ReserveModal({ onClose, cart, totals, onConfirmed }: {
           customer_name: name,
           customer_email: email,
           customer_phone: phone,
-          pickup_date: formattedDate,         // UK format in email
+          pickup_date: formattedDate,      // UK format in email
           pickup_time: time,
-          order_lines: lines.join("\n"),      // real newlines
+          order_lines: lines.join("\n"),   // real newlines
           bottles: qtyTotal,
           bundles,
           remainder,
@@ -1083,46 +1104,155 @@ function ReserveModal({ onClose, cart, totals, onConfirmed }: {
         { publicKey: EMAILJS_PUBLIC_KEY }
       );
 
-      const payload = {
+      // Save info for inline confirmation view
+      setOrderInfo({
         orderId,
-        name,
-        email,
-        phone,
-        formattedDate, // <-- send UK date to confirmation page
+        formattedDate,
         time,
         lines,
         qtyTotal,
         bundles,
         remainder,
-        total: gbp(total),
+        totalText: gbp(total),
         address: [...ADDRESS_LINES],
-      };
-      setSent(true);
-      onConfirmed && onConfirmed(payload);
+        name,
+      });
+
+      setMode("confirmed");
     } catch (e) {
       console.error(e);
       setError(
-        "Email send failed. Check your EmailJS keys and that To is set to {{owner_email}} in the template."
+        "Email send failed. Please check your details or try again in a moment."
       );
     } finally {
       setSending(false);
     }
   }
 
+  // -------- RENDER --------
+
+  if (mode === "confirmed" && orderInfo) {
+    const {
+      orderId,
+      formattedDate,
+      time,
+      lines,
+      qtyTotal,
+      bundles,
+      remainder,
+      totalText,
+      address,
+      name,
+    } = orderInfo;
+
+    return (
+      <Modal onClose={onClose} title="Reservation confirmed">
+        <p className="text-sm text-white/80">
+          Thanks, <span className="font-semibold">{name}</span>. Your reservation
+          has been received and a confirmation email has been sent.
+        </p>
+
+        <div className="mt-4 space-y-2 text-sm text-white/90">
+          <div className="flex justify-between">
+            <span className="text-white/60">Order ID</span>
+            <span className="font-semibold">{orderId}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-white/60">Pickup</span>
+            <span className="font-semibold">
+              {time} on {formattedDate}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-white/60">Bottles</span>
+            <span>
+              {qtyTotal} (bundles {bundles} · remainder {remainder})
+            </span>
+          </div>
+          <div className="flex justify-between border-t border-white/20 pt-2 mt-2">
+            <span className="font-semibold">Total due at collection</span>
+            <span className="font-semibold">{totalText}</span>
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <div className="font-semibold text-sm mb-1">Items</div>
+          <ul className="list-disc pl-5 text-sm text-white/80 space-y-1">
+            {lines.map((l, i) => (
+              <li key={i}>{l}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mt-4 text-sm text-white/80">
+          <div className="font-semibold">Collect at</div>
+          <address className="not-italic">
+            {address.map((l, i) => (
+              <div key={i}>{l}</div>
+            ))}
+          </address>
+          <p className="mt-2 text-white/70">
+            Payment on collection (<strong>cash or card</strong>).
+          </p>
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-2">
+          <button
+            onClick={onClose}
+            className="inline-flex rounded-2xl bg-white text-slate-900 px-5 py-3 text-sm font-semibold hover:bg-amber-300 transition"
+          >
+            Close
+          </button>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${MAPS_QUERY}`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex rounded-2xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
+          >
+            Open in Google Maps
+          </a>
+        </div>
+
+        <p className="mt-4 text-xs text-white/50">
+          If you need to change your slot, please reply to the confirmation
+          email and we’ll do our best to adjust.
+        </p>
+      </Modal>
+    );
+  }
+
+  // -------- FORM MODE --------
   return (
     <Modal onClose={onClose} title="Reserve & Collect">
-      <p className="text-sm text-slate-600">
+      <p className="text-sm text-white/80">
         Fill in your details and choose a collection slot. You’ll receive an
         email confirmation, and you pay on collection (cash or card).
       </p>
 
       <div className="mt-4 grid md:grid-cols-2 gap-4">
-        <input value={name} onChange={e => setName(e.target.value)} required placeholder="Full name"
-          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"/>
-        <input value={email} onChange={e => setEmail(e.target.value)} required type="email" placeholder="Email"
-          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"/>
-        <input value={phone} onChange={e => setPhone(e.target.value)} required type="tel" placeholder="Mobile number"
-          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"/>
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          placeholder="Full name"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+        />
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          type="email"
+          placeholder="Email"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+        />
+        <input
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          required
+          type="tel"
+          placeholder="Mobile number"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+        />
         <input
           value={date}
           onChange={(e) => {
@@ -1134,183 +1264,116 @@ function ReserveModal({ onClose, cart, totals, onConfirmed }: {
           required
           type="date"
           min={todayLocalISO()}
-          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/40"
         />
-        <select value={time} onChange={e => setTime(e.target.value)}
-          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300">
-          {timeSlotsForDate(date).map(t => <option key={t} value={t}>{t}</option>)}
+        <select
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/40"
+        >
+          {timeSlotsForDate(date).map((t) => (
+            <option key={t} value={t} className="bg-slate-900 text-white">
+              {t}
+            </option>
+          ))}
         </select>
-        <input value={note} onChange={e => setNote(e.target.value)} placeholder="Order note (optional)"
-          className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"/>
+        <input
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="Order note (optional)"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+        />
       </div>
 
-      <div className="mt-5 rounded-2xl bg-slate-50 p-4 text-sm">
+      <div className="mt-5 rounded-2xl bg-black/40 border border-white/15 p-4 text-sm text-white/85">
         <div className="font-semibold mb-2">Summary</div>
         <div className="grid sm:grid-cols-2 gap-2">
-          <div>{lines.map((l,i)=><div key={i}>• {l}</div>)}</div>
+          <div>
+            {lines.map((l, i) => (
+              <div key={i}>• {l}</div>
+            ))}
+          </div>
           <div>
             <div>Bottles: {qtyTotal}</div>
             <div>Bundles: {bundles} × £10</div>
             <div>Remainder: {remainder} × £2</div>
-            <div className="font-semibold mt-1">Total due: {gbp(total)}</div>
+            <div className="font-semibold mt-1">
+              Total due: {gbp(total)}
+            </div>
           </div>
         </div>
       </div>
 
-      {error && <p className="mt-3 text-sm text-rose-700">{error}</p>}
+      {error && (
+        <p className="mt-3 text-sm text-rose-300">
+          {error}
+        </p>
+      )}
 
       <div className="mt-5 flex flex-wrap gap-2">
-        <button onClick={sendEmail}
-          className={cn("inline-flex rounded-2xl px-5 py-3 text-sm font-semibold",
-            valid? "bg-slate-900 text-white hover:bg-slate-800":"bg-slate-200 text-slate-500 cursor-not-allowed")}
-          disabled={!valid || sending}>
-          {sending ? "Sending…" : sent ? "Sent ✓" : "Confirm reservation"}
+        <button
+          onClick={sendEmail}
+          className={cn(
+            "inline-flex rounded-2xl px-5 py-3 text-sm font-semibold transition",
+            valid
+              ? "bg-white text-slate-900 hover:bg-amber-300"
+              : "bg-white/10 text-white/40 cursor-not-allowed"
+          )}
+          disabled={!valid || sending}
+        >
+          {sending ? "Sending…" : "Confirm reservation"}
         </button>
-        <button onClick={onClose}
-          className="inline-flex rounded-2xl border border-slate-300 px-5 py-3 text-sm font-semibold hover:bg-white">
+        <button
+          onClick={onClose}
+          className="inline-flex rounded-2xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
+        >
           Close
         </button>
       </div>
 
-      <p className="mt-4 text-xs text-slate-500">
-        By reserving you agree to collect at the chosen time and pay on collection (cash or card).
-        If you need to change your slot, please reply to the confirmation email.
+      <p className="mt-4 text-xs text-white/50">
+        By reserving you agree to collect at the chosen time and pay on
+        collection (cash or card). If you need to change your slot, please
+        reply to the confirmation email.
       </p>
     </Modal>
   );
 }
 
-function Modal({ onClose, title, children }:{ onClose:()=>void; title:string; children:React.ReactNode; }) {
+function Modal({
+  onClose,
+  title,
+  children,
+}: {
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="fixed inset-0 z-50">
-      <div onClick={onClose} className="absolute inset-0 bg-slate-900/40" />
+      {/* Dark blurred backdrop */}
+      <div
+        onClick={onClose}
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+      />
+
+      {/* Centered frosted panel */}
       <div className="absolute inset-0 grid place-items-center p-4">
-        <div className="w-full max-w-lg rounded-2xl bg-white ring-1 ring-slate-200 shadow-xl p-6">
+        <div className="w-full max-w-lg rounded-2xl bg-black/80 border border-white/15 text-white shadow-2xl p-6 backdrop-blur-lg">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">{title}</h3>
-            <button onClick={onClose} aria-label="Close" className="rounded-full w-8 h-8 grid place-items-center hover:bg-slate-100">✕</button>
+            <button
+              onClick={onClose}
+              aria-label="Close"
+              className="rounded-full w-8 h-8 grid place-items-center hover:bg-white/10 transition"
+            >
+              ✕
+            </button>
           </div>
           <div className="mt-3">{children}</div>
         </div>
       </div>
     </div>
-  );
-}
-
-function ConfirmationPage({
-  brand,
-  confirmation,
-  onReset,
-}: {
-  brand: string;
-  confirmation: any;
-  onReset: () => void;
-}) {
-  const {
-    orderId,
-    name,
-    formattedDate, // dd/mm/yyyy (from ReserveModal payload)
-    time,
-    lines,
-    qtyTotal,
-    bundles,
-    remainder,
-    total,
-    address,
-  } = confirmation;
-
-  // Scroll to top when confirmation mounts (so header shows correctly)
-  React.useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
-  }, []);
-
-  // Return to shop and scroll to #shop after resetting
-  function handleBackToShop() {
-    onReset();
-    requestAnimationFrame(() => {
-      const el = document.querySelector("#shop");
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  }
-
-  return (
-    <>
-      {/* Reuse the site header (skyline + shrink on scroll).
-          Basket is disabled on this view, so pass 0 and a no-op. */}
-      <Header brand={brand} itemsCount={0} openCart={() => {}} />
-
-      <main className="min-h-screen bg-gradient-to-b from-white to-slate-50 text-slate-800">
-        <section className="mx-auto max-w-3xl px-4 py-10">
-          <div className="rounded-3xl bg-white ring-1 ring-slate-200 shadow-sm p-6">
-            <h1 className="text-2xl font-bold">Order confirmed</h1>
-            <p className="mt-1 text-slate-600">
-              Thanks, {name}! Your reservation has been received and a confirmation email has been sent.
-            </p>
-
-            <div className="mt-4 grid gap-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-slate-500">Order ID</span>
-                <span className="font-medium">{orderId}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Pickup</span>
-                <span className="font-medium">
-                  {time} on {formattedDate}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Bottles</span>
-                <span className="font-medium">
-                  {qtyTotal} (bundles {bundles} · remainder {remainder})
-                </span>
-              </div>
-              <div className="flex justify-between border-t pt-2 mt-2">
-                <span className="font-semibold">Total due at collection</span>
-                <span className="font-semibold">{total}</span>
-              </div>
-            </div>
-
-            <div className="mt-5">
-              <div className="font-semibold mb-1">Items</div>
-              <ul className="list-disc pl-5 text-sm text-slate-700">
-                {lines.map((l: string, i: number) => (
-                  <li key={i}>{l}</li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="mt-5 text-sm">
-              <div className="font-semibold">Collect at</div>
-              <address className="not-italic text-slate-700">
-                {address.map((l: string, i: number) => (
-                  <div key={i}>{l}</div>
-                ))}
-              </address>
-              <p className="mt-2 text-slate-600">Payment on collection (cash or card).</p>
-            </div>
-
-            <div className="mt-6 flex flex-wrap gap-2">
-              <button
-                onClick={handleBackToShop}
-                className="rounded-2xl bg-slate-900 text-white px-5 py-3 text-sm font-semibold hover:bg-slate-800"
-              >
-                Place another order
-              </button>
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${MAPS_QUERY}`}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-2xl border border-slate-300 px-5 py-3 text-sm font-semibold hover:bg-white"
-              >
-                Open in Google Maps
-              </a>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <Footer brand={brand} />
-    </>
   );
 }
 
