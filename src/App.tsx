@@ -63,11 +63,11 @@ const GROUPED = [
     key: "prcxn",
     title: "PRCXN",
     blurb: <>Yoghurt cultured with <em>L. reuteri</em> DSM 17648.
-      <br/>Contains 1 trillion CFU.
-      <br/>Targets <em>H. pylori</em>.
-      <br/>Best paired with SPCTRL for full-spectrum microbial balance.
-      <br/>Lactose-free available.
-      <br/>250ml.</>,
+      Contains 100 billion CFU.
+      Targets <em>H. pylori</em>.
+      Best paired with SPCTRL for full-spectrum microbial balance.
+      Lactose-free available.
+      250ml.</>,
     img: "prcxn.png",
     variants: [
       { id: "PRCXN", label: "PRCXN" },
@@ -78,11 +78,11 @@ const GROUPED = [
     key: "spctrl",
     title: "SPCTRL",
     blurb: <>Yoghurt cultured with <em>L. reuteri</em> DSM 17938.
-      <br/>Contains 1 trillion CFU.
-      <br/>Targets pathogens including <em>Candida</em>.
-      <br/>Best paired with PRCXN for full-spectrum microbial balance.
-      <br/>Lactose-free available.
-      <br/>250ml.</>,
+      Contains 1 trillion CFU.
+      Targets pathogens including <em>Candida</em>.
+      Best paired with PRCXN for full-spectrum microbial balance.
+      Lactose-free available.
+      250ml.</>,
     img: "spctrl.png",
     variants: [
       { id: "SPCTRL", label: "SPCTRL" },
@@ -594,7 +594,7 @@ export default function App(){
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div className="mx-auto max-w-6xl px-4 grid md:grid-cols-2 gap-10 items-center">
+        <div className="mx-auto max-w-6xl px-8 grid md:grid-cols-2 gap-10 items-center">
           {/* Left: address & info */}
           <div>
             <h2 className="text-3xl font-bold mb-3">Collect your order</h2>
