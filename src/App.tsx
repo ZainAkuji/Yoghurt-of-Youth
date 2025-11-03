@@ -755,16 +755,53 @@ function Logo({ brand }:{ brand:string }) {
   );
 }
 
-function Drawer({ open, onClose, title, children }:{ open:boolean; onClose:()=>void; title:string; children:React.ReactNode; }) {
+function Drawer({
+  open,
+  onClose,
+  title,
+  children,
+}: {
+  open: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div aria-hidden={!open} className={cn("fixed inset-0 z-50", open ? "" : "pointer-events-none")}>
-      <div onClick={onClose} className={cn("absolute inset-0 bg-slate-900/40 transition-opacity", open ? "opacity-100" : "opacity-0")} />
-      <aside className={cn("absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-xl ring-1 ring-slate-200 p-5 transition-transform", open ? "translate-x-0" : "translate-x-full")}>
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">{title}</h3>
-          <button onClick={onClose} aria-label="Close" className="rounded-full w-8 h-8 grid place-items-center hover:bg-slate-100">✕</button>
+    <div
+      aria-hidden={!open}
+      className={cn("fixed inset-0 z-50", open ? "" : "pointer-events-none")}
+    >
+      {/* Dimmed background overlay */}
+      <div
+        onClick={onClose}
+        className={cn(
+          "absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity",
+          open ? "opacity-100" : "opacity-0"
+        )}
+      />
+
+      {/* Drawer panel */}
+      <aside
+        className={cn(
+          "absolute right-0 top-0 h-full w-full max-w-md shadow-2xl p-6 transition-transform border-l border-white/10",
+          "bg-black text-white",
+          open ? "translate-x-0" : "translate-x-full"
+        )}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <h3 className="text-lg font-semibold tracking-tight">{title}</h3>
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="rounded-full w-8 h-8 grid place-items-center hover:bg-white/10 transition"
+          >
+            ✕
+          </button>
         </div>
-        <div className="mt-4">{children}</div>
+
+        {/* Content */}
+        <div className="mt-4 text-white/90">{children}</div>
       </aside>
     </div>
   );
