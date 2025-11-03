@@ -769,25 +769,30 @@ function Drawer({
   return (
     <div
       aria-hidden={!open}
-      className={cn("fixed inset-0 z-50 transition-all duration-500", open ? "" : "pointer-events-none")}
+      className={cn(
+        "fixed inset-0 z-50 transition-all duration-500",
+        open ? "" : "pointer-events-none"
+      )}
     >
-      {/* Dim background overlay */}
+      {/* Background overlay */}
       <div
         onClick={onClose}
         className={cn(
-          "absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-500",
+          "absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-500",
           open ? "opacity-100" : "opacity-0"
         )}
       />
 
-      {/* Drawer panel */}
+      {/* Transparent drawer */}
       <aside
         className={cn(
-          "absolute right-0 top-0 h-full w-full max-w-md bg-black/80 backdrop-blur-md text-white shadow-2xl border-l border-white/10 p-6 transition-transform duration-500 ease-in-out",
+          "absolute right-0 top-0 h-full w-full max-w-md bg-black/60 backdrop-blur-lg text-white shadow-2xl border-l border-white/10 p-6 transition-transform duration-500 ease-in-out",
           open ? "translate-x-0" : "translate-x-full"
         )}
+        style={{
+          backgroundColor: "rgba(0, 0, 0, 0.55)", // true transparency for browsers that ignore Tailwind alpha
+        }}
       >
-        {/* Header */}
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">{title}</h3>
           <button
@@ -799,8 +804,9 @@ function Drawer({
           </button>
         </div>
 
-        {/* Content */}
-        <div className="mt-4 text-white/90">{children}</div>
+        <div className="mt-4 text-white/90 overflow-y-auto max-h-[calc(100%-5rem)] pr-2">
+          {children}
+        </div>
       </aside>
     </div>
   );
