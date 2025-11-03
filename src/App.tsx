@@ -128,7 +128,7 @@ function AboutSection() {
           About Yoghurt of Youth
         </h2>
 
-        <p className="mt-4 text-white>
+        <p className="mt-4 text-white">
           Each of our yoghurts is efficiently fermented with live{" "}
           <em>Lactobacillus reuteri</em> strains that have been studied for
           their unique, health-supporting properties.
