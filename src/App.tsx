@@ -121,6 +121,8 @@ function AboutSection() {
         backgroundRepeat: "no-repeat",
       }}
     >
+      {/* dark overlay */}
+      <div className="absolute inset-0 bg-black/70" />
       <div className="mx-auto max-w-6xl px-4">
         <h2 className="text-2xl md:text-3xl font-bold text-white">
           About Yoghurt of Youth
