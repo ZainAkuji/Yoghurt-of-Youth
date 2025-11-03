@@ -78,7 +78,7 @@ const GROUPED = [
     key: "spctrl",
     title: "SPCTRL",
     blurb: <>Yoghurt cultured with <em>L. reuteri</em> DSM 17938.
-      Contains 1 trillion CFU.
+      Contains 100 billion CFU.
       Targets pathogens including <em>Candida</em>.
       Best paired with PRCXN for full-spectrum microbial balance.
       Lactose-free available.
@@ -480,7 +480,7 @@ export default function App(){
                   />
       
                   {/* dark overlay for readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+                  <div className="absolute inset-0 bg-black/50" />
       
                   {/* content overlay */}
                   <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-8">
