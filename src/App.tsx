@@ -511,53 +511,51 @@ export default function App(){
                     </div>
       
                     {/* buttons + bundle note */}
-                    <div className="space-y-3">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-w-md">
-                        {g.variants.map((v) => {
-                          const qty = cart[v.id] || 0;
-                          return (
-                            <div
-                              key={v.id}
-                              className="flex items-center gap-2 bg-black/25 rounded-lg px-2 py-1.5 backdrop-blur-sm"
+                    <div className="grid grid-cols-2 gap-2 max-w-md">
+                      {g.variants.map((v) => {
+                        const qty = cart[v.id] || 0;
+                        return (
+                          <div
+                            key={v.id}
+                            className="flex items-center gap-2 bg-black/25 rounded-lg px-2 py-1.5 backdrop-blur-sm"
+                          >
+                            {/* minus */}
+                            <button
+                              onClick={() => sub(v.id)}
+                              className="w-8 h-8 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
+                              aria-label={`Remove one ${v.label}`}
                             >
-                              {/* minus */}
-                              <button
-                                onClick={() => sub(v.id)}
-                                className="w-8 h-8 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
-                                aria-label={`Remove one ${v.label}`}
-                              >
-                                <span className="translate-y-[-1px] text-base font-semibold">
-                                  −
-                                </span>
-                              </button>
-      
-                              {/* qty */}
-                              <span
-                                key={`${v.id}-${qty}`}
-                                className="min-w-[2rem] text-center text-sm text-white font-semibold qty-flash"
-                              >
-                                {qty}
+                              <span className="translate-y-[-1px] text-base font-semibold">
+                                −
                               </span>
-      
-                              {/* plus */}
-                              <button
-                                onClick={() => add(v.id)}
-                                className="w-8 h-8 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                aria-label={`Add one ${v.label}`}
-                              >
-                                <span className="translate-y-[-1px] text-base font-semibold">
-                                  +
-                                </span>
-                              </button>
-      
-                              {/* label */}
-                              <span className="ml-1 text-xs md:text-sm text-white">
-                                {v.label}
+                            </button>
+    
+                            {/* qty */}
+                            <span
+                              key={`${v.id}-${qty}`}
+                              className="min-w-[2rem] text-center text-sm text-white font-semibold qty-flash"
+                            >
+                              {qty}
+                            </span>
+    
+                            {/* plus */}
+                            <button
+                              onClick={() => add(v.id)}
+                              className="w-8 h-8 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                              aria-label={`Add one ${v.label}`}
+                            >
+                              <span className="translate-y-[-1px] text-base font-semibold">
+                                +
                               </span>
-                            </div>
-                          );
-                        })}
-                      </div>
+                            </button>
+    
+                            {/* label */}
+                            <span className="ml-1 text-xs md:text-sm text-white">
+                              {v.label}
+                            </span>
+                          </div>
+                        );
+                      })}
       
                       <div className="text-xs text-white flex items-center">
                         £2 per bottle · 7 for £10 (mix &amp; match)
