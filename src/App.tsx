@@ -1354,7 +1354,7 @@ function Modal({
       {/* Dim / blur the page behind */}
       <div
         onClick={onClose}
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
       />
 
       {/* Centered frosted panel */}
@@ -1363,7 +1363,7 @@ function Modal({
           className="w-full max-w-lg rounded-2xl border border-white/20 shadow-2xl p-6 text-white backdrop-blur-sm"
           style={{
             // REAL transparency – same vibe as the drawer
-            backgroundColor: "rgba(0, 0, 0, 0.60)",
+            backgroundColor: "rgba(0, 0, 0, 0.55)",
           }}
         >
           <div className="flex items-center justify-between">
