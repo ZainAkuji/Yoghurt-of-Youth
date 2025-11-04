@@ -62,10 +62,9 @@ const GROUPED = [
   {
     key: "prcxn",
     title: "PRCXN",
-    blurb: <>Yoghurt cultured with <em>L. reuteri</em> DSM 17648.
-      Contains 100 billion CFU.
+    blurb: <>Yoghurt fermented by <em>L. reuteri</em> DSM 17648 to 100 billion CFU.
       Targets <em>H. pylori</em>.
-      Best paired with SPCTRL for full-spectrum microbial balance.
+      Pair with SPCTRL for full gut restoration.
       Lactose-free available.
       250ml.</>,
     img: "prcxn.png",
@@ -77,10 +76,9 @@ const GROUPED = [
   {
     key: "spctrl",
     title: "SPCTRL",
-    blurb: <>Yoghurt cultured with <em>L. reuteri</em> DSM 17938.
-      Contains 100 billion CFU.
+    blurb: <>Yoghurt fermented by <em>L. reuteri</em> DSM 17938 to 100 billion CFU.
       Targets pathogens including <em>Candida</em>.
-      Best paired with PRCXN for full-spectrum microbial balance.
+      Pair with PRCXN for full gut restoration.
       Lactose-free available.
       250ml.</>,
     img: "spctrl.png",
@@ -525,7 +523,7 @@ export default function App(){
                               className="w-8 h-8 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
                               aria-label={`Remove one ${v.label}`}
                             >
-                              <span className="translate-y-[-1px] text-base font-semibold">
+                              <span className="translate-y-[-1px] text-xs sm:text-sm md:text-base font-semibold">
                                 −
                               </span>
                             </button>
@@ -533,7 +531,7 @@ export default function App(){
                             {/* qty */}
                             <span
                               key={`${v.id}-${qty}`}
-                              className="min-w-[2rem] text-center text-sm text-white font-semibold qty-flash"
+                              className="min-w-[2rem] text-center text-xs sm:text-sm md:text-sm text-white font-semibold qty-flash"
                             >
                               {qty}
                             </span>
@@ -544,13 +542,13 @@ export default function App(){
                               className="w-8 h-8 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
                               aria-label={`Add one ${v.label}`}
                             >
-                              <span className="translate-y-[-1px] text-base font-semibold">
+                              <span className="translate-y-[-1px] text-xs sm:text-sm md:text-base font-semibold">
                                 +
                               </span>
                             </button>
     
                             {/* label */}
-                            <span className="ml-1 text-xs md:text-sm text-white">
+                            <span className="ml-1 text-xs sm:text-sm md:text-sm text-white">
                               {v.label}
                             </span>
                           </div>
