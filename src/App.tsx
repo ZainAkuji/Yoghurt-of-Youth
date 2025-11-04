@@ -486,7 +486,7 @@ export default function App(){
                   <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-8">
                     {/* title + blurb */}
                     <div>
-                      <p className="text-xs uppercase tracking-[0.2em] text-white mb-1">
+                      <p className="text-xs sm:text-sm md:text-base uppercase tracking-[0.2em] text-white mb-1">
                         {idx === 0 ? "Targeted" : "Broad-acting"}
                       </p>
                       {g.key === "prcxn" ? (
