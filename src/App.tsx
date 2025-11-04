@@ -523,7 +523,7 @@ export default function App(){
                               className="w-8 h-8 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
                               aria-label={`Remove one ${v.label}`}
                             >
-                              <span className="translate-y-[-1px] text-xs sm:text-sm md:text-base font-semibold">
+                              <span className="translate-y-[-1px] text-sm sm:text-sm md:text-base font-semibold">
                                 −
                               </span>
                             </button>
@@ -531,7 +531,7 @@ export default function App(){
                             {/* qty */}
                             <span
                               key={`${v.id}-${qty}`}
-                              className="min-w-[2rem] text-center text-xs sm:text-sm md:text-sm text-white font-semibold qty-flash"
+                              className="text-center text-xs sm:text-sm md:text-sm text-white font-semibold qty-flash"
                             >
                               {qty}
                             </span>
@@ -542,7 +542,7 @@ export default function App(){
                               className="w-8 h-8 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
                               aria-label={`Add one ${v.label}`}
                             >
-                              <span className="translate-y-[-1px] text-xs sm:text-sm md:text-base font-semibold">
+                              <span className="translate-y-[-1px] text-sm sm:text-sm md:text-base font-semibold">
                                 +
                               </span>
                             </button>
