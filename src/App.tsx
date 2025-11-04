@@ -493,19 +493,19 @@ export default function App(){
                         <img
                           src="/prcxn_logo.png"
                           alt="PRCXN"
-                          className="h-20 md:h-28 w-auto drop-shadow-lg"
+                          className="w-[60%] sm:w-[55%] md:w-[45%] object-contain drop-shadow-lg"
                         />
                       ) : g.key === "spctrl" ? (
                         <img
                           src="/spctrl_logo.png"
                           alt="SPCTRL"
-                          className="h-20 md:h-28 w-auto drop-shadow-lg"
+                          className="w-[60%] sm:w-[55%] md:w-[45%] object-contain drop-shadow-lg"
                         />
                       ) : (
                         <h3 className="text-3xl font-bold text-white drop-shadow-md">{g.title}</h3>
                       )}
 
-                      <p className="mt-2 text-sm md:text-base text-white max-w-md leading-relaxed">
+                      <p className="mt-2 text-xs sm:text-sm md:text-base text-white max-w-md leading-relaxed">
                         {g.blurb}
                       </p>
                     </div>
@@ -723,7 +723,7 @@ function Header({ brand, itemsCount, openCart }) {
             </a>
 
             {/* NAVIGATION */}
-            <nav className="flex items-center gap-6 text-white font-medium text-sm md:text-base">
+            <nav className="flex items-center gap-6 text-white font-medium text-xs sm:text-sm md:text-base">
               <div className="flex items-center gap-6 leading-none">
                 <a href="#shop" className="hover:text-amber-300 transition-colors">Shop</a>
                 <a href="#about" className="hover:text-amber-300 transition-colors">About</a>
