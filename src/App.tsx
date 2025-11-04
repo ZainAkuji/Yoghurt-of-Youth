@@ -548,7 +548,7 @@ export default function App(){
                             </button>
     
                             {/* label */}
-                            <span className="ml-1 text-xs sm:text-sm md:text-sm text-white">
+                            <span className="ml-1 text-center text-xs sm:text-sm md:text-sm text-white">
                               {v.label}
                             </span>
                           </div>
