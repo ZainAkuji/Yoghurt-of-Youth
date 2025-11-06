@@ -693,10 +693,14 @@ function Header({ brand, itemsCount, openCart }) {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 transition-all duration-500 ease-in-out">
+    <header className="sticky top-0 z-50 transition-all duration-500 ease-in-out group">
       {/* Background */}
       <div
-        className={`relative transition-all duration-500 ${scrolled ? "h-20" : "h-32"}`}
+        className={`
+          relative transition-all duration-500
+          ${scrolled ? "h-20" : "h-32"}
+          group-hover:h-32
+        `}
         style={{
           backgroundImage: "url('skyline.png')",
           backgroundSize: "cover",
@@ -714,9 +718,11 @@ function Header({ brand, itemsCount, openCart }) {
               <img
                 src="logo_inverted_transparent.png"
                 alt="Yoghurt of Youth logo"
-                className={`object-contain transition-all duration-500 ${
-                  scrolled ? "h-10 md:h-12" : "h-14 md:h-16"
-                }`}
+                className={`
+                  object-contain transition-all duration-500
+                  ${scrolled ? "h-10 md:h-12" : "h-14 md:h-16"}
+                  group-hover:h-14 md:group-hover:h-16
+                `}
               />
             </a>
 
@@ -727,7 +733,7 @@ function Header({ brand, itemsCount, openCart }) {
                 <a href="#about" className="hover:text-amber-300 transition-colors">About</a>
                 <a href="#visit" className="hover:text-amber-300 transition-colors">Collect</a>
               </div>
-  
+
               {/* Basket button perfectly aligned */}
               <button
                 onClick={openCart}
