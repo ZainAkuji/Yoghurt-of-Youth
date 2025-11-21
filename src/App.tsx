@@ -353,7 +353,7 @@ function AboutSection() {
             <li>Leave on the skin for an hour</li>
             <li>Peel off the dried mask; it will be brittle so it should just crack off easily</li>
             <li>Leave the powdery residue on</li>
-            <li>Avoid washing the are for as long as possible to maximise health benefit</li>
+            <li>Avoid washing the area for as long as possible to maximise health benefit</li>
           </ul>
         </div>
 
