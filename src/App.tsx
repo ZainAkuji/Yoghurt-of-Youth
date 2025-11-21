@@ -341,19 +341,19 @@ function AboutSection() {
         </div>
 
         <p className="mt-2 text-white text-sm leading-relaxed">
-          The SPCTRL yoghurt can be used to make a powerful, natural <strong>mask</strong> that takes advantage of its antibacterial and antifungal properties topically. To do that, follow these steps:
+          The SPCTRL yoghurt (and PRCXN to a lesser extent) can be used to make a powerful, natural <strong>mask</strong> that takes advantage of its antibacterial and antifungal properties topically. To do that, follow these steps:
         </p>
 
         <div className="mt-2 text-sm text-white leading-relaxed">
           <ul className="list-disc list-inside space-y-1">
-            <li>Add 1 tbsp of yoghurt into a cup.</li>
-            <li>Add 3 slightly heaped tsp of cornflour into the cup.</li>
-            <li>Mix until the mixture is thick and sticky (take care not to overdo).</li>
-            <li>Apply a thick layer on the face or any skin that requires treating until the skin is concealed under the mask.</li>
-            <li>Leave on the skin for an hour.</li>
-            <li>Peel off the dried mask; it will be brittle so it should just crack off easily.</li>
-            <li>Leave the powdery residue on.</li>
-            <li>Avoid washing the are for as long as possible to maximise health benefit.</li>
+            <li>Add 1 tbsp of yoghurt into a cup</li>
+            <li>Add 3 flat tsp of cornflour into the cup</li>
+            <li>Mix until the mixture is thick and sticky (take care not to overdo it)</li>
+            <li>Apply a thick layer on the face or any skin that requires treating until the skin is concealed under the mask</li>
+            <li>Leave on the skin for an hour</li>
+            <li>Peel off the dried mask; it will be brittle so it should just crack off easily</li>
+            <li>Leave the powdery residue on</li>
+            <li>Avoid washing the are for as long as possible to maximise health benefit</li>
           </ul>
         </div>
 
