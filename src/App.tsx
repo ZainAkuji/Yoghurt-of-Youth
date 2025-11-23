@@ -431,21 +431,6 @@ function AboutSection() {
   );
 }
 
-function AddRemove({ id, label, price = 2.0 }: { id: string; label: string; price?: number }) {
-  const qty = cart[id] || 0;
-  return (
-    <div className="flex items-center justify-center gap-3 py-2">
-      <button onClick={() => sub(id)} className="w-9 h-9 rounded-full bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-lg">−</button>
-      <span className="w-12 text-center font-bold text-lg">{qty}</span>
-      <button onClick={() => add(id)} className="w-9 h-9 rounded-full bg-white shadow-md hover:shadow-lg flex items-center justify-center text-lg font-bold text-slate-800">+</button>
-      <div className="text-sm">
-        {qty > 0 && <span className="block text-slate-600">£{(qty * price).toFixed(2)}</span>}
-        <span className="block text-xs text-slate-500">{label}</span>
-      </div>
-    </div>
-  );
-}
-
 export default function App(){
   const [query, setQuery] = useState("");
   const [cart, setCart] = useState<Record<string,number>>(()=>{ try{ return JSON.parse(localStorage.getItem("yoy_cart") || "{}"); }catch{ return {}; }});
@@ -460,6 +445,20 @@ export default function App(){
   }, [query]);
 
   const { items, qtyTotal, bundles, remainder, total, savings, plainSubtotal } = computeTotals(cart);
+  const AddRemove = ({ id, label, price = 2.0 }: { id: string; label: string; price?: number }) => {
+    const qty = cart[id] || 0;
+    return (
+      <div className="flex items-center justify-center gap-3 py-2">
+        <button onClick={() => sub(id)} className="w-9 h-9 rounded-full bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-lg">−</button>
+        <span className="w-12 text-center font-bold text-lg">{qty}</span>
+        <button onClick={() => add(id)} className="w-9 h-9 rounded-full bg-white shadow-md hover:shadow-lg flex items-center justify-center text-lg font-bold text-slate-800">+</button>
+        <div className="text-sm">
+          {qty > 0 && <span className="block">£{(qty * price).toFixed(2)}</span>}
+          <span className="block text-xs text-slate-500">{label}</span>
+        </div>
+      </div>
+    );
+  };
   const add = (id:string)=> setCart(c=>({ ...c, [id]: (c[id]||0)+1 }));
   const sub = (id:string)=> setCart(c=>{ const n={...c}; if(!n[id]) return n; n[id]--; if(n[id]<=0) delete n[id]; return n; });
   const remove = (id:string)=> setCart(c=>{ const n={...c}; delete n[id]; return n; });
@@ -509,7 +508,6 @@ export default function App(){
       {/* SHOP */}
       <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full py-12 bg-gradient-to-b from-white to-slate-50">
         <div className="max-w-7xl mx-auto px-6">
-          {/* Bundle notice – visible on all screens */}
           <div className="text-center mb-10 space-y-2">
             <p className="text-lg font-semibold text-slate-800">
               Plain yoghurts: <span className="text-emerald-600">7 for £10</span> (mix & match plain only)
@@ -537,25 +535,21 @@ export default function App(){
                       </tr>
                     </thead>
                     <tbody>
-                      {/* Plain */}
                       <tr className="bg-white">
                         <td className="px-6 py-5 font-semibold">Plain (PLN)</td>
                         <td className="text-center"><AddRemove id="PRCXN" label="PRCXN" /></td>
                         <td className="text-center"><AddRemove id="PRCXN LF" label="PRCXN LF" /></td>
                       </tr>
-                      {/* Strawberry */}
                       <tr className="bg-pink-50">
                         <td className="px-6 py-5 font-semibold text-pink-800">Strawberry (STR)</td>
                         <td className="text-center"><AddRemove id="PRCXN-STR" label="PRCXN STR" price={2.5} /></td>
                         <td className="text-center"><AddRemove id="PRCXN-STR-LF" label="PRCXN STR LF" price={2.5} /></td>
                       </tr>
-                      {/* Chocolate */}
                       <tr className="bg-amber-50">
                         <td className="px-6 py-5 font-semibold text-amber-900">Chocolate (CHC)</td>
                         <td className="text-center"><AddRemove id="PRCXN-CHC" label="PRCXN CHC" price={2.5} /></td>
                         <td className="text-center"><AddRemove id="PRCXN-CHC-LF" label="PRCXN CHC LF" price={2.5} /></td>
                       </tr>
-                      {/* Vanilla */}
                       <tr className="bg-yellow-50">
                         <td className="px-6 py-5 font-semibold text-yellow-900">Vanilla (VAN)</td>
                         <td className="text-center"><AddRemove id="PRCXN-VAN" label="PRCXN VAN" price={2.5} /></td>
@@ -584,25 +578,21 @@ export default function App(){
                       </tr>
                     </thead>
                     <tbody>
-                      {/* Plain */}
                       <tr className="bg-white">
                         <td className="px-6 py-5 font-semibold">Plain (PLN)</td>
                         <td className="text-center"><AddRemove id="SPCTRL" label="SPCTRL" /></td>
                         <td className="text-center"><AddRemove id="SPCTRL LF" label="SPCTRL LF" /></td>
                       </tr>
-                      {/* Strawberry */}
                       <tr className="bg-pink-50">
                         <td className="px-6 py-5 font-semibold text-pink-800">Strawberry (STR)</td>
                         <td className="text-center"><AddRemove id="SPCTRL-STR" label="SPCTRL STR" price={2.5} /></td>
                         <td className="text-center"><AddRemove id="SPCTRL-STR-LF" label="SPCTRL STR LF" price={2.5} /></td>
                       </tr>
-                      {/* Chocolate */}
                       <tr className="bg-amber-50">
                         <td className="px-6 py-5 font-semibold text-amber-900">Chocolate (CHC)</td>
                         <td className="text-center"><AddRemove id="SPCTRL-CHC" label="SPCTRL CHC" price={2.5} /></td>
                         <td className="text-center"><AddRemove id="SPCTRL-CHC-LF" label="SPCTRL CHC LF" price={2.5} /></td>
                       </tr>
-                      {/* Vanilla */}
                       <tr className="bg-yellow-50">
                         <td className="px-6 py-5 font-semibold text-yellow-900">Vanilla (VAN)</td>
                         <td className="text-center"><AddRemove id="SPCTRL-VAN" label="SPCTRL VAN" price={2.5} /></td>
@@ -616,7 +606,6 @@ export default function App(){
           </div>
         </div>
       </section>
-
 
       {/* About */}
       <AboutSection />
