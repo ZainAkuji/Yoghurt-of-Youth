@@ -445,17 +445,15 @@ export default function App(){
   }, [query]);
 
   const { items, qtyTotal, bundles, remainder, total, savings, plainSubtotal } = computeTotals(cart);
-  const AddRemove = ({ id, label, price = 2.0 }: { id: string; label: string; price?: number }) => {
+  const MiniAdd = ({ id, label, price = 2.0 }: { id: string; label: string; price?: number }) => {
     const qty = cart[id] || 0;
     return (
-      <div className="flex items-center justify-center gap-3 py-2">
-        <button onClick={() => sub(id)} className="w-9 h-9 rounded-full bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-lg">−</button>
-        <span className="w-12 text-center font-bold text-lg">{qty}</span>
-        <button onClick={() => add(id)} className="w-9 h-9 rounded-full bg-white shadow-md hover:shadow-lg flex items-center justify-center text-lg font-bold text-slate-800">+</button>
-        <div className="text-sm">
-          {qty > 0 && <span className="block">£{(qty * price).toFixed(2)}</span>}
-          <span className="block text-xs text-slate-500">{label}</span>
-        </div>
+      <div className="flex items-center justify-center gap-2">
+        <button onClick={() => sub(id)} className="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-lg">−</button>
+        <span className="w-10 text-center font-bold">{qty}</span>
+        <button onClick={() => add(id)} className="w-8 h-8 rounded-full bg-white shadow hover:shadow-md text-lg font-bold">+</button>
+        {qty > 0 && <span className="ml-2 text-sm">£{(qty * price).toFixed(2)}</span>}
+        <span className="block text-xs text-slate-500">{label}</span>
       </div>
     );
   };
@@ -506,104 +504,119 @@ export default function App(){
       </section>
       
       {/* SHOP */}
-      <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full py-12 bg-gradient-to-b from-white to-slate-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-10 space-y-2">
-            <p className="text-lg font-semibold text-slate-800">
-              Plain yoghurts: <span className="text-emerald-600">7 for £10</span> (mix & match plain only)
-            </p>
-            <p className="text-lg font-semibold text-slate-800">
-              Flavoured yoghurts: <span className="text-amber-600">7 for £15</span> (mix & match flavoured only)
-            </p>
-          </div>
+      <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full">      
+        {/* full-width panels */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 w-full">
+          {GROUPED
+            .filter((g) => {
+              const q = (query || "").toLowerCase();
+              return (
+                !q ||
+                g.title.toLowerCase().includes(q) ||
+                g.variants.some((v) => v.label.toLowerCase().includes(q))
+              );
+            })
+            .map((g, idx) => {
+              // how many of this group are in basket (for the small summary)
+              const groupTotal = g.variants.reduce(
+                (sum, v) => sum + (cart[v.id] || 0),
+                0
+              );
       
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* ====== PRCXN TABLE ====== */}
-            <div className="relative overflow-hidden rounded-3xl shadow-2xl">
-              <img src="/prcxn.png" alt="PRCXN" className="absolute inset-0 w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-black/50" />
-              <div className="relative p-8 text-white">
-                <h2 className="text-4xl font-bold mb-2">PRCXN</h2>
-                <p className="text-lg mb-6">Targets <em>H. pylori</em> – DSM 17648</p>
-                <div className="bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden text-slate-800">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="bg-slate-900 text-white">
-                        <th className="px-6 py-4 text-left">Flavour</th>
-                        <th className="px-6 py-4 text-center">Standard</th>
-                        <th className="px-6 py-4 text-center">Lactose-Free</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="bg-white">
-                        <td className="px-6 py-5 font-semibold">Plain (PLN)</td>
-                        <td className="text-center"><AddRemove id="PRCXN" label="PRCXN" /></td>
-                        <td className="text-center"><AddRemove id="PRCXN LF" label="PRCXN LF" /></td>
-                      </tr>
-                      <tr className="bg-pink-50">
-                        <td className="px-6 py-5 font-semibold text-pink-800">Strawberry (STR)</td>
-                        <td className="text-center"><AddRemove id="PRCXN-STR" label="PRCXN STR" price={2.5} /></td>
-                        <td className="text-center"><AddRemove id="PRCXN-STR-LF" label="PRCXN STR LF" price={2.5} /></td>
-                      </tr>
-                      <tr className="bg-amber-50">
-                        <td className="px-6 py-5 font-semibold text-amber-900">Chocolate (CHC)</td>
-                        <td className="text-center"><AddRemove id="PRCXN-CHC" label="PRCXN CHC" price={2.5} /></td>
-                        <td className="text-center"><AddRemove id="PRCXN-CHC-LF" label="PRCXN CHC LF" price={2.5} /></td>
-                      </tr>
-                      <tr className="bg-yellow-50">
-                        <td className="px-6 py-5 font-semibold text-yellow-900">Vanilla (VAN)</td>
-                        <td className="text-center"><AddRemove id="PRCXN-VAN" label="PRCXN VAN" price={2.5} /></td>
-                        <td className="text-center"><AddRemove id="PRCXN-VAN-LF" label="PRCXN VAN LF" price={2.5} /></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+              return (
+                <article
+                  key={g.key}
+                  className="relative aspect-[3/2] w-full overflow-hidden"
+                >
+                  {/* background image */}
+                  <img
+                    src={g.img}
+                    alt={g.title}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
       
-            {/* ====== SPCTRL TABLE ====== */}
-            <div className="relative overflow-hidden rounded-3xl shadow-2xl">
-              <img src="/spctrl.png" alt="SPCTRL" className="absolute inset-0 w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-black/50" />
-              <div className="relative p-8 text-white">
-                <h2 className="text-4xl font-bold mb-2">SPCTRL</h2>
-                <p className="text-lg mb-6">Broad protection including <em>Candida</em> – DSM 17938</p>
-                <div className="bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden text-slate-800">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="bg-slate-900 text-white">
-                        <th className="px-6 py-4 text-left">Flavour</th>
-                        <th className="px-6 py-4 text-center">Standard</th>
-                        <th className="px-6 py-4 text-center">Lactose-Free</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="bg-white">
-                        <td className="px-6 py-5 font-semibold">Plain (PLN)</td>
-                        <td className="text-center"><AddRemove id="SPCTRL" label="SPCTRL" /></td>
-                        <td className="text-center"><AddRemove id="SPCTRL LF" label="SPCTRL LF" /></td>
-                      </tr>
-                      <tr className="bg-pink-50">
-                        <td className="px-6 py-5 font-semibold text-pink-800">Strawberry (STR)</td>
-                        <td className="text-center"><AddRemove id="SPCTRL-STR" label="SPCTRL STR" price={2.5} /></td>
-                        <td className="text-center"><AddRemove id="SPCTRL-STR-LF" label="SPCTRL STR LF" price={2.5} /></td>
-                      </tr>
-                      <tr className="bg-amber-50">
-                        <td className="px-6 py-5 font-semibold text-amber-900">Chocolate (CHC)</td>
-                        <td className="text-center"><AddRemove id="SPCTRL-CHC" label="SPCTRL CHC" price={2.5} /></td>
-                        <td className="text-center"><AddRemove id="SPCTRL-CHC-LF" label="SPCTRL CHC LF" price={2.5} /></td>
-                      </tr>
-                      <tr className="bg-yellow-50">
-                        <td className="px-6 py-5 font-semibold text-yellow-900">Vanilla (VAN)</td>
-                        <td className="text-center"><AddRemove id="SPCTRL-VAN" label="SPCTRL VAN" price={2.5} /></td>
-                        <td className="text-center"><AddRemove id="SPCTRL-VAN-LF" label="SPCTRL VAN LF" price={2.5} /></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
+                  {/* dark overlay for readability */}
+                  <div className="absolute inset-0 bg-black/30" />
+      
+                  {/* content overlay */}
+                  <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-8">
+                    {/* title + blurb */}
+                    <div>
+                      <p className="text-xs sm:text-sm md:text-base uppercase tracking-[0.2em] text-white mb-1">
+                        {idx === 0 ? "Targeted" : "Broad-acting"}
+                      </p>
+                      {g.key === "prcxn" ? (
+                        <img
+                          src="/prcxn_logo.png"
+                          alt="PRCXN"
+                          className="w-[60%] sm:w-[55%] md:w-[45%] object-contain drop-shadow-lg"
+                        />
+                      ) : g.key === "spctrl" ? (
+                        <img
+                          src="/spctrl_logo.png"
+                          alt="SPCTRL"
+                          className="w-[60%] sm:w-[55%] md:w-[45%] object-contain drop-shadow-lg"
+                        />
+                      ) : (
+                        <h3 className="text-3xl font-bold text-white drop-shadow-md">{g.title}</h3>
+                      )}
+
+                      <p className="mt-2 text-xs sm:text-sm md:text-base text-white max-w-md leading-relaxed">
+                        {g.blurb}
+                      </p>
+                    </div>
+      
+                    {/* NEW FLAVOUR TABLE – replaces the old buttons */}
+                    <div className="bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl">
+                      <div className="bg-gradient-to-r from-emerald-600 to-amber-600 text-white px-6 py-3 text-center font-semibold">
+                        Plain £2.00 • Flavoured £2.50  |  Plain 7 for £10 | Flavoured 7 for £15
+                      </div>
+                      <table className="w-full text-slate-800">
+                        <tbody>
+                          {/* Plain row */}
+                          <tr className="bg-white border-b-2 border-slate-100">
+                            <td className="px-6 py-4 font-semibold">Plain (PLN)</td>
+                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN" : "SPCTRL"} label="Standard" /></td>
+                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN LF" : "SPCTRL LF"} label="LF" /></td>
+                          </tr>
+                          {/* Strawberry row */}
+                          <tr className="bg-pink-50 border-b-2 border-slate-100">
+                            <td className="px-6 py-4 font-semibold text-pink-800">Strawberry (STR)</td>
+                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN-STR" : "SPCTRL-STR"} label="Standard" price={2.5} /></td>
+                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN-STR-LF" : "SPCTRL-STR-LF"} label="LF" price={2.5} /></td>
+                          </tr>
+                          {/* Chocolate row */}
+                          <tr className="bg-amber-50 border-b-2 border-slate-100">
+                            <td className="px-6 py-4 font-semibold text-amber-900">Chocolate (CHC)</td>
+                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN-CHC" : "SPCTRL-CHC"} label="Standard" price={2.5} /></td>
+                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN-CHC-LF" : "SPCTRL-CHC-LF"} label="LF" price={2.5} /></td>
+                          </tr>
+                          {/* Vanilla row */}
+                          <tr className="bg-yellow-50">
+                            <td className="px-6 py-4 font-semibold text-yellow-900">Vanilla (VAN)</td>
+                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN-VAN" : "SPCTRL-VAN"} label="Standard" price={2.5} /></td>
+                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN-VAN-LF" : "SPCTRL-VAN-LF"} label="LF" price={2.5} /></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div className="text-xs text-white flex items-center">
+                      £2 per bottle · 7 for £10 (mix &amp; match)
+                      <span
+                        className={cn(
+                          "ml-2 inline-block bg-white/10 px-2 py-0.5 rounded transition-opacity duration-150",
+                          groupTotal > 0 ? "opacity-100" : "opacity-0"
+                        )}
+                      >
+                        In basket: {groupTotal}
+                      </span>
+                    </div>
+                    
+                  </div>
+                </article>
+              );
+            })}
         </div>
       </section>
 
