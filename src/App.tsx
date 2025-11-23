@@ -48,60 +48,14 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  // ================== PLAIN (original therapeutic) – £2.00 ==================
-  { id: "PRCXN",        name: "PRCXN Plain",          price: 2.0, size: "250 mL",
-    desc: "Classic dairy yoghurt cultured with *L. reuteri* DSM 17648. Targets *H. pylori*.", 
-    tags: ["Plain","PRCXN","DSM 17648"], img: "/prcxn.png" },
-  { id: "PRCXN LF",     name: "PRCXN Plain (LF)",     price: 2.0, size: "250 mL",
-    desc: "Lactose-free version of PRCXN. Targets *H. pylori*.", 
-    tags: ["Plain","Lactose-free","PRCXN","DSM 17648"], img: "/prcxn.png" },
-  { id: "SPCTRL",       name: "SPCTRL Plain",         price: 2.0, size: "250 mL",
-    desc: "Classic dairy yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", 
-    tags: ["Plain","SPCTRL","DSM 17938"], img: "/spctrl.png" },
-  { id: "SPCTRL LF",    name: "SPCTRL Plain (LF)",    price: 2.0, size: "250 mL",
-    desc: "Lactose-free version of SPCTRL. Targets harmful microbes including *Candida*.", 
-    tags: ["Plain","Lactose-free","SPCTRL","DSM 17938"], img: "/spctrl.png" },
-
-  // ================== FLAVOURED – £2.50 ==================
-  // PRCXN flavoured
-  { id: "PRCXN-STR",     name: "PRCXN Strawberry",     price: 2.5, size: "250 mL",
-    desc: "PRCXN yoghurt with real freeze-dried strawberry & light erythritol sweetness.", 
-    tags: ["Flavoured","Strawberry","PRCXN","DSM 17648"], img: "/prcxn.png" },
-  { id: "PRCXN-STR-LF",  name: "PRCXN Strawberry (LF)",price: 2.5, size: "250 mL",
-    desc: "Lactose-free PRCXN strawberry flavour.", 
-    tags: ["Flavoured","Strawberry","Lactose-free","PRCXN","DSM 17648"], img: "/prcxn.png" },
-  { id: "PRCXN-CHC",     name: "PRCXN Chocolate",      price: 2.5, size: "250 mL",
-    desc: "PRCXN yoghurt with Dutch-process cocoa & light erythritol sweetness.", 
-    tags: ["Flavoured","Chocolate","PRCXN","DSM 17648"], img: "/prcxn.png" },
-  { id: "PRCXN-CHC-LF",  name: "PRCXN Chocolate (LF)", price: 2.5, size: "250 mL",
-    desc: "Lactose-free PRCXN chocolate flavour.", 
-    tags: ["Flavoured","Chocolate","Lactose-free","PRCXN","DSM 17648"], img: "/prcxn.png" },
-  { id: "PRCXN-VAN",     name: "PRCXN Vanilla",        price: 2.5, size: "250 mL",
-    desc: "PRCXN yoghurt with real Madagascar vanilla bean & light erythritol sweetness.", 
-    tags: ["Flavoured","Vanilla","PRCXN","DSM 17648"], img: "/prcxn.png" },
-  { id: "PRCXN-VAN-LF",  name: "PRCXN Vanilla (LF)",   price: 2.5, size: "250 mL",
-    desc: "Lactose-free PRCXN vanilla flavour.", 
-    tags: ["Flavoured","Vanilla","Lactose-free","PRCXN","DSM 17648"], img: "/prcxn.png" },
-
-  // SPCTRL flavoured
-  { id: "SPCTRL-STR",    name: "SPCTRL Strawberry",    price: 2.5, size: "250 mL",
-    desc: "SPCTRL yoghurt with real freeze-dried strawberry & light erythritol sweetness.", 
-    tags: ["Flavoured","Strawberry","SPCTRL","DSM 17938"], img: "/spctrl.png" },
-  { id: "SPCTRL-STR-LF", name: "SPCTRL Strawberry (LF)",price: 2.5, size: "250 mL",
-    desc: "Lactose-free SPCTRL strawberry flavour.", 
-    tags: ["Flavoured","Strawberry","Lactose-free","SPCTRL","DSM 17938"], img: "/spctrl.png" },
-  { id: "SPCTRL-CHC",    name: "SPCTRL Chocolate",     price: 2.5, size: "250 mL",
-    desc: "SPCTRL yoghurt with Dutch-process cocoa & light erythritol sweetness.", 
-    tags: ["Flavoured","Chocolate","SPCTRL","DSM 17938"], img: "/spctrl.png" },
-  { id: "SPCTRL-CHC-LF", name: "SPCTRL Chocolate (LF)",price: 2.5, size: "250 mL",
-    desc: "Lactose-free SPCTRL chocolate flavour.", 
-    tags: ["Flavoured","Chocolate","Lactose-free","SPCTRL","DSM 17938"], img: "/spctrl.png" },
-  { id: "SPCTRL-VAN",    name: "SPCTRL Vanilla",       price: 2.5, size: "250 mL",
-    desc: "SPCTRL yoghurt with real Madagascar vanilla bean & light erythritol sweetness.", 
-    tags: ["Flavoured","Vanilla","SPCTRL","DSM 17938"], img: "/spctrl.png" },
-  { id: "SPCTRL-VAN-LF", name: "SPCTRL Vanilla (LF)",  price: 2.5, size: "250 mL",
-    desc: "Lactose-free SPCTRL vanilla flavour.", 
-    tags: ["Flavoured","Vanilla","Lactose-free","SPCTRL","DSM 17938"], img: "/spctrl.png" },
+  { id:"PRCXN", name:"PRCXN", price:2.0, size:"250 mL",
+    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["Classic","DSM 17648"], img: "/prcxn.png" },
+  { id:"PRCXN LF", name:"PRCXN LF", price:2.0, size:"250 mL",
+    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["Lactose‑free","DSM 17648"], img: "/prcxn.png" },
+  { id:"SPCTRL", name:"SPCTRL", price:2.0, size:"250 mL",
+    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["Classic","DSM 17938"], img: "/spctrl.png" },
+  { id:"SPCTRL LF", name:"SPCTRL LF", price:2.0, size:"250 mL",
+    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["Lactose‑free","DSM 17938"], img: "/spctrl.png" },
 ];
 
 const GROUPED = [
@@ -445,18 +399,6 @@ export default function App(){
   }, [query]);
 
   const { items, qtyTotal, bundles, remainder, total, savings, plainSubtotal } = computeTotals(cart);
-  const MiniAdd = ({ id, label, price = 2.0 }: { id: string; label: string; price?: number }) => {
-    const qty = cart[id] || 0;
-    return (
-      <div className="flex items-center justify-center gap-2">
-        <button onClick={() => sub(id)} className="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-lg">−</button>
-        <span className="w-10 text-center font-bold">{qty}</span>
-        <button onClick={() => add(id)} className="w-8 h-8 rounded-full bg-white shadow hover:shadow-md text-lg font-bold">+</button>
-        {qty > 0 && <span className="ml-2 text-sm">£{(qty * price).toFixed(2)}</span>}
-        <span className="block text-xs text-slate-500">{label}</span>
-      </div>
-    );
-  };
   const add = (id:string)=> setCart(c=>({ ...c, [id]: (c[id]||0)+1 }));
   const sub = (id:string)=> setCart(c=>{ const n={...c}; if(!n[id]) return n; n[id]--; if(n[id]<=0) delete n[id]; return n; });
   const remove = (id:string)=> setCart(c=>{ const n={...c}; delete n[id]; return n; });
@@ -504,7 +446,7 @@ export default function App(){
       </section>
       
       {/* SHOP */}
-      <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full">      
+     <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full">      
         {/* full-width panels */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0 w-full">
           {GROUPED
@@ -566,39 +508,52 @@ export default function App(){
                       </p>
                     </div>
       
-                    {/* NEW FLAVOUR TABLE – replaces the old buttons */}
-                    <div className="bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl">
-                      <div className="bg-gradient-to-r from-emerald-600 to-amber-600 text-white px-6 py-3 text-center font-semibold">
-                        Plain £2.00 • Flavoured £2.50  |  Plain 7 for £10 | Flavoured 7 for £15
-                      </div>
-                      <table className="w-full text-slate-800">
-                        <tbody>
-                          {/* Plain row */}
-                          <tr className="bg-white border-b-2 border-slate-100">
-                            <td className="px-6 py-4 font-semibold">Plain (PLN)</td>
-                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN" : "SPCTRL"} label="Standard" /></td>
-                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN LF" : "SPCTRL LF"} label="LF" /></td>
-                          </tr>
-                          {/* Strawberry row */}
-                          <tr className="bg-pink-50 border-b-2 border-slate-100">
-                            <td className="px-6 py-4 font-semibold text-pink-800">Strawberry (STR)</td>
-                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN-STR" : "SPCTRL-STR"} label="Standard" price={2.5} /></td>
-                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN-STR-LF" : "SPCTRL-STR-LF"} label="LF" price={2.5} /></td>
-                          </tr>
-                          {/* Chocolate row */}
-                          <tr className="bg-amber-50 border-b-2 border-slate-100">
-                            <td className="px-6 py-4 font-semibold text-amber-900">Chocolate (CHC)</td>
-                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN-CHC" : "SPCTRL-CHC"} label="Standard" price={2.5} /></td>
-                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN-CHC-LF" : "SPCTRL-CHC-LF"} label="LF" price={2.5} /></td>
-                          </tr>
-                          {/* Vanilla row */}
-                          <tr className="bg-yellow-50">
-                            <td className="px-6 py-4 font-semibold text-yellow-900">Vanilla (VAN)</td>
-                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN-VAN" : "SPCTRL-VAN"} label="Standard" price={2.5} /></td>
-                            <td className="text-center"><MiniAdd id={g.key === "prcxn" ? "PRCXN-VAN-LF" : "SPCTRL-VAN-LF"} label="LF" price={2.5} /></td>
-                          </tr>
-                        </tbody>
-                      </table>
+                    {/* buttons + bundle note */}
+                    <div className="grid grid-cols-2 gap-2 max-w-md">
+                      {g.variants.map((v) => {
+                        const qty = cart[v.id] || 0;
+                        return (
+                          <div
+                            key={v.id}
+                            className="flex items-center gap-2 bg-black/25 rounded-lg px-2 py-1.5 backdrop-blur-sm"
+                          >
+                            {/* minus */}
+                            <button
+                              onClick={() => sub(v.id)}
+                              className="w-8 h-8 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
+                              aria-label={`Remove one ${v.label}`}
+                            >
+                              <span className="translate-y-[-1px] text-sm sm:text-sm md:text-base font-semibold">
+                                −
+                              </span>
+                            </button>
+    
+                            {/* qty */}
+                            <span
+                              key={`${v.id}-${qty}`}
+                              className="text-center text-xs sm:text-sm md:text-sm text-white font-semibold qty-flash"
+                            >
+                              {qty}
+                            </span>
+    
+                            {/* plus */}
+                            <button
+                              onClick={() => add(v.id)}
+                              className="w-8 h-8 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                              aria-label={`Add one ${v.label}`}
+                            >
+                              <span className="translate-y-[-1px] text-sm sm:text-sm md:text-base font-semibold">
+                                +
+                              </span>
+                            </button>
+    
+                            {/* label */}
+                            <span className="ml-1 text-center text-xs sm:text-sm md:text-sm text-white">
+                              {v.label}
+                            </span>
+                          </div>
+                        );
+                      })}
                     </div>
 
                     <div className="text-xs text-white flex items-center">
