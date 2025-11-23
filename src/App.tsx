@@ -48,14 +48,60 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  { id:"PRCXN", name:"PRCXN", price:2.0, size:"250 mL",
-    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["Classic","DSM 17648"], img: "/prcxn.png" },
-  { id:"PRCXN LF", name:"PRCXN LF", price:2.0, size:"250 mL",
-    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["Lactose‑free","DSM 17648"], img: "/prcxn.png" },
-  { id:"SPCTRL", name:"SPCTRL", price:2.0, size:"250 mL",
-    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["Classic","DSM 17938"], img: "/spctrl.png" },
-  { id:"SPCTRL LF", name:"SPCTRL LF", price:2.0, size:"250 mL",
-    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["Lactose‑free","DSM 17938"], img: "/spctrl.png" },
+  // ================== PLAIN (original therapeutic) – £2.00 ==================
+  { id: "PRCXN",        name: "PRCXN Plain",          price: 2.0, size: "250 mL",
+    desc: "Classic dairy yoghurt cultured with *L. reuteri* DSM 17648. Targets *H. pylori*.", 
+    tags: ["Plain","PRCXN","DSM 17648"], img: "/prcxn.png" },
+  { id: "PRCXN LF",     name: "PRCXN Plain (LF)",     price: 2.0, size: "250 mL",
+    desc: "Lactose-free version of PRCXN. Targets *H. pylori*.", 
+    tags: ["Plain","Lactose-free","PRCXN","DSM 17648"], img: "/prcxn.png" },
+  { id: "SPCTRL",       name: "SPCTRL Plain",         price: 2.0, size: "250 mL",
+    desc: "Classic dairy yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", 
+    tags: ["Plain","SPCTRL","DSM 17938"], img: "/spctrl.png" },
+  { id: "SPCTRL LF",    name: "SPCTRL Plain (LF)",    price: 2.0, size: "250 mL",
+    desc: "Lactose-free version of SPCTRL. Targets harmful microbes including *Candida*.", 
+    tags: ["Plain","Lactose-free","SPCTRL","DSM 17938"], img: "/spctrl.png" },
+
+  // ================== FLAVOURED – £2.50 ==================
+  // PRCXN flavoured
+  { id: "PRCXN-STR",     name: "PRCXN Strawberry",     price: 2.5, size: "250 mL",
+    desc: "PRCXN yoghurt with real freeze-dried strawberry & light erythritol sweetness.", 
+    tags: ["Flavoured","Strawberry","PRCXN","DSM 17648"], img: "/prcxn.png" },
+  { id: "PRCXN-STR-LF",  name: "PRCXN Strawberry (LF)",price: 2.5, size: "250 mL",
+    desc: "Lactose-free PRCXN strawberry flavour.", 
+    tags: ["Flavoured","Strawberry","Lactose-free","PRCXN","DSM 17648"], img: "/prcxn.png" },
+  { id: "PRCXN-CHC",     name: "PRCXN Chocolate",      price: 2.5, size: "250 mL",
+    desc: "PRCXN yoghurt with Dutch-process cocoa & light erythritol sweetness.", 
+    tags: ["Flavoured","Chocolate","PRCXN","DSM 17648"], img: "/prcxn.png" },
+  { id: "PRCXN-CHC-LF",  name: "PRCXN Chocolate (LF)", price: 2.5, size: "250 mL",
+    desc: "Lactose-free PRCXN chocolate flavour.", 
+    tags: ["Flavoured","Chocolate","Lactose-free","PRCXN","DSM 17648"], img: "/prcxn.png" },
+  { id: "PRCXN-VAN",     name: "PRCXN Vanilla",        price: 2.5, size: "250 mL",
+    desc: "PRCXN yoghurt with real Madagascar vanilla bean & light erythritol sweetness.", 
+    tags: ["Flavoured","Vanilla","PRCXN","DSM 17648"], img: "/prcxn.png" },
+  { id: "PRCXN-VAN-LF",  name: "PRCXN Vanilla (LF)",   price: 2.5, size: "250 mL",
+    desc: "Lactose-free PRCXN vanilla flavour.", 
+    tags: ["Flavoured","Vanilla","Lactose-free","PRCXN","DSM 17648"], img: "/prcxn.png" },
+
+  // SPCTRL flavoured
+  { id: "SPCTRL-STR",    name: "SPCTRL Strawberry",    price: 2.5, size: "250 mL",
+    desc: "SPCTRL yoghurt with real freeze-dried strawberry & light erythritol sweetness.", 
+    tags: ["Flavoured","Strawberry","SPCTRL","DSM 17938"], img: "/spctrl.png" },
+  { id: "SPCTRL-STR-LF", name: "SPCTRL Strawberry (LF)",price: 2.5, size: "250 mL",
+    desc: "Lactose-free SPCTRL strawberry flavour.", 
+    tags: ["Flavoured","Strawberry","Lactose-free","SPCTRL","DSM 17938"], img: "/spctrl.png" },
+  { id: "SPCTRL-CHC",    name: "SPCTRL Chocolate",     price: 2.5, size: "250 mL",
+    desc: "SPCTRL yoghurt with Dutch-process cocoa & light erythritol sweetness.", 
+    tags: ["Flavoured","Chocolate","SPCTRL","DSM 17938"], img: "/spctrl.png" },
+  { id: "SPCTRL-CHC-LF", name: "SPCTRL Chocolate (LF)",price: 2.5, size: "250 mL",
+    desc: "Lactose-free SPCTRL chocolate flavour.", 
+    tags: ["Flavoured","Chocolate","Lactose-free","SPCTRL","DSM 17938"], img: "/spctrl.png" },
+  { id: "SPCTRL-VAN",    name: "SPCTRL Vanilla",       price: 2.5, size: "250 mL",
+    desc: "SPCTRL yoghurt with real Madagascar vanilla bean & light erythritol sweetness.", 
+    tags: ["Flavoured","Vanilla","SPCTRL","DSM 17938"], img: "/spctrl.png" },
+  { id: "SPCTRL-VAN-LF", name: "SPCTRL Vanilla (LF)",  price: 2.5, size: "250 mL",
+    desc: "Lactose-free SPCTRL vanilla flavour.", 
+    tags: ["Flavoured","Vanilla","Lactose-free","SPCTRL","DSM 17938"], img: "/spctrl.png" },
 ];
 
 const GROUPED = [
@@ -385,6 +431,21 @@ function AboutSection() {
   );
 }
 
+function AddRemove({ id, label, price = 2.0 }: { id: string; label: string; price?: number }) {
+  const qty = cart[id] || 0;
+  return (
+    <div className="flex items-center justify-center gap-3 py-2">
+      <button onClick={() => sub(id)} className="w-9 h-9 rounded-full bg-slate-200 hover:bg-slate-300 flex items-center justify-center text-lg">−</button>
+      <span className="w-12 text-center font-bold text-lg">{qty}</span>
+      <button onClick={() => add(id)} className="w-9 h-9 rounded-full bg-white shadow-md hover:shadow-lg flex items-center justify-center text-lg font-bold text-slate-800">+</button>
+      <div className="text-sm">
+        {qty > 0 && <span className="block text-slate-600">£{(qty * price).toFixed(2)}</span>}
+        <span className="block text-xs text-slate-500">{label}</span>
+      </div>
+    </div>
+  );
+}
+
 export default function App(){
   const [query, setQuery] = useState("");
   const [cart, setCart] = useState<Record<string,number>>(()=>{ try{ return JSON.parse(localStorage.getItem("yoy_cart") || "{}"); }catch{ return {}; }});
@@ -446,132 +507,113 @@ export default function App(){
       </section>
       
       {/* SHOP */}
-      <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full">      
-        {/* full-width panels */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 w-full">
-          {GROUPED
-            .filter((g) => {
-              const q = (query || "").toLowerCase();
-              return (
-                !q ||
-                g.title.toLowerCase().includes(q) ||
-                g.variants.some((v) => v.label.toLowerCase().includes(q))
-              );
-            })
-            .map((g, idx) => {
-              // how many of this group are in basket (for the small summary)
-              const groupTotal = g.variants.reduce(
-                (sum, v) => sum + (cart[v.id] || 0),
-                0
-              );
+      <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full py-12 bg-gradient-to-b from-white to-slate-50">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Bundle notice – visible on all screens */}
+          <div className="text-center mb-10 space-y-2">
+            <p className="text-lg font-semibold text-slate-800">
+              Plain yoghurts: <span className="text-emerald-600">7 for £10</span> (mix & match plain only)
+            </p>
+            <p className="text-lg font-semibold text-slate-800">
+              Flavoured yoghurts: <span className="text-amber-600">7 for £15</span> (mix & match flavoured only)
+            </p>
+          </div>
       
-              return (
-                <article
-                  key={g.key}
-                  className="relative aspect-[3/2] w-full overflow-hidden"
-                >
-                  {/* background image */}
-                  <img
-                    src={g.img}
-                    alt={g.title}
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
+          <div className="grid lg:grid-cols-2 gap-12">
+            {/* ====== PRCXN TABLE ====== */}
+            <div className="relative overflow-hidden rounded-3xl shadow-2xl">
+              <img src="/prcxn.png" alt="PRCXN" className="absolute inset-0 w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-black/50" />
+              <div className="relative p-8 text-white">
+                <h2 className="text-4xl font-bold mb-2">PRCXN</h2>
+                <p className="text-lg mb-6">Targets <em>H. pylori</em> – DSM 17648</p>
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden text-slate-800">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="bg-slate-900 text-white">
+                        <th className="px-6 py-4 text-left">Flavour</th>
+                        <th className="px-6 py-4 text-center">Standard</th>
+                        <th className="px-6 py-4 text-center">Lactose-Free</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* Plain */}
+                      <tr className="bg-white">
+                        <td className="px-6 py-5 font-semibold">Plain (PLN)</td>
+                        <td className="text-center"><AddRemove id="PRCXN" label="PRCXN" /></td>
+                        <td className="text-center"><AddRemove id="PRCXN LF" label="PRCXN LF" /></td>
+                      </tr>
+                      {/* Strawberry */}
+                      <tr className="bg-pink-50">
+                        <td className="px-6 py-5 font-semibold text-pink-800">Strawberry (STR)</td>
+                        <td className="text-center"><AddRemove id="PRCXN-STR" label="PRCXN STR" price={2.5} /></td>
+                        <td className="text-center"><AddRemove id="PRCXN-STR-LF" label="PRCXN STR LF" price={2.5} /></td>
+                      </tr>
+                      {/* Chocolate */}
+                      <tr className="bg-amber-50">
+                        <td className="px-6 py-5 font-semibold text-amber-900">Chocolate (CHC)</td>
+                        <td className="text-center"><AddRemove id="PRCXN-CHC" label="PRCXN CHC" price={2.5} /></td>
+                        <td className="text-center"><AddRemove id="PRCXN-CHC-LF" label="PRCXN CHC LF" price={2.5} /></td>
+                      </tr>
+                      {/* Vanilla */}
+                      <tr className="bg-yellow-50">
+                        <td className="px-6 py-5 font-semibold text-yellow-900">Vanilla (VAN)</td>
+                        <td className="text-center"><AddRemove id="PRCXN-VAN" label="PRCXN VAN" price={2.5} /></td>
+                        <td className="text-center"><AddRemove id="PRCXN-VAN-LF" label="PRCXN VAN LF" price={2.5} /></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
       
-                  {/* dark overlay for readability */}
-                  <div className="absolute inset-0 bg-black/30" />
-      
-                  {/* content overlay */}
-                  <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-8">
-                    {/* title + blurb */}
-                    <div>
-                      <p className="text-xs sm:text-sm md:text-base uppercase tracking-[0.2em] text-white mb-1">
-                        {idx === 0 ? "Targeted" : "Broad-acting"}
-                      </p>
-                      {g.key === "prcxn" ? (
-                        <img
-                          src="/prcxn_logo.png"
-                          alt="PRCXN"
-                          className="w-[60%] sm:w-[55%] md:w-[45%] object-contain drop-shadow-lg"
-                        />
-                      ) : g.key === "spctrl" ? (
-                        <img
-                          src="/spctrl_logo.png"
-                          alt="SPCTRL"
-                          className="w-[60%] sm:w-[55%] md:w-[45%] object-contain drop-shadow-lg"
-                        />
-                      ) : (
-                        <h3 className="text-3xl font-bold text-white drop-shadow-md">{g.title}</h3>
-                      )}
-
-                      <p className="mt-2 text-xs sm:text-sm md:text-base text-white max-w-md leading-relaxed">
-                        {g.blurb}
-                      </p>
-                    </div>
-      
-                    {/* buttons + bundle note */}
-                    <div className="grid grid-cols-2 gap-2 max-w-md">
-                      {g.variants.map((v) => {
-                        const qty = cart[v.id] || 0;
-                        return (
-                          <div
-                            key={v.id}
-                            className="flex items-center gap-2 bg-black/25 rounded-lg px-2 py-1.5 backdrop-blur-sm"
-                          >
-                            {/* minus */}
-                            <button
-                              onClick={() => sub(v.id)}
-                              className="w-8 h-8 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
-                              aria-label={`Remove one ${v.label}`}
-                            >
-                              <span className="translate-y-[-1px] text-sm sm:text-sm md:text-base font-semibold">
-                                −
-                              </span>
-                            </button>
-    
-                            {/* qty */}
-                            <span
-                              key={`${v.id}-${qty}`}
-                              className="text-center text-xs sm:text-sm md:text-sm text-white font-semibold qty-flash"
-                            >
-                              {qty}
-                            </span>
-    
-                            {/* plus */}
-                            <button
-                              onClick={() => add(v.id)}
-                              className="w-8 h-8 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                              aria-label={`Add one ${v.label}`}
-                            >
-                              <span className="translate-y-[-1px] text-sm sm:text-sm md:text-base font-semibold">
-                                +
-                              </span>
-                            </button>
-    
-                            {/* label */}
-                            <span className="ml-1 text-center text-xs sm:text-sm md:text-sm text-white">
-                              {v.label}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <div className="text-xs text-white flex items-center">
-                      £2 per bottle · 7 for £10 (mix &amp; match)
-                      <span
-                        className={cn(
-                          "ml-2 inline-block bg-white/10 px-2 py-0.5 rounded transition-opacity duration-150",
-                          groupTotal > 0 ? "opacity-100" : "opacity-0"
-                        )}
-                      >
-                        In basket: {groupTotal}
-                      </span>
-                    </div>
-                    
-                  </div>
-                </article>
-              );
-            })}
+            {/* ====== SPCTRL TABLE ====== */}
+            <div className="relative overflow-hidden rounded-3xl shadow-2xl">
+              <img src="/spctrl.png" alt="SPCTRL" className="absolute inset-0 w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-black/50" />
+              <div className="relative p-8 text-white">
+                <h2 className="text-4xl font-bold mb-2">SPCTRL</h2>
+                <p className="text-lg mb-6">Broad protection including <em>Candida</em> – DSM 17938</p>
+                <div className="bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden text-slate-800">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="bg-slate-900 text-white">
+                        <th className="px-6 py-4 text-left">Flavour</th>
+                        <th className="px-6 py-4 text-center">Standard</th>
+                        <th className="px-6 py-4 text-center">Lactose-Free</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* Plain */}
+                      <tr className="bg-white">
+                        <td className="px-6 py-5 font-semibold">Plain (PLN)</td>
+                        <td className="text-center"><AddRemove id="SPCTRL" label="SPCTRL" /></td>
+                        <td className="text-center"><AddRemove id="SPCTRL LF" label="SPCTRL LF" /></td>
+                      </tr>
+                      {/* Strawberry */}
+                      <tr className="bg-pink-50">
+                        <td className="px-6 py-5 font-semibold text-pink-800">Strawberry (STR)</td>
+                        <td className="text-center"><AddRemove id="SPCTRL-STR" label="SPCTRL STR" price={2.5} /></td>
+                        <td className="text-center"><AddRemove id="SPCTRL-STR-LF" label="SPCTRL STR LF" price={2.5} /></td>
+                      </tr>
+                      {/* Chocolate */}
+                      <tr className="bg-amber-50">
+                        <td className="px-6 py-5 font-semibold text-amber-900">Chocolate (CHC)</td>
+                        <td className="text-center"><AddRemove id="SPCTRL-CHC" label="SPCTRL CHC" price={2.5} /></td>
+                        <td className="text-center"><AddRemove id="SPCTRL-CHC-LF" label="SPCTRL CHC LF" price={2.5} /></td>
+                      </tr>
+                      {/* Vanilla */}
+                      <tr className="bg-yellow-50">
+                        <td className="px-6 py-5 font-semibold text-yellow-900">Vanilla (VAN)</td>
+                        <td className="text-center"><AddRemove id="SPCTRL-VAN" label="SPCTRL VAN" price={2.5} /></td>
+                        <td className="text-center"><AddRemove id="SPCTRL-VAN-LF" label="SPCTRL VAN LF" price={2.5} /></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
