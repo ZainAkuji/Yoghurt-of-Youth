@@ -274,22 +274,113 @@ const GROUPED = [
 ];
 
 function computeTotals(cart: Record<string, number>) {
-  const items = Object.entries(cart).map(([id, qty]) => ({ ...PRODUCTS.find(p=>p.id===id)!, qty }));
-  const qtyTotal = items.reduce((s,i)=>s+i.qty,0);
-  const bundles = Math.floor(qtyTotal/7);
-  const remainder = qtyTotal%7;
-  const total = bundles*10 + remainder*2;
-  const plainSubtotal = qtyTotal * 2.0;
-  const savings = Math.max(0, plainSubtotal - total);
-  return { items, qtyTotal, bundles, remainder, total, savings, plainSubtotal };
+  // expand cart into full product objects + qty
+  const items = Object.entries(cart)
+    .map(([id, qty]) => {
+      const product = PRODUCTS.find((p) => p.id === id);
+      if (!product) return null;
+      return { ...product, qty };
+    })
+    .filter(Boolean) as Array<(typeof PRODUCTS)[number] & { qty: number }>;
+
+  const qtyTotal = items.reduce((s, i) => s + i.qty, 0);
+
+  // classify by price: £2 = "plain", £2.50 = "flavoured"
+  const plainItems = items.filter((i) => i.price === 2.0);
+  const flavItems = items.filter((i) => i.price === 2.5);
+
+  const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
+  const flavQty = flavItems.reduce((s, i) => s + i.qty, 0);
+
+  // bundles: plain 7-for-£10, flavoured 5-for-£10
+  const plainBundles = Math.floor(plainQty / 7);
+  const plainRemainder = plainQty % 7;
+
+  const flavBundles = Math.floor(flavQty / 5);
+  const flavRemainder = flavQty % 5;
+
+  // full price with no deals at all
+  const fullPrice = items.reduce((s, i) => s + i.qty * i.price, 0);
+
+  // apply bundle pricing
+  const plainTotal = plainBundles * 10 + plainRemainder * 2.0;
+  const flavTotal = flavBundles * 10 + flavRemainder * 2.5;
+
+  const total = plainTotal + flavTotal;
+
+  const savings = Math.max(0, fullPrice - total);
+
+  // legacy aggregate fields (used in Basket / reservation summaries)
+  const bundles = plainBundles + flavBundles;
+  const remainder = plainRemainder + flavRemainder;
+
+  return {
+    items,
+    qtyTotal,
+
+    // legacy fields (already used in JSX)
+    bundles,
+    remainder,
+    total,
+    savings,
+    // still called plainSubtotal in code, but now means "full price (no bundles)"
+    plainSubtotal: fullPrice,
+
+    // new, more detailed breakdown for future use
+    plainQty,
+    flavQty,
+    plainBundles,
+    plainRemainder,
+    flavBundles,
+    flavRemainder,
+  };
 }
 
-function nextBundleHint(qtyTotal:number){
-  if (qtyTotal===0) return "Bundle: 7 bottles for £10 (mix & match).";
-  const need = (7 - (qtyTotal % 7)) % 7;
-  if (need===0) return "You’re on a bundle – great value!";
-  return `Add ${need} more to unlock the 7‑for‑£10 bundle.`;
+
+function nextBundleHint(plainQty: number, flavQty: number) {
+  // no items at all
+  if (plainQty === 0 && flavQty === 0) {
+    return "Bundles: PLN 7 for £10 · STR/MNG/CHC 5 for £10.";
+  }
+
+  const plainNeed = (7 - (plainQty % 7)) % 7; // how many plain to next 7-for-£10
+  const flavNeed = (5 - (flavQty % 5)) % 5;   // how many flavoured to next 5-for-£10
+
+  // already perfectly on both bundles
+  if (plainNeed === 0 && plainQty > 0 && flavNeed === 0 && flavQty > 0) {
+    return "You’re on all available bundles – great value.";
+  }
+
+  // only PLN in basket
+  if (flavQty === 0 && plainQty > 0) {
+    if (plainNeed === 0) return "You’re on the PLN 7-for-£10 bundle – great value.";
+    return `Add ${plainNeed} more PLN to unlock the 7-for-£10 bundle.`;
+  }
+
+  // only flavoured in basket
+  if (plainQty === 0 && flavQty > 0) {
+    if (flavNeed === 0) return "You’re on the flavoured 5-for-£10 bundle – great value.";
+    return `Add ${flavNeed} more flavoured to unlock the 5-for-£10 bundle.`;
+  }
+
+  // mix of PLN + flavoured
+  const parts: string[] = [];
+
+  if (plainNeed > 0) {
+    parts.push(`add ${plainNeed} PLN for 7-for-£10`);
+  } else if (plainQty > 0) {
+    parts.push("PLN already on 7-for-£10");
+  }
+
+  if (flavNeed > 0) {
+    parts.push(`add ${flavNeed} flavoured for 5-for-£10`);
+  } else if (flavQty > 0) {
+    parts.push("flavoured already on 5-for-£10");
+  }
+
+  return parts.join(" · ") + ".";
 }
+
 
 function AboutSection() {
   return (
@@ -582,7 +673,21 @@ export default function App(){
     return PRODUCTS.filter(p => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || p.tags.join(" ").toLowerCase().includes(q));
   }, [query]);
 
-  const { items, qtyTotal, bundles, remainder, total, savings, plainSubtotal } = computeTotals(cart);
+  const {
+    items,
+    qtyTotal,
+    bundles,
+    remainder,
+    total,
+    savings,
+    plainSubtotal,
+    plainQty,
+    flavQty,
+    plainBundles,
+    flavBundles,
+    plainRemainder,
+    flavRemainder,
+  } = computeTotals(cart);
   const add = (id:string)=> setCart(c=>({ ...c, [id]: (c[id]||0)+1 }));
   const sub = (id:string)=> setCart(c=>{ const n={...c}; if(!n[id]) return n; n[id]--; if(n[id]<=0) delete n[id]; return n; });
   const remove = (id:string)=> setCart(c=>{ const n={...c}; delete n[id]; return n; });
@@ -1125,31 +1230,62 @@ export default function App(){
           {/* Right: basket summary */}
           <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-5 md:p-6 shadow-lg border border-white/10">
             <h3 className="font-semibold text-lg mb-2">Your basket</h3>
-      
+          
             <div className="mt-2 space-y-2 max-h-44 overflow-auto pr-1 text-sm">
               {items.length === 0 && (
                 <div className="text-white/70">No items yet.</div>
               )}
               {items.map((i) => (
                 <div key={i.id} className="flex items-center justify-between">
-                  <span>{i.name} × {i.qty}</span>
-                  <span>£{(i.qty * 2).toFixed(2)}</span>
+                  <span>
+                    {i.name} × {i.qty}
+                  </span>
+                  <span>£{(i.qty * i.price).toFixed(2)}</span>
                 </div>
               ))}
             </div>
-      
+          
             <div className="mt-3 border-t border-white/20 pt-3 text-sm space-y-1">
-              <div className="flex justify-between"><span>Bottles</span><span>{qtyTotal}</span></div>
-              <div className="flex justify-between"><span>Bundles</span><span>{bundles} × £10</span></div>
-              <div className="flex justify-between"><span>Remainder</span><span>{remainder} × £2</span></div>
-              <div className="flex justify-between"><span>Full price</span><span>{gbp(plainSubtotal)}</span></div>
-              <div className="flex justify-between text-emerald-400">
-                <span>You save</span><span>−{gbp(savings)}</span>
+              <div className="flex justify-between">
+                <span>Bottles</span>
+                <span>{qtyTotal}</span>
               </div>
+          
+              <div className="flex justify-between">
+                <span>PLN bundles</span>
+                <span>{plainBundles} × £10</span>
+              </div>
+              <div className="flex justify-between">
+                <span>PLN remainder</span>
+                <span>{plainRemainder} × £2</span>
+              </div>
+          
+              <div className="flex justify-between">
+                <span>Flavoured bundles</span>
+                <span>{flavBundles} × £10</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Flavoured remainder</span>
+                <span>{flavRemainder} × £2.50</span>
+              </div>
+          
+              <div className="flex justify-between">
+                <span>Full price</span>
+                <span>{gbp(plainSubtotal)}</span>
+              </div>
+          
+              <div className="flex justify-between text-emerald-400">
+                <span>You save</span>
+                <span>−{gbp(savings)}</span>
+              </div>
+          
               <div className="flex justify-between font-semibold">
-                <span>Total due at collection</span><span>{gbp(total)}</span>
+                <span>Total due at collection</span>
+                <span>{gbp(total)}</span>
               </div>
             </div>
+          </div>
+
       
             <button
               onClick={() => setReserveOpen(true)}
@@ -1180,7 +1316,20 @@ export default function App(){
         <ReserveModal
           onClose={() => setReserveOpen(false)}
           cart={cart}
-          totals={{ qtyTotal, bundles, remainder, total, savings, plainSubtotal }}
+          totals={{
+            qtyTotal,
+            bundles,
+            remainder,
+            total,
+            savings,
+            plainSubtotal,
+            plainQty,
+            flavQty,
+            plainBundles,
+            flavBundles,
+            plainRemainder,
+            flavRemainder,
+          }}
         />
       )}
 
@@ -1508,7 +1657,19 @@ function ReserveModal({
   cart: Record<string, number>;
   totals: any;
 }) {
-  const { qtyTotal, bundles, remainder, total } = totals;
+  const {
+    qtyTotal,
+    bundles,
+    remainder,
+    total,
+    plainQty,
+    flavQty,
+    plainBundles,
+    flavBundles,
+    plainRemainder,
+    flavRemainder,
+  } = totals;
+
 
   // mode: "form" for booking, "confirmed" after success
   const [mode, setMode] = useState<"form" | "confirmed">("form");
@@ -1677,7 +1838,7 @@ function ReserveModal({
           <div className="flex justify-between">
             <span className="text-white/60">Bottles</span>
             <span>
-              {qtyTotal} (bundles {bundles} · remainder {remainder})
+              {qtyTotal} (PLN {plainQty}, flavoured {flavQty})
             </span>
           </div>
           <div className="flex justify-between border-t border-white/20 pt-2 mt-2">
@@ -1806,8 +1967,10 @@ function ReserveModal({
           </div>
           <div>
             <div>Bottles: {qtyTotal}</div>
-            <div>Bundles: {bundles} × £10</div>
-            <div>Remainder: {remainder} × £2</div>
+            <div>PLN bundles: {plainBundles} × £10</div>
+            <div>PLN remainder: {plainRemainder} × £2</div>
+            <div>Flavoured bundles: {flavBundles} × £10</div>
+            <div>Flavoured remainder: {flavRemainder} × £2.50</div>
             <div className="font-semibold mt-1">
               Total due: {gbp(total)}
             </div>
