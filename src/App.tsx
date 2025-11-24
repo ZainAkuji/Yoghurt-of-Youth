@@ -1352,8 +1352,13 @@ export default function App(){
             plainRemainder,
             flavRemainder,
           }}
+          onConfirmed={() => {
+            // clear the basket after a successful reservation
+            setCart({});
+          }}
         />
       )}
+
 
     </div>
   );
@@ -1695,10 +1700,12 @@ function ReserveModal({
   onClose,
   cart,
   totals,
+  onConfirmed,
 }: {
   onClose: () => void;
   cart: Record<string, number>;
   totals: any;
+  onConfirmed: () => void;
 }) {
   const {
     qtyTotal,
@@ -1833,6 +1840,9 @@ function ReserveModal({
         name,
       });
 
+      // tell App to clear the basket
+      onConfirmed();
+
       setMode("confirmed");
     } catch (e) {
       console.error(e);
@@ -1916,8 +1926,9 @@ function ReserveModal({
             onClick={onClose}
             className="inline-flex rounded-2xl bg-white text-slate-900 px-5 py-3 text-sm font-semibold hover:bg-amber-300 transition"
           >
-            Close
+            Continue shopping
           </button>
+
           <a
             href={`https://www.google.com/maps/search/?api=1&query=${MAPS_QUERY}`}
             target="_blank"
