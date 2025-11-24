@@ -741,15 +741,18 @@ export default function App(){
             const qty = (id: string) => cart[id] || 0;
 
             // total bottles in basket for this panel (all flavours)
-            const totalInBasket =
+            const totalPlain =
               qty(ids.PLN_STD) +
-              qty(ids.PLN_LF) +
+              qty(ids.PLN_LF);
+            
+            const totalFlavoured =
               qty(ids.STR_STD) +
               qty(ids.STR_LF) +
               qty(ids.MNG_STD) +
               qty(ids.MNG_LF) +
               qty(ids.CHC_STD) +
               qty(ids.CHC_LF);
+
       
             return (
               <article
@@ -1028,27 +1031,42 @@ export default function App(){
                     </div>
                   </div>
       
-                  {/* pricing + note */}
-                  <div className="mt-3 text-[10px] sm:text-xs text-white">
-                    <p>PLN: <strong>£2</strong> per bottle · <strong>7 for £10</strong></p>
-                    <p>STR, MNG &amp; CHC: <strong>£2.50</strong> per bottle · <strong>5 for £10</strong></p>
-                    <p className="mt-1 text-white">No added sweeteners.</p>
-
-                    {/* pricing + note + "in basket" overlay */}
-                    {totalInBasket > 0 && (
-                      <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-black/60 px-3 py-1 text-[11px] sm:text-xs shadow-lg backdrop-blur-md">
-                        <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                        <span>
-                          In basket:{" "}
+                  {/* pricing + note with per-offer "in basket" badges */}
+                  <div className="mt-3 text-[10px] sm:text-xs text-white space-y-1.5">
+                    <p className="flex flex-wrap items-center gap-2">
+                      <span>
+                        PLN: <strong>£2</strong> per bottle · <strong>7 for £10</strong>
+                      </span>
+                      {totalPlain > 0 && (
+                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md">
+                          In basket:&nbsp;
                           <strong>
-                            {totalInBasket} bottle
-                            {totalInBasket !== 1 && "s"}
+                            {totalPlain} bottle
+                            {totalPlain !== 1 && "s"}
                           </strong>
                         </span>
-                      </div>
-                    )}
-                    
+                      )}
+                    </p>
+                  
+                    <p className="flex flex-wrap items-center gap-2">
+                      <span>
+                        STR, MNG &amp; CHC: <strong>£2.50</strong> per bottle ·{" "}
+                        <strong>5 for £10</strong>
+                      </span>
+                      {totalFlavoured > 0 && (
+                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md">
+                          In basket:&nbsp;
+                          <strong>
+                            {totalFlavoured} bottle
+                            {totalFlavoured !== 1 && "s"}
+                          </strong>
+                        </span>
+                      )}
+                    </p>
+                  
+                    <p className="mt-1 text-white">No added sweeteners.</p>
                   </div>
+
                 </div>
               </article>
             );
