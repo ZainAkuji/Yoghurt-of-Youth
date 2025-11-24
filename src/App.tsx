@@ -1227,65 +1227,65 @@ export default function App(){
             </p>
           </div>
       
-          {/* Right: basket summary */}
-          <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-5 md:p-6 shadow-lg border border-white/10">
-            <h3 className="font-semibold text-lg mb-2">Your basket</h3>
-          
-            <div className="mt-2 space-y-2 max-h-44 overflow-auto pr-1 text-sm">
-              {items.length === 0 && (
-                <div className="text-white/70">No items yet.</div>
-              )}
-              {items.map((i) => (
-                <div key={i.id} className="flex items-center justify-between">
-                  <span>
-                    {i.name} × {i.qty}
-                  </span>
-                  <span>£{(i.qty * i.price).toFixed(2)}</span>
+          {/* Right: basket summary + reserve button */}
+          <div>
+            <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-5 md:p-6 shadow-lg border border-white/10">
+              <h3 className="font-semibold text-lg mb-2">Your basket</h3>
+      
+              <div className="mt-2 space-y-2 max-h-44 overflow-auto pr-1 text-sm">
+                {items.length === 0 && (
+                  <div className="text-white/70">No items yet.</div>
+                )}
+                {items.map((i) => (
+                  <div key={i.id} className="flex items-center justify-between">
+                    <span>
+                      {i.name} × {i.qty}
+                    </span>
+                    <span>£{(i.qty * i.price).toFixed(2)}</span>
+                  </div>
+                ))}
+              </div>
+      
+              <div className="mt-3 border-t border-white/20 pt-3 text-sm space-y-1">
+                <div className="flex justify-between">
+                  <span>Bottles</span>
+                  <span>{qtyTotal}</span>
                 </div>
-              ))}
-            </div>
-          
-            <div className="mt-3 border-t border-white/20 pt-3 text-sm space-y-1">
-              <div className="flex justify-between">
-                <span>Bottles</span>
-                <span>{qtyTotal}</span>
-              </div>
-          
-              <div className="flex justify-between">
-                <span>PLN bundles</span>
-                <span>{plainBundles} × £10</span>
-              </div>
-              <div className="flex justify-between">
-                <span>PLN remainder</span>
-                <span>{plainRemainder} × £2</span>
-              </div>
-          
-              <div className="flex justify-between">
-                <span>Flavoured bundles</span>
-                <span>{flavBundles} × £10</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Flavoured remainder</span>
-                <span>{flavRemainder} × £2.50</span>
-              </div>
-          
-              <div className="flex justify-between">
-                <span>Full price</span>
-                <span>{gbp(plainSubtotal)}</span>
-              </div>
-          
-              <div className="flex justify-between text-emerald-400">
-                <span>You save</span>
-                <span>−{gbp(savings)}</span>
-              </div>
-          
-              <div className="flex justify-between font-semibold">
-                <span>Total due at collection</span>
-                <span>{gbp(total)}</span>
+      
+                <div className="flex justify-between">
+                  <span>PLN bundles</span>
+                  <span>{plainBundles} × £10</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>PLN remainder</span>
+                  <span>{plainRemainder} × £2</span>
+                </div>
+      
+                <div className="flex justify-between">
+                  <span>Flavoured bundles</span>
+                  <span>{flavBundles} × £10</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Flavoured remainder</span>
+                  <span>{flavRemainder} × £2.50</span>
+                </div>
+      
+                <div className="flex justify-between">
+                  <span>Full price</span>
+                  <span>{gbp(plainSubtotal)}</span>
+                </div>
+      
+                <div className="flex justify-between text-emerald-400">
+                  <span>You save</span>
+                  <span>−{gbp(savings)}</span>
+                </div>
+      
+                <div className="flex justify-between font-semibold">
+                  <span>Total due at collection</span>
+                  <span>{gbp(total)}</span>
+                </div>
               </div>
             </div>
-          </div>
-
       
             <button
               onClick={() => setReserveOpen(true)}
@@ -1302,6 +1302,7 @@ export default function App(){
           </div>
         </div>
       </section>
+
 
 
       <Footer brand={BRAND} />
