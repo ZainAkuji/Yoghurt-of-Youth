@@ -776,7 +776,7 @@ export default function App(){
       
                   {/* flavour table */}
                   <div className="bg-black/35 rounded-xl p-2 sm:p-3 backdrop-blur-sm">
-                    <div className="grid grid-cols-[minmax(0,1.1fr)_repeat(2,minmax(0,1.4fr))] gap-px text-[10px] sm:text-xs text-white">
+                    <div className="grid grid-cols-[minmax(0,1.1fr)_repeat(2,minmax(0,1.4fr))] gap-px text-sm text-white">
                       {/* header row */}
                       <div className="bg-black/60 px-2 py-1.5 font-semibold uppercase tracking-wide">
                         Flavour
