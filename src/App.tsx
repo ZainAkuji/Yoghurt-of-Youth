@@ -793,7 +793,7 @@ export default function App(){
       
                       {/* PLN row */}
                       <div className="bg-white/25 px-2 py-1.5 font-semibold text-sm">
-                        PLN
+                        PLN (plain)
                       </div>
                       <div className="bg-white/25 px-2 py-1.5">
                         <div className="flex items-center justify-between gap-1">
@@ -854,7 +854,7 @@ export default function App(){
       
                       {/* STR row */}
                       <div className="bg-pink-500/35 px-2 py-1.5 font-semibold text-sm">
-                        STR
+                        STR (strawberry)
                       </div>
                       <div className="bg-pink-500/35 px-2 py-1.5">
                         <div className="flex items-center justify-between gap-1">
@@ -913,7 +913,7 @@ export default function App(){
       
                       {/* MNG row */}
                       <div className="bg-amber-300/45 px-2 py-1.5 font-semibold text-sm">
-                        MNG
+                        MNG (mango)
                       </div>
                       <div className="bg-amber-300/45 px-2 py-1.5">
                         <div className="flex items-center justify-between gap-1">
@@ -972,7 +972,7 @@ export default function App(){
       
                       {/* CHC row */}
                       <div className="bg-amber-900/45 px-2 py-1.5 font-semibold text-sm">
-                        CHC
+                        CHC (chocolate)
                       </div>
                       <div className="bg-amber-900/45 px-2 py-1.5">
                         <div className="flex items-center justify-between gap-1">
@@ -1037,15 +1037,18 @@ export default function App(){
                       <span>
                         PLN: <strong>£2</strong> per bottle · <strong>7 for £10</strong>
                       </span>
-                      {totalPlain > 0 && (
-                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md">
-                          In basket:&nbsp;
-                          <strong>
-                            {totalPlain} bottle
-                            {totalPlain !== 1 && "s"}
-                          </strong>
-                        </span>
-                      )}
+                      {totalPlain > 0 ? (
+                            <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md">
+                              In basket:&nbsp;
+                              <strong>{totalPlain}</strong>
+                            </span>
+                          ) : (
+                            // invisible placeholder to reserve space and avoid layout shift
+                            <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
+                              In basket:&nbsp;
+                              <strong>0</strong>
+                            </span>
+                          )}
                     </p>
                   
                     <p className="flex flex-wrap items-center gap-2">
@@ -1053,13 +1056,16 @@ export default function App(){
                         STR, MNG &amp; CHC: <strong>£2.50</strong> per bottle ·{" "}
                         <strong>5 for £10</strong>
                       </span>
-                      {totalFlavoured > 0 && (
+                      {totalFlavoured > 0 ? (
                         <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md">
                           In basket:&nbsp;
-                          <strong>
-                            {totalFlavoured} bottle
-                            {totalFlavoured !== 1 && "s"}
-                          </strong>
+                          <strong>{totalFlavoured}</strong>
+                        </span>
+                      ) : (
+                        // invisible placeholder to reserve space and avoid layout shift
+                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
+                          In basket:&nbsp;
+                          <strong>0</strong>
                         </span>
                       )}
                     </p>
