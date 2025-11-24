@@ -244,10 +244,11 @@ const GROUPED = [
   {
     key: "prcxn",
     title: "PRCXN",
-    blurb: <>Yoghurt fermented by <em>L. reuteri</em> DSM 17648 to 100 billion CFU.
-      Targets <em>H. pylori</em>.
-      Pair with SPCTRL for full gut restoration.
-      Lactose-free available.
+    blurb: <>Yoghurt fermented by <em>L. reuteri</em> DSM 17648.<br />
+      100 billion CFU.<br />
+      Targets <em>H. pylori</em>.<br />
+      Pair with SPCTRL for full gut restoration.<br />
+      Lactose-free available.<br />
       250ml.</>,
     img: "prcxn.png",
     variants: [
@@ -258,10 +259,11 @@ const GROUPED = [
   {
     key: "spctrl",
     title: "SPCTRL",
-    blurb: <>Yoghurt fermented by <em>L. reuteri</em> DSM 17938 to 100 billion CFU.
-      Targets pathogens including <em>Candida</em>.
-      Pair with PRCXN for full gut restoration.
-      Lactose-free available.
+    blurb: <>Yoghurt fermented by <em>L. reuteri</em> DSM 17938.<br />
+      100 billion CFU.<br />
+      Targets pathogens including <em>Candida</em>.<br />
+      Pair with PRCXN for full gut restoration.<br />
+      Lactose-free available.<br />
       250ml.</>,
     img: "spctrl.png",
     variants: [
@@ -658,7 +660,7 @@ export default function App(){
               {/* content */}
               <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-8">
                 <div>
-                  <p className="text-xs sm:text-sm md:text-base uppercase tracking-[0.2em] text-white/80 mb-1">
+                  <p className="text-xs sm:text-sm md:text-base uppercase tracking-[0.2em] text-white mb-1">
                     {idx === 0 ? "Targeted" : "Broad-acting"}
                   </p>
     
@@ -749,7 +751,7 @@ export default function App(){
                 <div className="relative z-10 h-full flex flex-col justify-between p-4 sm:p-6 md:p-8">
                   {/* heading for flavour grid */}
                   <div>
-                    <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-white/80 mb-2">
+                    <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-white mb-2">
                       Flavour selection
                     </p>
                   </div>
@@ -758,7 +760,7 @@ export default function App(){
                   <div className="bg-black/35 rounded-xl p-2 sm:p-3 backdrop-blur-sm">
                     <div className="grid grid-cols-[minmax(0,1.1fr)_repeat(2,minmax(0,1.4fr))] gap-px text-[10px] sm:text-xs text-white">
                       {/* header row */}
-                      <div className="bg-black/60 px-2 py-1.5 font-semibold uppercase tracking-wide text-[0.6rem] sm:text-[0.65rem]">
+                      <div className="bg-black/60 px-2 py-1.5 font-semibold uppercase tracking-wide">
                         Flavour
                       </div>
                       <div className="bg-black/60 px-2 py-1.5 text-center font-semibold">
