@@ -871,8 +871,7 @@ export default function App(){
                             PLN (plain)
                           </div>
                           <div className="bg-white/25 px-2 py-1.5">
-                            <div className="flex items-center justify-between gap-1">
-                              <div className="flex items-center gap-1">
+                            <div className="flex items-center justify-center gap-2">
                                 <button
                                   onClick={() => sub(ids.PLN_STD)}
                                   className="w-4 h-4 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
@@ -894,12 +893,10 @@ export default function App(){
                                     +
                                   </span>
                                 </button>
-                              </div>
                             </div>
                           </div>
                           <div className="bg-white/10 px-2 py-1.5">
-                            <div className="flex items-center justify-between gap-1">
-                              <div className="flex items-center gap-1">
+                            <div className="flex items-center justify-justify-center gap-2">
                                 <button
                                   onClick={() => sub(ids.PLN_LF)}
                                   className="w-4 h-4 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
@@ -921,7 +918,6 @@ export default function App(){
                                     +
                                   </span>
                                 </button>
-                              </div>
                             </div>
                           </div>
         
@@ -930,8 +926,7 @@ export default function App(){
                             STR (strawberry)
                           </div>
                           <div className="bg-pink-500/35 px-2 py-1.5">
-                            <div className="flex items-center justify-between gap-1">
-                              <div className="flex items-center gap-1">
+                            <div className="flex items-center justify-center gap-2">
                                 <button
                                   onClick={() => sub(ids.STR_STD)}
                                   className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
@@ -953,12 +948,10 @@ export default function App(){
                                     +
                                   </span>
                                 </button>
-                              </div>
                             </div>
                           </div>
                           <div className="bg-pink-500/35 px-2 py-1.5">
-                            <div className="flex items-center justify-between gap-1">
-                              <div className="flex items-center gap-1">
+                            <div className="flex items-center justify-center gap-2">
                                 <button
                                   onClick={() => sub(ids.STR_LF)}
                                   className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
@@ -980,7 +973,6 @@ export default function App(){
                                     +
                                   </span>
                                 </button>
-                              </div>
                             </div>
                           </div>
         
@@ -989,8 +981,7 @@ export default function App(){
                             MNG (mango)
                           </div>
                           <div className="bg-amber-300/45 px-2 py-1.5">
-                            <div className="flex items-center justify-between gap-1">
-                              <div className="flex items-center gap-1">
+                            <div className="flex items-center justify-center gap-2">
                                 <button
                                   onClick={() => sub(ids.MNG_STD)}
                                   className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
@@ -1012,12 +1003,10 @@ export default function App(){
                                     +
                                   </span>
                                 </button>
-                              </div>
                             </div>
                           </div>
                           <div className="bg-amber-300/45 px-2 py-1.5">
-                            <div className="flex items-center justify-between gap-1">
-                              <div className="flex items-center gap-1">
+                            <div className="flex items-center justify-center gap-2">
                                 <button
                                   onClick={() => sub(ids.MNG_LF)}
                                   className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
@@ -1039,7 +1028,6 @@ export default function App(){
                                     +
                                   </span>
                                 </button>
-                              </div>
                             </div>
                           </div>
         
@@ -1048,8 +1036,7 @@ export default function App(){
                             CHC (chocolate)
                           </div>
                           <div className="bg-amber-900/45 px-2 py-1.5">
-                            <div className="flex items-center justify-between gap-1">
-                              <div className="flex items-center gap-1">
+                            <div className="flex items-center justify-center gap-2">
                                 <button
                                   onClick={() => sub(ids.CHC_STD)}
                                   className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
@@ -1071,12 +1058,10 @@ export default function App(){
                                     +
                                   </span>
                                 </button>
-                              </div>
                             </div>
                           </div>
                           <div className="bg-amber-900/45 px-2 py-1.5">
-                            <div className="flex items-center justify-between gap-1">
-                              <div className="flex items-center gap-1">
+                            <div className="flex items-center justify-center gap-2">
                                 <button
                                   onClick={() => sub(ids.CHC_LF)}
                                   className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
@@ -1098,7 +1083,6 @@ export default function App(){
                                     +
                                   </span>
                                 </button>
-                              </div>
                             </div>
                           </div>
                         </div>
