@@ -703,6 +703,13 @@ export default function App(){
           })
           .map((g) => {
             const isPRCXN = g.key === "prcxn";
+
+            // flavour panel background (different from hero row)
+            const flavourBg = isPRCXN
+              ? "/prcxn_flavour_bg.png"
+              : g.key === "spctrl"
+              ? "/spctrl_flavour_bg.png"
+              : g.img;
       
             // map strains to flavour IDs
             const ids = isPRCXN
@@ -738,9 +745,9 @@ export default function App(){
                 key={g.key + "-flavours"}
                 className="relative aspect-[3/2] w-full overflow-hidden"
               >
-                {/* background image reused */}
+                {/* dedicated flavour background image */}
                 <img
-                  src={g.img}
+                  src={flavourBg}
                   alt={g.title + " flavours"}
                   className="absolute inset-0 w-full h-full object-cover"
                 />
@@ -771,10 +778,10 @@ export default function App(){
                       </div>
       
                       {/* PLN row */}
-                      <div className="bg-black/40 px-2 py-1.5 font-mono font-semibold">
+                      <div className="bg-white/25 px-2 py-1.5 font-semibold text-sm">
                         PLN
                       </div>
-                      <div className="bg-white/10 px-2 py-1.5">
+                      <div className="bg-white/25 px-2 py-1.5">
                         <div className="flex items-center justify-between gap-1">
                           <div className="flex items-center gap-1">
                             <button
@@ -832,7 +839,7 @@ export default function App(){
                       </div>
       
                       {/* STR row */}
-                      <div className="bg-black/40 px-2 py-1.5 font-mono font-semibold">
+                      <div className="bg-pink-500/35 px-2 py-1.5 font-semibold text-sm">
                         STR
                       </div>
                       <div className="bg-pink-500/35 px-2 py-1.5">
@@ -891,7 +898,7 @@ export default function App(){
                       </div>
       
                       {/* MNG row */}
-                      <div className="bg-black/40 px-2 py-1.5 font-mono font-semibold">
+                      <div className="bg-amber-300/45 px-2 py-1.5 font-semibold text-sm">
                         MNG
                       </div>
                       <div className="bg-amber-300/45 px-2 py-1.5">
@@ -950,7 +957,7 @@ export default function App(){
                       </div>
       
                       {/* CHC row */}
-                      <div className="bg-black/40 px-2 py-1.5 font-mono font-semibold">
+                      <div className="bg-amber-900/45 px-2 py-1.5 font-semibold text-sm">
                         CHC
                       </div>
                       <div className="bg-amber-900/45 px-2 py-1.5">
@@ -1015,6 +1022,21 @@ export default function App(){
                     <p>PLN: <strong>£2</strong> per bottle · <strong>7 for £10</strong></p>
                     <p>STR, MNG &amp; CHC: <strong>£2.50</strong> per bottle · <strong>5 for £10</strong></p>
                     <p className="mt-1 text-white">No added sweeteners.</p>
+
+                    {/* pricing + note + "in basket" overlay */}
+                    {totalInBasket > 0 && (
+                      <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-black/60 px-3 py-1 text-[11px] sm:text-xs shadow-lg backdrop-blur-md">
+                        <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                        <span>
+                          In basket:{" "}
+                          <strong>
+                            {totalInBasket} bottle
+                            {totalInBasket !== 1 && "s"}
+                          </strong>
+                        </span>
+                      </div>
+                    )}
+                    
                   </div>
                 </div>
               </article>
