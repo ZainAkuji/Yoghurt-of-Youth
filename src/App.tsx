@@ -875,7 +875,7 @@ export default function App(){
                               <div className="flex items-center gap-1">
                                 <button
                                   onClick={() => sub(ids.PLN_STD)}
-                                  className="w-7 h-7 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
+                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
                                   aria-label="Remove one plain"
                                 >
                                   <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
@@ -887,7 +887,7 @@ export default function App(){
                                 </span>
                                 <button
                                   onClick={() => add(ids.PLN_STD)}
-                                  className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
                                   aria-label="Add one plain"
                                 >
                                   <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
@@ -902,7 +902,7 @@ export default function App(){
                               <div className="flex items-center gap-1">
                                 <button
                                   onClick={() => sub(ids.PLN_LF)}
-                                  className="w-7 h-7 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
+                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
                                   aria-label="Remove one plain LF"
                                 >
                                   <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
@@ -914,7 +914,7 @@ export default function App(){
                                 </span>
                                 <button
                                   onClick={() => add(ids.PLN_LF)}
-                                  className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
                                   aria-label="Add one plain LF"
                                 >
                                   <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
@@ -934,7 +934,7 @@ export default function App(){
                               <div className="flex items-center gap-1">
                                 <button
                                   onClick={() => sub(ids.STR_STD)}
-                                  className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
+                                  className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
                                   aria-label="Remove one strawberry"
                                 >
                                   <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
@@ -946,7 +946,7 @@ export default function App(){
                                 </span>
                                 <button
                                   onClick={() => add(ids.STR_STD)}
-                                  className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
                                   aria-label="Add one strawberry"
                                 >
                                   <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
@@ -993,7 +993,7 @@ export default function App(){
                               <div className="flex items-center gap-1">
                                 <button
                                   onClick={() => sub(ids.MNG_STD)}
-                                  className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
+                                  className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
                                   aria-label="Remove one mango"
                                 >
                                   <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
@@ -1005,7 +1005,7 @@ export default function App(){
                                 </span>
                                 <button
                                   onClick={() => add(ids.MNG_STD)}
-                                  className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
                                   aria-label="Add one mango"
                                 >
                                   <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
@@ -1052,7 +1052,7 @@ export default function App(){
                               <div className="flex items-center gap-1">
                                 <button
                                   onClick={() => sub(ids.CHC_STD)}
-                                  className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
+                                  className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
                                   aria-label="Remove one chocolate"
                                 >
                                   <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
@@ -1064,7 +1064,7 @@ export default function App(){
                                 </span>
                                 <button
                                   onClick={() => add(ids.CHC_STD)}
-                                  className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
                                   aria-label="Add one chocolate"
                                 >
                                   <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
