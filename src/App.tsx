@@ -1307,10 +1307,31 @@ export default function App(){
 
       <Footer brand={BRAND} />
 
-      <Drawer open={drawerOpen} onClose={()=>setDrawerOpen(false)} title="Your Basket">
-        <Basket items={items} qtyTotal={qtyTotal} bundles={bundles} remainder={remainder} total={total} savings={savings}
-          add={add} sub={sub} remove={remove} clear={clear}
-          onReserve={()=>{ setDrawerOpen(false); setReserveOpen(true); }} />
+      <Drawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        title="Your Basket"
+      >
+        <Basket
+          items={items}
+          qtyTotal={qtyTotal}
+          bundles={bundles}
+          remainder={remainder}
+          total={total}
+          savings={savings}
+          plainBundles={plainBundles}
+          flavBundles={flavBundles}
+          plainRemainder={plainRemainder}
+          flavRemainder={flavRemainder}
+          add={add}
+          sub={sub}
+          remove={remove}
+          clear={clear}
+          onReserve={() => {
+            setDrawerOpen(false);
+            setReserveOpen(true);
+          }}
+        />
       </Drawer>
 
       {reserveOpen && (
@@ -1479,6 +1500,10 @@ function Basket({
   remainder,
   total,
   savings,
+  plainBundles,
+  flavBundles,
+  plainRemainder,
+  flavRemainder,
   add,
   sub,
   remove,
@@ -1487,10 +1512,14 @@ function Basket({
 }: {
   items: any[];
   qtyTotal: number;
-  bundles: number;
-  remainder: number;
+  bundles: number;          // still passed, even if not shown
+  remainder: number;        // still passed, even if not shown
   total: number;
   savings: number;
+  plainBundles: number;
+  flavBundles: number;
+  plainRemainder: number;
+  flavRemainder: number;
   add: (id: string) => void;
   sub: (id: string) => void;
   remove: (id: string) => void;
@@ -1516,8 +1545,9 @@ function Basket({
                 <div className="font-medium text-white">{i.name}</div>
                 <div className="text-white/60">{i.size}</div>
               </div>
+              {/* use real product price instead of hard-coded 2 */}
               <div className="font-medium text-white/90">
-                £{(i.qty * 2).toFixed(2)}
+                £{(i.qty * i.price).toFixed(2)}
               </div>
             </div>
 
@@ -1552,14 +1582,25 @@ function Basket({
           <span>Bottles</span>
           <span>{qtyTotal}</span>
         </div>
+
         <div className="flex justify-between">
-          <span>Bundles</span>
-          <span>{bundles} × £10</span>
+          <span>PLN bundles</span>
+          <span>{plainBundles} × £10</span>
         </div>
         <div className="flex justify-between">
-          <span>Remainder</span>
-          <span>{remainder} × £2</span>
+          <span>PLN remainder</span>
+          <span>{plainRemainder} × £2</span>
         </div>
+
+        <div className="flex justify-between">
+          <span>Flavoured bundles</span>
+          <span>{flavBundles} × £10</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Flavoured remainder</span>
+          <span>{flavRemainder} × £2.50</span>
+        </div>
+
         <div className="flex justify-between text-emerald-400">
           <span>You save</span>
           <span>−{gbp(savings)}</span>
@@ -1594,6 +1635,7 @@ function Basket({
     </div>
   );
 }
+
 
 // ---- helper functions ----
 function todayLocalISO() {
