@@ -630,7 +630,7 @@ export default function App(){
       </section>
       
       {/* SHOP */}
-     <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full">
+      <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0 w-full">
         {/* ───── TOP ROW: existing hero-style panels (no buttons) ───── */}
         {GROUPED
@@ -653,17 +653,17 @@ export default function App(){
                 alt={g.title}
                 className="absolute inset-0 w-full h-full object-cover"
               />
-    
+      
               {/* dark overlay */}
               <div className="absolute inset-0 bg-black/40" />
-    
+      
               {/* content */}
               <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-8">
                 <div>
                   <p className="text-xs sm:text-sm md:text-base uppercase tracking-[0.2em] text-white mb-1">
                     {idx === 0 ? "Targeted" : "Broad-acting"}
                   </p>
-    
+      
                   {/* logo / title */}
                   {g.key === "prcxn" ? (
                     <img
@@ -682,7 +682,7 @@ export default function App(){
                       {g.title}
                     </h3>
                   )}
-    
+      
                   <p className="mt-2 text-xs sm:text-sm md:text-base text-white max-w-md leading-relaxed">
                     {g.blurb}
                   </p>
@@ -690,7 +690,7 @@ export default function App(){
               </div>
             </article>
           ))}
-    
+      
         {/* ───── BOTTOM ROW: flavour tables for each panel ───── */}
         {GROUPED
           .filter((g) => {
@@ -703,7 +703,7 @@ export default function App(){
           })
           .map((g) => {
             const isPRCXN = g.key === "prcxn";
-    
+      
             // map strains to flavour IDs
             const ids = isPRCXN
               ? {
@@ -730,9 +730,9 @@ export default function App(){
                   MNG_LF: "SPCTRL_LF_MNG",
                   CHC_LF: "SPCTRL_LF_CHC",
                 };
-    
+      
             const qty = (id: string) => cart[id] || 0;
-    
+      
             return (
               <article
                 key={g.key + "-flavours"}
@@ -744,10 +744,10 @@ export default function App(){
                   alt={g.title + " flavours"}
                   className="absolute inset-0 w-full h-full object-cover"
                 />
-    
+      
                 {/* darker gradient for readability */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/30" />
-    
+      
                 <div className="relative z-10 h-full flex flex-col justify-between p-4 sm:p-6 md:p-8">
                   {/* heading for flavour grid */}
                   <div>
@@ -755,7 +755,7 @@ export default function App(){
                       Flavour selection
                     </p>
                   </div>
-    
+      
                   {/* flavour table */}
                   <div className="bg-black/35 rounded-xl p-2 sm:p-3 backdrop-blur-sm">
                     <div className="grid grid-cols-[minmax(0,1.1fr)_repeat(2,minmax(0,1.4fr))] gap-px text-[10px] sm:text-xs text-white">
@@ -769,7 +769,7 @@ export default function App(){
                       <div className="bg-black/60 px-2 py-1.5 text-center font-semibold">
                         {ids.lfLabel}
                       </div>
-    
+      
                       {/* PLN row */}
                       <div className="bg-black/40 px-2 py-1.5 font-mono font-semibold">
                         PLN
@@ -830,7 +830,7 @@ export default function App(){
                           </div>
                         </div>
                       </div>
-    
+      
                       {/* STR row */}
                       <div className="bg-black/40 px-2 py-1.5 font-mono font-semibold">
                         STR
@@ -889,7 +889,7 @@ export default function App(){
                           </div>
                         </div>
                       </div>
-    
+      
                       {/* MNG row */}
                       <div className="bg-black/40 px-2 py-1.5 font-mono font-semibold">
                         MNG
@@ -948,7 +948,7 @@ export default function App(){
                           </div>
                         </div>
                       </div>
-    
+      
                       {/* CHC row */}
                       <div className="bg-black/40 px-2 py-1.5 font-mono font-semibold">
                         CHC
@@ -1009,19 +1009,19 @@ export default function App(){
                       </div>
                     </div>
                   </div>
-    
+      
                   {/* pricing + note */}
-                  <div className="mt-3 text-[10px] sm:text-xs text-white/90">
+                  <div className="mt-3 text-[10px] sm:text-xs text-white">
                     <p>PLN: <strong>£2</strong> per bottle · <strong>7 for £10</strong></p>
                     <p>STR, MNG &amp; CHC: <strong>£2.50</strong> per bottle · <strong>5 for £10</strong></p>
-                    <p className="mt-1 text-white/70">No added sweeteners.</p>
+                    <p className="mt-1 text-white">No added sweeteners.</p>
                   </div>
                 </div>
               </article>
             );
           })}
       </div>
-    </section>
+      </section>
 
 
       {/* About */}
