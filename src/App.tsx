@@ -739,6 +739,17 @@ export default function App(){
                 };
       
             const qty = (id: string) => cart[id] || 0;
+
+            // total bottles in basket for this panel (all flavours)
+            const totalInBasket =
+              qty(ids.PLN_STD) +
+              qty(ids.PLN_LF) +
+              qty(ids.STR_STD) +
+              qty(ids.STR_LF) +
+              qty(ids.MNG_STD) +
+              qty(ids.MNG_LF) +
+              qty(ids.CHC_STD) +
+              qty(ids.CHC_LF);
       
             return (
               <article
