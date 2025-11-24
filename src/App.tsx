@@ -706,9 +706,9 @@ export default function App(){
 
             // flavour panel background (different from hero row)
             const flavourBg = isPRCXN
-              ? "/prcxn_flavour_bg.png"
+              ? "/prcxn_flavour_bg.PNG"
               : g.key === "spctrl"
-              ? "/spctrl_flavour_bg.png"
+              ? "/spctrl_flavour_bg.PNG"
               : g.img;
       
             // map strains to flavour IDs
