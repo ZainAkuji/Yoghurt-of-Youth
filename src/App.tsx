@@ -48,15 +48,197 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  { id:"PRCXN", name:"PRCXN", price:2.0, size:"250 mL",
-    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["Classic","DSM 17648"], img: "/prcxn.png" },
-  { id:"PRCXN LF", name:"PRCXN LF", price:2.0, size:"250 mL",
-    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.", tags:["Lactose‑free","DSM 17648"], img: "/prcxn.png" },
-  { id:"SPCTRL", name:"SPCTRL", price:2.0, size:"250 mL",
-    desc:"Classic dairy yoghurt cultured with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["Classic","DSM 17938"], img: "/spctrl.png" },
-  { id:"SPCTRL LF", name:"SPCTRL LF", price:2.0, size:"250 mL",
-    desc:"Lactose‑free dairy yoghurt, fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.", tags:["Lactose‑free","DSM 17938"], img: "/spctrl.png" },
+  // --- base SKUs (keep for backwards compatibility) ---
+  {
+    id: "PRCXN",
+    name: "PRCXN",
+    price: 2.0,
+    size: "250 mL",
+    desc: "Classic dairy yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    tags: ["Classic", "DSM 17648"],
+    img: "/prcxn.png",
+  },
+  {
+    id: "PRCXN LF",
+    name: "PRCXN LF",
+    price: 2.0,
+    size: "250 mL",
+    desc: "Lactose-free dairy yoghurt, fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    tags: ["Lactose-free", "DSM 17648"],
+    img: "/prcxn.png",
+  },
+  {
+    id: "SPCTRL",
+    name: "SPCTRL",
+    price: 2.0,
+    size: "250 mL",
+    desc: "Classic dairy yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    tags: ["Classic", "DSM 17938"],
+    img: "/spctrl.png",
+  },
+  {
+    id: "SPCTRL LF",
+    name: "SPCTRL LF",
+    price: 2.0,
+    size: "250 mL",
+    desc: "Lactose-free dairy yoghurt, fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    tags: ["Lactose-free", "DSM 17938"],
+    img: "/spctrl.png",
+  },
+
+  // --- PRCXN flavours (standard) ---
+  {
+    id: "PRCXN_PLN",
+    name: "PRCXN PLN",
+    price: 2.0,
+    size: "250 mL",
+    desc: "Plain PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    tags: ["PRCXN", "Plain"],
+    img: "/prcxn.png",
+  },
+  {
+    id: "PRCXN_STR",
+    name: "PRCXN STR",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Strawberry PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    tags: ["PRCXN", "Strawberry"],
+    img: "/prcxn.png",
+  },
+  {
+    id: "PRCXN_MNG",
+    name: "PRCXN MNG",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Mango PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    tags: ["PRCXN", "Mango"],
+    img: "/prcxn.png",
+  },
+  {
+    id: "PRCXN_CHC",
+    name: "PRCXN CHC",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Chocolate PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    tags: ["PRCXN", "Chocolate"],
+    img: "/prcxn.png",
+  },
+
+  // --- PRCXN flavours (lactose-free) ---
+  {
+    id: "PRCXN_LF_PLN",
+    name: "PRCXN LF PLN",
+    price: 2.0,
+    size: "250 mL",
+    desc: "Plain lactose-free PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    tags: ["PRCXN", "Lactose-free", "Plain"],
+    img: "/prcxn.png",
+  },
+  {
+    id: "PRCXN_LF_STR",
+    name: "PRCXN LF STR",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Strawberry lactose-free PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    tags: ["PRCXN", "Lactose-free", "Strawberry"],
+    img: "/prcxn.png",
+  },
+  {
+    id: "PRCXN_LF_MNG",
+    name: "PRCXN LF MNG",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Mango lactose-free PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    tags: ["PRCXN", "Lactose-free", "Mango"],
+    img: "/prcxn.png",
+  },
+  {
+    id: "PRCXN_LF_CHC",
+    name: "PRCXN LF CHC",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Chocolate lactose-free PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    tags: ["PRCXN", "Lactose-free", "Chocolate"],
+    img: "/prcxn.png",
+  },
+
+  // --- SPCTRL flavours (standard) ---
+  {
+    id: "SPCTRL_PLN",
+    name: "SPCTRL PLN",
+    price: 2.0,
+    size: "250 mL",
+    desc: "Plain SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    tags: ["SPCTRL", "Plain"],
+    img: "/spctrl.png",
+  },
+  {
+    id: "SPCTRL_STR",
+    name: "SPCTRL STR",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Strawberry SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    tags: ["SPCTRL", "Strawberry"],
+    img: "/spctrl.png",
+  },
+  {
+    id: "SPCTRL_MNG",
+    name: "SPCTRL MNG",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Mango SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    tags: ["SPCTRL", "Mango"],
+    img: "/spctrl.png",
+  },
+  {
+    id: "SPCTRL_CHC",
+    name: "SPCTRL CHC",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Chocolate SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    tags: ["SPCTRL", "Chocolate"],
+    img: "/spctrl.png",
+  },
+
+  // --- SPCTRL flavours (lactose-free) ---
+  {
+    id: "SPCTRL_LF_PLN",
+    name: "SPCTRL LF PLN",
+    price: 2.0,
+    size: "250 mL",
+    desc: "Plain lactose-free SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    tags: ["SPCTRL", "Lactose-free", "Plain"],
+    img: "/spctrl.png",
+  },
+  {
+    id: "SPCTRL_LF_STR",
+    name: "SPCTRL LF STR",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Strawberry lactose-free SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    tags: ["SPCTRL", "Lactose-free", "Strawberry"],
+    img: "/spctrl.png",
+  },
+  {
+    id: "SPCTRL_LF_MNG",
+    name: "SPCTRL LF MNG",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Mango lactose-free SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    tags: ["SPCTRL", "Lactose-free", "Mango"],
+    img: "/spctrl.png",
+  },
+  {
+    id: "SPCTRL_LF_CHC",
+    name: "SPCTRL LF CHC",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Chocolate lactose-free SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    tags: ["SPCTRL", "Lactose-free", "Chocolate"],
+    img: "/spctrl.png",
+  },
 ];
+
 
 const GROUPED = [
   {
@@ -446,134 +628,399 @@ export default function App(){
       </section>
       
       {/* SHOP */}
-     <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full">      
-        {/* full-width panels */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 w-full">
-          {GROUPED
-            .filter((g) => {
-              const q = (query || "").toLowerCase();
-              return (
-                !q ||
-                g.title.toLowerCase().includes(q) ||
-                g.variants.some((v) => v.label.toLowerCase().includes(q))
-              );
-            })
-            .map((g, idx) => {
-              // how many of this group are in basket (for the small summary)
-              const groupTotal = g.variants.reduce(
-                (sum, v) => sum + (cart[v.id] || 0),
-                0
-              );
-      
-              return (
-                <article
-                  key={g.key}
-                  className="relative aspect-[3/2] w-full overflow-hidden"
-                >
-                  {/* background image */}
-                  <img
-                    src={g.img}
-                    alt={g.title}
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-      
-                  {/* dark overlay for readability */}
-                  <div className="absolute inset-0 bg-black/30" />
-      
-                  {/* content overlay */}
-                  <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-8">
-                    {/* title + blurb */}
-                    <div>
-                      <p className="text-xs sm:text-sm md:text-base uppercase tracking-[0.2em] text-white mb-1">
-                        {idx === 0 ? "Targeted" : "Broad-acting"}
-                      </p>
-                      {g.key === "prcxn" ? (
-                        <img
-                          src="/prcxn_logo.png"
-                          alt="PRCXN"
-                          className="w-[60%] sm:w-[55%] md:w-[45%] object-contain drop-shadow-lg"
-                        />
-                      ) : g.key === "spctrl" ? (
-                        <img
-                          src="/spctrl_logo.png"
-                          alt="SPCTRL"
-                          className="w-[60%] sm:w-[55%] md:w-[45%] object-contain drop-shadow-lg"
-                        />
-                      ) : (
-                        <h3 className="text-3xl font-bold text-white drop-shadow-md">{g.title}</h3>
-                      )}
-
-                      <p className="mt-2 text-xs sm:text-sm md:text-base text-white max-w-md leading-relaxed">
-                        {g.blurb}
-                      </p>
-                    </div>
-      
-                    {/* buttons + bundle note */}
-                    <div className="grid grid-cols-2 gap-2 max-w-md">
-                      {g.variants.map((v) => {
-                        const qty = cart[v.id] || 0;
-                        return (
-                          <div
-                            key={v.id}
-                            className="flex items-center gap-2 bg-black/25 rounded-lg px-2 py-1.5 backdrop-blur-sm"
-                          >
-                            {/* minus */}
+     <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 w-full">
+        {/* ───── TOP ROW: existing hero-style panels (no buttons) ───── */}
+        {GROUPED
+          .filter((g) => {
+            const q = (query || "").toLowerCase();
+            return (
+              !q ||
+              g.title.toLowerCase().includes(q) ||
+              g.variants.some((v) => v.label.toLowerCase().includes(q))
+            );
+          })
+          .map((g, idx) => (
+            <article
+              key={g.key + "-hero"}
+              className="relative aspect-[3/2] w-full overflow-hidden"
+            >
+              {/* background image */}
+              <img
+                src={g.img}
+                alt={g.title}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+    
+              {/* dark overlay */}
+              <div className="absolute inset-0 bg-black/40" />
+    
+              {/* content */}
+              <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-8">
+                <div>
+                  <p className="text-xs sm:text-sm md:text-base uppercase tracking-[0.2em] text-white/80 mb-1">
+                    {idx === 0 ? "Targeted" : "Broad-acting"}
+                  </p>
+    
+                  {/* logo / title */}
+                  {g.key === "prcxn" ? (
+                    <img
+                      src="/prcxn_logo.png"
+                      alt="PRCXN"
+                      className="w-[60%] sm:w-[55%] md:w-[45%] object-contain drop-shadow-lg"
+                    />
+                  ) : g.key === "spctrl" ? (
+                    <img
+                      src="/spctrl_logo.png"
+                      alt="SPCTRL"
+                      className="w-[60%] sm:w-[55%] md:w-[45%] object-contain drop-shadow-lg"
+                    />
+                  ) : (
+                    <h3 className="text-3xl font-bold text-white drop-shadow-md">
+                      {g.title}
+                    </h3>
+                  )}
+    
+                  <p className="mt-2 text-xs sm:text-sm md:text-base text-white max-w-md leading-relaxed">
+                    {g.blurb}
+                  </p>
+                </div>
+              </div>
+            </article>
+          ))}
+    
+        {/* ───── BOTTOM ROW: flavour tables for each panel ───── */}
+        {GROUPED
+          .filter((g) => {
+            const q = (query || "").toLowerCase();
+            return (
+              !q ||
+              g.title.toLowerCase().includes(q) ||
+              g.variants.some((v) => v.label.toLowerCase().includes(q))
+            );
+          })
+          .map((g) => {
+            const isPRCXN = g.key === "prcxn";
+    
+            // map strains to flavour IDs
+            const ids = isPRCXN
+              ? {
+                  baseLabel: "PRCXN",
+                  lfLabel: "PRCXN LF",
+                  PLN_STD: "PRCXN_PLN",
+                  STR_STD: "PRCXN_STR",
+                  MNG_STD: "PRCXN_MNG",
+                  CHC_STD: "PRCXN_CHC",
+                  PLN_LF: "PRCXN_LF_PLN",
+                  STR_LF: "PRCXN_LF_STR",
+                  MNG_LF: "PRCXN_LF_MNG",
+                  CHC_LF: "PRCXN_LF_CHC",
+                }
+              : {
+                  baseLabel: "SPCTRL",
+                  lfLabel: "SPCTRL LF",
+                  PLN_STD: "SPCTRL_PLN",
+                  STR_STD: "SPCTRL_STR",
+                  MNG_STD: "SPCTRL_MNG",
+                  CHC_STD: "SPCTRL_CHC",
+                  PLN_LF: "SPCTRL_LF_PLN",
+                  STR_LF: "SPCTRL_LF_STR",
+                  MNG_LF: "SPCTRL_LF_MNG",
+                  CHC_LF: "SPCTRL_LF_CHC",
+                };
+    
+            const qty = (id: string) => cart[id] || 0;
+    
+            return (
+              <article
+                key={g.key + "-flavours"}
+                className="relative aspect-[3/2] w-full overflow-hidden"
+              >
+                {/* background image reused */}
+                <img
+                  src={g.img}
+                  alt={g.title + " flavours"}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+    
+                {/* darker gradient for readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/30" />
+    
+                <div className="relative z-10 h-full flex flex-col justify-between p-4 sm:p-6 md:p-8">
+                  {/* heading for flavour grid */}
+                  <div>
+                    <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-white/80 mb-2">
+                      Flavour selection
+                    </p>
+                  </div>
+    
+                  {/* flavour table */}
+                  <div className="bg-black/35 rounded-xl p-2 sm:p-3 backdrop-blur-sm">
+                    <div className="grid grid-cols-[minmax(0,1.1fr)_repeat(2,minmax(0,1.4fr))] gap-px text-[10px] sm:text-xs text-white">
+                      {/* header row */}
+                      <div className="bg-black/60 px-2 py-1.5 font-semibold uppercase tracking-wide text-[0.6rem] sm:text-[0.65rem]">
+                        Flavour
+                      </div>
+                      <div className="bg-black/60 px-2 py-1.5 text-center font-semibold">
+                        {ids.baseLabel}
+                      </div>
+                      <div className="bg-black/60 px-2 py-1.5 text-center font-semibold">
+                        {ids.lfLabel}
+                      </div>
+    
+                      {/* PLN row */}
+                      <div className="bg-black/40 px-2 py-1.5 font-mono font-semibold">
+                        PLN
+                      </div>
+                      <div className="bg-white/10 px-2 py-1.5">
+                        <div className="flex items-center justify-between gap-1">
+                          <div className="flex items-center gap-1">
                             <button
-                              onClick={() => sub(v.id)}
-                              className="w-8 h-8 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
-                              aria-label={`Remove one ${v.label}`}
+                              onClick={() => sub(ids.PLN_STD)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
+                              aria-label="Remove one PRCXN plain"
                             >
-                              <span className="translate-y-[-1px] text-sm sm:text-sm md:text-base font-semibold">
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
                                 −
                               </span>
                             </button>
-    
-                            {/* qty */}
                             <span
-                              key={`${v.id}-${qty}`}
-                              className="text-center text-xs sm:text-sm md:text-sm text-white font-semibold qty-flash"
+                              className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash"
                             >
-                              {qty}
+                              {qty(ids.PLN_STD)}
                             </span>
-    
-                            {/* plus */}
                             <button
-                              onClick={() => add(v.id)}
-                              className="w-8 h-8 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                              aria-label={`Add one ${v.label}`}
+                              onClick={() => add(ids.PLN_STD)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                              aria-label="Add one PRCXN plain"
                             >
-                              <span className="translate-y-[-1px] text-sm sm:text-sm md:text-base font-semibold">
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
                                 +
                               </span>
                             </button>
-    
-                            {/* label */}
-                            <span className="ml-1 text-center text-xs sm:text-sm md:text-sm text-white">
-                              {v.label}
-                            </span>
                           </div>
-                        );
-                      })}
+                        </div>
+                      </div>
+                      <div className="bg-white/10 px-2 py-1.5">
+                        <div className="flex items-center justify-between gap-1">
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => sub(ids.PLN_LF)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
+                              aria-label="Remove one plain LF"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                −
+                              </span>
+                            </button>
+                            <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
+                              {qty(ids.PLN_LF)}
+                            </span>
+                            <button
+                              onClick={() => add(ids.PLN_LF)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                              aria-label="Add one plain LF"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                +
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+    
+                      {/* STR row */}
+                      <div className="bg-black/40 px-2 py-1.5 font-mono font-semibold">
+                        STR
+                      </div>
+                      <div className="bg-pink-500/35 px-2 py-1.5">
+                        <div className="flex items-center justify-between gap-1">
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => sub(ids.STR_STD)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
+                              aria-label="Remove one strawberry"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                −
+                              </span>
+                            </button>
+                            <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
+                              {qty(ids.STR_STD)}
+                            </span>
+                            <button
+                              onClick={() => add(ids.STR_STD)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                              aria-label="Add one strawberry"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                +
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-pink-500/35 px-2 py-1.5">
+                        <div className="flex items-center justify-between gap-1">
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => sub(ids.STR_LF)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
+                              aria-label="Remove one strawberry LF"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                −
+                              </span>
+                            </button>
+                            <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
+                              {qty(ids.STR_LF)}
+                            </span>
+                            <button
+                              onClick={() => add(ids.STR_LF)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                              aria-label="Add one strawberry LF"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                +
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+    
+                      {/* MNG row */}
+                      <div className="bg-black/40 px-2 py-1.5 font-mono font-semibold">
+                        MNG
+                      </div>
+                      <div className="bg-amber-300/45 px-2 py-1.5">
+                        <div className="flex items-center justify-between gap-1">
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => sub(ids.MNG_STD)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
+                              aria-label="Remove one mango"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                −
+                              </span>
+                            </button>
+                            <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
+                              {qty(ids.MNG_STD)}
+                            </span>
+                            <button
+                              onClick={() => add(ids.MNG_STD)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                              aria-label="Add one mango"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                +
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-amber-300/45 px-2 py-1.5">
+                        <div className="flex items-center justify-between gap-1">
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => sub(ids.MNG_LF)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
+                              aria-label="Remove one mango LF"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                −
+                              </span>
+                            </button>
+                            <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
+                              {qty(ids.MNG_LF)}
+                            </span>
+                            <button
+                              onClick={() => add(ids.MNG_LF)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                              aria-label="Add one mango LF"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                +
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+    
+                      {/* CHC row */}
+                      <div className="bg-black/40 px-2 py-1.5 font-mono font-semibold">
+                        CHC
+                      </div>
+                      <div className="bg-amber-900/45 px-2 py-1.5">
+                        <div className="flex items-center justify-between gap-1">
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => sub(ids.CHC_STD)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
+                              aria-label="Remove one chocolate"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                −
+                              </span>
+                            </button>
+                            <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
+                              {qty(ids.CHC_STD)}
+                            </span>
+                            <button
+                              onClick={() => add(ids.CHC_STD)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                              aria-label="Add one chocolate"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                +
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-amber-900/45 px-2 py-1.5">
+                        <div className="flex items-center justify-between gap-1">
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => sub(ids.CHC_LF)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
+                              aria-label="Remove one chocolate LF"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                −
+                              </span>
+                            </button>
+                            <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
+                              {qty(ids.CHC_LF)}
+                            </span>
+                            <button
+                              onClick={() => add(ids.CHC_LF)}
+                              className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                              aria-label="Add one chocolate LF"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                +
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-
-                    <div className="text-xs text-white flex items-center">
-                      £2 per bottle · 7 for £10 (mix &amp; match)
-                      <span
-                        className={cn(
-                          "ml-2 inline-block bg-white/10 px-2 py-0.5 rounded transition-opacity duration-150",
-                          groupTotal > 0 ? "opacity-100" : "opacity-0"
-                        )}
-                      >
-                        In basket: {groupTotal}
-                      </span>
-                    </div>
-                    
                   </div>
-                </article>
-              );
-            })}
-        </div>
-      </section>
+    
+                  {/* pricing + note */}
+                  <div className="mt-3 text-[10px] sm:text-xs text-white/90">
+                    <p>PLN: <strong>£2</strong> per bottle · <strong>7 for £10</strong></p>
+                    <p>STR, MNG &amp; CHC: <strong>£2.50</strong> per bottle · <strong>5 for £10</strong></p>
+                    <p className="mt-1 text-white/70">No added sweeteners.</p>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+      </div>
+    </section>
+
 
       {/* About */}
       <AboutSection />
