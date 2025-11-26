@@ -1221,7 +1221,7 @@ export default function App(){
               const ids = isPRCXN
                 ? {
                     baseLabel: "PRCXN",
-                    lfLabel: "PRCXN LF",
+                    lfLabel: "PRCXN LF (lactose free)",
                     PLN_STD: "PRCXN_PLN",
                     STR_STD: "PRCXN_STR",
                     MNG_STD: "PRCXN_MNG",
@@ -1233,7 +1233,7 @@ export default function App(){
                   }
                 : {
                     baseLabel: "SPCTRL",
-                    lfLabel: "SPCTRL LF",
+                    lfLabel: "SPCTRL LF (lactose free)",
                     PLN_STD: "SPCTRL_PLN",
                     STR_STD: "SPCTRL_STR",
                     MNG_STD: "SPCTRL_MNG",
