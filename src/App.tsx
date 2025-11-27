@@ -2030,8 +2030,9 @@ function Basket({
 
 
 // ---- helper functions ----
-function todayLocalISO() {
+function earliestPickupISO() {
   const d = new Date();
+  d.setDate(d.getDate() + 2);  // push date forward by 2 days
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
@@ -2115,11 +2116,11 @@ function ReserveModal({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [date, setDate] = useState(todayLocalISO());
+  const [date, setDate] = useState(earliestPickupISO());
   const formattedDate = formatDateUK(date);
 
   const initialTime = (() => {
-    const opts = timeSlotsForDate(todayLocalISO());
+    const opts = timeSlotsForDate(earliestPickupISO());
     return opts[0] || "09:00";
   })();
   const [time, setTime] = useState(initialTime);
@@ -2161,10 +2162,10 @@ function ReserveModal({
     const pickupAt = new Date(`${date}T00:00:00`);
     pickupAt.setHours(hh || 0, mm || 0, 0, 0);
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    if (pickupAt < today) {
-      setError("Please choose today or a future date.");
+    const earliest = new Date(earliestPickupISO());
+    earliest.setHours(0,0,0,0);
+    if (pickupAt < earliest) {
+      setError("Please choose a date at least 2 days from today.");
       return;
     }
 
@@ -2376,7 +2377,7 @@ function ReserveModal({
           }}
           required
           type="date"
-          min={todayLocalISO()}
+          min={earliestPickupISO()}
           className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/40"
         />
         <select
