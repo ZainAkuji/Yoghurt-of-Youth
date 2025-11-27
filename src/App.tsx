@@ -248,6 +248,7 @@ const GROUPED = [
       100 billion CFU.<br />
       Targets <em>H. pylori</em>.<br />
       Pair with SPCTRL for full gut restoration.<br />
+      Freshly fermented on order (2 days prep).<br />
       Lactose-free available.<br />
       250ml.</>,
     img: "prcxn.png",
@@ -263,6 +264,7 @@ const GROUPED = [
       100 billion CFU.<br />
       Targets pathogens including <em>Candida</em>.<br />
       Pair with PRCXN for full gut restoration.<br />
+      Freshly fermented on order (2 days prep).<br />
       Lactose-free available.<br />
       250ml.</>,
     img: "spctrl.png",
