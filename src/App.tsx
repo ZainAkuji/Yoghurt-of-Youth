@@ -245,7 +245,7 @@ const GROUPED = [
     key: "prcxn",
     title: "PRCXN",
     blurb: <>Yoghurt fermented by <em>L. reuteri</em> DSM 17648.<br />
-      100 billion CFU.<br />
+      1 trillion CFU.<br />
       Targets <em>H. pylori</em>.<br />
       Pair with SPCTRL for full gut restoration.<br />
       Freshly fermented on order (2 days prep).<br />
@@ -261,7 +261,7 @@ const GROUPED = [
     key: "spctrl",
     title: "SPCTRL",
     blurb: <>Yoghurt fermented by <em>L. reuteri</em> DSM 17938.<br />
-      100 billion CFU.<br />
+      1 trillion CFU.<br />
       Targets pathogens including <em>Candida</em>.<br />
       Pair with PRCXN for full gut restoration.<br />
       Freshly fermented on order (2 days prep).<br />
