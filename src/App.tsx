@@ -248,9 +248,11 @@ const GROUPED = [
       1 trillion CFU.<br />
       Targets <em>H. pylori</em>.<br />
       Pair with SPCTRL for full gut restoration.<br />
-      Freshly fermented on order (2 days prep).<br />
+      No added sweeteners.<br />
       Lactose-free available.<br />
-      250ml.</>,
+      250ml.<br /><br />
+      Delivered fresh on Monday & Thursday 6:30-8:00pm.<br />
+      Fermented on day before delivery.</>,
     img: "prcxn.png",
     variants: [
       { id: "PRCXN", label: "PRCXN" },
@@ -264,9 +266,11 @@ const GROUPED = [
       1 trillion CFU.<br />
       Targets pathogens including <em>Candida</em>.<br />
       Pair with PRCXN for full gut restoration.<br />
-      Freshly fermented on order (2 days prep).<br />
+      No added sweeteners.<br />
       Lactose-free available.<br />
-      250ml.</>,
+      250ml.<br /><br />
+      Delivered fresh on Monday & Thursday 6:30-8:00pm.<br />
+      Fermented on day before delivery.</>,
     img: "spctrl.png",
     variants: [
       { id: "SPCTRL", label: "SPCTRL" },
@@ -1091,7 +1095,7 @@ export default function App(){
                       </div>
         
                       {/* pricing + note with per-offer "in basket" badges */}
-                      <div className="mt-3 text-[10px] sm:text-xs text-white space-y-1.5">
+                      <div className="mt-3 text-xs text-white space-y-1.5">
                         <p className="flex flex-wrap items-center gap-2">
                           <span>
                             PLN: <strong>£2</strong> per bottle ·{" "}
@@ -1127,8 +1131,6 @@ export default function App(){
                             </span>
                           )}
                         </p>
-        
-                        <p className="mt-1 text-white">No added sweeteners.</p>
                       </div>
                     </div>
                   </article>
@@ -1524,7 +1526,7 @@ export default function App(){
                     </div>
         
                     {/* pricing + note with per-offer "in basket" badges */}
-                    <div className="mt-3 text-[10px] sm:text-xs text-white space-y-1.5">
+                    <div className="mt-3 text-xs text-white space-y-1.5">
                       <p className="flex flex-wrap items-center gap-2">
                         <span>
                           PLN: <strong>£2</strong> per bottle · <strong>7 for £10</strong>
@@ -1561,10 +1563,7 @@ export default function App(){
                           </span>
                         )}
                       </p>
-                    
-                      <p className="mt-1 text-white">No added sweeteners.</p>
                     </div>
-  
                   </div>
                 </article>
               );
@@ -1976,21 +1975,23 @@ function Basket({
         </div>
 
         <div className="flex justify-between">
-          <span>PLN bundles</span>
-          <span>{plainBundles} × £10</span>
-        </div>
-        <div className="flex justify-between">
-          <span>PLN remainder</span>
+          <span>PLN</span>
           <span>{plainRemainder} × £2</span>
         </div>
 
         <div className="flex justify-between">
-          <span>Flavoured bundles</span>
-          <span>{flavBundles} × £10</span>
+          <span>PLN bundles</span>
+          <span>{plainBundles}</span>
         </div>
+
         <div className="flex justify-between">
-          <span>Flavoured remainder</span>
+          <span>Flavoured</span>
           <span>{flavRemainder} × £2.50</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span>Flavoured bundles</span>
+          <span>{flavBundles}</span>
         </div>
 
         <div className="flex justify-between text-emerald-400">
