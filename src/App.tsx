@@ -250,9 +250,7 @@ const GROUPED = [
       Pair with SPCTRL for full gut restoration.<br />
       No added sweeteners.<br />
       Lactose-free available.<br />
-      250ml.<br /><br />
-      Delivered fresh on Monday & Thursday 6:30-8:00pm.<br />
-      Fermented on day before delivery.</>,
+      250ml..</>,
     img: "prcxn.png",
     variants: [
       { id: "PRCXN", label: "PRCXN" },
@@ -268,9 +266,7 @@ const GROUPED = [
       Pair with PRCXN for full gut restoration.<br />
       No added sweeteners.<br />
       Lactose-free available.<br />
-      250ml.<br /><br />
-      Delivered fresh on Monday & Thursday 6:30-8:00pm.<br />
-      Fermented on day before delivery.</>,
+      250ml.</>,
     img: "spctrl.png",
     variants: [
       { id: "SPCTRL", label: "SPCTRL" },
@@ -851,7 +847,7 @@ export default function App(){
         
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/30" />
         
-                    <div className="relative z-10 h-full flex flex-col justify-between p-4">
+                    <div className="relative z-10 h-full flex flex-col justify-between p-6">
                       <div>
                         <p className="text-xs uppercase tracking-[0.18em] text-white mb-2">
                           Flavour selection
@@ -1279,7 +1275,7 @@ export default function App(){
                   {/* darker gradient for readability */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/30" />
         
-                  <div className="relative z-10 h-full flex flex-col justify-between p-4 sm:p-6 md:p-8">
+                  <div className="relative z-10 h-full flex flex-col justify-between p-6">
                     {/* heading for flavour grid */}
                     <div>
                       <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-white mb-2">
@@ -1637,23 +1633,25 @@ export default function App(){
                   <span>Bottles</span>
                   <span>{qtyTotal}</span>
                 </div>
-      
+
                 <div className="flex justify-between">
-                  <span>PLN bundles</span>
-                  <span>{plainBundles} × £10</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>PLN remainder</span>
+                  <span>PLN</span>
                   <span>{plainRemainder} × £2</span>
                 </div>
       
                 <div className="flex justify-between">
-                  <span>Flavoured bundles</span>
-                  <span>{flavBundles} × £10</span>
+                  <span>PLN bundles</span>
+                  <span>{plainBundles}</span>
                 </div>
+
                 <div className="flex justify-between">
-                  <span>Flavoured remainder</span>
+                  <span>Flavoured</span>
                   <span>{flavRemainder} × £2.50</span>
+                </div>
+      
+                <div className="flex justify-between">
+                  <span>Flavoured bundles</span>
+                  <span>{flavBundles}</span>
                 </div>
       
                 <div className="flex justify-between">
