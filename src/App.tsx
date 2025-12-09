@@ -1628,18 +1628,22 @@ export default function App(){
                         <span>
                           Delivery £2 · <strong>FREE delivery on orders over £20</strong>
                         </span>
-                        <span
-                          className={cn(
-                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
-                            freeDeliveryUnlocked
-                              ? "bg-emerald-500/80 text-slate-900"
-                              : "bg-black/60 text-white"
-                          )}
-                        >
-                          Spent:&nbsp;
-                          <strong>{gbp(total)}</strong>
-                        </span>
+                      
+                        {total > 0 && (
+                          <span
+                            className={cn(
+                              "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                              freeDeliveryUnlocked
+                                ? "bg-emerald-500/80 text-slate-900"
+                                : "bg-black/60 text-white"
+                            )}
+                          >
+                            Spent:&nbsp;
+                            <strong>{gbp(total)}</strong>
+                          </span>
+                        )}
                       </p>
+                      
                     </div>
                     
                   </div>
