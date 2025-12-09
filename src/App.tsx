@@ -289,51 +289,56 @@ function computeTotals(cart: Record<string, number>) {
 
   // classify by price: £2 = "plain", £2.50 = "flavoured"
   const plainItems = items.filter((i) => i.price === 2.0);
-  const flavItems = items.filter((i) => i.price === 2.5);
+  const flavItems = items.filter((i) => i.price === 3.0);
 
   const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
   const flavQty = flavItems.reduce((s, i) => s + i.qty, 0);
 
-  // bundles: plain 7-for-£10, flavoured 5-for-£10
+  // unit prices (taken from products so it's future-proof)
+  const plainUnit = plainItems[0]?.price ?? 2.0;
+  const flavUnit = flavItems[0]?.price ?? 3.0;
+
+  // "no bundle" full price (for savings display)
+  const plainSubtotalRaw = plainQty * plainUnit;
+  const flavSubtotalRaw = flavQty * flavUnit;
+
+  // ── NEW DEAL: 7 for the price of 6, separately for plain and flavoured ──
   const plainBundles = Math.floor(plainQty / 7);
   const plainRemainder = plainQty % 7;
+  const plainBundleTotal =
+    plainBundles * 6 * plainUnit + plainRemainder * plainUnit;
 
-  const flavBundles = Math.floor(flavQty / 5);
-  const flavRemainder = flavQty % 5;
+  const flavBundles = Math.floor(flavQty / 7);
+  const flavRemainder = flavQty % 7;
+  const flavBundleTotal =
+    flavBundles * 6 * flavUnit + flavRemainder * flavUnit;
 
-  // full price with no deals at all
-  const fullPrice = items.reduce((s, i) => s + i.qty * i.price, 0);
+  // discounted total actually charged
+  const total = plainBundleTotal + flavBundleTotal;
 
-  // apply bundle pricing
-  const plainTotal = plainBundles * 10 + plainRemainder * 2.0;
-  const flavTotal = flavBundles * 10 + flavRemainder * 2.5;
-
-  const total = plainTotal + flavTotal;
+  // "full price" if no bundles at all
+  const fullPrice = plainSubtotalRaw + flavSubtotalRaw;
 
   const savings = Math.max(0, fullPrice - total);
 
-  // legacy aggregate fields (used in Basket / reservation summaries)
+  // legacy combined bundle/remainder if you still show them anywhere
   const bundles = plainBundles + flavBundles;
   const remainder = plainRemainder + flavRemainder;
 
   return {
     items,
     qtyTotal,
-
-    // legacy fields (already used in JSX)
     bundles,
     remainder,
     total,
     savings,
-    // still called plainSubtotal in code, but now means "full price (no bundles)"
+    // keep this name so your UI still works:
     plainSubtotal: fullPrice,
-
-    // new, more detailed breakdown for future use
     plainQty,
     flavQty,
     plainBundles,
-    plainRemainder,
     flavBundles,
+    plainRemainder,
     flavRemainder,
   };
 }
