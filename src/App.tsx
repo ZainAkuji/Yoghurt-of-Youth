@@ -1685,8 +1685,6 @@ export default function App(){
         />
       )}
 
-
-
     </div>
   );
 }
@@ -2392,7 +2390,7 @@ function ReserveModal({
           value={streetAddress}
           onChange={(e) => setStreetAddress(e.target.value)}
           required
-          placeholder="Street address (house no. + street)"
+          placeholder="Street address"
           className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
         />
 
@@ -2434,24 +2432,47 @@ function ReserveModal({
       </div>
 
       {/* summary */}
-      <div className="mt-5 rounded-2xl bg-black/40 border border-white/15 p-4 text-sm text-white/85">
-        <div className="font-semibold mb-2">Summary</div>
-        <div className="grid sm:grid-cols-2 gap-2">
-          <div>
-            {lines.map((l, i) => (
-              <div key={i}>• {l}</div>
-            ))}
-          </div>
-          <div>
-            <div>Bottles: {qtyTotal}</div>
-            <div>PLN bundles: {plainBundles} × £10</div>
-            <div>PLN remainder: {plainRemainder} × £2</div>
-            <div>Flavoured bundles: {flavBundles} × £10</div>
-            <div>Flavoured remainder: {flavRemainder} × £3</div>
-            <div className="font-semibold mt-1">Total due: {gbp(total)}</div>
+      {qtyTotal > 0 && (
+        <div className="mt-5 rounded-2xl bg-black/40 border border-white/15 p-4 text-sm text-white/85">
+          <div className="font-semibold mb-2">Summary</div>
+          <div className="grid sm:grid-cols-2 gap-2">
+            <div>
+              {lines.map((l, i) => (
+                <div key={i}>• {l}</div>
+              ))}
+            </div>
+            <div>
+              {/* Always show bottles if there is a basket */}
+              <div>Bottles: {qtyTotal}</div>
+      
+              {/* Plain paid bottles */}
+              {plainRemainder > 0 && (
+                <div>PLN: {plainRemainder} × £2</div>
+              )}
+      
+              {/* Free plain bottles from 7-for-6 */}
+              {plainBundles > 0 && (
+                <div>Free PLN (7 for 6): {plainBundles}</div>
+              )}
+      
+              {/* Flavoured paid bottles */}
+              {flavRemainder > 0 && (
+                <div>Flavoured: {flavRemainder} × £3</div>
+              )}
+      
+              {/* Free flavoured bottles from 7-for-6 */}
+              {flavBundles > 0 && (
+                <div>Free flavoured (7 for 6): {flavBundles}</div>
+              )}
+      
+              <div className="font-semibold mt-1">
+                Total due: {gbp(total)}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
 
       {error && (
         <p className="mt-3 text-sm text-rose-300">
