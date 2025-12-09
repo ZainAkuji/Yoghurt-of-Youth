@@ -1837,7 +1837,7 @@ function Basket({
   qtyTotal: number;
   bundles: number;          // still passed, even if not shown
   remainder: number;        // still passed, even if not shown
-  total: number;
+  total: number;            // merchandise total (before delivery)
   savings: number;
   plainBundles: number;
   flavBundles: number;
@@ -1849,6 +1849,11 @@ function Basket({
   clear: () => void;
   onReserve: () => void;
 }) {
+  // ── delivery logic ──────────────────────────────────────────────
+  const freeDelivery = total >= 20;
+  const deliveryFee = qtyTotal === 0 ? 0 : freeDelivery ? 0 : 2;
+  const grandTotal = total + deliveryFee;
+
   return (
     <div className="space-y-4 text-white">
       {items.length === 0 && (
@@ -1906,33 +1911,60 @@ function Basket({
           <span>{qtyTotal}</span>
         </div>
 
-        <div className="flex justify-between">
-          <span>PLN</span>
-          <span>{plainRemainder} × £2</span>
-        </div>
+        {plainRemainder > 0 && (
+          <div className="flex justify-between">
+            <span>PLN</span>
+            <span>{plainRemainder} × £2</span>
+          </div>
+        )}
 
-        <div className="flex justify-between">
-          <span>Free PLN (7 for 6)</span>
-          <span>{plainBundles}</span>
-        </div>
+        {plainBundles > 0 && (
+          <div className="flex justify-between">
+            <span>Free PLN (7 for 6)</span>
+            <span>{plainBundles}</span>
+          </div>
+        )}
 
-        <div className="flex justify-between">
-          <span>Flavoured</span>
-          <span>{flavRemainder} × £3.00</span>
-        </div>
+        {flavRemainder > 0 && (
+          <div className="flex justify-between">
+            <span>Flavoured</span>
+            <span>{flavRemainder} × £3.00</span>
+          </div>
+        )}
 
-        <div className="flex justify-between">
-          <span>Free flavoured (7 for 6)</span>
-          <span>{flavBundles}</span>
-        </div>
+        {flavBundles > 0 && (
+          <div className="flex justify-between">
+            <span>Free flavoured (7 for 6)</span>
+            <span>{flavBundles}</span>
+          </div>
+        )}
 
-        <div className="flex justify-between text-emerald-400">
-          <span>You save</span>
-          <span>−{gbp(savings)}</span>
-        </div>
+        {savings > 0 && (
+          <div className="flex justify-between text-emerald-400">
+            <span>You save</span>
+            <span>−{gbp(savings)}</span>
+          </div>
+        )}
+
+        {qtyTotal > 0 && (
+          <>
+            <div className="flex justify-between">
+              <span>
+                Delivery{" "}
+                <span className="text-xs text-white/60">
+                  (£2 · free over £20)
+                </span>
+              </span>
+              <span className={freeDelivery ? "text-emerald-400 font-semibold" : ""}>
+                {freeDelivery ? "FREE" : gbp(deliveryFee)}
+              </span>
+            </div>
+          </>
+        )}
+
         <div className="flex justify-between font-semibold text-white">
           <span>Total due to be paid</span>
-          <span>{gbp(total)}</span>
+          <span>{gbp(grandTotal)}</span>
         </div>
       </div>
 
@@ -1960,7 +1992,6 @@ function Basket({
     </div>
   );
 }
-
 
 // ---- helper functions ----
 function earliestPickupISO() {
