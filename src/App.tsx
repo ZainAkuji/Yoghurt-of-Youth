@@ -1122,7 +1122,7 @@ export default function App(){
                                   : "bg-black/60 text-white"
                               )}
                             >
-                              Spentt:&nbsp;
+                              Spent:&nbsp;
                               <strong>{gbp(total)}</strong>
                             </span>
                           ) : (
@@ -1598,7 +1598,7 @@ export default function App(){
                                 : "bg-black/60 text-white"
                             )}
                           >
-                            Spentt:&nbsp;
+                            Spent:&nbsp;
                             <strong>{gbp(total)}</strong>
                           </span>
                         ) : (
@@ -1625,6 +1625,7 @@ export default function App(){
       
       <Footer brand={BRAND} />
 
+      
       <Drawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
@@ -1911,17 +1912,17 @@ function Basket({
         </div>
 
         <div className="flex justify-between">
-          <span>PLN bundles</span>
+          <span>Free PLN (7 for 6)</span>
           <span>{plainBundles}</span>
         </div>
 
         <div className="flex justify-between">
           <span>Flavoured</span>
-          <span>{flavRemainder} × £2.50</span>
+          <span>{flavRemainder} × £3.00</span>
         </div>
 
         <div className="flex justify-between">
-          <span>Flavoured bundles</span>
+          <span>Free flavoured (7 for 6)</span>
           <span>{flavBundles}</span>
         </div>
 
@@ -1930,7 +1931,7 @@ function Basket({
           <span>−{gbp(savings)}</span>
         </div>
         <div className="flex justify-between font-semibold text-white">
-          <span>Total due at collection</span>
+          <span>Total due to be paid</span>
           <span>{gbp(total)}</span>
         </div>
       </div>
@@ -1947,7 +1948,7 @@ function Basket({
               : "bg-white/10 text-white/40 cursor-not-allowed"
           )}
         >
-          Reserve & choose collection time
+          Pay and choose delivery day
         </button>
         <button
           onClick={clear}
