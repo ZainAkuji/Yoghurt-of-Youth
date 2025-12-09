@@ -96,6 +96,15 @@ const PRODUCTS = [
     tags: ["PRCXN", "Plain"],
     img: "/prcxn.png",
   },
+    {
+    id: "PRCXN_BFC",
+    name: "PRCXN BFC",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Black forest chocolate PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    tags: ["PRCXN", "Black forest chocolate"],
+    img: "/prcxn.png",
+  },
   {
     id: "PRCXN_STR",
     name: "PRCXN STR",
@@ -114,15 +123,6 @@ const PRODUCTS = [
     tags: ["PRCXN", "Mango"],
     img: "/prcxn.png",
   },
-  {
-    id: "PRCXN_CHC",
-    name: "PRCXN CHC",
-    price: 2.5,
-    size: "250 mL",
-    desc: "Chocolate PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
-    tags: ["PRCXN", "Chocolate"],
-    img: "/prcxn.png",
-  },
 
   // --- PRCXN flavours (lactose-free) ---
   {
@@ -130,8 +130,17 @@ const PRODUCTS = [
     name: "PRCXN LF PLN",
     price: 2.0,
     size: "250 mL",
-    desc: "Plain lactose-free PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    desc: "Lactose-free plain PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
     tags: ["PRCXN", "Lactose-free", "Plain"],
+    img: "/prcxn.png",
+  },
+  {
+    id: "PRCXN_LF_BFC",
+    name: "PRCXN LF BFC",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Lactose-free black forest chocolate PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    tags: ["PRCXN", "Lactose-free", "Black forest chocolate"],
     img: "/prcxn.png",
   },
   {
@@ -139,7 +148,7 @@ const PRODUCTS = [
     name: "PRCXN LF STR",
     price: 2.5,
     size: "250 mL",
-    desc: "Strawberry lactose-free PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    desc: "Lactose-free strawberry PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
     tags: ["PRCXN", "Lactose-free", "Strawberry"],
     img: "/prcxn.png",
   },
@@ -148,17 +157,8 @@ const PRODUCTS = [
     name: "PRCXN LF MNG",
     price: 2.5,
     size: "250 mL",
-    desc: "Mango lactose-free PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
+    desc: "Lactose-free mango PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
     tags: ["PRCXN", "Lactose-free", "Mango"],
-    img: "/prcxn.png",
-  },
-  {
-    id: "PRCXN_LF_CHC",
-    name: "PRCXN LF CHC",
-    price: 2.5,
-    size: "250 mL",
-    desc: "Chocolate lactose-free PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
-    tags: ["PRCXN", "Lactose-free", "Chocolate"],
     img: "/prcxn.png",
   },
 
@@ -170,6 +170,15 @@ const PRODUCTS = [
     size: "250 mL",
     desc: "Plain SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
     tags: ["SPCTRL", "Plain"],
+    img: "/spctrl.png",
+  },
+  {
+    id: "SPCTRL_BFC",
+    name: "SPCTRL BFC",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Black forest chocolate SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    tags: ["SPCTRL", "Black forest chocolate"],
     img: "/spctrl.png",
   },
   {
@@ -190,15 +199,6 @@ const PRODUCTS = [
     tags: ["SPCTRL", "Mango"],
     img: "/spctrl.png",
   },
-  {
-    id: "SPCTRL_CHC",
-    name: "SPCTRL CHC",
-    price: 2.5,
-    size: "250 mL",
-    desc: "Chocolate SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
-    tags: ["SPCTRL", "Chocolate"],
-    img: "/spctrl.png",
-  },
 
   // --- SPCTRL flavours (lactose-free) ---
   {
@@ -206,8 +206,17 @@ const PRODUCTS = [
     name: "SPCTRL LF PLN",
     price: 2.0,
     size: "250 mL",
-    desc: "Plain lactose-free SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    desc: "Lactose-free plain SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
     tags: ["SPCTRL", "Lactose-free", "Plain"],
+    img: "/spctrl.png",
+  },
+  {
+    id: "SPCTRL_LF_BFC",
+    name: "SPCTRL LF BFC",
+    price: 2.5,
+    size: "250 mL",
+    desc: "Lactose-free black forest chocolate SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    tags: ["SPCTRL", "Lactose-free", "Black forest chocolate"],
     img: "/spctrl.png",
   },
   {
@@ -215,7 +224,7 @@ const PRODUCTS = [
     name: "SPCTRL LF STR",
     price: 2.5,
     size: "250 mL",
-    desc: "Strawberry lactose-free SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    desc: "Lactose-free strawberry SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
     tags: ["SPCTRL", "Lactose-free", "Strawberry"],
     img: "/spctrl.png",
   },
@@ -224,17 +233,8 @@ const PRODUCTS = [
     name: "SPCTRL LF MNG",
     price: 2.5,
     size: "250 mL",
-    desc: "Mango lactose-free SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
+    desc: "Lactose-free mango SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
     tags: ["SPCTRL", "Lactose-free", "Mango"],
-    img: "/spctrl.png",
-  },
-  {
-    id: "SPCTRL_LF_CHC",
-    name: "SPCTRL LF CHC",
-    price: 2.5,
-    size: "250 mL",
-    desc: "Chocolate lactose-free SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
-    tags: ["SPCTRL", "Lactose-free", "Chocolate"],
     img: "/spctrl.png",
   },
 ];
@@ -342,7 +342,7 @@ function computeTotals(cart: Record<string, number>) {
 function nextBundleHint(plainQty: number, flavQty: number) {
   // no items at all
   if (plainQty === 0 && flavQty === 0) {
-    return "Bundles: PLN 7 for £10 · STR/MNG/CHC 5 for £10.";
+    return "Bundles: PLN 7 for £10 · STR/MNG/BFC 5 for £10.";
   }
 
   const plainNeed = (7 - (plainQty % 7)) % 7; // how many plain to next 7-for-£10
@@ -522,8 +522,9 @@ function AboutSection() {
         </p>
         
         <p className="mt-2 text-white text-sm leading-relaxed">
-          Everyone’s microbiome is unique — and so is their response.
-          If you experience stronger sensations, please try the <strong>lactose-free</strong> options.
+          Everyone’s gut is unique — and so is their response.
+          If you experience negative reactions, please try the <strong>lactose-free</strong> options.
+          We find that the issue is most often due to lactose intolerance.
           If you would like personalised guidance on how to ease the transition, please reach out to us.
           We’re happy to help you find the rhythm that suits your body best.
         </p>
@@ -765,11 +766,11 @@ export default function App(){
                     PLN_STD: "PRCXN_PLN",
                     STR_STD: "PRCXN_STR",
                     MNG_STD: "PRCXN_MNG",
-                    CHC_STD: "PRCXN_CHC",
+                    BFC_STD: "PRCXN_BFC",
                     PLN_LF: "PRCXN_LF_PLN",
                     STR_LF: "PRCXN_LF_STR",
                     MNG_LF: "PRCXN_LF_MNG",
-                    CHC_LF: "PRCXN_LF_CHC",
+                    BFC_LF: "PRCXN_LF_BFC",
                   }
                 : {
                     baseLabel: "SPCTRL",
@@ -777,11 +778,11 @@ export default function App(){
                     PLN_STD: "SPCTRL_PLN",
                     STR_STD: "SPCTRL_STR",
                     MNG_STD: "SPCTRL_MNG",
-                    CHC_STD: "SPCTRL_CHC",
+                    BFC_STD: "SPCTRL_BFC",
                     PLN_LF: "SPCTRL_LF_PLN",
                     STR_LF: "SPCTRL_LF_STR",
                     MNG_LF: "SPCTRL_LF_MNG",
-                    CHC_LF: "SPCTRL_LF_CHC",
+                    BFC_LF: "SPCTRL_LF_BFC",
                   };
         
               const qty = (id: string) => cart[id] || 0;
@@ -793,8 +794,8 @@ export default function App(){
                 qty(ids.STR_LF) +
                 qty(ids.MNG_STD) +
                 qty(ids.MNG_LF) +
-                qty(ids.CHC_STD) +
-                qty(ids.CHC_LF);
+                qty(ids.BFC_STD) +
+                qty(ids.BFC_LF);
         
               return (
                 <div key={g.key + "-mobile"} className="w-full">
@@ -1033,28 +1034,28 @@ export default function App(){
                             </div>
                           </div>
         
-                          {/* CHC row */}
-                          <div className="bg-amber-900/45 px-2 py-1.5 font-semibold text-xs md:text-sm">
-                            CHC (chocolate)
+                          {/* BFC row */}
+                          <div className="bg-stone-900/40 px-2 py-1.5 font-semibold text-xs md:text-sm">
+                            BFC (black forest chocolate)
                           </div>
                           <div className="bg-amber-900/45 px-2 py-1.5">
                             <div className="flex items-center justify-center gap-2">
                                 <button
-                                  onClick={() => sub(ids.CHC_STD)}
+                                  onClick={() => sub(ids.BFC_STD)}
                                   className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                  aria-label="Remove one chocolate"
+                                  aria-label="Remove one black forest chocolate"
                                 >
                                   <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
                                     −
                                   </span>
                                 </button>
                                 <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                  {qty(ids.CHC_STD)}
+                                  {qty(ids.BFC_STD)}
                                 </span>
                                 <button
-                                  onClick={() => add(ids.CHC_STD)}
+                                  onClick={() => add(ids.BFC_STD)}
                                   className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                  aria-label="Add one chocolate"
+                                  aria-label="Add one black forest chocolate"
                                 >
                                   <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
                                     +
@@ -1062,24 +1063,24 @@ export default function App(){
                                 </button>
                             </div>
                           </div>
-                          <div className="bg-amber-900/45 px-2 py-1.5">
+                          <div className="bg-stone-900/40 px-2 py-1.5">
                             <div className="flex items-center justify-center gap-2">
                                 <button
-                                  onClick={() => sub(ids.CHC_LF)}
+                                  onClick={() => sub(ids.BFC_LF)}
                                   className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                  aria-label="Remove one chocolate LF"
+                                  aria-label="Remove one black forest chocolate LF"
                                 >
                                   <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
                                     −
                                   </span>
                                 </button>
                                 <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                  {qty(ids.CHC_LF)}
+                                  {qty(ids.BFC_LF)}
                                 </span>
                                 <button
-                                  onClick={() => add(ids.CHC_LF)}
+                                  onClick={() => add(ids.BFC_LF)}
                                   className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                  aria-label="Add one chocolate LF"
+                                  aria-label="Add one black forest chocolate LF"
                                 >
                                   <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
                                     +
@@ -1112,7 +1113,7 @@ export default function App(){
         
                         <p className="flex flex-wrap items-center gap-2">
                           <span>
-                            STR, MNG &amp; CHC: <strong>£2.50</strong> per bottle ·{" "}
+                            STR, MNG &amp; BFC: <strong>£2.50</strong> per bottle ·{" "}
                             <strong>5 for £10</strong>
                           </span>
                           {totalFlavoured > 0 ? (
@@ -1225,11 +1226,11 @@ export default function App(){
                     PLN_STD: "PRCXN_PLN",
                     STR_STD: "PRCXN_STR",
                     MNG_STD: "PRCXN_MNG",
-                    CHC_STD: "PRCXN_CHC",
+                    BFC_STD: "PRCXN_BFC",
                     PLN_LF: "PRCXN_LF_PLN",
                     STR_LF: "PRCXN_LF_STR",
                     MNG_LF: "PRCXN_LF_MNG",
-                    CHC_LF: "PRCXN_LF_CHC",
+                    BFC_LF: "PRCXN_LF_BFC",
                   }
                 : {
                     baseLabel: "SPCTRL",
@@ -1237,11 +1238,11 @@ export default function App(){
                     PLN_STD: "SPCTRL_PLN",
                     STR_STD: "SPCTRL_STR",
                     MNG_STD: "SPCTRL_MNG",
-                    CHC_STD: "SPCTRL_CHC",
+                    BFC_STD: "SPCTRL_BFC",
                     PLN_LF: "SPCTRL_LF_PLN",
                     STR_LF: "SPCTRL_LF_STR",
                     MNG_LF: "SPCTRL_LF_MNG",
-                    CHC_LF: "SPCTRL_LF_CHC",
+                    BFC_LF: "SPCTRL_LF_BFC",
                   };
         
               const qty = (id: string) => cart[id] || 0;
@@ -1256,8 +1257,8 @@ export default function App(){
                 qty(ids.STR_LF) +
                 qty(ids.MNG_STD) +
                 qty(ids.MNG_LF) +
-                qty(ids.CHC_STD) +
-                qty(ids.CHC_LF);
+                qty(ids.BFC_STD) +
+                qty(ids.BFC_LF);
   
         
               return (
@@ -1464,28 +1465,28 @@ export default function App(){
                           </div>
                         </div>
         
-                        {/* CHC row */}
-                        <div className="bg-amber-900/45 px-2 py-1.5 font-semibold text-xs md:text-sm">
-                          CHC (chocolate)
+                        {/* BFC row */}
+                        <div className="bg-stone-900/40 px-2 py-1.5 font-semibold text-xs md:text-sm">
+                          BFC (black forest chocolate)
                         </div>
                         <div className="bg-amber-900/45 px-2 py-1.5">
                           <div className="flex items-center justify-center gap-2">
                               <button
-                                onClick={() => sub(ids.CHC_STD)}
+                                onClick={() => sub(ids.BFC_STD)}
                                 className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                aria-label="Remove one chocolate"
+                                aria-label="Remove one black forest chocolate"
                               >
                                 <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
                                   −
                                 </span>
                               </button>
                               <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                {qty(ids.CHC_STD)}
+                                {qty(ids.BFC_STD)}
                               </span>
                               <button
-                                onClick={() => add(ids.CHC_STD)}
+                                onClick={() => add(ids.BFC_STD)}
                                 className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                aria-label="Add one chocolate"
+                                aria-label="Add one black forest chocolate"
                               >
                                 <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
                                   +
@@ -1493,24 +1494,24 @@ export default function App(){
                               </button>
                           </div>
                         </div>
-                        <div className="bg-amber-900/45 px-2 py-1.5">
+                        <div className="bg-stone-900/40 px-2 py-1.5">
                           <div className="flex items-center justify-center gap-2">
                               <button
-                                onClick={() => sub(ids.CHC_LF)}
+                                onClick={() => sub(ids.BFC_LF)}
                                 className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                aria-label="Remove one chocolate LF"
+                                aria-label="Remove one black forest chocolate LF"
                               >
                                 <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
                                   −
                                 </span>
                               </button>
                               <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                {qty(ids.CHC_LF)}
+                                {qty(ids.BFC_LF)}
                               </span>
                               <button
-                                onClick={() => add(ids.CHC_LF)}
+                                onClick={() => add(ids.BFC_LF)}
                                 className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                aria-label="Add one chocolate LF"
+                                aria-label="Add one black forest chocolate LF"
                               >
                                 <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
                                   +
@@ -1543,7 +1544,7 @@ export default function App(){
                     
                       <p className="flex flex-wrap items-center gap-2">
                         <span>
-                          STR, MNG &amp; CHC: <strong>£2.50</strong> per bottle ·{" "}
+                          STR, MNG &amp; BFC: <strong>£2.50</strong> per bottle ·{" "}
                           <strong>5 for £10</strong>
                         </span>
                         {totalFlavoured > 0 ? (
