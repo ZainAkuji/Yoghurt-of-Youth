@@ -1158,8 +1158,8 @@ export default function App(){
                           <span>
                             Delivery £2 · <strong>FREE delivery on orders over £20</strong>
                           </span>
-                        
-                          {total > 0 && (
+
+                          {total > 0 ? (
                             <span
                               className={cn(
                                 "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
@@ -1168,8 +1168,13 @@ export default function App(){
                                   : "bg-black/60 text-white"
                               )}
                             >
-                              Spent:&nbsp;
+                              Spentt:&nbsp;
                               <strong>{gbp(total)}</strong>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
+                              Spent:&nbsp;
+                              <strong>0</strong>
                             </span>
                           )}
                         </p>
@@ -1628,8 +1633,8 @@ export default function App(){
                         <span>
                           Delivery £2 · <strong>FREE delivery on orders over £20</strong>
                         </span>
-                      
-                        {total > 0 && (
+
+                        {total > 0 ? (
                           <span
                             className={cn(
                               "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
@@ -1638,8 +1643,13 @@ export default function App(){
                                 : "bg-black/60 text-white"
                             )}
                           >
-                            Spent:&nbsp;
+                            Spentt:&nbsp;
                             <strong>{gbp(total)}</strong>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
+                            Spent:&nbsp;
+                            <strong>0</strong>
                           </span>
                         )}
                       </p>
