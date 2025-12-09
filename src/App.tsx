@@ -343,52 +343,6 @@ function computeTotals(cart: Record<string, number>) {
   };
 }
 
-
-function nextBundleHint(plainQty: number, flavQty: number) {
-  // no items at all
-  if (plainQty === 0 && flavQty === 0) {
-    return "Bundles: PLN 7 for £10 · STR/MNG/BFC 5 for £10.";
-  }
-
-  const plainNeed = (7 - (plainQty % 7)) % 7; // how many plain to next 7-for-£10
-  const flavNeed = (5 - (flavQty % 5)) % 5;   // how many flavoured to next 5-for-£10
-
-  // already perfectly on both bundles
-  if (plainNeed === 0 && plainQty > 0 && flavNeed === 0 && flavQty > 0) {
-    return "You’re on all available bundles – great value.";
-  }
-
-  // only PLN in basket
-  if (flavQty === 0 && plainQty > 0) {
-    if (plainNeed === 0) return "You’re on the PLN 7-for-£10 bundle – great value.";
-    return `Add ${plainNeed} more PLN to unlock the 7-for-£10 bundle.`;
-  }
-
-  // only flavoured in basket
-  if (plainQty === 0 && flavQty > 0) {
-    if (flavNeed === 0) return "You’re on the flavoured 5-for-£10 bundle – great value.";
-    return `Add ${flavNeed} more flavoured to unlock the 5-for-£10 bundle.`;
-  }
-
-  // mix of PLN + flavoured
-  const parts: string[] = [];
-
-  if (plainNeed > 0) {
-    parts.push(`add ${plainNeed} PLN for 7-for-£10`);
-  } else if (plainQty > 0) {
-    parts.push("PLN already on 7-for-£10");
-  }
-
-  if (flavNeed > 0) {
-    parts.push(`add ${flavNeed} flavoured for 5-for-£10`);
-  } else if (flavQty > 0) {
-    parts.push("flavoured already on 5-for-£10");
-  }
-
-  return parts.join(" · ") + ".";
-}
-
-
 function AboutSection() {
   return (
     <section
@@ -1776,7 +1730,6 @@ function Header({ brand, itemsCount, openCart }) {
               <div className="flex items-center gap-6 leading-none">
                 <a href="#shop" className="hover:text-amber-300 transition-colors">Shop</a>
                 <a href="#about" className="hover:text-amber-300 transition-colors">About</a>
-                <a href="#visit" className="hover:text-amber-300 transition-colors">Collect</a>
               </div>
 
               {/* Basket button perfectly aligned */}
