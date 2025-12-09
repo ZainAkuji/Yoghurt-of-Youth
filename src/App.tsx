@@ -1178,6 +1178,7 @@ export default function App(){
                             </span>
                           )}
                         </p>
+                      </div>
 
                     </div>
                   </article>
