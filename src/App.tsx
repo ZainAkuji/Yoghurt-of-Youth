@@ -99,7 +99,7 @@ const PRODUCTS = [
     {
     id: "PRCXN_BFC",
     name: "PRCXN BFC",
-    price: 2.5,
+    price: 3.0,
     size: "250 mL",
     desc: "Black forest chocolate PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
     tags: ["PRCXN", "Black forest chocolate"],
@@ -108,7 +108,7 @@ const PRODUCTS = [
   {
     id: "PRCXN_STR",
     name: "PRCXN STR",
-    price: 2.5,
+    price: 3.0,
     size: "250 mL",
     desc: "Strawberry PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
     tags: ["PRCXN", "Strawberry"],
@@ -117,7 +117,7 @@ const PRODUCTS = [
   {
     id: "PRCXN_MNG",
     name: "PRCXN MNG",
-    price: 2.5,
+    price: 3.0,
     size: "250 mL",
     desc: "Mango PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
     tags: ["PRCXN", "Mango"],
@@ -137,7 +137,7 @@ const PRODUCTS = [
   {
     id: "PRCXN_LF_BFC",
     name: "PRCXN LF BFC",
-    price: 2.5,
+    price: 3.0,
     size: "250 mL",
     desc: "Lactose-free black forest chocolate PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
     tags: ["PRCXN", "Lactose-free", "Black forest chocolate"],
@@ -146,7 +146,7 @@ const PRODUCTS = [
   {
     id: "PRCXN_LF_STR",
     name: "PRCXN LF STR",
-    price: 2.5,
+    price: 3.0,
     size: "250 mL",
     desc: "Lactose-free strawberry PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
     tags: ["PRCXN", "Lactose-free", "Strawberry"],
@@ -155,7 +155,7 @@ const PRODUCTS = [
   {
     id: "PRCXN_LF_MNG",
     name: "PRCXN LF MNG",
-    price: 2.5,
+    price: 3.0,
     size: "250 mL",
     desc: "Lactose-free mango PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
     tags: ["PRCXN", "Lactose-free", "Mango"],
@@ -175,7 +175,7 @@ const PRODUCTS = [
   {
     id: "SPCTRL_BFC",
     name: "SPCTRL BFC",
-    price: 2.5,
+    price: 3.0,
     size: "250 mL",
     desc: "Black forest chocolate SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
     tags: ["SPCTRL", "Black forest chocolate"],
@@ -184,7 +184,7 @@ const PRODUCTS = [
   {
     id: "SPCTRL_STR",
     name: "SPCTRL STR",
-    price: 2.5,
+    price: 3.0,
     size: "250 mL",
     desc: "Strawberry SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
     tags: ["SPCTRL", "Strawberry"],
@@ -193,7 +193,7 @@ const PRODUCTS = [
   {
     id: "SPCTRL_MNG",
     name: "SPCTRL MNG",
-    price: 2.5,
+    price: 3.0,
     size: "250 mL",
     desc: "Mango SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
     tags: ["SPCTRL", "Mango"],
@@ -213,7 +213,7 @@ const PRODUCTS = [
   {
     id: "SPCTRL_LF_BFC",
     name: "SPCTRL LF BFC",
-    price: 2.5,
+    price: 3.0,
     size: "250 mL",
     desc: "Lactose-free black forest chocolate SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
     tags: ["SPCTRL", "Lactose-free", "Black forest chocolate"],
@@ -222,7 +222,7 @@ const PRODUCTS = [
   {
     id: "SPCTRL_LF_STR",
     name: "SPCTRL LF STR",
-    price: 2.5,
+    price: 3.0,
     size: "250 mL",
     desc: "Lactose-free strawberry SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
     tags: ["SPCTRL", "Lactose-free", "Strawberry"],
@@ -231,7 +231,7 @@ const PRODUCTS = [
   {
     id: "SPCTRL_LF_MNG",
     name: "SPCTRL LF MNG",
-    price: 2.5,
+    price: 3.0,
     size: "250 mL",
     desc: "Lactose-free mango SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
     tags: ["SPCTRL", "Lactose-free", "Mango"],
@@ -796,7 +796,11 @@ export default function App(){
                 qty(ids.MNG_LF) +
                 qty(ids.BFC_STD) +
                 qty(ids.BFC_LF);
-        
+
+              const plainOnBundle = totalPlain >= 7;
+              const flavOnBundle = totalFlavoured >= 7;
+              const freeDeliveryUnlocked = total >= 20; // total from computeTotals(cart)
+              
               return (
                 <div key={g.key + "-mobile"} className="w-full">
                   {/* HERO PANEL (same content as desktop, but mobile only) */}
@@ -1093,14 +1097,21 @@ export default function App(){
                       </div>
         
                       {/* pricing + note with per-offer "in basket" badges */}
-                      <div className="mt-3 text-xs text-white space-y-1.5">
+                      <div className="mt-3 text-sm text-white space-y-1.5">
                         <p className="flex flex-wrap items-center gap-2">
                           <span>
                             PLN: <strong>£2</strong> per bottle ·{" "}
-                            <strong>7 for £10</strong>
+                            <strong>Buy 7 get one FREE</strong>
                           </span>
-                          {totalPlain > 0 ? (
-                            <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md">
+                           {totalPlain > 0 ? (
+                            <span
+                              className={cn(
+                                "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                                plainOnBundle
+                                  ? "bg-emerald-500/80 text-slate-900"
+                                  : "bg-black/60 text-white"
+                              )}
+                            >
                               In basket:&nbsp;
                               <strong>{totalPlain}</strong>
                             </span>
@@ -1114,11 +1125,18 @@ export default function App(){
         
                         <p className="flex flex-wrap items-center gap-2">
                           <span>
-                            STR, MNG &amp; BFC: <strong>£2.50</strong> per bottle ·{" "}
-                            <strong>5 for £10</strong>
+                            BFC, STR &amp; MNG: <strong>£3.00</strong> per bottle ·{" "}
+                            <strong>Buy 7 get one FREE</strong>
                           </span>
                           {totalFlavoured > 0 ? (
-                            <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md">
+                            <span
+                              className={cn(
+                                "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                                flavOnBundle
+                                  ? "bg-emerald-500/80 text-slate-900"
+                                  : "bg-black/60 text-white"
+                              )}
+                            >
                               In basket:&nbsp;
                               <strong>{totalFlavoured}</strong>
                             </span>
@@ -1129,7 +1147,26 @@ export default function App(){
                             </span>
                           )}
                         </p>
+
+                        {/* Delivery info + "Spent" badge */}
+                        <p className="flex flex-wrap items-center gap-2">
+                          <span>
+                            Delivery £2 · <strong>FREE delivery on orders over £20</strong>
+                          </span>
+                          <span
+                            className={cn(
+                              "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                              freeDeliveryUnlocked
+                                ? "bg-emerald-500/80 text-slate-900"
+                                : "bg-black/60 text-white"
+                            )}
+                          >
+                            Spent:&nbsp;
+                            <strong>{gbp(total)}</strong>
+                          </span>
+                        </p>
                       </div>
+
                     </div>
                   </article>
                 </div>
@@ -1525,44 +1562,76 @@ export default function App(){
                     </div>
         
                     {/* pricing + note with per-offer "in basket" badges */}
-                    <div className="mt-3 text-xs text-white space-y-1.5">
+                    <div className="mt-3 text-sm text-white space-y-1.5">
                       <p className="flex flex-wrap items-center gap-2">
                         <span>
-                          PLN: <strong>£2</strong> per bottle · <strong>7 for £10</strong>
+                          PLN: <strong>£2</strong> per bottle ·{" "}
+                          <strong>Buy 7 get one FREE</strong>
                         </span>
-                        {totalPlain > 0 ? (
-                              <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md">
-                                In basket:&nbsp;
-                                <strong>{totalPlain}</strong>
-                              </span>
-                            ) : (
-                              // invisible placeholder to reserve space and avoid layout shift
-                              <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
-                                In basket:&nbsp;
-                                <strong>0</strong>
-                              </span>
+                         {totalPlain > 0 ? (
+                          <span
+                            className={cn(
+                              "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                              plainOnBundle
+                                ? "bg-emerald-500/80 text-slate-900"
+                                : "bg-black/60 text-white"
                             )}
-                      </p>
-                    
-                      <p className="flex flex-wrap items-center gap-2">
-                        <span>
-                          STR, MNG &amp; BFC: <strong>£2.50</strong> per bottle ·{" "}
-                          <strong>5 for £10</strong>
-                        </span>
-                        {totalFlavoured > 0 ? (
-                          <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md">
+                          >
                             In basket:&nbsp;
-                            <strong>{totalFlavoured}</strong>
+                            <strong>{totalPlain}</strong>
                           </span>
                         ) : (
-                          // invisible placeholder to reserve space and avoid layout shift
                           <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
                             In basket:&nbsp;
                             <strong>0</strong>
                           </span>
                         )}
                       </p>
+      
+                      <p className="flex flex-wrap items-center gap-2">
+                        <span>
+                          BFC, STR &amp; MNG: <strong>£3.00</strong> per bottle ·{" "}
+                          <strong>Buy 7 get one FREE</strong>
+                        </span>
+                        {totalFlavoured > 0 ? (
+                          <span
+                            className={cn(
+                              "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                              flavOnBundle
+                                ? "bg-emerald-500/80 text-slate-900"
+                                : "bg-black/60 text-white"
+                            )}
+                          >
+                            In basket:&nbsp;
+                            <strong>{totalFlavoured}</strong>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
+                            In basket:&nbsp;
+                            <strong>0</strong>
+                          </span>
+                        )}
+                      </p>
+
+                      {/* Delivery info + "Spent" badge */}
+                      <p className="flex flex-wrap items-center gap-2">
+                        <span>
+                          Delivery £2 · <strong>FREE delivery on orders over £20</strong>
+                        </span>
+                        <span
+                          className={cn(
+                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                            freeDeliveryUnlocked
+                              ? "bg-emerald-500/80 text-slate-900"
+                              : "bg-black/60 text-white"
+                          )}
+                        >
+                          Spent:&nbsp;
+                          <strong>{gbp(total)}</strong>
+                        </span>
+                      </p>
                     </div>
+                    
                   </div>
                 </article>
               );
