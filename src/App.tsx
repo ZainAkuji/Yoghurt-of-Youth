@@ -1297,8 +1297,11 @@ export default function App(){
                 qty(ids.MNG_LF) +
                 qty(ids.BFC_STD) +
                 qty(ids.BFC_LF);
-  
-        
+
+              const plainOnBundle = totalPlain >= 7;
+              const flavOnBundle = totalFlavoured >= 7;
+              const freeDeliveryUnlocked = total >= 20; // total from computeTotals(cart)
+              
               return (
                 <article
                   key={g.key + "-flavours"}
