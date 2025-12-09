@@ -1850,13 +1850,13 @@ function Basket({
   qtyTotal,
   bundles,
   remainder,
-  total,
+  total,               // FINAL total including delivery (from computeTotals)
   savings,
   plainBundles,
   flavBundles,
   plainRemainder,
   flavRemainder,
-  merchTotal,
+  merchTotal,          // bottles only, after bundles (if you want to show it later)
   deliveryFee,
   freeDeliveryUnlocked,
   add,
@@ -1869,7 +1869,7 @@ function Basket({
   qtyTotal: number;
   bundles: number;          // still passed, even if not shown
   remainder: number;        // still passed, even if not shown
-  total: number;            // merchandise total (before delivery)
+  total: number;            // final total INCLUDING delivery
   savings: number;
   plainBundles: number;
   flavBundles: number;
@@ -1884,11 +1884,6 @@ function Basket({
   clear: () => void;
   onReserve: () => void;
 }) {
-  // ── delivery logic ──────────────────────────────────────────────
-  const freeDelivery = total >= 20;
-  const deliveryFee = qtyTotal === 0 ? 0 : freeDelivery ? 0 : 2;
-  const grandTotal = total + deliveryFee;
-
   return (
     <div className="space-y-4 text-white">
       {items.length === 0 && (
@@ -1908,7 +1903,7 @@ function Basket({
                 <div className="font-medium text-white">{i.name}</div>
                 <div className="text-white/60">{i.size}</div>
               </div>
-              {/* use real product price instead of hard-coded 2 */}
+              {/* real product price */}
               <div className="font-medium text-white/90">
                 £{(i.qty * i.price).toFixed(2)}
               </div>
@@ -1981,25 +1976,28 @@ function Basket({
           </div>
         )}
 
+        {/* Delivery row – only when there is at least one bottle */}
         {qtyTotal > 0 && (
-          <>
-            <div className="flex justify-between">
-              <span>
-                Delivery{" "}
-                <span className="text-xs text-white/60">
-                  (£2 · free over £20)
-                </span>
+          <div className="flex justify-between">
+            <span>
+              Delivery{" "}
+              <span className="text-xs text-white/60">
+                (£2 · free over £20)
               </span>
-              <span className={freeDelivery ? "text-emerald-400 font-semibold" : ""}>
-                {freeDelivery ? "FREE" : gbp(deliveryFee)}
-              </span>
-            </div>
-          </>
+            </span>
+            <span
+              className={
+                freeDeliveryUnlocked ? "text-emerald-400 font-semibold" : ""
+              }
+            >
+              {freeDeliveryUnlocked ? "FREE" : gbp(deliveryFee)}
+            </span>
+          </div>
         )}
 
         <div className="flex justify-between font-semibold text-white">
           <span>Total due to be paid</span>
-          <span>{gbp(grandTotal)}</span>
+          <span>{gbp(total)}</span>
         </div>
       </div>
 
