@@ -251,7 +251,7 @@ const GROUPED = [
       No added sweeteners.<br />
       Lactose-free available.<br />
       250ml.<br /><br />
-      Delivered on Monday and Thursday 6:30-8:00pm.<br />
+      Delivered on Monday and Thursday 18:30–20:00.<br />
       Fermented on day before delivery for freshness.<br />
       Delivered to Blackburn residents only.
     </>,
@@ -271,7 +271,7 @@ const GROUPED = [
       No added sweeteners.<br />
       Lactose-free available.<br />
       250ml.<br /><br />
-      Delivered on Monday and Thursday 6:30-8:00pm.<br />
+      Delivered on Monday and Thursday 18:30–20:00.<br />
       Fermented on day before delivery for freshness.<br />
       Delivered to Blackburn residents only.
     </>,
@@ -2051,6 +2051,21 @@ function formatDateUK(iso: string) {
   return `${d}/${m}/${y}`; // dd/mm/yyyy
 }
 
+function weekdayFromISO(iso: string) {
+  const [y, m, d] = iso.split("-").map(Number);
+  const date = new Date(y, m - 1, d);
+  const names = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  return names[date.getDay()];
+}
+
 // ---- main component ----
 function ReserveModal({
   onClose,
@@ -2086,9 +2101,9 @@ function ReserveModal({
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
-  const [house, setHouse] = useState("");
-  const [street, setStreet] = useState("");
+  // postcode + single street address
   const [postcode, setPostcode] = useState("");
+  const [streetAddress, setStreetAddress] = useState("");
 
   const [date, setDate] = useState(initialDate);
   const formattedDate = formatDateUK(date);
@@ -2123,12 +2138,11 @@ function ReserveModal({
 
   const subjectBase = `${BRAND} order – ${formattedDate} – ${name}`;
 
-  const fullAddress = [house, street, postcode.toUpperCase()]
-    .map((x) => x.trim())
+  const normalizedPostcode = postcode.trim().toUpperCase();
+
+  const fullAddress = [streetAddress.trim(), normalizedPostcode]
     .filter(Boolean)
     .join(", ");
-
-  const normalizedPostcode = postcode.trim().toUpperCase();
 
   const valid =
     !!name &&
@@ -2361,31 +2375,24 @@ function ReserveModal({
         >
           {deliveryOptions.map((d) => (
             <option key={d} value={d} className="bg-slate-900 text-white">
-              {formatDateUK(d)} (Mon/Thu)
+              {formatDateUK(d)} ({weekdayFromISO(d)})
             </option>
           ))}
         </select>
 
         {/* address fields (Blackburn only) */}
         <input
-          value={house}
-          onChange={(e) => setHouse(e.target.value)}
-          required
-          placeholder="House number"
-          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
-        />
-        <input
-          value={street}
-          onChange={(e) => setStreet(e.target.value)}
-          required
-          placeholder="Street name"
-          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
-        />
-        <input
           value={postcode}
           onChange={(e) => setPostcode(e.target.value)}
           required
           placeholder="Postcode (BB1 / BB2 only)"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+        />
+        <input
+          value={streetAddress}
+          onChange={(e) => setStreetAddress(e.target.value)}
+          required
+          placeholder="Street address (house no. + street)"
           className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
         />
 
