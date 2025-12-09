@@ -923,6 +923,61 @@ export default function App(){
                                 </button>
                             </div>
                           </div>
+
+                          {/* BFC row */}
+                          <div className="bg-rose-900/40 px-2 py-1.5 font-semibold text-xs md:text-sm">
+                            BFC (black forest chocolate)
+                          </div>
+                          <div className="bg-rose-900/40 px-2 py-1.5">
+                            <div className="flex items-center justify-center gap-2">
+                                <button
+                                  onClick={() => sub(ids.BFC_STD)}
+                                  className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
+                                  aria-label="Remove one black forest chocolate"
+                                >
+                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                    −
+                                  </span>
+                                </button>
+                                <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
+                                  {qty(ids.BFC_STD)}
+                                </span>
+                                <button
+                                  onClick={() => add(ids.BFC_STD)}
+                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                                  aria-label="Add one black forest chocolate"
+                                >
+                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                    +
+                                  </span>
+                                </button>
+                            </div>
+                          </div>
+                          <div className="bg-rose-900/40 px-2 py-1.5">
+                            <div className="flex items-center justify-center gap-2">
+                                <button
+                                  onClick={() => sub(ids.BFC_LF)}
+                                  className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
+                                  aria-label="Remove one black forest chocolate LF"
+                                >
+                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                    −
+                                  </span>
+                                </button>
+                                <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
+                                  {qty(ids.BFC_LF)}
+                                </span>
+                                <button
+                                  onClick={() => add(ids.BFC_LF)}
+                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                                  aria-label="Add one black forest chocolate LF"
+                                >
+                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                    +
+                                  </span>
+                                </button>
+                            </div>
+                          </div>
         
                           {/* STR row */}
                           <div className="bg-pink-500/35 px-2 py-1.5 font-semibold text-xs md:text-sm">
@@ -1034,60 +1089,6 @@ export default function App(){
                             </div>
                           </div>
         
-                          {/* BFC row */}
-                          <div className="bg-stone-900/40 px-2 py-1.5 font-semibold text-xs md:text-sm">
-                            BFC (black forest chocolate)
-                          </div>
-                          <div className="bg-amber-900/45 px-2 py-1.5">
-                            <div className="flex items-center justify-center gap-2">
-                                <button
-                                  onClick={() => sub(ids.BFC_STD)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                  aria-label="Remove one black forest chocolate"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    −
-                                  </span>
-                                </button>
-                                <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                  {qty(ids.BFC_STD)}
-                                </span>
-                                <button
-                                  onClick={() => add(ids.BFC_STD)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                  aria-label="Add one black forest chocolate"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    +
-                                  </span>
-                                </button>
-                            </div>
-                          </div>
-                          <div className="bg-stone-900/40 px-2 py-1.5">
-                            <div className="flex items-center justify-center gap-2">
-                                <button
-                                  onClick={() => sub(ids.BFC_LF)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                  aria-label="Remove one black forest chocolate LF"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    −
-                                  </span>
-                                </button>
-                                <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                  {qty(ids.BFC_LF)}
-                                </span>
-                                <button
-                                  onClick={() => add(ids.BFC_LF)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                  aria-label="Add one black forest chocolate LF"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    +
-                                  </span>
-                                </button>
-                            </div>
-                          </div>
                         </div>
                       </div>
         
@@ -1354,6 +1355,61 @@ export default function App(){
                               </button>
                           </div>
                         </div>
+
+                        {/* BFC row */}
+                        <div className="bg-rose-900/40 px-2 py-1.5 font-semibold text-xs md:text-sm">
+                          BFC (black forest chocolate)
+                        </div>
+                        <div className="bg-rose-900/40 px-2 py-1.5">
+                          <div className="flex items-center justify-center gap-2">
+                              <button
+                                onClick={() => sub(ids.BFC_STD)}
+                                className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
+                                aria-label="Remove one black forest chocolate"
+                              >
+                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                  −
+                                </span>
+                              </button>
+                              <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
+                                {qty(ids.BFC_STD)}
+                              </span>
+                              <button
+                                onClick={() => add(ids.BFC_STD)}
+                                className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                                aria-label="Add one black forest chocolate"
+                              >
+                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                  +
+                                </span>
+                              </button>
+                          </div>
+                        </div>
+                        <div className="bg-rose-900/40 px-2 py-1.5">
+                          <div className="flex items-center justify-center gap-2">
+                              <button
+                                onClick={() => sub(ids.BFC_LF)}
+                                className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
+                                aria-label="Remove one black forest chocolate LF"
+                              >
+                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                  −
+                                </span>
+                              </button>
+                              <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
+                                {qty(ids.BFC_LF)}
+                              </span>
+                              <button
+                                onClick={() => add(ids.BFC_LF)}
+                                className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                                aria-label="Add one black forest chocolate LF"
+                              >
+                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                  +
+                                </span>
+                              </button>
+                          </div>
+                        </div>
         
                         {/* STR row */}
                         <div className="bg-pink-500/35 px-2 py-1.5 font-semibold text-xs md:text-sm">
@@ -1465,60 +1521,6 @@ export default function App(){
                           </div>
                         </div>
         
-                        {/* BFC row */}
-                        <div className="bg-stone-900/40 px-2 py-1.5 font-semibold text-xs md:text-sm">
-                          BFC (black forest chocolate)
-                        </div>
-                        <div className="bg-amber-900/45 px-2 py-1.5">
-                          <div className="flex items-center justify-center gap-2">
-                              <button
-                                onClick={() => sub(ids.BFC_STD)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                aria-label="Remove one black forest chocolate"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  −
-                                </span>
-                              </button>
-                              <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                {qty(ids.BFC_STD)}
-                              </span>
-                              <button
-                                onClick={() => add(ids.BFC_STD)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                aria-label="Add one black forest chocolate"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  +
-                                </span>
-                              </button>
-                          </div>
-                        </div>
-                        <div className="bg-stone-900/40 px-2 py-1.5">
-                          <div className="flex items-center justify-center gap-2">
-                              <button
-                                onClick={() => sub(ids.BFC_LF)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                aria-label="Remove one black forest chocolate LF"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  −
-                                </span>
-                              </button>
-                              <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                {qty(ids.BFC_LF)}
-                              </span>
-                              <button
-                                onClick={() => add(ids.BFC_LF)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                aria-label="Add one black forest chocolate LF"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  +
-                                </span>
-                              </button>
-                          </div>
-                        </div>
                       </div>
                     </div>
         
