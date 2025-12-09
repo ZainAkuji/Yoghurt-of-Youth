@@ -295,42 +295,53 @@ function computeTotals(cart: Record<string, number>) {
 
   const qtyTotal = items.reduce((s, i) => s + i.qty, 0);
 
-  // classify by price: £2 = "plain", £2.50 = "flavoured"
+  // classify by price: £2 = "plain", £3 = "flavoured"
   const plainItems = items.filter((i) => i.price === 2.0);
   const flavItems = items.filter((i) => i.price === 3.0);
 
   const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
-  const flavQty = flavItems.reduce((s, i) => s + i.qty, 0);
+  const flavQty  = flavItems.reduce((s, i) => s + i.qty, 0);
 
   // unit prices (taken from products so it's future-proof)
   const plainUnit = plainItems[0]?.price ?? 2.0;
-  const flavUnit = flavItems[0]?.price ?? 3.0;
+  const flavUnit  = flavItems[0]?.price ?? 3.0;
 
   // "no bundle" full price (for savings display)
   const plainSubtotalRaw = plainQty * plainUnit;
-  const flavSubtotalRaw = flavQty * flavUnit;
+  const flavSubtotalRaw  = flavQty * flavUnit;
 
-  // ── NEW DEAL: 7 for the price of 6, separately for plain and flavoured ──
-  const plainBundles = Math.floor(plainQty / 7);
+  // ── DEAL: 7 for the price of 6, separately for plain and flavoured ──
+  const plainBundles   = Math.floor(plainQty / 7);
   const plainRemainder = plainQty % 7;
   const plainBundleTotal =
     plainBundles * 6 * plainUnit + plainRemainder * plainUnit;
 
-  const flavBundles = Math.floor(flavQty / 7);
+  const flavBundles   = Math.floor(flavQty / 7);
   const flavRemainder = flavQty % 7;
   const flavBundleTotal =
     flavBundles * 6 * flavUnit + flavRemainder * flavUnit;
 
-  // discounted total actually charged
-  const total = plainBundleTotal + flavBundleTotal;
+  // discounted merchandise total (bottles only, no delivery)
+  const merchTotal = plainBundleTotal + flavBundleTotal;
 
-  // "full price" if no bundles at all
+  // "full price" if no bundles at all (also bottles only)
   const fullPrice = plainSubtotalRaw + flavSubtotalRaw;
 
-  const savings = Math.max(0, fullPrice - total);
+  const savings = Math.max(0, fullPrice - merchTotal);
+
+  // ---- DELIVERY LOGIC ----
+  const FREE_DELIVERY_THRESHOLD = 20; // £20 of yoghurt (after discounts)
+  const freeDeliveryUnlocked = merchTotal >= FREE_DELIVERY_THRESHOLD;
+
+  // £2 delivery if there is any order and threshold not reached
+  const deliveryFee =
+    merchTotal === 0 ? 0 : freeDeliveryUnlocked ? 0 : 2;
+
+  // final amount customer pays (bottles + delivery)
+  const total = merchTotal + deliveryFee;
 
   // legacy combined bundle/remainder if you still show them anywhere
-  const bundles = plainBundles + flavBundles;
+  const bundles   = plainBundles + flavBundles;
   const remainder = plainRemainder + flavRemainder;
 
   return {
@@ -338,10 +349,16 @@ function computeTotals(cart: Record<string, number>) {
     qtyTotal,
     bundles,
     remainder,
-    total,
+
+    // money
+    total,              // final charge INCLUDING delivery
     savings,
-    // keep this name so your UI still works:
-    plainSubtotal: fullPrice,
+    plainSubtotal: fullPrice,  // keep old name for "full price" row
+    merchTotal,         // bottles only, after bundles, no delivery
+    deliveryFee,
+    freeDeliveryUnlocked,
+
+    // breakdown
     plainQty,
     flavQty,
     plainBundles,
@@ -350,6 +367,7 @@ function computeTotals(cart: Record<string, number>) {
     flavRemainder,
   };
 }
+
 
 function AboutSection() {
   return (
@@ -643,6 +661,7 @@ export default function App(){
     return PRODUCTS.filter(p => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || p.tags.join(" ").toLowerCase().includes(q));
   }, [query]);
 
+  const totals = computeTotals(cart);
   const {
     items,
     qtyTotal,
@@ -650,14 +669,15 @@ export default function App(){
     remainder,
     total,
     savings,
-    plainSubtotal,
-    plainQty,
-    flavQty,
     plainBundles,
     flavBundles,
     plainRemainder,
     flavRemainder,
-  } = computeTotals(cart);
+    merchTotal,
+    deliveryFee,
+    freeDeliveryUnlocked,
+  } = totals;
+
   const add = (id:string)=> setCart(c=>({ ...c, [id]: (c[id]||0)+1 }));
   const sub = (id:string)=> setCart(c=>{ const n={...c}; if(!n[id]) return n; n[id]--; if(n[id]<=0) delete n[id]; return n; });
   const remove = (id:string)=> setCart(c=>{ const n={...c}; delete n[id]; return n; });
@@ -1131,7 +1151,7 @@ export default function App(){
                               )}
                             >
                               Spent:&nbsp;
-                              <strong>{gbp(total)}</strong>
+                              <strong>{gbp(merchTotal)}</strong>
                             </span>
                           ) : (
                             <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
@@ -1607,7 +1627,7 @@ export default function App(){
                             )}
                           >
                             Spent:&nbsp;
-                            <strong>{gbp(total)}</strong>
+                            <strong>{gbp(merchTotal)}</strong>
                           </span>
                         ) : (
                           <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
@@ -1650,6 +1670,9 @@ export default function App(){
           flavBundles={flavBundles}
           plainRemainder={plainRemainder}
           flavRemainder={flavRemainder}
+          merchTotal={merchTotal}
+          deliveryFee={deliveryFee}
+          freeDeliveryUnlocked={freeDeliveryUnlocked}
           add={add}
           sub={sub}
           remove={remove}
@@ -1833,6 +1856,9 @@ function Basket({
   flavBundles,
   plainRemainder,
   flavRemainder,
+  merchTotal,
+  deliveryFee,
+  freeDeliveryUnlocked,
   add,
   sub,
   remove,
@@ -1849,6 +1875,9 @@ function Basket({
   flavBundles: number;
   plainRemainder: number;
   flavRemainder: number;
+  deliveryFee: number;
+  freeDeliveryUnlocked: boolean;
+  merchTotal: number;
   add: (id: string) => void;
   sub: (id: string) => void;
   remove: (id: string) => void;
@@ -2087,6 +2116,9 @@ function ReserveModal({
     flavRemainder,
   } = totals;
 
+  const deliveryFee = (totals as any).deliveryFee ?? 0;
+  const freeDeliveryUnlocked = (totals as any).freeDeliveryUnlocked ?? false;
+
   // available delivery dates (Mon/Thu, ≥2 days from today)
   const deliveryOptions = deliveryDateOptions();
   const initialDate = deliveryOptions[0] || "";
@@ -2141,9 +2173,6 @@ function ReserveModal({
   const fullAddress = [streetAddress.trim(), normalizedPostcode]
     .filter(Boolean)
     .join(", ");
-
-  const deliveryFee = (totals as any).deliveryFee ?? 0;
-  const freeDeliveryUnlocked = (totals as any).freeDeliveryUnlocked ?? false;
 
   const valid =
     !!name &&
@@ -2480,6 +2509,11 @@ function ReserveModal({
                   Free delivery unlocked (orders over £20)
                 </div>
               )}
+
+              <div className="flex justify-between text-emerald-400">
+                <span>You save</span>
+                <span>−{gbp(savings)}</span>
+              </div>
       
               <div className="font-semibold mt-1">
                 Total due: {gbp(total)}
