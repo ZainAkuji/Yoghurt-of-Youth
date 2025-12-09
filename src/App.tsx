@@ -1130,7 +1130,7 @@ export default function App(){
         
                         <p className="flex flex-wrap items-center gap-2">
                           <span>
-                            BFC, STR &amp; MNG: <strong>£3.00</strong> per bottle ·{" "}
+                            BFC, STR &amp; MNG: <strong>£3</strong> per bottle ·{" "}
                             <strong>Buy 7 get one FREE</strong>
                           </span>
                           {totalFlavoured > 0 ? (
@@ -1156,7 +1156,7 @@ export default function App(){
                         {/* Delivery info + "Spent" badge */}
                         <p className="flex flex-wrap items-center gap-2">
                           <span>
-                            Delivery £2 · <strong>FREE delivery on orders over £20</strong>
+                            Delivery <strong>£2</strong> · <strong>FREE delivery on orders over £20</strong>
                           </span>
 
                           {total > 0 ? (
@@ -1606,7 +1606,7 @@ export default function App(){
       
                       <p className="flex flex-wrap items-center gap-2">
                         <span>
-                          BFC, STR &amp; MNG: <strong>£3.00</strong> per bottle ·{" "}
+                          BFC, STR &amp; MNG: <strong>£3</strong> per bottle ·{" "}
                           <strong>Buy 7 get one FREE</strong>
                         </span>
                         {totalFlavoured > 0 ? (
@@ -1632,7 +1632,7 @@ export default function App(){
                       {/* Delivery info + "Spent" badge */}
                       <p className="flex flex-wrap items-center gap-2">
                         <span>
-                          Delivery £2 · <strong>FREE delivery on orders over £20</strong>
+                          Delivery <strong>£2</strong> · <strong>FREE delivery on orders over £20</strong>
                         </span>
 
                         {total > 0 ? (
