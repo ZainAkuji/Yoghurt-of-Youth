@@ -250,7 +250,11 @@ const GROUPED = [
       Pair with SPCTRL for full gut restoration.<br />
       No added sweeteners.<br />
       Lactose-free available.<br />
-      250ml..</>,
+      250ml.<br /><br />
+      Delivered on Monday and Thursday 6:30-8:00pm.<br />
+      Fermented on day before delivery for freshness.<br />
+      Delivered to Blackburn residents only.
+    </>,
     img: "prcxn.png",
     variants: [
       { id: "PRCXN", label: "PRCXN" },
@@ -266,7 +270,11 @@ const GROUPED = [
       Pair with PRCXN for full gut restoration.<br />
       No added sweeteners.<br />
       Lactose-free available.<br />
-      250ml.</>,
+      250ml.<br /><br />
+      Delivered on Monday and Thursday 6:30-8:00pm.<br />
+      Fermented on day before delivery for freshness.<br />
+      Delivered to Blackburn residents only.
+    </>,
     img: "spctrl.png",
     variants: [
       { id: "SPCTRL", label: "SPCTRL" },
@@ -1659,24 +1667,24 @@ export default function App(){
           cart={cart}
           totals={{
             qtyTotal,
-            bundles,
-            remainder,
             total,
-            savings,
-            plainSubtotal,
             plainQty,
             flavQty,
             plainBundles,
             flavBundles,
             plainRemainder,
             flavRemainder,
+            // …any other fields you already pass
           }}
           onConfirmed={() => {
-            // clear the basket after a successful reservation
-            setCart({});
+            clear();           // clear basket
+            setDrawerOpen(false);
+            // reserveOpen stays true so the confirmation view shows;
+            // user clicks "Continue shopping" to close it.
           }}
         />
       )}
+
 
 
     </div>
@@ -1993,58 +2001,54 @@ function Basket({
   );
 }
 
-// ---- helper functions ----
-function earliestPickupISO() {
-  const d = new Date();
-  d.setDate(d.getDate() + 2);  // push date forward by 2 days
+// ---- helper functions for delivery ----
+const DELIVERY_DAYS = [1, 4]; // Monday=1, Thursday=4
+
+function toISODate(d: Date) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
 }
 
-function formatDateUK(iso: string) {
-  // iso expected like "2025-03-07"
-  if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso || "";
-  const [y, m, d] = iso.split("-");
-  return `${d}/${m}/${y}`; // dd/mm/yyyy
-}
-
-// Round current time up to next 30-minute boundary
-function roundUpToNextSlot(date: Date) {
-  const d = new Date(date);
-  d.setSeconds(0, 0);
-  const minutes = d.getMinutes();
-  const remainder = minutes % PICKUP_INTERVAL_MIN;
-  if (remainder !== 0) d.setMinutes(minutes + (PICKUP_INTERVAL_MIN - remainder));
+function addDays(base: Date, n: number) {
+  const d = new Date(base);
+  d.setDate(d.getDate() + n);
   return d;
 }
 
-// Build list of valid time slots (today excludes past/too-soon)
-function timeSlotsForDate(dateISO: string) {
-  const slots: string[] = [];
-  for (let h = PICKUP_START_HOUR; h <= PICKUP_END_HOUR; h++) {
-    for (let m = 0; m < 60; m += PICKUP_INTERVAL_MIN) {
-      slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
-    }
+// find the next Monday/Thursday on or after a given date
+function nextDeliveryOnOrAfter(start: Date) {
+  const d = new Date(start);
+  while (!DELIVERY_DAYS.includes(d.getDay())) {
+    d.setDate(d.getDate() + 1);
+  }
+  return d;
+}
+
+// Create a list of allowed delivery dates (e.g. next ~10 slots)
+function deliveryDateOptions(): string[] {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // must be at least 2 days from today
+  const minDate = addDays(today, 2);
+  const options: string[] = [];
+
+  let current = nextDeliveryOnOrAfter(minDate);
+  for (let i = 0; i < 10; i++) {
+    options.push(toISODate(current));
+    // move forward at least one day, then find next Mon/Thu
+    current = nextDeliveryOnOrAfter(addDays(current, 1));
   }
 
-  const now = new Date();
-  const selected = new Date(`${dateISO}T00:00:00`);
-  const isToday =
-    now.getFullYear() === selected.getFullYear() &&
-    now.getMonth() === selected.getMonth() &&
-    now.getDate() === selected.getDate();
+  return options;
+}
 
-  if (!isToday) return slots;
-
-  const cutoff = roundUpToNextSlot(now);
-  return slots.filter((hhmm) => {
-    const [h, m] = hhmm.split(":").map((x) => parseInt(x, 10));
-    const slot = new Date(selected);
-    slot.setHours(h, m, 0, 0);
-    return slot >= cutoff;
-  });
+function formatDateUK(iso: string) {
+  if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso || "";
+  const [y, m, d] = iso.split("-");
+  return `${d}/${m}/${y}`; // dd/mm/yyyy
 }
 
 // ---- main component ----
@@ -2061,8 +2065,6 @@ function ReserveModal({
 }) {
   const {
     qtyTotal,
-    bundles,
-    remainder,
     total,
     plainQty,
     flavQty,
@@ -2072,22 +2074,28 @@ function ReserveModal({
     flavRemainder,
   } = totals;
 
+  // available delivery dates (Mon/Thu, ≥2 days from today)
+  const deliveryOptions = deliveryDateOptions();
+  const initialDate = deliveryOptions[0] || "";
 
-  // mode: "form" for booking, "confirmed" after success
+  // mode: "form" for checkout, "confirmed" after success
   const [mode, setMode] = useState<"form" | "confirmed">("form");
 
   // form state
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [date, setDate] = useState(earliestPickupISO());
-  const formattedDate = formatDateUK(date);
 
-  const initialTime = (() => {
-    const opts = timeSlotsForDate(earliestPickupISO());
-    return opts[0] || "09:00";
-  })();
-  const [time, setTime] = useState(initialTime);
+  const [house, setHouse] = useState("");
+  const [street, setStreet] = useState("");
+  const [postcode, setPostcode] = useState("");
+
+  const [date, setDate] = useState(initialDate);
+  const formattedDate = formatDateUK(date);
+  const deliveryWindow = "18:30–20:00";
+
+  const [paymentMethod, setPaymentMethod] = useState<"" | "card" | "paypal">("");
+
   const [note, setNote] = useState("");
 
   const [sending, setSending] = useState(false);
@@ -2097,14 +2105,15 @@ function ReserveModal({
   const [orderInfo, setOrderInfo] = useState<null | {
     orderId: string;
     formattedDate: string;
-    time: string;
+    deliveryWindow: string;
     lines: string[];
     qtyTotal: number;
-    bundles: number;
-    remainder: number;
+    plainQty: number;
+    flavQty: number;
     totalText: string;
-    address: string[];
+    address: string;
     name: string;
+    paymentMethod: string;
   }>(null);
 
   const lines = Object.entries(cart).map(([id, qty]) => {
@@ -2112,35 +2121,41 @@ function ReserveModal({
     return `${p?.name} × ${qty}`;
   });
 
-  const subjectBase = `${BRAND} reservation – ${formattedDate} ${time} – ${name}`;
-  const valid = name && email && phone && qtyTotal > 0 && date && time;
+  const subjectBase = `${BRAND} order – ${formattedDate} – ${name}`;
+
+  const fullAddress = [house, street, postcode.toUpperCase()]
+    .map((x) => x.trim())
+    .filter(Boolean)
+    .join(", ");
+
+  const normalizedPostcode = postcode.trim().toUpperCase();
+
+  const valid =
+    !!name &&
+    !!email &&
+    !!phone &&
+    !!house &&
+    !!street &&
+    !!postcode &&
+    !!paymentMethod &&
+    !!date &&
+    qtyTotal > 0;
 
   async function sendEmail() {
     if (!valid) {
-      alert("Please complete the form first.");
+      alert("Please complete all required fields first.");
       return;
     }
 
-    // extra validation: prevent yesterday / past times
-    const [hh, mm] = (time || "00:00").split(":").map(Number);
-    const pickupAt = new Date(`${date}T00:00:00`);
-    pickupAt.setHours(hh || 0, mm || 0, 0, 0);
-
-    const earliest = new Date(earliestPickupISO());
-    earliest.setHours(0,0,0,0);
-    if (pickupAt < earliest) {
-      setError("Please choose a date at least 2 days from today.");
+    // postcode gate – only BB1/BB2 (Blackburn area)
+    if (!/^BB[12]\b/.test(normalizedPostcode)) {
+      setError("Sorry, we do not deliver outside of Blackburn (postcodes BB1–BB2).");
       return;
     }
 
-    const now = new Date();
-    const isSameDay =
-      now.getFullYear() === pickupAt.getFullYear() &&
-      now.getMonth() === pickupAt.getMonth() &&
-      now.getDate() === pickupAt.getDate();
-
-    if (isSameDay && pickupAt < roundUpToNextSlot(now)) {
-      setError("Please choose the next available half-hour slot or later.");
+    // sanity check that chosen date is one of our generated options
+    if (!deliveryOptions.includes(date)) {
+      setError("Please choose a valid delivery date (Monday or Thursday).");
       return;
     }
 
@@ -2151,7 +2166,6 @@ function ReserveModal({
       const { default: emailjs } = await import("@emailjs/browser");
       const orderId = `YOY-${Date.now().toString().slice(-6)}`;
       const subjectWithId = `${subjectBase} – ${orderId}`;
-      const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${MAPS_QUERY}`;
 
       await emailjs.send(
         EMAILJS_SERVICE_ID,
@@ -2162,17 +2176,29 @@ function ReserveModal({
           customer_name: name,
           customer_email: email,
           customer_phone: phone,
-          pickup_date: formattedDate,      // UK format in email
-          pickup_time: time,
-          order_lines: lines.join("\n"),   // real newlines
+
+          // ---- delivery-specific fields ----
+          delivery_date: formattedDate,
+          delivery_window: deliveryWindow,
+          customer_address: fullAddress,
+
+          // order lines and totals
+          order_lines: lines.join("\n"),
           bottles: qtyTotal,
-          bundles,
-          remainder,
+          plain_qty: plainQty,
+          flav_qty: flavQty,
+          plain_bundles: plainBundles,
+          flav_bundles: flavBundles,
+          plain_remainder: plainRemainder,
+          flav_remainder: flavRemainder,
           total: gbp(total),
-          address: ADDRESS_LINES.join(", "),
+
+          // payment + note
+          payment_method: paymentMethod === "card" ? "Credit/debit card" : "PayPal",
           note,
+
+          // meta
           order_id: orderId,
-          maps_url: mapsUrl,
           subject: subjectWithId,
         },
         { publicKey: EMAILJS_PUBLIC_KEY }
@@ -2182,14 +2208,15 @@ function ReserveModal({
       setOrderInfo({
         orderId,
         formattedDate,
-        time,
+        deliveryWindow,
         lines,
         qtyTotal,
-        bundles,
-        remainder,
+        plainQty,
+        flavQty,
         totalText: gbp(total),
-        address: [...ADDRESS_LINES],
+        address: fullAddress,
         name,
+        paymentMethod: paymentMethod === "card" ? "Credit/debit card" : "PayPal",
       });
 
       // tell App to clear the basket
@@ -2199,34 +2226,34 @@ function ReserveModal({
     } catch (e) {
       console.error(e);
       setError(
-        "Email send failed. Please check your details or try again in a moment."
+        "Payment / email step failed. Please check your details or try again in a moment."
       );
     } finally {
       setSending(false);
     }
   }
 
-  // -------- RENDER --------
-
+  // -------- CONFIRMED VIEW --------
   if (mode === "confirmed" && orderInfo) {
     const {
       orderId,
       formattedDate,
-      time,
+      deliveryWindow,
       lines,
       qtyTotal,
-      bundles,
-      remainder,
+      plainQty,
+      flavQty,
       totalText,
       address,
       name,
+      paymentMethod,
     } = orderInfo;
 
     return (
-      <Modal onClose={onClose} title="Reservation confirmed">
+      <Modal onClose={onClose} title="Order received">
         <p className="text-sm text-white/80">
-          Thanks, <span className="font-semibold">{name}</span>. Your reservation
-          has been received and a confirmation email has been sent.
+          Thanks, <span className="font-semibold">{name}</span>. Your order has been
+          received and a confirmation email has been sent.
         </p>
 
         <div className="mt-4 space-y-2 text-sm text-white/90">
@@ -2235,9 +2262,9 @@ function ReserveModal({
             <span className="font-semibold">{orderId}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-white/60">Pickup</span>
+            <span className="text-white/60">Delivery</span>
             <span className="font-semibold">
-              {time} on {formattedDate}
+              {formattedDate} · {deliveryWindow}
             </span>
           </div>
           <div className="flex justify-between">
@@ -2246,8 +2273,12 @@ function ReserveModal({
               {qtyTotal} (PLN {plainQty}, flavoured {flavQty})
             </span>
           </div>
+          <div className="flex justify-between">
+            <span className="text-white/60">Payment</span>
+            <span className="font-semibold">{paymentMethod}</span>
+          </div>
           <div className="flex justify-between border-t border-white/20 pt-2 mt-2">
-            <span className="font-semibold">Total due at collection</span>
+            <span className="font-semibold">Total paid</span>
             <span className="font-semibold">{totalText}</span>
           </div>
         </div>
@@ -2262,14 +2293,10 @@ function ReserveModal({
         </div>
 
         <div className="mt-4 text-sm text-white/80">
-          <div className="font-semibold">Collect at</div>
-          <address className="not-italic">
-            {address.map((l, i) => (
-              <div key={i}>{l}</div>
-            ))}
-          </address>
+          <div className="font-semibold">Delivery address</div>
+          <p>{address}</p>
           <p className="mt-2 text-white/70">
-            Payment on collection (<strong>cash or card</strong>).
+            Deliveries are made between <strong>{deliveryWindow}</strong>.
           </p>
         </div>
 
@@ -2280,33 +2307,27 @@ function ReserveModal({
           >
             Continue shopping
           </button>
-
-          <a
-            href={`https://www.google.com/maps/search/?api=1&query=${MAPS_QUERY}`}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex rounded-2xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
-          >
-            Open in Google Maps
-          </a>
         </div>
 
         <p className="mt-4 text-xs text-white/50">
-          If you need to change your slot, please reply to the confirmation
+          If you need to change your delivery day, please reply to the confirmation
           email and we’ll do our best to adjust.
         </p>
       </Modal>
     );
   }
 
-  // -------- FORM MODE --------
+  // -------- FORM MODE (CHECKOUT) --------
   return (
-    <Modal onClose={onClose} title="Reserve & Collect">
+    <Modal onClose={onClose} title="Checkout & Delivery">
       <p className="text-sm text-white/80">
-        Fill in your details and choose a collection slot. You’ll receive an
-        email confirmation, and you pay on collection (cash or card).
+        Choose your delivery day, enter your Blackburn address, and select your
+        payment method. We deliver on{" "}
+        <span className="font-semibold">Mondays and Thursdays</span> between{" "}
+        <span className="font-semibold">{deliveryWindow}</span>.
       </p>
 
+      {/* customer details */}
       <div className="mt-4 grid md:grid-cols-2 gap-4">
         <input
           value={name}
@@ -2331,38 +2352,81 @@ function ReserveModal({
           placeholder="Mobile number"
           className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
         />
-        <input
-          value={date}
-          onChange={(e) => {
-            const newDate = e.target.value;
-            setDate(newDate);
-            const opts = timeSlotsForDate(newDate);
-            setTime(opts[0] || "");
-          }}
-          required
-          type="date"
-          min={earliestPickupISO()}
-          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/40"
-        />
+
+        {/* delivery date: only allowed Mon/Thu options */}
         <select
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
           className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/40"
         >
-          {timeSlotsForDate(date).map((t) => (
-            <option key={t} value={t} className="bg-slate-900 text-white">
-              {t}
+          {deliveryOptions.map((d) => (
+            <option key={d} value={d} className="bg-slate-900 text-white">
+              {formatDateUK(d)} (Mon/Thu)
             </option>
           ))}
         </select>
+
+        {/* address fields (Blackburn only) */}
+        <input
+          value={house}
+          onChange={(e) => setHouse(e.target.value)}
+          required
+          placeholder="House number"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+        />
+        <input
+          value={street}
+          onChange={(e) => setStreet(e.target.value)}
+          required
+          placeholder="Street name"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+        />
+        <input
+          value={postcode}
+          onChange={(e) => setPostcode(e.target.value)}
+          required
+          placeholder="Postcode (BB1 / BB2 only)"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+        />
+
         <input
           value={note}
           onChange={(e) => setNote(e.target.value)}
           placeholder="Order note (optional)"
-          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2"
         />
       </div>
 
+      {/* payment method */}
+      <div className="mt-4 text-sm text-white/90 space-y-2">
+        <div className="font-semibold">Payment method</div>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <label className="inline-flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="payment"
+              value="card"
+              checked={paymentMethod === "card"}
+              onChange={() => setPaymentMethod("card")}
+              className="accent-amber-300"
+            />
+            <span>Credit / debit card</span>
+          </label>
+          <label className="inline-flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="payment"
+              value="paypal"
+              checked={paymentMethod === "paypal"}
+              onChange={() => setPaymentMethod("paypal")}
+              className="accent-amber-300"
+            />
+            <span>PayPal</span>
+          </label>
+        </div>
+      </div>
+
+      {/* summary */}
       <div className="mt-5 rounded-2xl bg-black/40 border border-white/15 p-4 text-sm text-white/85">
         <div className="font-semibold mb-2">Summary</div>
         <div className="grid sm:grid-cols-2 gap-2">
@@ -2376,10 +2440,8 @@ function ReserveModal({
             <div>PLN bundles: {plainBundles} × £10</div>
             <div>PLN remainder: {plainRemainder} × £2</div>
             <div>Flavoured bundles: {flavBundles} × £10</div>
-            <div>Flavoured remainder: {flavRemainder} × £2.50</div>
-            <div className="font-semibold mt-1">
-              Total due: {gbp(total)}
-            </div>
+            <div>Flavoured remainder: {flavRemainder} × £3</div>
+            <div className="font-semibold mt-1">Total due: {gbp(total)}</div>
           </div>
         </div>
       </div>
@@ -2401,20 +2463,19 @@ function ReserveModal({
           )}
           disabled={!valid || sending}
         >
-          {sending ? "Sending…" : "Confirm reservation"}
+          {sending ? "Processing…" : "Confirm & pay"}
         </button>
         <button
           onClick={onClose}
           className="inline-flex rounded-2xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
         >
-          Close
+          Cancel
         </button>
       </div>
 
       <p className="mt-4 text-xs text-white/50">
-        By reserving you agree to collect at the chosen time and pay on
-        collection (cash or card). If you need to change your slot, please
-        reply to the confirmation email.
+        We currently deliver only within Blackburn (postcodes BB1–BB2) on Mondays
+        and Thursdays between {deliveryWindow}.
       </p>
     </Modal>
   );
