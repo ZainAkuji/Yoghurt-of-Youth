@@ -2142,6 +2142,9 @@ function ReserveModal({
     .filter(Boolean)
     .join(", ");
 
+  const deliveryFee = (totals as any).deliveryFee ?? 0;
+  const freeDeliveryUnlocked = (totals as any).freeDeliveryUnlocked ?? false;
+
   const valid =
     !!name &&
     !!email &&
@@ -2463,6 +2466,19 @@ function ReserveModal({
               {/* Free flavoured bottles from 7-for-6 */}
               {flavBundles > 0 && (
                 <div>Free flavoured (7 for 6): {flavBundles}</div>
+              )}
+
+              {/* Delivery rows – invisible when zero */}
+              {deliveryFee > 0 && (
+                <div className="mt-1">
+                  Delivery: {gbp(deliveryFee)}
+                </div>
+              )}
+      
+              {freeDeliveryUnlocked && (
+                <div className="mt-1 text-emerald-400">
+                  Free delivery unlocked (orders over £20)
+                </div>
               )}
       
               <div className="font-semibold mt-1">
