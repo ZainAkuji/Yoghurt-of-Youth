@@ -771,68 +771,59 @@ export default function App(){
                 </div>
       
                 <div className="mt-6 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
-                  {/* 2-row table: top = flavours, bottom = +/- controls */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-px text-sm text-white">
-                    {/* header cells (row 1) */}
+                  {/* 2-row cards per flavour: header + controls */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-px text-[11px] sm:text-xs md:text-sm text-white">
                     {[
-                      "PLN (plain)",
-                      "BFC (black forest chocolate)",
-                      "STR (strawberry)",
-                      "MNG (mango)",
-                    ].map((label) => (
-                      <div
-                        key={label}
-                        className="bg-black/70 px-2 py-1.5 font-semibold text-center"
-                      >
-                        {label}
-                      </div>
-                    ))}
-                  
-                    {/* control cells (row 2) */}
-                    {[ids.PLN, ids.BFC, ids.STR, ids.MNG].map((flavourId, index) => {
-                      const currentQty = qty(flavourId);
-                  
-                      // background tints per flavour
-                      const bgClass =
-                        index === 0
-                          ? "bg-white/15"
-                          : index === 1
-                          ? "bg-rose-900/40"
-                          : index === 2
-                          ? "bg-pink-500/35"
-                          : "bg-amber-300/45";
+                      { id: ids.PLN, label: "PLN (plain)", bg: "bg-white/15" },
+                      { id: ids.BFC, label: "BFC (black forest chocolate)", bg: "bg-rose-900/40" },
+                      { id: ids.STR, label: "STR (strawberry)", bg: "bg-pink-500/35" },
+                      { id: ids.MNG, label: "MNG (mango)", bg: "bg-amber-300/45" },
+                    ].map((f) => {
+                      const currentQty = qty(f.id);
                   
                       return (
-                        <div
-                          key={flavourId}
-                          className={cn(
-                            "px-2 py-2 flex items-center justify-center gap-2",
-                            bgClass
-                          )}
-                        >
-                          <button
-                            onClick={() => sub(flavourId)}
-                            className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
-                            aria-label="Remove one"
+                        <div key={f.id} className="grid grid-rows-[auto,auto] gap-px">
+                          {/* header cell */}
+                          <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
+                            {f.label}
+                          </div>
+                  
+                          {/* controls cell */}
+                          <div
+                            className={cn(
+                              "px-2 py-2 flex items-center justify-center gap-2",
+                              f.bg
+                            )}
                           >
-                            <span className="translate-y-[-1px] text-sm font-semibold">−</span>
-                          </button>
-                          <span className="w-6 text-center text-sm font-semibold qty-flash">
-                            {currentQty}
-                          </span>
-                          <button
-                            onClick={() => add(flavourId)}
-                            className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                            aria-label="Add one"
-                          >
-                            <span className="translate-y-[-1px] text-sm font-semibold">+</span>
-                          </button>
+                            <button
+                              onClick={() => sub(f.id)}
+                              className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
+                              aria-label="Remove one"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                −
+                              </span>
+                            </button>
+                  
+                            <span className="w-6 text-center text-xs sm:text-sm font-semibold qty-flash">
+                              {currentQty}
+                            </span>
+                  
+                            <button
+                              onClick={() => add(f.id)}
+                              className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                              aria-label="Add one"
+                            >
+                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                                +
+                              </span>
+                            </button>
+                          </div>
                         </div>
                       );
                     })}
                   </div>
-
-      
+                   
                   {/* pricing + badges */}
                   <div className="mt-2 text-sm text-white space-y-1.5">
                     <p className="flex flex-wrap items-center gap-2">
