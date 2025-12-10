@@ -714,7 +714,7 @@ export default function App(){
         className="scroll-mt-32 md:scroll-mt-24 w-full py-12 relative text-white"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('/shop_bg.png')",
+            "linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('/flavour_bg.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
