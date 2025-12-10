@@ -622,7 +622,7 @@ export default function App(){
       
       {/* SHOP – product lines overview only */}
       <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full">
-        <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-0 w-full">
+        <div className="mx-auto grid grid-cols-1 md:grid-cols-2 gap-0 w-full">
           {GROUPED
             .filter((g) => {
               const q = (query || "").toLowerCase();
