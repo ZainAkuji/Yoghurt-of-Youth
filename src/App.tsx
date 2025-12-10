@@ -59,30 +59,12 @@ const PRODUCTS = [
     img: "/prcxn.png",
   },
   {
-    id: "PRCXN LF",
-    name: "PRCXN LF",
-    price: 2.0,
-    size: "250 mL",
-    desc: "Lactose-free dairy yoghurt, fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
-    tags: ["Lactose-free", "DSM 17648"],
-    img: "/prcxn.png",
-  },
-  {
     id: "SPCTRL",
     name: "SPCTRL",
     price: 2.0,
     size: "250 mL",
     desc: "Classic dairy yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
     tags: ["Classic", "DSM 17938"],
-    img: "/spctrl.png",
-  },
-  {
-    id: "SPCTRL LF",
-    name: "SPCTRL LF",
-    price: 2.0,
-    size: "250 mL",
-    desc: "Lactose-free dairy yoghurt, fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
-    tags: ["Lactose-free", "DSM 17938"],
     img: "/spctrl.png",
   },
 
@@ -123,45 +105,7 @@ const PRODUCTS = [
     tags: ["PRCXN", "Mango"],
     img: "/prcxn.png",
   },
-
-  // --- PRCXN flavours (lactose-free) ---
-  {
-    id: "PRCXN_LF_PLN",
-    name: "PRCXN LF PLN",
-    price: 2.0,
-    size: "250 mL",
-    desc: "Lactose-free plain PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
-    tags: ["PRCXN", "Lactose-free", "Plain"],
-    img: "/prcxn.png",
-  },
-  {
-    id: "PRCXN_LF_BFC",
-    name: "PRCXN LF BFC",
-    price: 3.0,
-    size: "250 mL",
-    desc: "Lactose-free black forest chocolate PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
-    tags: ["PRCXN", "Lactose-free", "Black forest chocolate"],
-    img: "/prcxn.png",
-  },
-  {
-    id: "PRCXN_LF_STR",
-    name: "PRCXN LF STR",
-    price: 3.0,
-    size: "250 mL",
-    desc: "Lactose-free strawberry PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
-    tags: ["PRCXN", "Lactose-free", "Strawberry"],
-    img: "/prcxn.png",
-  },
-  {
-    id: "PRCXN_LF_MNG",
-    name: "PRCXN LF MNG",
-    price: 3.0,
-    size: "250 mL",
-    desc: "Lactose-free mango PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
-    tags: ["PRCXN", "Lactose-free", "Mango"],
-    img: "/prcxn.png",
-  },
-
+  
   // --- SPCTRL flavours (standard) ---
   {
     id: "SPCTRL_PLN",
@@ -200,46 +144,6 @@ const PRODUCTS = [
     img: "/spctrl.png",
   },
 
-  // --- SPCTRL flavours (lactose-free) ---
-  {
-    id: "SPCTRL_LF_PLN",
-    name: "SPCTRL LF PLN",
-    price: 2.0,
-    size: "250 mL",
-    desc: "Lactose-free plain SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
-    tags: ["SPCTRL", "Lactose-free", "Plain"],
-    img: "/spctrl.png",
-  },
-  {
-    id: "SPCTRL_LF_BFC",
-    name: "SPCTRL LF BFC",
-    price: 3.0,
-    size: "250 mL",
-    desc: "Lactose-free black forest chocolate SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
-    tags: ["SPCTRL", "Lactose-free", "Black forest chocolate"],
-    img: "/spctrl.png",
-  },
-  {
-    id: "SPCTRL_LF_STR",
-    name: "SPCTRL LF STR",
-    price: 3.0,
-    size: "250 mL",
-    desc: "Lactose-free strawberry SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
-    tags: ["SPCTRL", "Lactose-free", "Strawberry"],
-    img: "/spctrl.png",
-  },
-  {
-    id: "SPCTRL_LF_MNG",
-    name: "SPCTRL LF MNG",
-    price: 3.0,
-    size: "250 mL",
-    desc: "Lactose-free mango SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
-    tags: ["SPCTRL", "Lactose-free", "Mango"],
-    img: "/spctrl.png",
-  },
-];
-
-
 const GROUPED = [
   {
     key: "prcxn",
@@ -249,16 +153,12 @@ const GROUPED = [
       Targets <em>H. pylori</em>.<br />
       Pair with SPCTRL for full gut restoration.<br />
       No added sweeteners.<br />
-      Lactose-free available.<br />
-      250ml.<br /><br />
-      Delivered on Monday and Thursday 18:30–20:00.<br />
-      Fermented on day before delivery for freshness.<br />
-      Delivered to Blackburn residents only.
+      Lactose-free.<br />
+      250ml.
     </>,
     img: "prcxn.png",
     variants: [
       { id: "PRCXN", label: "PRCXN" },
-      { id: "PRCXN LF", label: "PRCXN LF" },
     ],
   },
   {
@@ -269,16 +169,12 @@ const GROUPED = [
       Targets pathogens including <em>Candida</em>.<br />
       Pair with PRCXN for full gut restoration.<br />
       No added sweeteners.<br />
-      Lactose-free available.<br />
-      250ml.<br /><br />
-      Delivered on Monday and Thursday 18:30–20:00.<br />
-      Fermented on day before delivery for freshness.<br />
-      Delivered to Blackburn residents only.
+      Lactose-free.<br />
+      250ml.
     </>,
     img: "spctrl.png",
     variants: [
       { id: "SPCTRL", label: "SPCTRL" },
-      { id: "SPCTRL LF", label: "SPCTRL LF" },
     ],
   },
 ];
@@ -507,11 +403,7 @@ function AboutSection() {
         </p>
         
         <p className="mt-2 text-white text-sm leading-relaxed">
-          Everyone’s gut is unique — and so is their response.
-          If you experience negative reactions, please try the <strong>lactose-free</strong> options.
-          We find that the issue is most often due to lactose intolerance.
-          If you would like personalised guidance on how to ease the transition, please reach out to us.
-          We’re happy to help you find the rhythm that suits your body best.
+          All of our yoghurts are lactose-free to minimise negative reactions.
         </p>
 
         {/* NAC adjunct info */}
@@ -683,6 +575,10 @@ export default function App(){
   const remove = (id:string)=> setCart(c=>{ const n={...c}; delete n[id]; return n; });
   const clear = ()=> setCart({});
 
+  // Toggle this manually each week (or later via config):
+  const CURRENT_BRAND: "PRCXN" | "SPCTRL" = "PRCXN";
+
+
   return (
     <div className="scroll-smooth min-h-screen bg-gradient-to-b from-white to-slate-50 text-slate-800">
       <Header brand={BRAND} query={query} setQuery={setQuery} itemsCount={qtyTotal} openCart={()=>setDrawerOpen(true)} />
@@ -721,458 +617,11 @@ export default function App(){
             className="w-auto h-24 sm:h-36 md:h-56 lg:h-72 max-w-[88%] object-contain"
           />
         </div>
-
       </section>
       
-      {/* SHOP */}
+      {/* SHOP – product lines overview only */}
       <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full">
-        {/* MOBILE STACKED LAYOUT: hero + flavours per yoghurt */}
-        <div className="grid grid-cols-1 gap-0 w-full md:hidden">
-          {GROUPED
-            .filter((g) => {
-              const q = (query || "").toLowerCase();
-              return (
-                !q ||
-                g.title.toLowerCase().includes(q) ||
-                g.variants.some((v) => v.label.toLowerCase().includes(q))
-              );
-            })
-            .map((g, idx) => {
-              const isPRCXN = g.key === "prcxn";
-        
-              const flavourBg = isPRCXN
-                ? "/prcxn_flavour_bg.PNG"
-                : g.key === "spctrl"
-                ? "/spctrl_flavour_bg.PNG"
-                : g.img;
-        
-              const ids = isPRCXN
-                ? {
-                    baseLabel: "PRCXN",
-                    lfLabel: "PRCXN LF (lactose free)",
-                    PLN_STD: "PRCXN_PLN",
-                    STR_STD: "PRCXN_STR",
-                    MNG_STD: "PRCXN_MNG",
-                    BFC_STD: "PRCXN_BFC",
-                    PLN_LF: "PRCXN_LF_PLN",
-                    STR_LF: "PRCXN_LF_STR",
-                    MNG_LF: "PRCXN_LF_MNG",
-                    BFC_LF: "PRCXN_LF_BFC",
-                  }
-                : {
-                    baseLabel: "SPCTRL",
-                    lfLabel: "SPCTRL LF (lactose free)",
-                    PLN_STD: "SPCTRL_PLN",
-                    STR_STD: "SPCTRL_STR",
-                    MNG_STD: "SPCTRL_MNG",
-                    BFC_STD: "SPCTRL_BFC",
-                    PLN_LF: "SPCTRL_LF_PLN",
-                    STR_LF: "SPCTRL_LF_STR",
-                    MNG_LF: "SPCTRL_LF_MNG",
-                    BFC_LF: "SPCTRL_LF_BFC",
-                  };
-        
-              const qty = (id: string) => cart[id] || 0;
-        
-              const totalPlain = qty(ids.PLN_STD) + qty(ids.PLN_LF);
-        
-              const totalFlavoured =
-                qty(ids.STR_STD) +
-                qty(ids.STR_LF) +
-                qty(ids.MNG_STD) +
-                qty(ids.MNG_LF) +
-                qty(ids.BFC_STD) +
-                qty(ids.BFC_LF);
-
-              const plainOnBundle = totalPlain >= 7;
-              const flavOnBundle = totalFlavoured >= 7;
-              const freeDeliveryUnlocked = total >= 20; // total from computeTotals(cart)
-              
-              return (
-                <div key={g.key + "-mobile"} className="w-full">
-                  {/* HERO PANEL (same content as desktop, but mobile only) */}
-                  <article className="relative aspect-[3/2] w-full overflow-hidden">
-                    <img
-                      src={g.img}
-                      alt={g.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/40" />
-                    <div className="relative z-10 h-full flex flex-col justify-between p-6">
-                      <div>
-                        <p className="text-xs uppercase tracking-[0.2em] text-white mb-1">
-                          {idx === 0 ? "Targeted" : "Broad-acting"}
-                        </p>
-        
-                        {g.key === "prcxn" ? (
-                          <img
-                            src="/prcxn_logo.png"
-                            alt="PRCXN"
-                            className="w-[60%] object-contain drop-shadow-lg"
-                          />
-                        ) : g.key === "spctrl" ? (
-                          <img
-                            src="/spctrl_logo.png"
-                            alt="SPCTRL"
-                            className="w-[60%] object-contain drop-shadow-lg"
-                          />
-                        ) : (
-                          <h3 className="text-3xl font-bold text-white drop-shadow-md">
-                            {g.title}
-                          </h3>
-                        )}
-        
-                        <p className="mt-2 text-xs text-white max-w-md leading-relaxed">
-                          {g.blurb}
-                        </p>
-                      </div>
-                    </div>
-                  </article>
-        
-                  {/* FLAVOUR PANEL (same logic as desktop, but uses mobile text sizes) */}
-                  <article className="relative aspect-[3/2] w-full overflow-hidden">
-                    <img
-                      src={flavourBg}
-                      alt={g.title + " flavours"}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-        
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/30" />
-        
-                    <div className="relative z-10 h-full flex flex-col justify-between p-6">
-                      <div>
-                        <p className="text-xs uppercase tracking-[0.18em] text-white mb-2">
-                          Flavour selection
-                        </p>
-                      </div>
-        
-                      {/* flavour table */}
-                      <div className="bg-black/35 rounded-xl p-2 backdrop-blur-sm">
-                        <div className="grid grid-cols-[minmax(0,1.1fr)_repeat(2,minmax(0,1.4fr))] gap-px text-xs md:text-sm text-white">
-                          {/* header row */}
-                          <div className="bg-black/60 px-2 py-1.5 font-semibold uppercase tracking-wide">
-                            Flavour
-                          </div>
-                          <div className="bg-black/60 px-2 py-1.5 text-center font-semibold">
-                            {ids.baseLabel}
-                          </div>
-                          <div className="bg-black/60 px-2 py-1.5 text-center font-semibold">
-                            {ids.lfLabel}
-                          </div>
-        
-                          {/* PLN row */}
-                          <div className="bg-white/25 px-2 py-1.5 font-semibold text-xs md:text-sm">
-                            PLN (plain)
-                          </div>
-                          <div className="bg-white/25 px-2 py-1.5">
-                            <div className="flex items-center justify-center gap-2">
-                                <button
-                                  onClick={() => sub(ids.PLN_STD)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
-                                  aria-label="Remove one plain"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    −
-                                  </span>
-                                </button>
-                                <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                  {qty(ids.PLN_STD)}
-                                </span>
-                                <button
-                                  onClick={() => add(ids.PLN_STD)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                  aria-label="Add one plain"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    +
-                                  </span>
-                                </button>
-                            </div>
-                          </div>
-                          <div className="bg-white/25 px-2 py-1.5">
-                            <div className="flex items-center justify-center gap-2">
-                                <button
-                                  onClick={() => sub(ids.PLN_LF)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
-                                  aria-label="Remove one plain LF"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    −
-                                  </span>
-                                </button>
-                                <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                  {qty(ids.PLN_LF)}
-                                </span>
-                                <button
-                                  onClick={() => add(ids.PLN_LF)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                  aria-label="Add one plain LF"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    +
-                                  </span>
-                                </button>
-                            </div>
-                          </div>
-
-                          {/* BFC row */}
-                          <div className="bg-rose-900/40 px-2 py-1.5 font-semibold text-xs md:text-sm">
-                            BFC (black forest chocolate)
-                          </div>
-                          <div className="bg-rose-900/40 px-2 py-1.5">
-                            <div className="flex items-center justify-center gap-2">
-                                <button
-                                  onClick={() => sub(ids.BFC_STD)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                  aria-label="Remove one black forest chocolate"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    −
-                                  </span>
-                                </button>
-                                <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                  {qty(ids.BFC_STD)}
-                                </span>
-                                <button
-                                  onClick={() => add(ids.BFC_STD)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                  aria-label="Add one black forest chocolate"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    +
-                                  </span>
-                                </button>
-                            </div>
-                          </div>
-                          <div className="bg-rose-900/40 px-2 py-1.5">
-                            <div className="flex items-center justify-center gap-2">
-                                <button
-                                  onClick={() => sub(ids.BFC_LF)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                  aria-label="Remove one black forest chocolate LF"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    −
-                                  </span>
-                                </button>
-                                <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                  {qty(ids.BFC_LF)}
-                                </span>
-                                <button
-                                  onClick={() => add(ids.BFC_LF)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                  aria-label="Add one black forest chocolate LF"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    +
-                                  </span>
-                                </button>
-                            </div>
-                          </div>
-        
-                          {/* STR row */}
-                          <div className="bg-pink-500/35 px-2 py-1.5 font-semibold text-xs md:text-sm">
-                            STR (strawberry)
-                          </div>
-                          <div className="bg-pink-500/35 px-2 py-1.5">
-                            <div className="flex items-center justify-center gap-2">
-                                <button
-                                  onClick={() => sub(ids.STR_STD)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                  aria-label="Remove one strawberry"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    −
-                                  </span>
-                                </button>
-                                <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                  {qty(ids.STR_STD)}
-                                </span>
-                                <button
-                                  onClick={() => add(ids.STR_STD)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                  aria-label="Add one strawberry"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    +
-                                  </span>
-                                </button>
-                            </div>
-                          </div>
-                          <div className="bg-pink-500/35 px-2 py-1.5">
-                            <div className="flex items-center justify-center gap-2">
-                                <button
-                                  onClick={() => sub(ids.STR_LF)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                  aria-label="Remove one strawberry LF"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    −
-                                  </span>
-                                </button>
-                                <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                  {qty(ids.STR_LF)}
-                                </span>
-                                <button
-                                  onClick={() => add(ids.STR_LF)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                  aria-label="Add one strawberry LF"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    +
-                                  </span>
-                                </button>
-                            </div>
-                          </div>
-        
-                          {/* MNG row */}
-                          <div className="bg-amber-300/45 px-2 py-1.5 font-semibold text-xs md:text-sm">
-                            MNG (mango)
-                          </div>
-                          <div className="bg-amber-300/45 px-2 py-1.5">
-                            <div className="flex items-center justify-center gap-2">
-                                <button
-                                  onClick={() => sub(ids.MNG_STD)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                  aria-label="Remove one mango"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    −
-                                  </span>
-                                </button>
-                                <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                  {qty(ids.MNG_STD)}
-                                </span>
-                                <button
-                                  onClick={() => add(ids.MNG_STD)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                  aria-label="Add one mango"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    +
-                                  </span>
-                                </button>
-                            </div>
-                          </div>
-                          <div className="bg-amber-300/45 px-2 py-1.5">
-                            <div className="flex items-center justify-center gap-2">
-                                <button
-                                  onClick={() => sub(ids.MNG_LF)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                  aria-label="Remove one mango LF"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    −
-                                  </span>
-                                </button>
-                                <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                  {qty(ids.MNG_LF)}
-                                </span>
-                                <button
-                                  onClick={() => add(ids.MNG_LF)}
-                                  className="w-4 h-4 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                  aria-label="Add one mango LF"
-                                >
-                                  <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                    +
-                                  </span>
-                                </button>
-                            </div>
-                          </div>
-        
-                        </div>
-                      </div>
-        
-                      {/* pricing + note with per-offer "in basket" badges */}
-                      <div className="mt-3 text-sm text-white space-y-1.5">
-                        <p className="flex flex-wrap items-center gap-2">
-                          <span>
-                            PLN: <strong>£2</strong> per bottle ·{" "}
-                            <strong>Buy 7 get one FREE</strong>
-                          </span>
-                           {totalPlain > 0 ? (
-                            <span
-                              className={cn(
-                                "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
-                                plainOnBundle
-                                  ? "bg-emerald-500/80 text-slate-900"
-                                  : "bg-black/60 text-white"
-                              )}
-                            >
-                              In basket:&nbsp;
-                              <strong>{totalPlain}</strong>
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
-                              In basket:&nbsp;
-                              <strong>0</strong>
-                            </span>
-                          )}
-                        </p>
-        
-                        <p className="flex flex-wrap items-center gap-2">
-                          <span>
-                            BFC, STR &amp; MNG: <strong>£3</strong> per bottle ·{" "}
-                            <strong>Buy 7 get one FREE</strong>
-                          </span>
-                          {totalFlavoured > 0 ? (
-                            <span
-                              className={cn(
-                                "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
-                                flavOnBundle
-                                  ? "bg-emerald-500/80 text-slate-900"
-                                  : "bg-black/60 text-white"
-                              )}
-                            >
-                              In basket:&nbsp;
-                              <strong>{totalFlavoured}</strong>
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
-                              In basket:&nbsp;
-                              <strong>0</strong>
-                            </span>
-                          )}
-                        </p>
-
-                        {/* Delivery info + "Spent" badge */}
-                        <p className="flex flex-wrap items-center gap-2">
-                          <span>
-                            Delivery <strong>£2</strong> · <strong>FREE delivery on orders over £20</strong>
-                          </span>
-
-                          {total > 0 ? (
-                            <span
-                              className={cn(
-                                "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
-                                freeDeliveryUnlocked
-                                  ? "bg-emerald-500/80 text-slate-900"
-                                  : "bg-black/60 text-white"
-                              )}
-                            >
-                              Spent:&nbsp;
-                              <strong>{gbp(merchTotal)}</strong>
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
-                              Spent:&nbsp;
-                              <strong>0</strong>
-                            </span>
-                          )}
-                        </p>
-                      </div>
-
-                    </div>
-                  </article>
-                </div>
-              );
-            })}
-        </div>
-
-        
-        {/* DESKTOP 2×2 LAYOUT (unchanged) */}
-        <div className="hidden md:grid md:grid-cols-2 gap-0 w-full">
-          {/* ───── TOP ROW: existing hero-style panels (no buttons) ───── */}
+        <div className="grid grid-cols-2 gap-0 w-full">
           {GROUPED
             .filter((g) => {
               const q = (query || "").toLowerCase();
@@ -1184,7 +633,7 @@ export default function App(){
             })
             .map((g, idx) => (
               <article
-                key={g.key + "-hero"}
+                key={g.key + "-hero-mobile"}
                 className="relative aspect-[3/2] w-full overflow-hidden"
               >
                 {/* background image */}
@@ -1193,456 +642,261 @@ export default function App(){
                   alt={g.title}
                   className="absolute inset-0 w-full h-full object-cover"
                 />
-        
+      
                 {/* dark overlay */}
                 <div className="absolute inset-0 bg-black/40" />
-        
+      
                 {/* content */}
-                <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-8">
+                <div className="relative z-10 h-full flex flex-col justify-between p-6">
                   <div>
-                    <p className="text-xs sm:text-sm md:text-base uppercase tracking-[0.2em] text-white mb-1">
+                    <p className="text-xs uppercase tracking-[0.2em] text-white mb-1">
                       {idx === 0 ? "Targeted" : "Broad-acting"}
                     </p>
-        
+      
                     {/* logo / title */}
                     {g.key === "prcxn" ? (
                       <img
                         src="/prcxn_logo.png"
                         alt="PRCXN"
-                        className="w-[60%] sm:w-[55%] md:w-[45%] object-contain drop-shadow-lg"
+                        className="w-[60%] object-contain drop-shadow-lg"
                       />
                     ) : g.key === "spctrl" ? (
                       <img
                         src="/spctrl_logo.png"
                         alt="SPCTRL"
-                        className="w-[60%] sm:w-[55%] md:w-[45%] object-contain drop-shadow-lg"
+                        className="w-[60%] object-contain drop-shadow-lg"
                       />
                     ) : (
                       <h3 className="text-3xl font-bold text-white drop-shadow-md">
                         {g.title}
                       </h3>
                     )}
-        
-                    <p className="mt-2 text-xs sm:text-sm md:text-base text-white max-w-md leading-relaxed">
+      
+                    <p className="mt-2 text-xs text-white max-w-md leading-relaxed">
                       {g.blurb}
                     </p>
                   </div>
                 </div>
               </article>
             ))}
-        
-          {/* ───── BOTTOM ROW: flavour tables for each panel ───── */}
-          {GROUPED
-            .filter((g) => {
-              const q = (query || "").toLowerCase();
-              return (
-                !q ||
-                g.title.toLowerCase().includes(q) ||
-                g.variants.some((v) => v.label.toLowerCase().includes(q))
-              );
-            })
-            .map((g) => {
-              const isPRCXN = g.key === "prcxn";
-  
-              // flavour panel background (different from hero row)
-              const flavourBg = isPRCXN
-                ? "/prcxn_flavour_bg.PNG"
-                : g.key === "spctrl"
-                ? "/spctrl_flavour_bg.PNG"
-                : g.img;
-        
-              // map strains to flavour IDs
-              const ids = isPRCXN
+        </div>
+      </section>
+
+
+      {/* FLAVOUR SELECTION – single panel for current week */}
+      <section
+        id="flavours"
+        className="scroll-mt-32 md:scroll-mt-24 w-full py-12 relative text-white"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('/shop_bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3">Choose your flavours</h2>
+      
+          {/* Info text */}
+          <div className="text-sm sm:text-base text-white/80 max-w-2xl space-y-1">
+            <p>
+              This week is <strong>{CURRENT_BRAND}</strong> week; next week is{" "}
+              <strong>{CURRENT_BRAND === "PRCXN" ? "SPCTRL" : "PRCXN"}</strong> week.
+            </p>
+            <p>
+              Delivered on <strong>Monday</strong> and <strong>Thursday</strong>{" "}
+              <strong>18:30–20:00</strong>.
+            </p>
+            <p>Fermented on the day before delivery for freshness.</p>
+            <p>
+              Delivered to <strong>Blackburn</strong> residents only.
+            </p>
+          </div>
+      
+          {qtyTotal > 0 && (
+            <p className="mt-2 text-xs text-emerald-300">
+              Current basket: {qtyTotal} bottle{qtyTotal === 1 ? "" : "s"}.
+            </p>
+          )}
+      
+          {(() => {
+            // --- map CURRENT_BRAND → product IDs ---
+            const ids =
+              CURRENT_BRAND === "PRCXN"
                 ? {
-                    baseLabel: "PRCXN",
-                    lfLabel: "PRCXN LF (lactose free)",
-                    PLN_STD: "PRCXN_PLN",
-                    STR_STD: "PRCXN_STR",
-                    MNG_STD: "PRCXN_MNG",
-                    BFC_STD: "PRCXN_BFC",
-                    PLN_LF: "PRCXN_LF_PLN",
-                    STR_LF: "PRCXN_LF_STR",
-                    MNG_LF: "PRCXN_LF_MNG",
-                    BFC_LF: "PRCXN_LF_BFC",
+                    PLN: "PRCXN_PLN",
+                    BFC: "PRCXN_BFC",
+                    STR: "PRCXN_STR",
+                    MNG: "PRCXN_MNG",
                   }
                 : {
-                    baseLabel: "SPCTRL",
-                    lfLabel: "SPCTRL LF (lactose free)",
-                    PLN_STD: "SPCTRL_PLN",
-                    STR_STD: "SPCTRL_STR",
-                    MNG_STD: "SPCTRL_MNG",
-                    BFC_STD: "SPCTRL_BFC",
-                    PLN_LF: "SPCTRL_LF_PLN",
-                    STR_LF: "SPCTRL_LF_STR",
-                    MNG_LF: "SPCTRL_LF_MNG",
-                    BFC_LF: "SPCTRL_LF_BFC",
+                    PLN: "SPCTRL_PLN",
+                    BFC: "SPCTRL_BFC",
+                    STR: "SPCTRL_STR",
+                    MNG: "SPCTRL_MNG",
                   };
-        
-              const qty = (id: string) => cart[id] || 0;
-  
-              // total bottles in basket for this panel (all flavours)
-              const totalPlain =
-                qty(ids.PLN_STD) +
-                qty(ids.PLN_LF);
-              
-              const totalFlavoured =
-                qty(ids.STR_STD) +
-                qty(ids.STR_LF) +
-                qty(ids.MNG_STD) +
-                qty(ids.MNG_LF) +
-                qty(ids.BFC_STD) +
-                qty(ids.BFC_LF);
-
-              const plainOnBundle = totalPlain >= 7;
-              const flavOnBundle = totalFlavoured >= 7;
-              const freeDeliveryUnlocked = total >= 20; // total from computeTotals(cart)
-              
-              return (
-                <article
-                  key={g.key + "-flavours"}
-                  className="relative aspect-[3/2] w-full overflow-hidden"
-                >
-                  {/* dedicated flavour background image */}
-                  <img
-                    src={flavourBg}
-                    alt={g.title + " flavours"}
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-        
-                  {/* darker gradient for readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/55 to-black/30" />
-        
-                  <div className="relative z-10 h-full flex flex-col justify-between p-6">
-                    {/* heading for flavour grid */}
-                    <div>
-                      <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-white mb-2">
-                        Flavour selection
-                      </p>
-                    </div>
-        
-                    {/* flavour table */}
-                    <div className="bg-black/35 rounded-xl p-2 sm:p-3 backdrop-blur-sm">
-                      <div className="grid grid-cols-[minmax(0,1.1fr)_repeat(2,minmax(0,1.4fr))] gap-px text-xs md:text-sm text-white">
-                        {/* header row */}
-                        <div className="bg-black/60 px-2 py-1.5 font-semibold uppercase tracking-wide">
-                          Flavour
-                        </div>
-                        <div className="bg-black/60 px-2 py-1.5 text-center font-semibold">
-                          {ids.baseLabel}
-                        </div>
-                        <div className="bg-black/60 px-2 py-1.5 text-center font-semibold">
-                          {ids.lfLabel}
-                        </div>
-        
-                        {/* PLN row */}
-                        <div className="bg-white/25 px-2 py-1.5 font-semibold text-xs md:text-sm">
-                          PLN (plain)
-                        </div>
-                        <div className="bg-white/25 px-2 py-1.5">
-                          <div className="flex items-center justify-center gap-2">
-                              <button
-                                onClick={() => sub(ids.PLN_STD)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
-                                aria-label="Remove one PRCXN plain"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  −
-                                </span>
-                              </button>
-                              <span
-                                className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash"
-                              >
-                                {qty(ids.PLN_STD)}
-                              </span>
-                              <button
-                                onClick={() => add(ids.PLN_STD)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                aria-label="Add one PRCXN plain"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  +
-                                </span>
-                              </button>
-                          </div>
-                        </div>
-                        <div className="bg-white/25 px-2 py-1.5">
-                          <div className="flex items-center justify-center gap-2">
-                              <button
-                                onClick={() => sub(ids.PLN_LF)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition leading-none"
-                                aria-label="Remove one plain LF"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  −
-                                </span>
-                              </button>
-                              <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                {qty(ids.PLN_LF)}
-                              </span>
-                              <button
-                                onClick={() => add(ids.PLN_LF)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                aria-label="Add one plain LF"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  +
-                                </span>
-                              </button>
-                          </div>
-                        </div>
-
-                        {/* BFC row */}
-                        <div className="bg-rose-900/40 px-2 py-1.5 font-semibold text-xs md:text-sm">
-                          BFC (black forest chocolate)
-                        </div>
-                        <div className="bg-rose-900/40 px-2 py-1.5">
-                          <div className="flex items-center justify-center gap-2">
-                              <button
-                                onClick={() => sub(ids.BFC_STD)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                aria-label="Remove one black forest chocolate"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  −
-                                </span>
-                              </button>
-                              <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                {qty(ids.BFC_STD)}
-                              </span>
-                              <button
-                                onClick={() => add(ids.BFC_STD)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                aria-label="Add one black forest chocolate"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  +
-                                </span>
-                              </button>
-                          </div>
-                        </div>
-                        <div className="bg-rose-900/40 px-2 py-1.5">
-                          <div className="flex items-center justify-center gap-2">
-                              <button
-                                onClick={() => sub(ids.BFC_LF)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                aria-label="Remove one black forest chocolate LF"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  −
-                                </span>
-                              </button>
-                              <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                {qty(ids.BFC_LF)}
-                              </span>
-                              <button
-                                onClick={() => add(ids.BFC_LF)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                aria-label="Add one black forest chocolate LF"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  +
-                                </span>
-                              </button>
-                          </div>
-                        </div>
-        
-                        {/* STR row */}
-                        <div className="bg-pink-500/35 px-2 py-1.5 font-semibold text-xs md:text-sm">
-                          STR (strawberry)
-                        </div>
-                        <div className="bg-pink-500/35 px-2 py-1.5">
-                          <div className="flex items-center justify-center gap-2">
-                              <button
-                                onClick={() => sub(ids.STR_STD)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                aria-label="Remove one strawberry"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  −
-                                </span>
-                              </button>
-                              <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                {qty(ids.STR_STD)}
-                              </span>
-                              <button
-                                onClick={() => add(ids.STR_STD)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                aria-label="Add one strawberry"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  +
-                                </span>
-                              </button>
-                          </div>
-                        </div>
-                        <div className="bg-pink-500/35 px-2 py-1.5">
-                          <div className="flex items-center justify-center gap-2">
-                              <button
-                                onClick={() => sub(ids.STR_LF)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                aria-label="Remove one strawberry LF"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  −
-                                </span>
-                              </button>
-                              <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                {qty(ids.STR_LF)}
-                              </span>
-                              <button
-                                onClick={() => add(ids.STR_LF)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                aria-label="Add one strawberry LF"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  +
-                                </span>
-                              </button>
-                          </div>
-                        </div>
-        
-                        {/* MNG row */}
-                        <div className="bg-amber-300/45 px-2 py-1.5 font-semibold text-xs md:text-sm">
-                          MNG (mango)
-                        </div>
-                        <div className="bg-amber-300/45 px-2 py-1.5">
-                          <div className="flex items-center justify-center gap-2">
-                              <button
-                                onClick={() => sub(ids.MNG_STD)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                aria-label="Remove one mango"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  −
-                                </span>
-                              </button>
-                              <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                {qty(ids.MNG_STD)}
-                              </span>
-                              <button
-                                onClick={() => add(ids.MNG_STD)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                aria-label="Add one mango"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  +
-                                </span>
-                              </button>
-                          </div>
-                        </div>
-                        <div className="bg-amber-300/45 px-2 py-1.5">
-                          <div className="flex items-center justify-center gap-2">
-                              <button
-                                onClick={() => sub(ids.MNG_LF)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-black/20 text-white hover:bg-black/30 transition leading-none"
-                                aria-label="Remove one mango LF"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  −
-                                </span>
-                              </button>
-                              <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                                {qty(ids.MNG_LF)}
-                              </span>
-                              <button
-                                onClick={() => add(ids.MNG_LF)}
-                                className="w-7 h-7 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                                aria-label="Add one mango LF"
-                              >
-                                <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
-                                  +
-                                </span>
-                              </button>
-                          </div>
-                        </div>
-        
-                      </div>
-                    </div>
-        
-                    {/* pricing + note with per-offer "in basket" badges */}
-                    <div className="mt-3 text-sm text-white space-y-1.5">
-                      <p className="flex flex-wrap items-center gap-2">
-                        <span>
-                          PLN: <strong>£2</strong> per bottle ·{" "}
-                          <strong>Buy 7 get one FREE</strong>
-                        </span>
-                         {totalPlain > 0 ? (
-                          <span
-                            className={cn(
-                              "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
-                              plainOnBundle
-                                ? "bg-emerald-500/80 text-slate-900"
-                                : "bg-black/60 text-white"
-                            )}
-                          >
-                            In basket:&nbsp;
-                            <strong>{totalPlain}</strong>
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
-                            In basket:&nbsp;
-                            <strong>0</strong>
-                          </span>
-                        )}
-                      </p>
       
-                      <p className="flex flex-wrap items-center gap-2">
-                        <span>
-                          BFC, STR &amp; MNG: <strong>£3</strong> per bottle ·{" "}
-                          <strong>Buy 7 get one FREE</strong>
-                        </span>
-                        {totalFlavoured > 0 ? (
-                          <span
-                            className={cn(
-                              "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
-                              flavOnBundle
-                                ? "bg-emerald-500/80 text-slate-900"
-                                : "bg-black/60 text-white"
-                            )}
-                          >
-                            In basket:&nbsp;
-                            <strong>{totalFlavoured}</strong>
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
-                            In basket:&nbsp;
-                            <strong>0</strong>
-                          </span>
-                        )}
-                      </p>
-
-                      {/* Delivery info + "Spent" badge */}
-                      <p className="flex flex-wrap items-center gap-2">
-                        <span>
-                          Delivery <strong>£2</strong> · <strong>FREE delivery on orders over £20</strong>
-                        </span>
-
-                        {total > 0 ? (
-                          <span
-                            className={cn(
-                              "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
-                              freeDeliveryUnlocked
-                                ? "bg-emerald-500/80 text-slate-900"
-                                : "bg-black/60 text-white"
-                            )}
-                          >
-                            Spent:&nbsp;
-                            <strong>{gbp(merchTotal)}</strong>
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
-                            Spent:&nbsp;
-                            <strong>0</strong>
-                          </span>
-                        )}
-                      </p>
-                      
+            const qty = (id: string) => cart[id] || 0;
+      
+            const totalPlain = qty(ids.PLN);
+            const totalFlavoured = qty(ids.BFC) + qty(ids.STR) + qty(ids.MNG);
+      
+            const plainOnBundle = totalPlain >= 7;
+            const flavOnBundle = totalFlavoured >= 7;
+            const freeDeliveryUnlocked = merchTotal >= 20;
+      
+            return (
+              <div className="mt-6 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
+                {/* 2-row table: top = flavours, bottom = +/- controls */}
+                <div className="grid grid-cols-4 gap-px text-[11px] sm:text-xs md:text-sm text-white">
+                  {/* header row */}
+                  <div className="col-span-4 grid grid-cols-4 gap-px">
+                    <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
+                      PLN (plain)
                     </div>
-                    
+                    <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
+                      BFC (black forest)
+                    </div>
+                    <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
+                      STR (strawberry)
+                    </div>
+                    <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
+                      MNG (mango)
+                    </div>
                   </div>
-                </article>
-              );
-            })}
+      
+                  {/* controls row */}
+                  <div className="col-span-4 grid grid-cols-4 gap-px">
+                    {[ids.PLN, ids.BFC, ids.STR, ids.MNG].map((flavourId, index) => {
+                      const currentQty = qty(flavourId);
+      
+                      // background tints per flavour
+                      const bgClass =
+                        index === 0
+                          ? "bg-white/15"
+                          : index === 1
+                          ? "bg-rose-900/40"
+                          : index === 2
+                          ? "bg-pink-500/35"
+                          : "bg-amber-300/45";
+      
+                      return (
+                        <div
+                          key={flavourId}
+                          className={cn(
+                            "px-2 py-2 flex items-center justify-center gap-2",
+                            bgClass
+                          )}
+                        >
+                          <button
+                            onClick={() => sub(flavourId)}
+                            className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
+                            aria-label="Remove one"
+                          >
+                            <span className="translate-y-[-1px] text-xs font-semibold">
+                              −
+                            </span>
+                          </button>
+                          <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
+                            {currentQty}
+                          </span>
+                          <button
+                            onClick={() => add(flavourId)}
+                            className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                            aria-label="Add one"
+                          >
+                            <span className="translate-y-[-1px] text-xs font-semibold">
+                              +
+                            </span>
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+      
+                {/* pricing + badges */}
+                <div className="mt-3 text-[10px] sm:text-xs text-white space-y-1.5">
+                  <p className="flex flex-wrap items-center gap-2">
+                    <span>
+                      PLN: <strong>£2</strong> per bottle ·{" "}
+                      <strong>Buy 7 get one FREE</strong>
+                    </span>
+                    {totalPlain > 0 ? (
+                      <span
+                        className={cn(
+                          "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                          plainOnBundle
+                            ? "bg-emerald-500/80 text-slate-900"
+                            : "bg-black/60 text-white"
+                        )}
+                      >
+                        In basket:&nbsp;
+                        <strong>{totalPlain}</strong>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
+                        In basket:&nbsp;
+                        <strong>0</strong>
+                      </span>
+                    )}
+                  </p>
+      
+                  <p className="flex flex-wrap items-center gap-2">
+                    <span>
+                      BFC, STR &amp; MNG: <strong>£3</strong> per bottle ·{" "}
+                      <strong>Buy 7 get one FREE</strong>
+                    </span>
+                    {totalFlavoured > 0 ? (
+                      <span
+                        className={cn(
+                          "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                          flavOnBundle
+                            ? "bg-emerald-500/80 text-slate-900"
+                            : "bg-black/60 text-white"
+                        )}
+                      >
+                        In basket:&nbsp;
+                        <strong>{totalFlavoured}</strong>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
+                        In basket:&nbsp;
+                        <strong>0</strong>
+                      </span>
+                    )}
+                  </p>
+      
+                  {/* Delivery info + "Spent" badge */}
+                  <p className="flex flex-wrap items-center gap-2">
+                    <span>
+                      Delivery <strong>£2</strong> ·{" "}
+                      <strong>FREE delivery on orders over £20</strong>
+                    </span>
+      
+                    {merchTotal > 0 ? (
+                      <span
+                        className={cn(
+                          "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                          freeDeliveryUnlocked
+                            ? "bg-emerald-500/80 text-slate-900"
+                            : "bg-black/60 text-white"
+                        )}
+                      >
+                        Spent:&nbsp;
+                        <strong>{gbp(merchTotal)}</strong>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
+                        Spent:&nbsp;
+                        <strong>0</strong>
+                      </span>
+                    )}
+                  </p>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </section>
 
