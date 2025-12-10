@@ -772,7 +772,7 @@ export default function App(){
       
                 <div className="mt-6 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
                   {/* 2-row cards per flavour: header + controls */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-px text-[11px] sm:text-xs md:text-sm text-white">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-px text-sm text-white">
                     {[
                       { id: ids.PLN, label: "PLN (plain)", bg: "bg-white/15" },
                       { id: ids.BFC, label: "BFC (black forest chocolate)", bg: "bg-rose-900/40" },
@@ -800,12 +800,12 @@ export default function App(){
                               className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
                               aria-label="Remove one"
                             >
-                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                              <span className="translate-y-[-1px] text-sm font-semibold">
                                 −
                               </span>
                             </button>
                   
-                            <span className="w-6 text-center text-xs sm:text-sm font-semibold qty-flash">
+                            <span className="w-6 text-center text-sm font-semibold qty-flash">
                               {currentQty}
                             </span>
                   
@@ -814,7 +814,7 @@ export default function App(){
                               className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
                               aria-label="Add one"
                             >
-                              <span className="translate-y-[-1px] text-xs sm:text-sm font-semibold">
+                              <span className="translate-y-[-1px] text-sm font-semibold">
                                 +
                               </span>
                             </button>
