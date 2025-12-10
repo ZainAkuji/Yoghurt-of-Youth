@@ -773,71 +773,65 @@ export default function App(){
                 <div className="mt-6 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
                   {/* 2-row table: top = flavours, bottom = +/- controls */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-px text-sm text-white">
-                    {/* header row */}
-                    <div className="col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-px">
-                      <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
-                        PLN (plain)
+                    {/* header cells (row 1) */}
+                    {[
+                      "PLN (plain)",
+                      "BFC (black forest chocolate)",
+                      "STR (strawberry)",
+                      "MNG (mango)",
+                    ].map((label) => (
+                      <div
+                        key={label}
+                        className="bg-black/70 px-2 py-1.5 font-semibold text-center"
+                      >
+                        {label}
                       </div>
-                      <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
-                        BFC (black forest chocolate)
-                      </div>
-                      <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
-                        STR (strawberry)
-                      </div>
-                      <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
-                        MNG (mango)
-                      </div>
-                    </div>
-      
-                    {/* controls row */}
-                    <div className="col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-px">
-                      {[ids.PLN, ids.BFC, ids.STR, ids.MNG].map((flavourId, index) => {
-                        const currentQty = qty(flavourId);
-      
-                        // background tints per flavour
-                        const bgClass =
-                          index === 0
-                            ? "bg-white/15"
-                            : index === 1
-                            ? "bg-rose-900/40"
-                            : index === 2
-                            ? "bg-pink-500/35"
-                            : "bg-amber-300/45";
-      
-                        return (
-                          <div
-                            key={flavourId}
-                            className={cn(
-                              "px-2 py-2 flex items-center justify-center gap-2",
-                              bgClass
-                            )}
+                    ))}
+                  
+                    {/* control cells (row 2) */}
+                    {[ids.PLN, ids.BFC, ids.STR, ids.MNG].map((flavourId, index) => {
+                      const currentQty = qty(flavourId);
+                  
+                      // background tints per flavour
+                      const bgClass =
+                        index === 0
+                          ? "bg-white/15"
+                          : index === 1
+                          ? "bg-rose-900/40"
+                          : index === 2
+                          ? "bg-pink-500/35"
+                          : "bg-amber-300/45";
+                  
+                      return (
+                        <div
+                          key={flavourId}
+                          className={cn(
+                            "px-2 py-2 flex items-center justify-center gap-2",
+                            bgClass
+                          )}
+                        >
+                          <button
+                            onClick={() => sub(flavourId)}
+                            className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
+                            aria-label="Remove one"
                           >
-                            <button
-                              onClick={() => sub(flavourId)}
-                              className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
-                              aria-label="Remove one"
-                            >
-                              <span className="translate-y-[-1px] text-sm font-semibold">
-                                −
-                              </span>
-                            </button>
-                            <span className="w-6 text-center text-sm font-semibold qty-flash">
-                              {currentQty}
-                            </span>
-                            <button
-                              onClick={() => add(flavourId)}
-                              className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                              aria-label="Add one"
-                            >
-                              <span className="translate-y-[-1px] text-sm font-semibold">
-                                +
-                              </span>
-                            </button>
-                          </div>
-                        );
-                      })}
-                    </div>
+                            <span className="translate-y-[-1px] text-sm font-semibold">−</span>
+                          </button>
+                          <span className="w-6 text-center text-sm font-semibold qty-flash">
+                            {currentQty}
+                          </span>
+                          <button
+                            onClick={() => add(flavourId)}
+                            className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                            aria-label="Add one"
+                          >
+                            <span className="translate-y-[-1px] text-sm font-semibold">+</span>
+                          </button>
+                        </div>
+                      );
+                    })}
                   </div>
+
       
                   {/* pricing + badges */}
                   <div className="mt-2 text-sm text-white space-y-1.5">
