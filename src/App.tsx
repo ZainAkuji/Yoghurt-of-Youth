@@ -143,6 +143,7 @@ const PRODUCTS = [
     tags: ["SPCTRL", "Mango"],
     img: "/spctrl.png",
   },
+];
 
 const GROUPED = [
   {
