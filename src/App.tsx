@@ -622,7 +622,7 @@ export default function App(){
       
       {/* SHOP – product lines overview only */}
       <section id="shop" className="scroll-mt-32 md:scroll-mt-24 w-full">
-        <div className="grid grid-cols-2 gap-0 w-full">
+        <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-0 w-full">
           {GROUPED
             .filter((g) => {
               const q = (query || "").toLowerCase();
@@ -654,7 +654,6 @@ export default function App(){
                       {idx === 0 ? "Targeted" : "Broad-acting"}
                     </p>
       
-                    {/* logo / title */}
                     {g.key === "prcxn" ? (
                       <img
                         src="/prcxn_logo.png"
@@ -713,12 +712,6 @@ export default function App(){
               Delivered to <strong>Blackburn</strong> residents only.
             </p>
           </div>
-      
-          {qtyTotal > 0 && (
-            <p className="mt-2 text-xs text-emerald-300">
-              Current basket: {qtyTotal} bottle{qtyTotal === 1 ? "" : "s"}.
-            </p>
-          )}
       
           {(() => {
             // --- map CURRENT_BRAND → product IDs ---
