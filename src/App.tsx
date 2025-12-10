@@ -949,7 +949,7 @@ export default function App(){
       </Drawer>
 
       {reserveOpen && (
-        <PayModal
+        <ReserveModal
           onClose={() => setReserveOpen(false)}
           cart={cart}
           totals={{
