@@ -755,7 +755,7 @@ export default function App(){
                 </h2>
       
                 {/* Info text */}
-                <div className="text-sm sm:text-base text-white/80 max-w-2xl space-y-1">
+                <div className="text-sm sm:text-base text-white max-w-2xl space-y-1">
                   <p>
                     This week is <strong>{thisWeekBrand}</strong> week; next week is{" "}
                     <strong>{nextWeekBrand}</strong> week.
