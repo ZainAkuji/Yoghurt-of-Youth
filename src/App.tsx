@@ -265,6 +265,32 @@ function computeTotals(cart: Record<string, number>) {
   };
 }
 
+// --- week rotation helpers ---
+
+// ISO week number (1–53)
+function getISOWeek(date: Date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7; // 1–7, Mon=1
+  // Thursday of this week
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil(((+d - +yearStart + 1) / 86400000) / 7);
+  return weekNo;
+}
+
+// decide which brand is active this week
+function getBrandRotation() {
+  const today = new Date();
+  const week = getISOWeek(today);
+
+  // even weeks = SPCTRL, odd weeks = PRCXN
+  const isSPCTRLWeek = week % 2 === 0;
+
+  const thisWeekBrand = isSPCTRLWeek ? "SPCTRL" : "PRCXN";
+  const nextWeekBrand = isSPCTRLWeek ? "PRCXN" : "SPCTRL";
+
+  return { isSPCTRLWeek, thisWeekBrand, nextWeekBrand };
+}
 
 function AboutSection() {
   return (
@@ -579,7 +605,6 @@ export default function App(){
   // Toggle this manually each week (or later via config):
   const CURRENT_BRAND: "PRCXN" | "SPCTRL" = "PRCXN";
 
-
   return (
     <div className="scroll-smooth min-h-screen bg-gradient-to-b from-white to-slate-50 text-slate-800">
       <Header brand={BRAND} query={query} setQuery={setQuery} itemsCount={qtyTotal} openCart={()=>setDrawerOpen(true)} />
@@ -650,7 +675,7 @@ export default function App(){
                 {/* content */}
                 <div className="relative z-10 h-full flex flex-col justify-between p-6">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.2em] text-white mb-1">
+                    <p className="text-sm uppercase tracking-[0.2em] text-white mb-1">
                       {idx === 0 ? "Targeted" : "Broad-acting"}
                     </p>
       
@@ -672,7 +697,7 @@ export default function App(){
                       </h3>
                     )}
       
-                    <p className="mt-2 text-xs text-white max-w-md leading-relaxed">
+                    <p className="mt-2 text-sm text-white max-w-md leading-relaxed">
                       {g.blurb}
                     </p>
                   </div>
@@ -695,40 +720,24 @@ export default function App(){
         }}
       >
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3">Choose your flavours</h2>
-      
-          {/* Info text */}
-          <div className="text-sm sm:text-base text-white/80 max-w-2xl space-y-1">
-            <p>
-              This week is <strong>{CURRENT_BRAND}</strong> week; next week is{" "}
-              <strong>{CURRENT_BRAND === "PRCXN" ? "SPCTRL" : "PRCXN"}</strong> week.
-            </p>
-            <p>
-              Delivered on <strong>Monday</strong> and <strong>Thursday</strong>{" "}
-              <strong>18:30–20:00</strong>.
-            </p>
-            <p>Fermented on the day before delivery for freshness.</p>
-            <p>
-              Delivered to <strong>Blackburn</strong> residents only.
-            </p>
-          </div>
-      
+          {/** work out which yoghurt is active this week */}
           {(() => {
-            // --- map CURRENT_BRAND → product IDs ---
-            const ids =
-              CURRENT_BRAND === "PRCXN"
-                ? {
-                    PLN: "PRCXN_PLN",
-                    BFC: "PRCXN_BFC",
-                    STR: "PRCXN_STR",
-                    MNG: "PRCXN_MNG",
-                  }
-                : {
-                    PLN: "SPCTRL_PLN",
-                    BFC: "SPCTRL_BFC",
-                    STR: "SPCTRL_STR",
-                    MNG: "SPCTRL_MNG",
-                  };
+            const { isSPCTRLWeek, thisWeekBrand, nextWeekBrand } = getBrandRotation();
+      
+            // --- map active brand → product IDs ---
+            const ids = isSPCTRLWeek
+              ? {
+                  PLN: "SPCTRL_PLN",
+                  BFC: "SPCTRL_BFC",
+                  STR: "SPCTRL_STR",
+                  MNG: "SPCTRL_MNG",
+                }
+              : {
+                  PLN: "PRCXN_PLN",
+                  BFC: "PRCXN_BFC",
+                  STR: "PRCXN_STR",
+                  MNG: "PRCXN_MNG",
+                };
       
             const qty = (id: string) => cart[id] || 0;
       
@@ -740,155 +749,177 @@ export default function App(){
             const freeDeliveryUnlocked = merchTotal >= 20;
       
             return (
-              <div className="mt-6 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
-                {/* 2-row table: top = flavours, bottom = +/- controls */}
-                <div className="grid grid-cols-4 gap-px text-[11px] sm:text-xs md:text-sm text-white">
-                  {/* header row */}
-                  <div className="col-span-4 grid grid-cols-4 gap-px">
-                    <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
-                      PLN (plain)
+              <>
+                <h2 className="text-2xl sm:text-3xl font-bold mb-3">
+                  Choose your flavours – {thisWeekBrand}
+                </h2>
+      
+                {/* Info text */}
+                <div className="text-sm sm:text-base text-white/80 max-w-2xl space-y-1">
+                  <p>
+                    This week is <strong>{thisWeekBrand}</strong> week; next week is{" "}
+                    <strong>{nextWeekBrand}</strong> week.
+                  </p>
+                  <p>
+                    Delivered on <strong>Monday</strong> and <strong>Thursday</strong>{" "}
+                    <strong>18:30–20:00</strong>.
+                  </p>
+                  <p>Fermented on the day before delivery for freshness.</p>
+                  <p>
+                    Delivered to <strong>Blackburn</strong> residents only.
+                  </p>
+                </div>
+      
+                <div className="mt-6 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
+                  {/* 2-row table: top = flavours, bottom = +/- controls */}
+                  <div className="grid grid-cols-4 gap-px text-[11px] sm:text-xs md:text-sm text-white">
+                    {/* header row */}
+                    <div className="col-span-4 grid grid-cols-4 gap-px">
+                      <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
+                        PLN (plain)
+                      </div>
+                      <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
+                        BFC (black forest)
+                      </div>
+                      <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
+                        STR (strawberry)
+                      </div>
+                      <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
+                        MNG (mango)
+                      </div>
                     </div>
-                    <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
-                      BFC (black forest)
-                    </div>
-                    <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
-                      STR (strawberry)
-                    </div>
-                    <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
-                      MNG (mango)
+      
+                    {/* controls row */}
+                    <div className="col-span-4 grid grid-cols-4 gap-px">
+                      {[ids.PLN, ids.BFC, ids.STR, ids.MNG].map((flavourId, index) => {
+                        const currentQty = qty(flavourId);
+      
+                        // background tints per flavour
+                        const bgClass =
+                          index === 0
+                            ? "bg-white/15"
+                            : index === 1
+                            ? "bg-rose-900/40"
+                            : index === 2
+                            ? "bg-pink-500/35"
+                            : "bg-amber-300/45";
+      
+                        return (
+                          <div
+                            key={flavourId}
+                            className={cn(
+                              "px-2 py-2 flex items-center justify-center gap-2",
+                              bgClass
+                            )}
+                          >
+                            <button
+                              onClick={() => sub(flavourId)}
+                              className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
+                              aria-label="Remove one"
+                            >
+                              <span className="translate-y-[-1px] text-xs font-semibold">
+                                −
+                              </span>
+                            </button>
+                            <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
+                              {currentQty}
+                            </span>
+                            <button
+                              onClick={() => add(flavourId)}
+                              className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                              aria-label="Add one"
+                            >
+                              <span className="translate-y-[-1px] text-xs font-semibold">
+                                +
+                              </span>
+                            </button>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
       
-                  {/* controls row */}
-                  <div className="col-span-4 grid grid-cols-4 gap-px">
-                    {[ids.PLN, ids.BFC, ids.STR, ids.MNG].map((flavourId, index) => {
-                      const currentQty = qty(flavourId);
-      
-                      // background tints per flavour
-                      const bgClass =
-                        index === 0
-                          ? "bg-white/15"
-                          : index === 1
-                          ? "bg-rose-900/40"
-                          : index === 2
-                          ? "bg-pink-500/35"
-                          : "bg-amber-300/45";
-      
-                      return (
-                        <div
-                          key={flavourId}
+                  {/* pricing + badges */}
+                  <div className="mt-3 text-[10px] sm:text-xs text-white space-y-1.5">
+                    <p className="flex flex-wrap items-center gap-2">
+                      <span>
+                        PLN: <strong>£2</strong> per bottle ·{" "}
+                        <strong>Buy 7 get one FREE</strong>
+                      </span>
+                      {totalPlain > 0 ? (
+                        <span
                           className={cn(
-                            "px-2 py-2 flex items-center justify-center gap-2",
-                            bgClass
+                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                            plainOnBundle
+                              ? "bg-emerald-500/80 text-slate-900"
+                              : "bg-black/60 text-white"
                           )}
                         >
-                          <button
-                            onClick={() => sub(flavourId)}
-                            className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
-                            aria-label="Remove one"
-                          >
-                            <span className="translate-y-[-1px] text-xs font-semibold">
-                              −
-                            </span>
-                          </button>
-                          <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
-                            {currentQty}
-                          </span>
-                          <button
-                            onClick={() => add(flavourId)}
-                            className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                            aria-label="Add one"
-                          >
-                            <span className="translate-y-[-1px] text-xs font-semibold">
-                              +
-                            </span>
-                          </button>
-                        </div>
-                      );
-                    })}
+                          In basket:&nbsp;
+                          <strong>{totalPlain}</strong>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
+                          In basket:&nbsp;
+                          <strong>0</strong>
+                        </span>
+                      )}
+                    </p>
+      
+                    <p className="flex flex-wrap items-center gap-2">
+                      <span>
+                        BFC, STR &amp; MNG: <strong>£3</strong> per bottle ·{" "}
+                        <strong>Buy 7 get one FREE</strong>
+                      </span>
+                      {totalFlavoured > 0 ? (
+                        <span
+                          className={cn(
+                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                            flavOnBundle
+                              ? "bg-emerald-500/80 text-slate-900"
+                              : "bg-black/60 text-white"
+                          )}
+                        >
+                          In basket:&nbsp;
+                          <strong>{totalFlavoured}</strong>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
+                          In basket:&nbsp;
+                          <strong>0</strong>
+                        </span>
+                      )}
+                    </p>
+      
+                    {/* Delivery info + "Spent" badge */}
+                    <p className="flex flex-wrap items-center gap-2">
+                      <span>
+                        Delivery <strong>£2</strong> ·{" "}
+                        <strong>FREE delivery on orders over £20</strong>
+                      </span>
+      
+                      {merchTotal > 0 ? (
+                        <span
+                          className={cn(
+                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                            freeDeliveryUnlocked
+                              ? "bg-emerald-500/80 text-slate-900"
+                              : "bg-black/60 text-white"
+                          )}
+                        >
+                          Spent:&nbsp;
+                          <strong>{gbp(merchTotal)}</strong>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
+                          Spent:&nbsp;
+                          <strong>0</strong>
+                        </span>
+                      )}
+                    </p>
                   </div>
                 </div>
-      
-                {/* pricing + badges */}
-                <div className="mt-3 text-[10px] sm:text-xs text-white space-y-1.5">
-                  <p className="flex flex-wrap items-center gap-2">
-                    <span>
-                      PLN: <strong>£2</strong> per bottle ·{" "}
-                      <strong>Buy 7 get one FREE</strong>
-                    </span>
-                    {totalPlain > 0 ? (
-                      <span
-                        className={cn(
-                          "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
-                          plainOnBundle
-                            ? "bg-emerald-500/80 text-slate-900"
-                            : "bg-black/60 text-white"
-                        )}
-                      >
-                        In basket:&nbsp;
-                        <strong>{totalPlain}</strong>
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
-                        In basket:&nbsp;
-                        <strong>0</strong>
-                      </span>
-                    )}
-                  </p>
-      
-                  <p className="flex flex-wrap items-center gap-2">
-                    <span>
-                      BFC, STR &amp; MNG: <strong>£3</strong> per bottle ·{" "}
-                      <strong>Buy 7 get one FREE</strong>
-                    </span>
-                    {totalFlavoured > 0 ? (
-                      <span
-                        className={cn(
-                          "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
-                          flavOnBundle
-                            ? "bg-emerald-500/80 text-slate-900"
-                            : "bg-black/60 text-white"
-                        )}
-                      >
-                        In basket:&nbsp;
-                        <strong>{totalFlavoured}</strong>
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
-                        In basket:&nbsp;
-                        <strong>0</strong>
-                      </span>
-                    )}
-                  </p>
-      
-                  {/* Delivery info + "Spent" badge */}
-                  <p className="flex flex-wrap items-center gap-2">
-                    <span>
-                      Delivery <strong>£2</strong> ·{" "}
-                      <strong>FREE delivery on orders over £20</strong>
-                    </span>
-      
-                    {merchTotal > 0 ? (
-                      <span
-                        className={cn(
-                          "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
-                          freeDeliveryUnlocked
-                            ? "bg-emerald-500/80 text-slate-900"
-                            : "bg-black/60 text-white"
-                        )}
-                      >
-                        Spent:&nbsp;
-                        <strong>{gbp(merchTotal)}</strong>
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
-                        Spent:&nbsp;
-                        <strong>0</strong>
-                      </span>
-                    )}
-                  </p>
-                </div>
-              </div>
+              </>
             );
           })()}
         </div>
