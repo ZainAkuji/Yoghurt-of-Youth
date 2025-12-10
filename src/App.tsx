@@ -751,7 +751,7 @@ export default function App(){
             return (
               <>
                 <h2 className="text-2xl sm:text-3xl font-bold mb-3">
-                  Choose your flavours – {thisWeekBrand}
+                  Flavour Selection – {thisWeekBrand}
                 </h2>
       
                 {/* Info text */}
@@ -840,7 +840,7 @@ export default function App(){
                   </div>
       
                   {/* pricing + badges */}
-                  <div className="mt-3 text-[10px] sm:text-xs text-white space-y-1.5">
+                  <div className="mt-2 text-sm text-white space-y-1.5">
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
                         PLN: <strong>£2</strong> per bottle ·{" "}
@@ -849,7 +849,7 @@ export default function App(){
                       {totalPlain > 0 ? (
                         <span
                           className={cn(
-                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-sm shadow-md backdrop-blur-md",
                             plainOnBundle
                               ? "bg-emerald-500/80 text-slate-900"
                               : "bg-black/60 text-white"
@@ -859,7 +859,7 @@ export default function App(){
                           <strong>{totalPlain}</strong>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
+                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-sm shadow-md backdrop-blur-md invisible">
                           In basket:&nbsp;
                           <strong>0</strong>
                         </span>
@@ -874,7 +874,7 @@ export default function App(){
                       {totalFlavoured > 0 ? (
                         <span
                           className={cn(
-                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-sm shadow-md backdrop-blur-md",
                             flavOnBundle
                               ? "bg-emerald-500/80 text-slate-900"
                               : "bg-black/60 text-white"
@@ -884,7 +884,7 @@ export default function App(){
                           <strong>{totalFlavoured}</strong>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
+                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-sm shadow-md backdrop-blur-md invisible">
                           In basket:&nbsp;
                           <strong>0</strong>
                         </span>
@@ -901,7 +901,7 @@ export default function App(){
                       {merchTotal > 0 ? (
                         <span
                           className={cn(
-                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md",
+                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-sm shadow-md backdrop-blur-md",
                             freeDeliveryUnlocked
                               ? "bg-emerald-500/80 text-slate-900"
                               : "bg-black/60 text-white"
@@ -911,7 +911,7 @@ export default function App(){
                           <strong>{gbp(merchTotal)}</strong>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-[10px] sm:text-xs shadow-md backdrop-blur-md invisible">
+                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-sm shadow-md backdrop-blur-md invisible">
                           Spent:&nbsp;
                           <strong>0</strong>
                         </span>
