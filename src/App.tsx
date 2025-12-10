@@ -772,9 +772,9 @@ export default function App(){
       
                 <div className="mt-6 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
                   {/* 2-row table: top = flavours, bottom = +/- controls */}
-                  <div className="grid grid-cols-4 gap-px text-[11px] sm:text-xs md:text-sm text-white">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-px text-sm text-white">
                     {/* header row */}
-                    <div className="col-span-4 grid grid-cols-4 gap-px">
+                    <div className="col-span-4 grid-cols-2 sm:grid-cols-4 gap-px">
                       <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
                         PLN (plain)
                       </div>
@@ -790,7 +790,7 @@ export default function App(){
                     </div>
       
                     {/* controls row */}
-                    <div className="col-span-4 grid grid-cols-4 gap-px">
+                    <div className="col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-px">
                       {[ids.PLN, ids.BFC, ids.STR, ids.MNG].map((flavourId, index) => {
                         const currentQty = qty(flavourId);
       
@@ -817,11 +817,11 @@ export default function App(){
                               className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
                               aria-label="Remove one"
                             >
-                              <span className="translate-y-[-1px] text-xs font-semibold">
+                              <span className="translate-y-[-1px] text-sm font-semibold">
                                 −
                               </span>
                             </button>
-                            <span className="w-6 text-center text-[11px] sm:text-xs font-semibold qty-flash">
+                            <span className="w-6 text-center text-sm font-semibold qty-flash">
                               {currentQty}
                             </span>
                             <button
@@ -829,7 +829,7 @@ export default function App(){
                               className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
                               aria-label="Add one"
                             >
-                              <span className="translate-y-[-1px] text-xs font-semibold">
+                              <span className="translate-y-[-1px] text-sm font-semibold">
                                 +
                               </span>
                             </button>
