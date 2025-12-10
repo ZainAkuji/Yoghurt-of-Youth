@@ -961,13 +961,14 @@ export default function App(){
             flavBundles,
             plainRemainder,
             flavRemainder,
-            // …any other fields you already pass
+            savings,        // ← missing before
+            merchTotal,     // ← missing before
+            deliveryFee,    // ← missing before
+            freeDeliveryUnlocked, // ← missing before
           }}
           onConfirmed={() => {
-            clear();           // clear basket
+            clear();
             setDrawerOpen(false);
-            // reserveOpen stays true so the confirmation view shows;
-            // user clicks "Continue shopping" to close it.
           }}
         />
       )}
