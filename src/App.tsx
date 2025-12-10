@@ -774,12 +774,12 @@ export default function App(){
                   {/* 2-row table: top = flavours, bottom = +/- controls */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-px text-sm text-white">
                     {/* header row */}
-                    <div className="col-span-4 grid-cols-2 sm:grid-cols-4 gap-px">
+                    <div className="col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-px">
                       <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
                         PLN (plain)
                       </div>
                       <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
-                        BFC (black forest)
+                        BFC (black forest chocolate)
                       </div>
                       <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
                         STR (strawberry)
