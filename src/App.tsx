@@ -1327,7 +1327,6 @@ function deliveryDateOptions(): string[] {
   let current = nextDeliveryOnOrAfter(minDate);
   for (let i = 0; i < 10; i++) {
     options.push(toISODate(current));
-    // move forward at least one day, then find next Mon/Thu
     current = nextDeliveryOnOrAfter(addDays(current, 1));
   }
 
@@ -1356,7 +1355,7 @@ function weekdayFromISO(iso: string) {
 }
 
 // ---- main component ----
-function PayModal({
+function ReserveModal({
   onClose,
   cart,
   totals,
@@ -1379,8 +1378,11 @@ function PayModal({
     savings,
   } = totals;
 
-  const deliveryFee = (totals as any).deliveryFee ?? 0;
-  const freeDeliveryUnlocked = (totals as any).freeDeliveryUnlocked ?? false;
+  // delivery logic (mirror Basket)
+  const merchTotal = total;
+  const freeDeliveryUnlocked = merchTotal >= 20;
+  const deliveryFee = qtyTotal === 0 ? 0 : freeDeliveryUnlocked ? 0 : 2;
+  const grandTotal = merchTotal + deliveryFee;
 
   // available delivery dates (Mon/Thu, ≥2 days from today)
   const deliveryOptions = deliveryDateOptions();
@@ -1437,7 +1439,6 @@ function PayModal({
     .filter(Boolean)
     .join(", ");
 
-  // ✅ use streetAddress, not old house/street vars
   const valid =
     !!name &&
     !!email &&
@@ -1469,9 +1470,6 @@ function PayModal({
     setSending(true);
     setError("");
 
-    // grand total (merch + delivery)
-    const grandTotal = total + (freeDeliveryUnlocked ? 0 : deliveryFee);
-
     try {
       const { default: emailjs } = await import("@emailjs/browser");
       const orderId = `YOY-${Date.now().toString().slice(-6)}`;
@@ -1501,8 +1499,8 @@ function PayModal({
           flav_bundles: flavBundles,
           plain_remainder: plainRemainder,
           flav_remainder: flavRemainder,
-          merchandise_total: gbp(total),
-          delivery_fee: gbp(freeDeliveryUnlocked ? 0 : deliveryFee),
+          merchandise_total: gbp(merchTotal),
+          delivery_fee: gbp(deliveryFee),
           total_paid: gbp(grandTotal),
 
           // payment + note
@@ -1632,9 +1630,106 @@ function PayModal({
   // -------- FORM MODE (CHECKOUT) --------
   return (
     <Modal onClose={onClose} title="Checkout & Delivery">
-      {/* …the rest of your JSX (unchanged) … */}
+      <p className="text-sm text-white/80">
+        Choose your delivery day, enter your Blackburn address, and select your
+        payment method. We deliver on{" "}
+        <span className="font-semibold">Mondays and Thursdays</span> between{" "}
+        <span className="font-semibold">{deliveryWindow}</span>.
+      </p>
 
-      {/* summary */}
+      {/* customer details */}
+      <div className="mt-4 grid md:grid-cols-2 gap-4">
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+          placeholder="Full name"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+        />
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          type="email"
+          placeholder="Email"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+        />
+        <input
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          required
+          type="tel"
+          placeholder="Mobile number"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+        />
+
+        {/* delivery date: only allowed Mon/Thu options */}
+        <select
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/40"
+        >
+          {deliveryOptions.map((d) => (
+            <option key={d} value={d} className="bg-slate-900 text-white">
+              {formatDateUK(d)} ({weekdayFromISO(d)})
+            </option>
+          ))}
+        </select>
+
+        {/* address fields (Blackburn only) */}
+        <input
+          value={postcode}
+          onChange={(e) => setPostcode(e.target.value)}
+          required
+          placeholder="Postcode (BB1 / BB2 only)"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+        />
+        <input
+          value={streetAddress}
+          onChange={(e) => setStreetAddress(e.target.value)}
+          required
+          placeholder="Street address"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+        />
+
+        <input
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="Order note (optional)"
+          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2"
+        />
+      </div>
+
+      {/* payment method */}
+      <div className="mt-4 text-sm text-white/90 space-y-2">
+        <div className="font-semibold">Payment method</div>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <label className="inline-flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="payment"
+              value="card"
+              checked={paymentMethod === "card"}
+              onChange={() => setPaymentMethod("card")}
+              className="accent-amber-300"
+            />
+            <span>Credit / debit card</span>
+          </label>
+          <label className="inline-flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="payment"
+              value="paypal"
+              checked={paymentMethod === "paypal"}
+              onChange={() => setPaymentMethod("paypal")}
+              className="accent-amber-300"
+            />
+            <span>PayPal</span>
+          </label>
+        </div>
+      </div>
+
+      {/* summary – only if basket not empty */}
       {qtyTotal > 0 && (
         <div className="mt-5 rounded-2xl bg-black/40 border border-white/15 p-4 text-sm text-white/85">
           <div className="font-semibold mb-2">Summary</div>
@@ -1659,7 +1754,6 @@ function PayModal({
                 <div>Free flavoured (7 for 6): {flavBundles}</div>
               )}
 
-              {/* Delivery rows – invisible when zero */}
               {deliveryFee > 0 && !freeDeliveryUnlocked && (
                 <div className="mt-1">Delivery: {gbp(deliveryFee)}</div>
               )}
@@ -1676,18 +1770,47 @@ function PayModal({
               </div>
 
               <div className="font-semibold mt-1">
-                Total due: {gbp(total + (freeDeliveryUnlocked ? 0 : deliveryFee))}
+                Total due: {gbp(grandTotal)}
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* …buttons + footer exactly as you had them… */}
+      {error && (
+        <p className="mt-3 text-sm text-rose-300">
+          {error}
+        </p>
+      )}
+
+      <div className="mt-5 flex flex-wrap gap-2">
+        <button
+          onClick={sendEmail}
+          className={cn(
+            "inline-flex rounded-2xl px-5 py-3 text-sm font-semibold transition",
+            valid
+              ? "bg-white text-slate-900 hover:bg-amber-300"
+              : "bg-white/10 text-white/40 cursor-not-allowed"
+          )}
+          disabled={!valid || sending}
+        >
+          {sending ? "Processing…" : "Confirm & pay"}
+        </button>
+        <button
+          onClick={onClose}
+          className="inline-flex rounded-2xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
+        >
+          Cancel
+        </button>
+      </div>
+
+      <p className="mt-4 text-xs text-white/50">
+        We currently deliver only within Blackburn (postcodes BB1–BB2) on Mondays
+        and Thursdays between {deliveryWindow}.
+      </p>
     </Modal>
   );
 }
-
 
 function Modal({
   onClose,
