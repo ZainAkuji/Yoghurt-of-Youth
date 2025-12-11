@@ -595,7 +595,10 @@ export default function App(){
     merchTotal,
     deliveryFee,
     freeDeliveryUnlocked,
+    plainQty,
+    flavQty,
   } = totals;
+
 
   const add = (id:string)=> setCart(c=>({ ...c, [id]: (c[id]||0)+1 }));
   const sub = (id:string)=> setCart(c=>{ const n={...c}; if(!n[id]) return n; n[id]--; if(n[id]<=0) delete n[id]; return n; });
@@ -949,30 +952,16 @@ export default function App(){
       </Drawer>
 
       {reserveOpen && (
-        <ReserveModal
+        <PayModal
           onClose={() => setReserveOpen(false)}
           cart={cart}
-          totals={{
-            qtyTotal,
-            total,
-            plainQty,
-            flavQty,
-            plainBundles,
-            flavBundles,
-            plainRemainder,
-            flavRemainder,
-            savings,        // ← missing before
-            merchTotal,     // ← missing before
-            deliveryFee,    // ← missing before
-            freeDeliveryUnlocked, // ← missing before
-          }}
+          totals={totals}
           onConfirmed={() => {
             clear();
             setDrawerOpen(false);
           }}
         />
       )}
-
     </div>
   );
 }
@@ -1355,8 +1344,7 @@ function weekdayFromISO(iso: string) {
   return names[date.getDay()];
 }
 
-// ---- main component ----
-function ReserveModal({
+function PayModal({
   onClose,
   cart,
   totals,
@@ -1364,32 +1352,28 @@ function ReserveModal({
 }: {
   onClose: () => void;
   cart: Record<string, number>;
-  totals: any;
+  totals: ReturnType<typeof computeTotals>;
   onConfirmed: () => void;
 }) {
   const {
     qtyTotal,
-    total,           // merchandise total (before delivery)
+    total,             // final charge INCLUDING delivery (from computeTotals)
+    merchTotal,        // bottles only, after bundles (no delivery)
+    savings,
     plainQty,
     flavQty,
     plainBundles,
     flavBundles,
     plainRemainder,
     flavRemainder,
-    savings,
+    deliveryFee,
+    freeDeliveryUnlocked,
   } = totals;
-
-  // delivery logic (mirror Basket)
-  const merchTotal = total;
-  const freeDeliveryUnlocked = merchTotal >= 20;
-  const deliveryFee = qtyTotal === 0 ? 0 : freeDeliveryUnlocked ? 0 : 2;
-  const grandTotal = merchTotal + deliveryFee;
 
   // available delivery dates (Mon/Thu, ≥2 days from today)
   const deliveryOptions = deliveryDateOptions();
   const initialDate = deliveryOptions[0] || "";
 
-  // mode: "form" for checkout, "confirmed" after success
   const [mode, setMode] = useState<"form" | "confirmed">("form");
 
   // form state
@@ -1397,7 +1381,6 @@ function ReserveModal({
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
-  // postcode + single street address
   const [postcode, setPostcode] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
 
@@ -1406,13 +1389,11 @@ function ReserveModal({
   const deliveryWindow = "18:30–20:00";
 
   const [paymentMethod, setPaymentMethod] = useState<"" | "card" | "paypal">("");
-
   const [note, setNote] = useState("");
 
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
-  // for showing confirmation details inside the same modal
   const [orderInfo, setOrderInfo] = useState<null | {
     orderId: string;
     formattedDate: string;
@@ -1433,9 +1414,7 @@ function ReserveModal({
   });
 
   const subjectBase = `${BRAND} order – ${formattedDate} – ${name}`;
-
   const normalizedPostcode = postcode.trim().toUpperCase();
-
   const fullAddress = [streetAddress.trim(), normalizedPostcode]
     .filter(Boolean)
     .join(", ");
@@ -1456,13 +1435,12 @@ function ReserveModal({
       return;
     }
 
-    // postcode gate – only BB1/BB2 (Blackburn area)
+    // Blackburn gate
     if (!/^BB[12]\b/.test(normalizedPostcode)) {
       setError("Sorry, we do not deliver outside of Blackburn (postcodes BB1–BB2).");
       return;
     }
 
-    // sanity check that chosen date is one of our generated options
     if (!deliveryOptions.includes(date)) {
       setError("Please choose a valid delivery date (Monday or Thursday).");
       return;
@@ -1486,12 +1464,10 @@ function ReserveModal({
           customer_email: email,
           customer_phone: phone,
 
-          // ---- delivery-specific fields ----
           delivery_date: formattedDate,
           delivery_window: deliveryWindow,
           customer_address: fullAddress,
 
-          // order lines and totals
           order_lines: lines.join("\n"),
           bottles: qtyTotal,
           plain_qty: plainQty,
@@ -1502,20 +1478,17 @@ function ReserveModal({
           flav_remainder: flavRemainder,
           merchandise_total: gbp(merchTotal),
           delivery_fee: gbp(deliveryFee),
-          total_paid: gbp(grandTotal),
+          total_paid: gbp(total),
 
-          // payment + note
           payment_method: paymentMethod === "card" ? "Credit/debit card" : "PayPal",
           note,
 
-          // meta
           order_id: orderId,
           subject: subjectWithId,
         },
         { publicKey: EMAILJS_PUBLIC_KEY }
       );
 
-      // Save info for inline confirmation view
       setOrderInfo({
         orderId,
         formattedDate,
@@ -1524,15 +1497,13 @@ function ReserveModal({
         qtyTotal,
         plainQty,
         flavQty,
-        totalText: gbp(grandTotal),
+        totalText: gbp(total),
         address: fullAddress,
         name,
         paymentMethod: paymentMethod === "card" ? "Credit/debit card" : "PayPal",
       });
 
-      // tell App to clear the basket
       onConfirmed();
-
       setMode("confirmed");
     } catch (e) {
       console.error(e);
@@ -1544,7 +1515,7 @@ function ReserveModal({
     }
   }
 
-  // -------- CONFIRMED VIEW --------
+  // ---------- CONFIRMED VIEW ----------
   if (mode === "confirmed" && orderInfo) {
     const {
       orderId,
@@ -1628,7 +1599,7 @@ function ReserveModal({
     );
   }
 
-  // -------- FORM MODE (CHECKOUT) --------
+  // ---------- FORM VIEW ----------
   return (
     <Modal onClose={onClose} title="Checkout & Delivery">
       <p className="text-sm text-white/80">
@@ -1664,7 +1635,7 @@ function ReserveModal({
           className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
         />
 
-        {/* delivery date: only allowed Mon/Thu options */}
+        {/* delivery date – fixed Mon/Thu list */}
         <select
           value={date}
           onChange={(e) => setDate(e.target.value)}
@@ -1677,7 +1648,6 @@ function ReserveModal({
           ))}
         </select>
 
-        {/* address fields (Blackburn only) */}
         <input
           value={postcode}
           onChange={(e) => setPostcode(e.target.value)}
@@ -1730,7 +1700,7 @@ function ReserveModal({
         </div>
       </div>
 
-      {/* summary – only if basket not empty */}
+      {/* summary */}
       {qtyTotal > 0 && (
         <div className="mt-5 rounded-2xl bg-black/40 border border-white/15 p-4 text-sm text-white/85">
           <div className="font-semibold mb-2">Summary</div>
@@ -1771,7 +1741,7 @@ function ReserveModal({
               </div>
 
               <div className="font-semibold mt-1">
-                Total due: {gbp(grandTotal)}
+                Total due: {gbp(total)}
               </div>
             </div>
           </div>
