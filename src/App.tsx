@@ -48,101 +48,10 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  // --- base SKUs (keep for backwards compatibility) ---
-  {
-    id: "PRCXN",
-    name: "PRCXN",
-    price: 2.0,
-    size: "250 mL",
-    desc: "Classic dairy yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
-    tags: ["Classic", "DSM 17648"],
-    img: "/prcxn.png",
-  },
-  {
-    id: "SPCTRL",
-    name: "SPCTRL",
-    price: 2.0,
-    size: "250 mL",
-    desc: "Classic dairy yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
-    tags: ["Classic", "DSM 17938"],
-    img: "/spctrl.png",
-  },
-
-  // --- PRCXN flavours (standard) ---
-  {
-    id: "PRCXN_PLN",
-    name: "PRCXN PLN",
-    price: 2.0,
-    size: "250 mL",
-    desc: "Plain PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
-    tags: ["PRCXN", "Plain"],
-    img: "/prcxn.png",
-  },
-    {
-    id: "PRCXN_BFC",
-    name: "PRCXN BFC",
-    price: 3.0,
-    size: "250 mL",
-    desc: "Black forest chocolate PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
-    tags: ["PRCXN", "Black forest chocolate"],
-    img: "/prcxn.png",
-  },
-  {
-    id: "PRCXN_STR",
-    name: "PRCXN STR",
-    price: 3.0,
-    size: "250 mL",
-    desc: "Strawberry PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
-    tags: ["PRCXN", "Strawberry"],
-    img: "/prcxn.png",
-  },
-  {
-    id: "PRCXN_MNG",
-    name: "PRCXN MNG",
-    price: 3.0,
-    size: "250 mL",
-    desc: "Mango PRCXN yoghurt fermented with *L. reuteri* DSM 17648. Targets *H. pylori*.",
-    tags: ["PRCXN", "Mango"],
-    img: "/prcxn.png",
-  },
-  
-  // --- SPCTRL flavours (standard) ---
-  {
-    id: "SPCTRL_PLN",
-    name: "SPCTRL PLN",
-    price: 2.0,
-    size: "250 mL",
-    desc: "Plain SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
-    tags: ["SPCTRL", "Plain"],
-    img: "/spctrl.png",
-  },
-  {
-    id: "SPCTRL_BFC",
-    name: "SPCTRL BFC",
-    price: 3.0,
-    size: "250 mL",
-    desc: "Black forest chocolate SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
-    tags: ["SPCTRL", "Black forest chocolate"],
-    img: "/spctrl.png",
-  },
-  {
-    id: "SPCTRL_STR",
-    name: "SPCTRL STR",
-    price: 3.0,
-    size: "250 mL",
-    desc: "Strawberry SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
-    tags: ["SPCTRL", "Strawberry"],
-    img: "/spctrl.png",
-  },
-  {
-    id: "SPCTRL_MNG",
-    name: "SPCTRL MNG",
-    price: 3.0,
-    size: "250 mL",
-    desc: "Mango SPCTRL yoghurt fermented with *L. reuteri* DSM 17938. Targets harmful microbes including *Candida*.",
-    tags: ["SPCTRL", "Mango"],
-    img: "/spctrl.png",
-  },
+  { id: "PLN", name: "Plain yoghurt", price: 2.0, size: "250 mL", img: "/plain.png" },
+  { id: "BFC", name: "Black forest chocolate", price: 3.0, size: "250 mL", img: "/bfc.png" },
+  { id: "STR", name: "Strawberry", price: 3.0, size: "250 mL", img: "/str.png" },
+  { id: "MNG", name: "Mango", price: 3.0, size: "250 mL", img: "/mng.png" },
 ];
 
 const GROUPED = [
@@ -158,9 +67,7 @@ const GROUPED = [
       250ml.
     </>,
     img: "prcxn.png",
-    variants: [
-      { id: "PRCXN", label: "PRCXN" },
-    ],
+    variants: [],
   },
   {
     key: "spctrl",
@@ -174,9 +81,7 @@ const GROUPED = [
       250ml.
     </>,
     img: "spctrl.png",
-    variants: [
-      { id: "SPCTRL", label: "SPCTRL" },
-    ],
+    variants: [],
   },
 ];
 
@@ -279,11 +184,16 @@ function getISOWeek(date: Date) {
 }
 
 // decide which brand is active this week
+function getBrandForDate(date: Date) {
+  const week = getISOWeek(date);
+  return week % 2 === 0 ? "SPCTRL" : "PRCXN";
+}
+
 function getBrandRotation() {
   const today = new Date();
   const week = getISOWeek(today);
 
-  // even weeks = SPCTRL, odd weeks = PRCXN
+  // even = SPCTRL, odd = PRCXN
   const isSPCTRLWeek = week % 2 === 0;
 
   const thisWeekBrand = isSPCTRLWeek ? "SPCTRL" : "PRCXN";
@@ -605,9 +515,6 @@ export default function App(){
   const remove = (id:string)=> setCart(c=>{ const n={...c}; delete n[id]; return n; });
   const clear = ()=> setCart({});
 
-  // Toggle this manually each week (or later via config):
-  const CURRENT_BRAND: "PRCXN" | "SPCTRL" = "PRCXN";
-
   return (
     <div className="scroll-smooth min-h-screen bg-gradient-to-b from-white to-slate-50 text-slate-800">
       <Header brand={BRAND} query={query} setQuery={setQuery} itemsCount={qtyTotal} openCart={()=>setDrawerOpen(true)} />
@@ -725,22 +632,10 @@ export default function App(){
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           {/** work out which yoghurt is active this week */}
           {(() => {
-            const { isSPCTRLWeek, thisWeekBrand, nextWeekBrand } = getBrandRotation();
+            const { thisWeekBrand, nextWeekBrand } = getBrandRotation();
       
             // --- map active brand → product IDs ---
-            const ids = isSPCTRLWeek
-              ? {
-                  PLN: "SPCTRL_PLN",
-                  BFC: "SPCTRL_BFC",
-                  STR: "SPCTRL_STR",
-                  MNG: "SPCTRL_MNG",
-                }
-              : {
-                  PLN: "PRCXN_PLN",
-                  BFC: "PRCXN_BFC",
-                  STR: "PRCXN_STR",
-                  MNG: "PRCXN_MNG",
-                };
+            const ids = { PLN: "PLN", BFC: "BFC", STR: "STR", MNG: "MNG" };
       
             const qty = (id: string) => cart[id] || 0;
       
@@ -1470,6 +1365,7 @@ function PayModal({
 
           order_lines: lines.join("\n"),
           bottles: qtyTotal,
+          yoghurt_strain: deliveryBrand,
           plain_qty: plainQty,
           flav_qty: flavQty,
           plain_bundles: plainBundles,
@@ -1713,13 +1609,13 @@ function PayModal({
             <div>
               <div>Bottles: {qtyTotal}</div>
 
-              {plainRemainder > 0 && <div>PLN: {plainRemainder} × £2</div>}
+              {plainRemainder > 0 && <div>PLN: {plainRemainder} × £2.00</div>}
               {plainBundles > 0 && (
                 <div>Free PLN (7 for 6): {plainBundles}</div>
               )}
 
               {flavRemainder > 0 && (
-                <div>Flavoured: {flavRemainder} × £3</div>
+                <div>Flavoured: {flavRemainder} × £3.00</div>
               )}
               {flavBundles > 0 && (
                 <div>Free flavoured (7 for 6): {flavBundles}</div>
@@ -1735,10 +1631,12 @@ function PayModal({
                 </div>
               )}
 
-              <div className="flex justify-between text-emerald-400 mt-1">
-                <span>You save</span>
-                <span>−{gbp(savings)}</span>
-              </div>
+              {savings > 0 && (
+                <div className="flex justify-between text-emerald-400 mt-1">
+                  <span>You save</span>
+                  <span>−{gbp(savings)}</span>
+                </div>
+              )}
 
               <div className="font-semibold mt-1">
                 Total due: {gbp(total)}
@@ -1774,11 +1672,6 @@ function PayModal({
           Cancel
         </button>
       </div>
-
-      <p className="mt-4 text-xs text-white/50">
-        We currently deliver only within Blackburn (postcodes BB1–BB2) on Mondays
-        and Thursdays between {deliveryWindow}.
-      </p>
     </Modal>
   );
 }
