@@ -48,10 +48,10 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  { id: "PLN", name: "Plain yoghurt", price: 2.0, size: "250 mL", img: "/plain.png" },
-  { id: "BFC", name: "Black forest chocolate", price: 3.0, size: "250 mL", img: "/bfc.png" },
-  { id: "STR", name: "Strawberry", price: 3.0, size: "250 mL", img: "/str.png" },
-  { id: "MNG", name: "Mango", price: 3.0, size: "250 mL", img: "/mng.png" },
+  { id: "PLN", name: "PLN", price: 2.0, size: "250 mL", img: "/plain.png" },
+  { id: "BFC", name: "BFC", price: 3.0, size: "250 mL", img: "/bfc.png" },
+  { id: "STR", name: "STR", price: 3.0, size: "250 mL", img: "/str.png" },
+  { id: "MNG", name: "MNG", price: 3.0, size: "250 mL", img: "/mng.png" },
 ];
 
 const GROUPED = [
@@ -994,6 +994,13 @@ function Drawer({
   );
 }
 
+const FLAVOUR_STYLE = {
+  PLN: { bg: "bg-white/15", emoji: "🥛" },
+  BFC: { bg: "bg-rose-900/40", emoji: "🍫" },
+  STR: { bg: "bg-pink-500/35", emoji: "🍓" },
+  MNG: { bg: "bg-amber-300/45", emoji: "🥭" },
+};
+
 function Basket({
   items,
   qtyTotal,
@@ -1041,11 +1048,16 @@ function Basket({
 
       {items.map((i) => (
         <div key={i.id} className="flex gap-3">
-          <img
-            src={i.img}
-            alt=""
-            className="w-16 h-12 rounded-lg ring-1 ring-white/20 object-cover"
-          />
+          {/* flavour colour + emoji panel */}
+          <div
+            className={cn(
+              "w-16 h-12 rounded-lg ring-1 ring-white/20 flex items-center justify-center text-2xl",
+              FLAVOUR_STYLE[i.id]?.bg || "bg-black/30"
+            )}
+          >
+            <span>{FLAVOUR_STYLE[i.id]?.emoji || "❓"}</span>
+          </div>
+
           <div className="flex-1">
             <div className="flex justify-between text-sm">
               <div>
