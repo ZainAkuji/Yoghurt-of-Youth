@@ -59,8 +59,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       ],
       customer_email: customer.email,
-      success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}?cancelled=true`,
+      success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/?paid=1`,
+      cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}/?cancelled=1`,
       metadata,
     });
 
