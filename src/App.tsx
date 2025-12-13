@@ -1664,26 +1664,100 @@ function PayModal({
         </p>
       )}
 
-      <div className="mt-5 flex flex-wrap gap-2">
+      <div className="mt-5 flex flex-col sm:flex-row gap-3">
+
+        {/* STRIPE PAYMENT */}
         <button
-          onClick={sendEmail}
-          className={cn(
-            "inline-flex rounded-2xl px-5 py-3 text-sm font-semibold transition",
-            valid
-              ? "bg-white text-slate-900 hover:bg-amber-300"
-              : "bg-white/10 text-white/40 cursor-not-allowed"
-          )}
           disabled={!valid || sending}
+          onClick={async () => {
+            if (!valid) return;
+            setSending(true);
+            setError("");
+      
+            // Must match your backend API route
+            const res = await fetch("/api/stripe/create-checkout-session", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                cart,
+                totals,
+                customer: {
+                  name,
+                  email,
+                  phone,
+                  address: fullAddress,
+                },
+                delivery_date: formattedDate,
+                delivery_window: deliveryWindow,
+                note,
+              }),
+            });
+      
+            const data = await res.json();
+      
+            if (data.url) {
+              window.location.href = data.url; // redirect to Stripe Checkout
+            } else {
+              setError("Stripe checkout failed.");
+            }
+      
+            setSending(false);
+          }}
+          className="rounded-2xl px-5 py-3 text-sm font-semibold bg-white text-slate-900 hover:bg-amber-300 transition"
         >
-          {sending ? "Processing…" : "Confirm & pay"}
+          Pay with Stripe
         </button>
+      
+        {/* PAYPAL PAYMENT */}
+        <button
+          disabled={!valid || sending}
+          onClick={async () => {
+            if (!valid) return;
+            setSending(true);
+            setError("");
+      
+            const res = await fetch("/api/paypal/create-order", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                cart,
+                totals,
+                customer: {
+                  name,
+                  email,
+                  phone,
+                  address: fullAddress,
+                },
+                delivery_date: formattedDate,
+                delivery_window: deliveryWindow,
+                note,
+              }),
+            });
+      
+            const data = await res.json();
+      
+            if (data.approvalUrl) {
+              window.location.href = data.approvalUrl; // redirect to PayPal approval
+            } else {
+              setError("PayPal checkout failed.");
+            }
+      
+            setSending(false);
+          }}
+          className="rounded-2xl px-5 py-3 text-sm font-semibold bg-[#ffc439] text-slate-900 hover:bg-[#ffcf43] transition"
+        >
+          Pay with PayPal
+        </button>
+      
+        {/* CANCEL */}
         <button
           onClick={onClose}
-          className="inline-flex rounded-2xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
+          className="rounded-2xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
         >
           Cancel
         </button>
       </div>
+
     </Modal>
   );
 }
