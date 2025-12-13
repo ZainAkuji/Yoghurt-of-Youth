@@ -506,29 +506,6 @@ export default function App(){
     const pay = params.get("pay");
     const provider = params.get("provider");
 
-    if (provider === "paypal") {
-      const token = params.get("token"); // PayPal order id
-      if (!token) return;
-    
-      const r = await fetch(`/api/paypal/capture?token=${encodeURIComponent(token)}`);
-      const data = await r.json();
-      if (!data?.paid) return;
-    
-      const raw = localStorage.getItem("yoy_pending_order");
-      if (!raw) return;
-    
-      const order = JSON.parse(raw);
-      setConfirmOrder(order);
-      setConfirmOpen(true);
-    
-      setCart({});
-      localStorage.removeItem("yoy_cart");
-      localStorage.removeItem("yoy_pending_order");
-    
-      window.history.replaceState({}, "", window.location.pathname);
-    }
-
-  
     // only handle success
     if (pay !== "success") return;
   
@@ -560,7 +537,28 @@ export default function App(){
           window.history.replaceState({}, "", window.location.pathname);
         }
   
-        // PayPal flow next (section E)
+        // PayPal flow
+        if (provider === "paypal") {
+          const token = params.get("token"); // PayPal order id
+          if (!token) return;
+        
+          const r = await fetch(`/api/paypal/capture?token=${encodeURIComponent(token)}`);
+          const data = await r.json();
+          if (!data?.paid) return;
+        
+          const raw = localStorage.getItem("yoy_pending_order");
+          if (!raw) return;
+        
+          const order = JSON.parse(raw);
+          setConfirmOrder(order);
+          setConfirmOpen(true);
+        
+          setCart({});
+          localStorage.removeItem("yoy_cart");
+          localStorage.removeItem("yoy_pending_order");
+        
+          window.history.replaceState({}, "", window.location.pathname);
+        }
       } catch (e) {
         console.error(e);
       }
