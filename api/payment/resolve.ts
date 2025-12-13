@@ -1,6 +1,6 @@
-import Stripe from "stripe";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { sendOrderEmail } from "../../../utils/email"; // helper we write next
+import Stripe from "stripe";
+import { sendOrderEmail } from "../../../utils/email";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2023-10-16",
@@ -10,27 +10,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const { stripeSession, paypalOrder } = req.body;
 
-    let metadata: any;
+    let metadata: any = null;
 
+    // ---- STRIPE ----
     if (stripeSession) {
-      const session = await stripe.checkout.sessions.retrieve(stripeSession, {
-        expand: ["payment_intent"],
-      });
+      const session = await stripe.checkout.sessions.retrieve(stripeSession);
       metadata = session.metadata;
     }
 
-    // (You may also check PayPal orders here if you want)
+    // (Optional) PayPal resolution can be added here
 
     if (!metadata) {
-      return res.status(400).json({ error: "No order metadata found." });
+      return res.status(400).json({ error: "Could not load order metadata" });
     }
 
-    // Send confirmation email (server-side)
-    await sendOrderEmail(metadata);
+    const order = {
+      ...metadata,
+      lines: JSON.parse(metadata.lines),
+    };
 
-    return res.status(200).json(metadata);
+    await sendOrderEmail(order);
+
+    return res.status(200).json(order);
   } catch (e: any) {
-    console.error(e);
     return res.status(500).json({ error: e.message });
   }
 }
