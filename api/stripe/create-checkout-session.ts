@@ -79,38 +79,58 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       yoghurt_strain: String(totals.deliveryBrand || ""),
     };
 
-    // ✅ Build one Stripe line item: "Yoghurt of Youth order"
-    // (You can expand this later to multiple items; this is the simplest stable approach.)
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
+
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       customer_email: customer.email,
-
+    
       line_items: [
         {
           price_data: {
             currency: "gbp",
-            product_data: {
-              name: "Yoghurt of Youth",
-              description: orderLines.join(", ").slice(0, 500),
-            },
-            unit_amount: amountPence,
+            product_data: { name: "Yoghurt of Youth order" },
+            unit_amount: Math.round(Number(totals.total) * 100), // if totals.total is GBP
           },
           quantity: 1,
         },
       ],
-
-      metadata,
-
-      // Send them back to your site after payment/cancel
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/?paid=1&provider=stripe`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/?paid=0&provider=stripe`,
+    
+      success_url: `${siteUrl}/?pay=success&provider=stripe&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}/?pay=cancelled&provider=stripe`,
+    
+      metadata: {
+        order_id: `YOY-${Date.now().toString().slice(-6)}`,
+    
+        customer_name: customer.name,
+        customer_email: customer.email,
+        customer_phone: customer.phone,
+        customer_address: customer.address,
+    
+        delivery_date,
+        delivery_window,
+        note: note || "",
+    
+        order_lines: JSON.stringify(lines),
+        bottles: String(totals.qtyTotal),
+    
+        plain_qty: String(totals.plainQty),
+        flav_qty: String(totals.flavQty),
+        plain_bundles: String(totals.plainBundles),
+        flav_bundles: String(totals.flavBundles),
+        plain_remainder: String(totals.plainRemainder),
+        flav_remainder: String(totals.flavRemainder),
+    
+        merchandise_total: String(totals.merchTotal),
+        delivery_fee: String(totals.deliveryFee),
+        total_paid: String(totals.total),
+    
+        yoghurt_strain: String(totals.deliveryBrand || ""),
+        payment_provider: "stripe",
+      },
     });
-
-    return res.status(200).json({
-      url: session.url,
-      id: session.id,     // so your persistPendingOrder("stripe", data.id) works
-      orderId,            // optional, useful to show customer
-    });
+    
+    return res.status(200).json({ url: session.url, id: session.id });
   } catch (e: any) {
     console.error(e);
     return res.status(500).json({ error: e?.message || "Server error" });
