@@ -896,11 +896,9 @@ export default function App(){
       )}
 
       {confirmOpen && confirmOrder && (
-        <OrderConfirmationModal
-          order={confirmOrder}
-          onClose={() => setConfirmOpen(false)}
-        />
-      )}      
+        <OrderConfirmationModal order={confirmOrder} onClose={() => setConfirmOpen(false)} />
+      )}
+            
     </div>
   );
 }
