@@ -76,8 +76,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           brand_name: "Yoghurt of Youth",
           landing_page: "NO_PREFERENCE",
           user_action: "PAY_NOW",
-          return_url: `${process.env.NEXT_PUBLIC_DOMAIN}/checkout/success?paypal=true&order_id=${orderId}`,
-          cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}?cancelled=true`,
+          success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/?paid=1`,
+          cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}/?cancelled=1`,
         },
       }),
     });
