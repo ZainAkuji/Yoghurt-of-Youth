@@ -498,38 +498,29 @@ export default function App(){
     paymentMethod: string;
   };
   
-  export default function App() {
-    // ...your existing state...
-    const [confirmOrder, setConfirmOrder] = useState<ConfirmOrder | null>(null);
-    const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmOrder, setConfirmOrder] = useState<ConfirmOrder | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   
   useEffect(() => {
-    // only run in browser
     if (typeof window === "undefined") return;
-
+  
     const url = new URL(window.location.href);
-    const paid = url.searchParams.get("paid");
-
-    if (paid === "1") {
-      const raw = localStorage.getItem("yoy_pending_order");
-      if (!raw) return;
-
-      try {
-        const stored = JSON.parse(raw) as ConfirmOrder;
-        setConfirmOrder(stored);
-        setConfirmOpen(true);
-        localStorage.removeItem("yoy_pending_order");
-      } catch {
-        // ignore parse errors
-      }
-
-      // Clean the ?paid=1 from the URL so refreshes look normal
-      url.searchParams.delete("paid");
-      const newUrl =
-        url.pathname + (url.searchParams.toString() ? `?${url.searchParams.toString()}` : "");
-      window.history.replaceState({}, "", newUrl);
-    }
+    if (url.searchParams.get("paid") !== "1") return;
+  
+    const raw = localStorage.getItem("yoy_pending_order");
+    if (!raw) return;
+  
+    try {
+      const stored = JSON.parse(raw) as ConfirmOrder;
+      setConfirmOrder(stored);
+      setConfirmOpen(true);
+      localStorage.removeItem("yoy_pending_order");
+    } catch {}
+  
+    url.searchParams.delete("paid");
+    window.history.replaceState({}, "", url.pathname + (url.search ? `?${url.searchParams}` : ""));
   }, []);
+
 
   const results = useMemo(()=>{
     if(!query) return PRODUCTS;
