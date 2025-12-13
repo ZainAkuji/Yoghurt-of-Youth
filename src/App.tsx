@@ -1613,11 +1613,12 @@ function PayModal({
                 body: JSON.stringify({
                   cart,
                   totals,
+                  lines,
                   customer: { name, email, phone, address: fullAddress },
                   delivery_date: formattedDate,
                   delivery_window: deliveryWindow,
                   note,
-                }),
+                })
               });
 
               const data = await res.json();
