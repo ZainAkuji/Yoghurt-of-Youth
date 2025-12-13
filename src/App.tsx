@@ -484,6 +484,53 @@ export default function App(){
   const [reserveOpen, setReserveOpen] = useState(false);
   useEffect(()=>{ localStorage.setItem("yoy_cart", JSON.stringify(cart)); }, [cart]);
 
+  type ConfirmOrder = {
+    orderId?: string;
+    formattedDate: string;
+    deliveryWindow: string;
+    lines: string[];
+    qtyTotal: number;
+    plainQty: number;
+    flavQty: number;
+    totalText: string;
+    address: string;
+    name: string;
+    paymentMethod: string;
+  };
+  
+  export default function App() {
+    // ...your existing state...
+    const [confirmOrder, setConfirmOrder] = useState<ConfirmOrder | null>(null);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+  
+  useEffect(() => {
+    // only run in browser
+    if (typeof window === "undefined") return;
+
+    const url = new URL(window.location.href);
+    const paid = url.searchParams.get("paid");
+
+    if (paid === "1") {
+      const raw = localStorage.getItem("yoy_pending_order");
+      if (!raw) return;
+
+      try {
+        const stored = JSON.parse(raw) as ConfirmOrder;
+        setConfirmOrder(stored);
+        setConfirmOpen(true);
+        localStorage.removeItem("yoy_pending_order");
+      } catch {
+        // ignore parse errors
+      }
+
+      // Clean the ?paid=1 from the URL so refreshes look normal
+      url.searchParams.delete("paid");
+      const newUrl =
+        url.pathname + (url.searchParams.toString() ? `?${url.searchParams.toString()}` : "");
+      window.history.replaceState({}, "", newUrl);
+    }
+  }, []);
+
   const results = useMemo(()=>{
     if(!query) return PRODUCTS;
     const q = query.toLowerCase();
@@ -508,7 +555,6 @@ export default function App(){
     plainQty,
     flavQty,
   } = totals;
-
 
   const add = (id:string)=> setCart(c=>({ ...c, [id]: (c[id]||0)+1 }));
   const sub = (id:string)=> setCart(c=>{ const n={...c}; if(!n[id]) return n; n[id]--; if(n[id]<=0) delete n[id]; return n; });
@@ -857,6 +903,13 @@ export default function App(){
           }}
         />
       )}
+
+      {confirmOpen && confirmOrder && (
+        <OrderConfirmationModal
+          order={confirmOrder}
+          onClose={() => setConfirmOpen(false)}
+        />
+      )}      
     </div>
   );
 }
@@ -1251,21 +1304,33 @@ function weekdayFromISO(iso: string) {
   return names[date.getDay()];
 }
 
+type ConfirmOrder = {
+  orderId?: string;
+  formattedDate: string;
+  deliveryWindow: string;
+  lines: string[];
+  qtyTotal: number;
+  plainQty: number;
+  flavQty: number;
+  totalText: string;
+  address: string;
+  name: string;
+  paymentMethod: string;
+};
+
 function PayModal({
   onClose,
   cart,
   totals,
-  onConfirmed,
 }: {
   onClose: () => void;
   cart: Record<string, number>;
   totals: ReturnType<typeof computeTotals>;
-  onConfirmed: () => void;
 }) {
   const {
     qtyTotal,
-    total,             // final charge INCLUDING delivery (from computeTotals)
-    merchTotal,        // bottles only, after bundles (no delivery)
+    total,
+    merchTotal,
     savings,
     plainQty,
     flavQty,
@@ -1277,17 +1342,13 @@ function PayModal({
     freeDeliveryUnlocked,
   } = totals;
 
-  // available delivery dates (Mon/Thu, ≥2 days from today)
   const deliveryOptions = deliveryDateOptions();
   const initialDate = deliveryOptions[0] || "";
-
-  const [mode, setMode] = useState<"form" | "confirmed">("form");
 
   // form state
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-
   const [postcode, setPostcode] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
 
@@ -1295,224 +1356,73 @@ function PayModal({
   const formattedDate = formatDateUK(date);
   const deliveryWindow = "18:30–20:00";
 
-  const [paymentMethod, setPaymentMethod] = useState<"" | "card" | "paypal">("");
   const [note, setNote] = useState("");
-
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
-  const [orderInfo, setOrderInfo] = useState<null | {
-    orderId: string;
-    formattedDate: string;
-    deliveryWindow: string;
-    lines: string[];
-    qtyTotal: number;
-    plainQty: number;
-    flavQty: number;
-    totalText: string;
-    address: string;
-    name: string;
-    paymentMethod: string;
-  }>(null);
-
+  // Build these BEFORE helper functions
   const lines = Object.entries(cart).map(([id, qty]) => {
     const p = PRODUCTS.find((p) => p.id === id);
-    return `${p?.name} × ${qty}`;
+    return `${p?.name ?? id} × ${qty}`;
   });
 
-  const subjectBase = `${BRAND} order – ${formattedDate} – ${name}`;
   const normalizedPostcode = postcode.trim().toUpperCase();
   const fullAddress = [streetAddress.trim(), normalizedPostcode]
     .filter(Boolean)
     .join(", ");
 
+  // Validation (no paymentMethod now)
   const valid =
     !!name &&
     !!email &&
     !!phone &&
     !!postcode &&
     !!streetAddress &&
-    !!paymentMethod &&
     !!date &&
     qtyTotal > 0;
 
-  async function sendEmail() {
-    if (!valid) {
-      alert("Please complete all required fields first.");
-      return;
-    }
-
-    // Blackburn gate
-    if (!/^BB[12]\b/.test(normalizedPostcode)) {
-      setError("Sorry, we do not deliver outside of Blackburn (postcodes BB1–BB2).");
-      return;
-    }
-
-    if (!deliveryOptions.includes(date)) {
-      setError("Please choose a valid delivery date (Monday or Thursday).");
-      return;
-    }
-
-    setSending(true);
-    setError("");
-
-    try {
-      const { default: emailjs } = await import("@emailjs/browser");
-      const orderId = `YOY-${Date.now().toString().slice(-6)}`;
-      const subjectWithId = `${subjectBase} – ${orderId}`;
-
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        {
-          brand: BRAND,
-          owner_email: OWNER_EMAIL,
-          customer_name: name,
-          customer_email: email,
-          customer_phone: phone,
-
-          delivery_date: formattedDate,
-          delivery_window: deliveryWindow,
-          customer_address: fullAddress,
-
-          order_lines: lines.join("\n"),
-          bottles: qtyTotal,
-          yoghurt_strain: deliveryBrand,
-          plain_qty: plainQty,
-          flav_qty: flavQty,
-          plain_bundles: plainBundles,
-          flav_bundles: flavBundles,
-          plain_remainder: plainRemainder,
-          flav_remainder: flavRemainder,
-          merchandise_total: gbp(merchTotal),
-          delivery_fee: gbp(deliveryFee),
-          total_paid: gbp(total),
-
-          payment_method: paymentMethod === "card" ? "Credit/debit card" : "PayPal",
-          note,
-
-          order_id: orderId,
-          subject: subjectWithId,
-        },
-        { publicKey: EMAILJS_PUBLIC_KEY }
-      );
-
-      setOrderInfo({
-        orderId,
-        formattedDate,
-        deliveryWindow,
-        lines,
-        qtyTotal,
-        plainQty,
-        flavQty,
-        totalText: gbp(total),
-        address: fullAddress,
-        name,
-        paymentMethod: paymentMethod === "card" ? "Credit/debit card" : "PayPal",
-      });
-
-      onConfirmed();
-      setMode("confirmed");
-    } catch (e) {
-      console.error(e);
-      setError(
-        "Payment / email step failed. Please check your details or try again in a moment."
-      );
-    } finally {
-      setSending(false);
-    }
-  }
-
-  // ---------- CONFIRMED VIEW ----------
-  if (mode === "confirmed" && orderInfo) {
-    const {
-      orderId,
+  function persistPendingOrder(method: "stripe" | "paypal", externalId?: string) {
+    const pending: ConfirmOrder = {
+      orderId: externalId || "",
       formattedDate,
       deliveryWindow,
       lines,
       qtyTotal,
       plainQty,
       flavQty,
-      totalText,
-      address,
+      totalText: gbp(total),
+      address: fullAddress,
       name,
-      paymentMethod,
-    } = orderInfo;
+      paymentMethod: method === "stripe" ? "Stripe" : "PayPal",
+    };
 
-    return (
-      <Modal onClose={onClose} title="Order received">
-        <p className="text-sm text-white/80">
-          Thanks, <span className="font-semibold">{name}</span>. Your order has been
-          received and a confirmation email has been sent.
-        </p>
-
-        <div className="mt-4 space-y-2 text-sm text-white/90">
-          <div className="flex justify-between">
-            <span className="text-white/60">Order ID</span>
-            <span className="font-semibold">{orderId}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-white/60">Delivery</span>
-            <span className="font-semibold">
-              {formattedDate} · {deliveryWindow}
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-white/60">Bottles</span>
-            <span>
-              {qtyTotal} (PLN {plainQty}, flavoured {flavQty})
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-white/60">Payment</span>
-            <span className="font-semibold">{paymentMethod}</span>
-          </div>
-          <div className="flex justify-between border-t border-white/20 pt-2 mt-2">
-            <span className="font-semibold">Total paid</span>
-            <span className="font-semibold">{totalText}</span>
-          </div>
-        </div>
-
-        <div className="mt-4">
-          <div className="font-semibold text-sm mb-1">Items</div>
-          <ul className="list-disc pl-5 text-sm text-white/80 space-y-1">
-            {lines.map((l, i) => (
-              <li key={i}>{l}</li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="mt-4 text-sm text-white/80">
-          <div className="font-semibold">Delivery address</div>
-          <p>{address}</p>
-          <p className="mt-2 text-white/70">
-            Deliveries are made between <strong>{deliveryWindow}</strong>.
-          </p>
-        </div>
-
-        <div className="mt-6 flex flex-wrap gap-2">
-          <button
-            onClick={onClose}
-            className="inline-flex rounded-2xl bg-white text-slate-900 px-5 py-3 text-sm font-semibold hover:bg-amber-300 transition"
-          >
-            Continue shopping
-          </button>
-        </div>
-
-        <p className="mt-4 text-xs text-white/50">
-          If you need to change your delivery day, please reply to the confirmation
-          email and we’ll do our best to adjust.
-        </p>
-      </Modal>
-    );
+    try {
+      localStorage.setItem("yoy_pending_order", JSON.stringify(pending));
+    } catch {
+      // ignore
+    }
   }
 
-  // ---------- FORM VIEW ----------
+  function validateBeforePay(): boolean {
+    if (!valid) {
+      setError("Please complete all required fields first.");
+      return false;
+    }
+    if (!/^BB[12]\b/.test(normalizedPostcode)) {
+      setError("Sorry, we do not deliver outside of Blackburn (postcodes BB1–BB2).");
+      return false;
+    }
+    if (!deliveryOptions.includes(date)) {
+      setError("Please choose a valid delivery date (Monday or Thursday).");
+      return false;
+    }
+    return true;
+  }
+
   return (
     <Modal onClose={onClose} title="Checkout & Delivery">
       <p className="text-sm text-white/80">
-        Choose your delivery day, enter your Blackburn address, and select your
-        payment method. We deliver on{" "}
+        Choose your delivery day and enter your Blackburn address. We deliver on{" "}
         <span className="font-semibold">Mondays and Thursdays</span> between{" "}
         <span className="font-semibold">{deliveryWindow}</span>.
       </p>
@@ -1543,7 +1453,6 @@ function PayModal({
           className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
         />
 
-        {/* delivery date – fixed Mon/Thu list */}
         <select
           value={date}
           onChange={(e) => setDate(e.target.value)}
@@ -1579,35 +1488,6 @@ function PayModal({
         />
       </div>
 
-      {/* payment method */}
-      <div className="mt-4 text-sm text-white/90 space-y-2">
-        <div className="font-semibold">Payment method</div>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <label className="inline-flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              name="payment"
-              value="card"
-              checked={paymentMethod === "card"}
-              onChange={() => setPaymentMethod("card")}
-              className="accent-amber-300"
-            />
-            <span>Credit / debit card</span>
-          </label>
-          <label className="inline-flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              name="payment"
-              value="paypal"
-              checked={paymentMethod === "paypal"}
-              onChange={() => setPaymentMethod("paypal")}
-              className="accent-amber-300"
-            />
-            <span>PayPal</span>
-          </label>
-        </div>
-      </div>
-
       {/* summary */}
       {qtyTotal > 0 && (
         <div className="mt-5 rounded-2xl bg-black/40 border border-white/15 p-4 text-sm text-white/85">
@@ -1620,23 +1500,14 @@ function PayModal({
             </div>
             <div>
               <div>Bottles: {qtyTotal}</div>
-
               {plainRemainder > 0 && <div>PLN: {plainRemainder} × £2.00</div>}
-              {plainBundles > 0 && (
-                <div>Free PLN (7 for 6): {plainBundles}</div>
-              )}
-
-              {flavRemainder > 0 && (
-                <div>Flavoured: {flavRemainder} × £3.00</div>
-              )}
-              {flavBundles > 0 && (
-                <div>Free flavoured (7 for 6): {flavBundles}</div>
-              )}
+              {plainBundles > 0 && <div>Free PLN (7 for 6): {plainBundles}</div>}
+              {flavRemainder > 0 && <div>Flavoured: {flavRemainder} × £3.00</div>}
+              {flavBundles > 0 && <div>Free flavoured (7 for 6): {flavBundles}</div>}
 
               {deliveryFee > 0 && !freeDeliveryUnlocked && (
                 <div className="mt-1">Delivery: {gbp(deliveryFee)}</div>
               )}
-
               {freeDeliveryUnlocked && (
                 <div className="mt-1 text-emerald-400">
                   Free delivery unlocked (orders over £20)
@@ -1650,106 +1521,101 @@ function PayModal({
                 </div>
               )}
 
-              <div className="font-semibold mt-1">
-                Total due: {gbp(total)}
-              </div>
+              <div className="font-semibold mt-1">Total due: {gbp(total)}</div>
             </div>
           </div>
         </div>
       )}
 
-      {error && (
-        <p className="mt-3 text-sm text-rose-300">
-          {error}
-        </p>
-      )}
+      {error && <p className="mt-3 text-sm text-rose-300">{error}</p>}
 
       <div className="mt-5 flex flex-col sm:flex-row gap-3">
-
-        {/* STRIPE PAYMENT */}
+        {/* STRIPE */}
         <button
-          disabled={!valid || sending}
+          disabled={sending}
           onClick={async () => {
-            if (!valid) return;
+            if (!validateBeforePay()) return;
+
             setSending(true);
             setError("");
-      
-            // Must match your backend API route
-            const res = await fetch("/api/stripe/create-checkout-session", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                cart,
-                totals,
-                customer: {
-                  name,
-                  email,
-                  phone,
-                  address: fullAddress,
-                },
-                delivery_date: formattedDate,
-                delivery_window: deliveryWindow,
-                note,
-              }),
-            });
-      
-            const data = await res.json();
-      
-            if (data.url) {
-              window.location.href = data.url; // redirect to Stripe Checkout
-            } else {
+
+            try {
+              const res = await fetch("/api/stripe/create-checkout-session", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  cart,
+                  totals,
+                  customer: { name, email, phone, address: fullAddress },
+                  delivery_date: formattedDate,
+                  delivery_window: deliveryWindow,
+                  note,
+                }),
+              });
+
+              const data = await res.json();
+
+              if (data?.url) {
+                persistPendingOrder("stripe", data?.id);
+                window.location.href = data.url;
+              } else {
+                setError("Stripe checkout failed.");
+              }
+            } catch (e) {
+              console.error(e);
               setError("Stripe checkout failed.");
+            } finally {
+              setSending(false);
             }
-      
-            setSending(false);
           }}
           className="rounded-2xl px-5 py-3 text-sm font-semibold bg-white text-slate-900 hover:bg-amber-300 transition"
         >
           Pay with Stripe
         </button>
-      
-        {/* PAYPAL PAYMENT */}
+
+        {/* PAYPAL */}
         <button
-          disabled={!valid || sending}
+          disabled={sending}
           onClick={async () => {
-            if (!valid) return;
+            if (!validateBeforePay()) return;
+
             setSending(true);
             setError("");
-      
-            const res = await fetch("/api/paypal/create-order", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                cart,
-                totals,
-                customer: {
-                  name,
-                  email,
-                  phone,
-                  address: fullAddress,
-                },
-                delivery_date: formattedDate,
-                delivery_window: deliveryWindow,
-                note,
-              }),
-            });
-      
-            const data = await res.json();
-      
-            if (data.approvalUrl) {
-              window.location.href = data.approvalUrl; // redirect to PayPal approval
-            } else {
+
+            try {
+              const res = await fetch("/api/paypal/create-order", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  cart,
+                  totals,
+                  customer: { name, email, phone, address: fullAddress },
+                  delivery_date: formattedDate,
+                  delivery_window: deliveryWindow,
+                  note,
+                }),
+              });
+
+              const data = await res.json();
+
+              if (data?.approvalUrl) {
+                persistPendingOrder("paypal", data?.id);
+                window.location.href = data.approvalUrl;
+              } else {
+                setError("PayPal checkout failed.");
+              }
+            } catch (e) {
+              console.error(e);
               setError("PayPal checkout failed.");
+            } finally {
+              setSending(false);
             }
-      
-            setSending(false);
           }}
           className="rounded-2xl px-5 py-3 text-sm font-semibold bg-[#ffc439] text-slate-900 hover:bg-[#ffcf43] transition"
         >
           Pay with PayPal
         </button>
-      
-        {/* CANCEL */}
+
         <button
           onClick={onClose}
           className="rounded-2xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
@@ -1757,7 +1623,6 @@ function PayModal({
           Cancel
         </button>
       </div>
-
     </Modal>
   );
 }
