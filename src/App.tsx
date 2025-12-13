@@ -1535,7 +1535,13 @@ function PayModal({
                 body: JSON.stringify({
                   cart,
                   totals,
-                  customer: { name, email, phone, address: fullAddress },
+                  lines,
+                  customer: {
+                    name,
+                    email,
+                    phone,
+                    address: fullAddress,
+                  },
                   delivery_date: formattedDate,
                   delivery_window: deliveryWindow,
                   note,
