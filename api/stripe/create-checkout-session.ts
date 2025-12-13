@@ -43,26 +43,40 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Create session
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
       mode: "payment",
-      line_items: [
-        {
-          quantity: 1,
-          price_data: {
-            currency: "gbp",
-            product_data: {
-              name: `${qtyTotal} bottles of yoghurt`,
-              description: lines.join(", "),
-            },
-            unit_amount: total * 100, // Convert £ to pence
-          },
-        },
-      ],
+      // ...
       customer_email: customer.email,
-      success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/?paid=1`,
-      cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}/?cancelled=1`,
-      metadata,
+    
+      metadata: {
+        customer_name: customer.name,
+        customer_email: customer.email,
+        customer_phone: customer.phone,
+        customer_address: customer.address,
+        delivery_date,
+        delivery_window,
+        note: note || "",
+        order_lines: JSON.stringify(
+          Object.entries(cart).map(([id, qty]) => {
+            const p = PRODUCTS.find((x) => x.id === id);
+            return `${p?.name ?? id} × ${qty}`;
+          })
+        ),
+        bottles: String(totals.qtyTotal),
+        plain_qty: String(totals.plainQty),
+        flav_qty: String(totals.flavQty),
+        plain_bundles: String(totals.plainBundles),
+        flav_bundles: String(totals.flavBundles),
+        plain_remainder: String(totals.plainRemainder),
+        flav_remainder: String(totals.flavRemainder),
+        merchandise_total: String(totals.merchTotal),
+        delivery_fee: String(totals.deliveryFee),
+        total_paid: String(totals.total),
+    
+        // if you have this computed elsewhere, pass it in
+        yoghurt_strain: String(totals.deliveryBrand || ""),
+      },
     });
+
 
     return res.status(200).json({ url: session.url });
   } catch (e: any) {
