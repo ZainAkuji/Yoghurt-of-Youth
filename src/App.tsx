@@ -498,29 +498,53 @@ export default function App(){
     paymentMethod: string;
   };
   
-  const [confirmOrder, setConfirmOrder] = useState<ConfirmOrder | null>(null);
+  const [confirmOrder, setConfirmOrder] = useState<null | PendingOrder>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const pay = params.get("pay");
+    const provider = params.get("provider");
   
-    const url = new URL(window.location.href);
-    if (url.searchParams.get("paid") !== "1") return;
+    // only handle success
+    if (pay !== "success") return;
   
-    const raw = localStorage.getItem("yoy_pending_order");
-    if (!raw) return;
+    async function run() {
+      try {
+        if (provider === "stripe") {
+          const sessionId = params.get("session_id");
+          if (!sessionId) return;
   
-    try {
-      const stored = JSON.parse(raw) as ConfirmOrder;
-      setConfirmOrder(stored);
-      setConfirmOpen(true);
-      localStorage.removeItem("yoy_pending_order");
-    } catch {}
+          // Verify payment server-side
+          const r = await fetch(`/api/stripe/verify-session?session_id=${encodeURIComponent(sessionId)}`);
+          const data = await r.json();
+          if (!data?.paid) return;
   
-    url.searchParams.delete("paid");
-    window.history.replaceState({}, "", url.pathname + (url.search ? `?${url.searchParams}` : ""));
+          // Load what we saved before redirect
+          const raw = localStorage.getItem("yoy_pending_order");
+          if (!raw) return;
+  
+          const order = JSON.parse(raw);
+          setConfirmOrder(order);
+          setConfirmOpen(true);
+  
+          // clear basket AFTER successful verification
+          setCart({});
+          localStorage.removeItem("yoy_cart");
+          localStorage.removeItem("yoy_pending_order");
+  
+          // clean URL (remove query params so refreshing doesn't re-trigger)
+          window.history.replaceState({}, "", window.location.pathname);
+        }
+  
+        // PayPal flow next (section E)
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  
+    run();
   }, []);
-
 
   const results = useMemo(()=>{
     if(!query) return PRODUCTS;
@@ -896,9 +920,14 @@ export default function App(){
       )}
 
       {confirmOpen && confirmOrder && (
-        <OrderConfirmationModal order={confirmOrder} onClose={() => setConfirmOpen(false)} />
-      )}
-            
+        <OrderConfirmationModal
+          order={confirmOrder as any}
+          onClose={() => {
+            setConfirmOpen(false);
+            setConfirmOrder(null);
+          }}
+        />
+      )}   
     </div>
   );
 }
