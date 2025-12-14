@@ -45,7 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     return res.status(200).json({
       paid,
-      order_id: custom.order_id || "",
+      order_id: custom.orderId || custom.order_id || "",
       paypal_order_id: token,
     });
   } catch (e: any) {
