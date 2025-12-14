@@ -464,12 +464,6 @@ function AboutSection() {
               support@yoghurtofyouth.co.uk
             </a>
           </p>
-          <p>
-            📞 Phone:{" "}
-            <a href="tel:+447756231844" className="underline hover:text-white">
-              07756 231 844
-            </a>
-          </p>
           <p className="text-xs text-white">We aim to respond within one working day.</p>
         </div>
       </div>
@@ -1714,6 +1708,174 @@ function Modal({
     </div>
   );
 }
+
+function OrderConfirmationModal({
+  order,
+  onClose,
+}: {
+  order: {
+    orderId?: string;
+    formattedDate: string;
+    deliveryWindow: string;
+    lines: string[];
+    qtyTotal: number;
+    plainQty: number;
+    flavQty: number;
+    totalText: string;
+    address: string;
+    name: string;
+    paymentMethod: string;
+  };
+  onClose: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 overflow-hidden">
+      {/* Confetti layer */}
+      <ConfettiOverlay />
+
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
+      {/* Modal */}
+      <div className="absolute inset-0 flex items-center justify-center p-4">
+        <div
+          className="relative w-full max-w-xl rounded-3xl border border-white/20 shadow-2xl p-6 text-white"
+          style={{ backgroundColor: "rgba(0,0,0,0.65)" }}
+        >
+          {/* Header */}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h3 className="text-xl font-semibold">
+                Order confirmed
+              </h3>
+              <p className="text-sm text-white/70 mt-1">
+                Thank you for your order, {order.name}.
+              </p>
+            </div>
+
+            <button
+              onClick={onClose}
+              aria-label="Close"
+              className="rounded-full w-8 h-8 grid place-items-center hover:bg-white/10 transition"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Order reference */}
+          <div className="mt-3 rounded-xl bg-black/40 border border-white/15 px-4 py-3 text-sm">
+            <div className="text-white/60">Order reference</div>
+            <div className="font-mono font-semibold tracking-wide">
+              {order.orderId || "—"}
+            </div>
+          </div>
+
+          <div className="my-4 border-t border-white/20" />
+
+          {/* Key info */}
+          <div className="grid sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <div className="text-white/60">Delivery date</div>
+              <div className="font-medium">{order.formattedDate}</div>
+            </div>
+
+            <div>
+              <div className="text-white/60">Delivery window</div>
+              <div className="font-medium">{order.deliveryWindow}</div>
+            </div>
+
+            <div>
+              <div className="text-white/60">Payment method</div>
+              <div className="font-medium">{order.paymentMethod}</div>
+            </div>
+
+            <div>
+              <div className="text-white/60">Total paid</div>
+              <div className="font-semibold text-emerald-400">
+                {order.totalText}
+              </div>
+            </div>
+          </div>
+
+          {/* Address */}
+          <div className="mt-4 text-sm">
+            <div className="text-white/60 mb-1">Delivery address</div>
+            <div className="leading-relaxed">{order.address}</div>
+          </div>
+
+          {/* Items */}
+          <div className="mt-5 rounded-2xl bg-black/40 border border-white/15 p-4 text-sm">
+            <div className="font-semibold mb-2">Order summary</div>
+
+            <div className="space-y-1 text-white/85">
+              {order.lines.map((line, i) => (
+                <div key={i}>• {line}</div>
+              ))}
+            </div>
+
+            <div className="mt-3 grid grid-cols-3 gap-2 text-xs text-white/70">
+              <div>
+                Bottles: <strong className="text-white">{order.qtyTotal}</strong>
+              </div>
+              <div>
+                Plain: <strong className="text-white">{order.plainQty}</strong>
+              </div>
+              <div>
+                Flavoured: <strong className="text-white">{order.flavQty}</strong>
+              </div>
+            </div>
+          </div>
+
+          {/* Email notice */}
+          <p className="mt-4 text-xs text-white/70 leading-relaxed">
+            Your yoghurt is fermented on the day before delivery for freshness.
+            A confirmation email with your full order details will be sent to you shortly.
+            Please check your inbox (and spam folder) within the next few minutes.
+            If you have any questions or queries, please email support@yoghurtofyouth.co.uk.
+          </p>
+
+          {/* Action */}
+          <button
+            onClick={onClose}
+            className="mt-5 w-full rounded-2xl bg-white text-slate-900 py-3 text-sm font-semibold hover:bg-amber-300 transition"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ConfettiOverlay() {
+  const pieces = Array.from({ length: 80 });
+
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden z-40">
+      {pieces.map((_, i) => (
+        <span
+          key={i}
+          className="confetti-piece"
+          style={{
+            left: Math.random() * 100 + "%",
+            animationDelay: Math.random() * 1.5 + "s",
+            backgroundColor: [
+              "#fbbf24", // amber
+              "#34d399", // emerald
+              "#60a5fa", // blue
+              "#f472b6", // pink
+              "#e5e7eb", // soft white
+            ][i % 5],
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 
 function Footer() {
   return (
