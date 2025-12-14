@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import Stripe from "stripe";
-import { sendEmailJS as sendEmail } from "../../utils/emailjs-server";
+import { sendEmailJS } from "../../utils/emailjs-server";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
