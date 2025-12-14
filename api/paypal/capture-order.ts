@@ -21,14 +21,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // Email from server
   if (data.status === "COMPLETED") {
-    await sendEmailJS({
-      name: data.payer.name.given_name,
-      email: data.payer.email_address,
-      orderId,
-      total: data.purchase_units[0].amount.value,
-      paymentMethod: "PayPal",
-    });
+    await sendEmailJS(
+      process.env.EMAILJS_TEMPLATE_ID as string,
+      {
+        brand: "Yoghurt of Youth",
+        owner_email: process.env.OWNER_EMAIL || "support@yoghurtofyouth.co.uk",
+  
+        customer_name: data.payer.name.given_name,
+        customer_email: data.payer.email_address,
+  
+        order_id: orderId,
+        payment_method: "PayPal",
+  
+        total_paid: `£${data.purchase_units[0].amount.value}`,
+  
+        // Optional but safe fallbacks
+        customer_phone: "",
+        customer_address: "",
+        delivery_date: "",
+        delivery_window: "",
+        order_lines: "",
+        bottles: "",
+      }
+    );
   }
+
 
   res.status(200).json(data);
 }
