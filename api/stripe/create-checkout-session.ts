@@ -79,57 +79,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       yoghurt_strain: String(totals.deliveryBrand || ""),
     };
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_DOMAIN;
+    if (!siteUrl) return res.status(500).json({ error: "Missing NEXT_PUBLIC_SITE_URL / NEXT_PUBLIC_DOMAIN" });
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       customer_email: customer.email,
-    
       line_items: [
         {
           price_data: {
             currency: "gbp",
             product_data: { name: "Yoghurt of Youth order" },
-            unit_amount: Math.round(Number(totals.total) * 100), // if totals.total is GBP
+            unit_amount: amountPence,
           },
           quantity: 1,
         },
       ],
-    
-      success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/?pay=success&provider=stripe&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}/?pay=cancel&provider=stripe`,
-
-      metadata: {
-        order_id: `YOY-${Date.now().toString().slice(-6)}`,
-    
-        customer_name: customer.name,
-        customer_email: customer.email,
-        customer_phone: customer.phone,
-        customer_address: customer.address,
-    
-        delivery_date,
-        delivery_window,
-        note: note || "",
-    
-        order_lines: JSON.stringify(lines),
-        bottles: String(totals.qtyTotal),
-    
-        plain_qty: String(totals.plainQty),
-        flav_qty: String(totals.flavQty),
-        plain_bundles: String(totals.plainBundles),
-        flav_bundles: String(totals.flavBundles),
-        plain_remainder: String(totals.plainRemainder),
-        flav_remainder: String(totals.flavRemainder),
-    
-        merchandise_total: String(totals.merchTotal),
-        delivery_fee: String(totals.deliveryFee),
-        total_paid: String(totals.total),
-    
-        yoghurt_strain: String(totals.deliveryBrand || ""),
-        payment_provider: "stripe",
-      },
-    });
-    
+      success_url: `${siteUrl}/?pay=success&provider=stripe&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}/?pay=cancel&provider=stripe`,
+      metadata,
+    });   
+        
     return res.status(200).json({ url: session.url, id: session.id });
   } catch (e: any) {
     console.error(e);
