@@ -24,7 +24,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const session = event.data.object as Stripe.Checkout.Session;
       const m = session.metadata || {};
 
-      await sendEmail({
+      await sendEmail(process.env.EMAILJS_TEMPLATE_ID as string, {
         brand: "Yoghurt of Youth",
         owner_email: process.env.OWNER_EMAIL || "support@yoghurtofyouth.co.uk",
 
