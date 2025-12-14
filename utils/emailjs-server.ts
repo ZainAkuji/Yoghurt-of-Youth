@@ -1,12 +1,17 @@
 type EmailPayload = Record<string, any>;
 
-export async function sendEmailJS(templateId: string, templateParams: EmailPayload) {
+export async function sendEmailJS(
+  templateId: string,
+  templateParams: EmailPayload
+) {
   const serviceId = process.env.EMAILJS_SERVICE_ID;
   const publicKey = process.env.EMAILJS_PUBLIC_KEY;
   const privateKey = process.env.EMAILJS_PRIVATE_KEY;
 
   if (!serviceId || !publicKey || !privateKey) {
-    throw new Error("Missing EmailJS env vars (SERVICE_ID / PUBLIC_KEY / PRIVATE_KEY).");
+    throw new Error(
+      "Missing EmailJS env vars (EMAILJS_SERVICE_ID / EMAILJS_PUBLIC_KEY / EMAILJS_PRIVATE_KEY)"
+    );
   }
 
   const r = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
@@ -15,8 +20,8 @@ export async function sendEmailJS(templateId: string, templateParams: EmailPaylo
     body: JSON.stringify({
       service_id: serviceId,
       template_id: templateId,
-      publicKey,          // ✅ correct for server-side
-      privateKey,         // ✅ correct for server-side
+      user_id: publicKey,        // ✅ REQUIRED name
+      accessToken: privateKey,   // ✅ REQUIRED name (server-side)
       template_params: templateParams,
     }),
   });
