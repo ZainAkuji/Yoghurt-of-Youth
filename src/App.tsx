@@ -477,26 +477,26 @@ function AboutSection() {
   );
 }
 
+type ConfirmOrder = {
+  orderId?: string;
+  formattedDate: string;
+  deliveryWindow: string;
+  lines: string[];
+  qtyTotal: number;
+  plainQty: number;
+  flavQty: number;
+  totalText: string;
+  address: string;
+  name: string;
+  paymentMethod: string;
+};
+
 export default function App(){
   const [query, setQuery] = useState("");
   const [cart, setCart] = useState<Record<string,number>>(()=>{ try{ return JSON.parse(localStorage.getItem("yoy_cart") || "{}"); }catch{ return {}; }});
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [reserveOpen, setReserveOpen] = useState(false);
   useEffect(()=>{ localStorage.setItem("yoy_cart", JSON.stringify(cart)); }, [cart]);
-
-  type ConfirmOrder = {
-    orderId?: string;
-    formattedDate: string;
-    deliveryWindow: string;
-    lines: string[];
-    qtyTotal: number;
-    plainQty: number;
-    flavQty: number;
-    totalText: string;
-    address: string;
-    name: string;
-    paymentMethod: string;
-  };
   
   const [confirmOrder, setConfirmOrder] = useState<ConfirmOrder | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -930,10 +930,9 @@ export default function App(){
 
       {reserveOpen && (
         <PayModal
-          onConfirmed={() => {
-            clear();
-            setDrawerOpen(false);
-          }}
+          onClose={() => setReserveOpen(false)}
+          cart={cart}
+          totals={totals}
         />
       )}
 
@@ -1339,20 +1338,6 @@ function weekdayFromISO(iso: string) {
   ];
   return names[date.getDay()];
 }
-
-type ConfirmOrder = {
-  orderId?: string;
-  formattedDate: string;
-  deliveryWindow: string;
-  lines: string[];
-  qtyTotal: number;
-  plainQty: number;
-  flavQty: number;
-  totalText: string;
-  address: string;
-  name: string;
-  paymentMethod: string;
-};
 
 function PayModal({
   onClose,
