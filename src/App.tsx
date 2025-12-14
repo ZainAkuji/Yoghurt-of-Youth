@@ -498,7 +498,7 @@ export default function App(){
     paymentMethod: string;
   };
   
-  const [confirmOrder, setConfirmOrder] = useState<null | PendingOrder>(null);
+  const [confirmOrder, setConfirmOrder] = useState<ConfirmOrder | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
   
   useEffect(() => {
@@ -570,7 +570,7 @@ export default function App(){
   const results = useMemo(()=>{
     if(!query) return PRODUCTS;
     const q = query.toLowerCase();
-    return PRODUCTS.filter(p => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || p.tags.join(" ").toLowerCase().includes(q));
+    return PRODUCTS.filter(p => p.name.toLowerCase().includes(q));
   }, [query]);
 
   const totals = computeTotals(cart);
@@ -1598,7 +1598,15 @@ function PayModal({
                 }),
               });
 
-              const data = await res.json();
+              const text = await res.text();
+              let data: any = {};
+              try { data = JSON.parse(text); } catch {}
+              
+              if (!res.ok) {
+                console.error("Checkout error:", text);
+                setError(data?.error || "Checkout failed (server error).");
+                return;
+              }
 
               if (data?.url) {
                 persistPendingOrder("stripe", data?.id);
@@ -1642,7 +1650,15 @@ function PayModal({
                 })
               });
 
-              const data = await res.json();
+              const text = await res.text();
+              let data: any = {};
+              try { data = JSON.parse(text); } catch {}
+              
+              if (!res.ok) {
+                console.error("Checkout error:", text);
+                setError(data?.error || "Checkout failed (server error).");
+                return;
+              }
 
               if (data?.approvalUrl) {
                 persistPendingOrder("paypal", data?.id);
