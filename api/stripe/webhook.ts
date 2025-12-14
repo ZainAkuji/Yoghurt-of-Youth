@@ -1,84 +1,72 @@
 import Stripe from "stripe";
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sendEmail } from "../../utils/emailjs-server";
 
-// IMPORTANT: disable body parsing for Stripe
-export const config = {
-  api: { bodyParser: false },
-};
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2023-10-16",
-});
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Stripe requires raw body + signature verification.
+  // BUT: Vercel's Node functions don't give raw body by default like Next bodyParser=false.
+  // Easiest production-safe solution on Vercel: use Stripe's "constructEvent" with raw buffer we read ourselves.
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const sig = req.headers["stripe-signature"] as string;
-
-  let event: Stripe.Event;
+  const sig = req.headers["stripe-signature"];
+  if (!sig || Array.isArray(sig)) return res.status(400).send("Missing signature");
 
   try {
-    const rawBody = await buffer(req);
-    event = stripe.webhooks.constructEvent(
+    const rawBody = await readRawBody(req);
+    const event = stripe.webhooks.constructEvent(
       rawBody,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      process.env.STRIPE_WEBHOOK_SECRET as string
     );
-  } catch (err: any) {
-    console.error("❌ Stripe webhook signature verification failed:", err.message);
-    return res.status(400).send("Webhook Error");
-  }
 
-  // ✅ We only care about successful checkout
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
-    const m = session.metadata || {};
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object as Stripe.Checkout.Session;
+      const m = session.metadata || {};
 
-    try {
       await sendEmail({
-        // EmailJS template variables
         brand: "Yoghurt of Youth",
         owner_email: process.env.OWNER_EMAIL || "support@yoghurtofyouth.co.uk",
 
-        customer_name: m.customer_name,
-        customer_email: m.customer_email,
-        customer_phone: m.customer_phone,
-        customer_address: m.customer_address,
+        customer_name: m.customer_name || "",
+        customer_email: m.customer_email || "",
+        customer_phone: m.customer_phone || "",
+        customer_address: m.customer_address || "",
 
-        delivery_date: m.delivery_date,
-        delivery_window: m.delivery_window,
-
-        order_lines: m.order_lines,
-        bottles: m.bottles,
-        plain_qty: m.plain_qty,
-        flav_qty: m.flav_qty,
-        plain_bundles: m.plain_bundles,
-        flav_bundles: m.flav_bundles,
-        plain_remainder: m.plain_remainder,
-        flav_remainder: m.flav_remainder,
-
-        merchandise_total: m.merchandise_total,
-        delivery_fee: m.delivery_fee,
-        total_paid: m.total_paid,
-
-        payment_method: "Stripe",
-        order_id: m.order_id,
+        delivery_date: m.delivery_date || "",
+        delivery_window: m.delivery_window || "",
         note: m.note || "",
+
+        order_id: m.order_id || "",
+        payment_method: "Stripe",
+
+        order_lines: m.order_lines || "",
+        bottles: m.bottles || "",
+
+        plain_qty: m.plain_qty || "",
+        flav_qty: m.flav_qty || "",
+        plain_bundles: m.plain_bundles || "",
+        flav_bundles: m.flav_bundles || "",
+        plain_remainder: m.plain_remainder || "",
+        flav_remainder: m.flav_remainder || "",
+
+        merchandise_total: m.merchandise_total || "",
+        delivery_fee: m.delivery_fee || "",
+        total_paid: m.total_paid || "",
       });
-
-      console.log("✅ Stripe confirmation email sent:", m.order_id);
-    } catch (emailErr) {
-      console.error("❌ Failed to send Stripe email:", emailErr);
     }
-  }
 
-  res.json({ received: true });
+    return res.status(200).json({ received: true });
+  } catch (err: any) {
+    console.error("Stripe webhook error:", err?.message || err);
+    return res.status(400).send("Webhook Error");
+  }
 }
 
-// ---- raw body helper ----
-function buffer(req: NextApiRequest): Promise<Buffer> {
+function readRawBody(req: VercelRequest): Promise<Buffer> {
   return new Promise((resolve, reject) => {
-    const chunks: any[] = [];
-    req.on("data", (chunk) => chunks.push(chunk));
+    const chunks: Buffer[] = [];
+    req.on("data", (chunk: Buffer) => chunks.push(chunk));
     req.on("end", () => resolve(Buffer.concat(chunks)));
     req.on("error", reject);
   });
