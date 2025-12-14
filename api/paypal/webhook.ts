@@ -1,4 +1,5 @@
 import { kv } from "@vercel/kv";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { sendEmailJS } from "../../utils/emailjs-server";
 
 export const config = { api: { bodyParser: true } };
@@ -23,7 +24,7 @@ async function paypalAccessToken() {
   return data.access_token as string;
 }
 
-export default async function handler(req, res) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // 1) verify signature
   try {
     const access_token = await paypalAccessToken();
