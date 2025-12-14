@@ -27,7 +27,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       lines: JSON.parse(metadata.lines),
     };
 
-    await sendOrderEmail(order);
+    await sendEmailJS(process.env.EMAILJS_TEMPLATE_ID as string, order);
 
     return res.status(200).json(order);
   } catch (e: any) {
