@@ -930,9 +930,6 @@ export default function App(){
 
       {reserveOpen && (
         <PayModal
-          onClose={() => setReserveOpen(false)}
-          cart={cart}
-          totals={totals}
           onConfirmed={() => {
             clear();
             setDrawerOpen(false);
