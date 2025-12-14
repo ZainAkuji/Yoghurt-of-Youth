@@ -4,7 +4,7 @@ import { sendOrderEmail } from "../../../utils/email";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const { stripeSession, paypalOrder } = req.body;
 
