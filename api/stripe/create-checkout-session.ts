@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import Stripe from "stripe";
 
 // If your totals are in GBP pounds (e.g. 12.50), convert to pence (1250)
