@@ -21,7 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // Email from server
   if (data.status === "COMPLETED") {
-    await sendEmail({
+    await sendEmailJS({
       name: data.payer.name.given_name,
       email: data.payer.email_address,
       orderId,
