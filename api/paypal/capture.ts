@@ -19,7 +19,7 @@ async function paypalAccessToken() {
   return data.access_token as string;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   const token = String(req.query.token || "");
   if (!token) return res.status(400).json({ error: "Missing token" });
 
