@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { sendEmailJS } from "../../utils/emailjs-server";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { orderId } = req.body;
