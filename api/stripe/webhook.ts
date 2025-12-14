@@ -1,8 +1,10 @@
 import Stripe from "stripe";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { sendEmail } from "../../utils/emailjs-server";
+import { sendEmailJS } from "../../utils/emailjs-server";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+  apiVersion: "2023-10-16",
+});
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Stripe requires raw body + signature verification.
@@ -24,7 +26,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const session = event.data.object as Stripe.Checkout.Session;
       const m = session.metadata || {};
 
-      await sendEmail(process.env.EMAILJS_TEMPLATE_ID as string, {
+      await sendEmailJS(process.env.EMAILJS_TEMPLATE_ID as string, {
         brand: "Yoghurt of Youth",
         owner_email: process.env.OWNER_EMAIL || "support@yoghurtofyouth.co.uk",
 
