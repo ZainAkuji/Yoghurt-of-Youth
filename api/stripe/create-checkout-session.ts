@@ -96,8 +96,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       ],
     
-      success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/?paid=1&provider=stripe&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}/?cancelled=1&provider=stripe`,
+      success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/?pay=success&provider=stripe&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}/?pay=cancel&provider=stripe`,
 
       metadata: {
         order_id: `YOY-${Date.now().toString().slice(-6)}`,
