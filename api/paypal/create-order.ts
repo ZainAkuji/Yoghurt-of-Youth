@@ -26,8 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const access_token = await paypalAccessToken();
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_DOMAIN;
-  if (!siteUrl) return res.status(500).json({ error: "Missing NEXT_PUBLIC_SITE_URL" });
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  if (!siteUrl) throw new Error("Missing NEXT_PUBLIC_SITE_URL");
 
   const orderRef = `YOY-${Date.now().toString().slice(-6)}`;
 
@@ -85,8 +85,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           brand_name: "Yoghurt of Youth",
           landing_page: "NO_PREFERENCE",
           user_action: "PAY_NOW",
-          success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/?pay=success&provider=paypal&token=\${orderId}`,
-          cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}/?pay=cancel&provider=paypal`,
+          success_url: `${siteUrl}/?pay=success&provider=paypal`,
+          cancel_url: `${siteUrl}/?pay=cancel&provider=paypal`,
         },
       }),
     });
