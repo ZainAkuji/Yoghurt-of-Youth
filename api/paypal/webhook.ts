@@ -136,19 +136,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       subject: `Yoghurt of Youth order – ${custom.delivery_date} – ${custom.customer_name} – ${custom.order_id || paypalOrderId}`,
     };
 
-    // owner
-    await sendEmailJS(process.env.EMAILJS_TEMPLATE_ID_OWNER!, {
+    // 1) owner email
+    await sendEmailJS(process.env.EMAILJS_TEMPLATE_ID as string, {
       ...templateParams,
-      to_email: process.env.OWNER_EMAIL || "support@yoghurtofyouth.co.uk",
-      reply_to: custom.customer_email,
+      to_email: process.env.OWNER_EMAIL || "zainul_a@hotmail.co.uk",
     });
-
-    // customer
-    await sendEmailJS(process.env.EMAILJS_TEMPLATE_ID_CUSTOMER!, {
-      ...templateParams,
-      to_email: custom.customer_email,
-      reply_to: process.env.OWNER_EMAIL || "support@yoghurtofyouth.co.uk",
-    });
+    
+    // 2) customer email
+    if (m.customer_email) {
+      await sendEmailJS(process.env.EMAILJS_CUSTOMER_TEMPLATE_ID as string, {
+        ...templateParams,
+        to_email: m.customer_email,
+      });
+    }
   }
 
   return res.json({ received: true });
