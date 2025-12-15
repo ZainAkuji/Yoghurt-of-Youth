@@ -143,10 +143,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
     
     // 2) customer email
-    if (m.customer_email) {
+    if (custom.customer_email) {
       await sendEmailJS(process.env.EMAILJS_CUSTOMER_TEMPLATE_ID as string, {
         ...templateParams,
-        to_email: m.customer_email,
+        to_email: custom.customer_email,
       });
     }
   }
