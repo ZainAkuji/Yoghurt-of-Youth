@@ -95,7 +95,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ],
       success_url: `${siteUrl}/?pay=success&provider=stripe&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/?pay=cancel&provider=stripe`,
-      metadata,
+      metadata: {
+        order_id: orderId,
+        payment_provider: "stripe",
+      },
     });   
         
     return res.status(200).json({ url: session.url, id: session.id });
