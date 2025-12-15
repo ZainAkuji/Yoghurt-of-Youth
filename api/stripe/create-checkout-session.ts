@@ -46,7 +46,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const metadata: Stripe.MetadataParam = {
       // for EmailJS template
       brand: "Yoghurt of Youth",
-      owner_email: process.env.OWNER_EMAIL || "support@yoghurtofyouth.co.uk",
 
       customer_name: customer.name || "",
       customer_email: customer.email || "",
@@ -72,6 +71,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       // internal id you like
       order_id: orderId,
+      payment_provider: "stripe",
 
       // if you pass this from client, include it; otherwise blank
       yoghurt_strain: String(totals.deliveryBrand || ""),
@@ -95,9 +95,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ],
       success_url: `${siteUrl}/?pay=success&provider=stripe&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/?pay=cancel&provider=stripe`,
-      metadata: {
-        order_id: orderId,
-        payment_provider: "stripe",
+      metadata,
       },
     });   
         
