@@ -1585,7 +1585,7 @@ function PayModal({
               }
 
               if (data?.url) {
-                persistPendingOrder("stripe", data?.id);
+                persistPendingOrder("stripe", data?.order_id || data?.id);
                 window.location.href = data.url;
               } else {
                 setError("Stripe checkout failed.");
