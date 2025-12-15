@@ -31,6 +31,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const session = event.data.object as Stripe.Checkout.Session;
       const m = session.metadata || {};
 
+      let orderLines = "";
+      try {
+        orderLines = JSON.parse(m.order_lines || "[]").join("\n");
+      } catch {
+        orderLines = String(m.order_lines || "");
+      }
+
       // Build your EmailJS template params (same keys you use everywhere)
       const templateParams = {
         brand: "Yoghurt of Youth",
