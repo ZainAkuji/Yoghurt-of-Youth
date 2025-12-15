@@ -1832,8 +1832,8 @@ function OrderConfirmationModal({
           {/* Email notice */}
           <p className="mt-4 text-xs text-white/70 leading-relaxed">
             Your yoghurt is fermented on the day before delivery for freshness.
-            A confirmation email with your full order details will be sent to you shortly.
-            Please check your inbox (and spam folder) within the next few minutes.
+            You’ll receive an email receipt with full order details shortly.
+            If it doesn’t arrive within 5 minutes, check spam.
             If you have any questions or queries, please email support@yoghurtofyouth.co.uk.
           </p>
 
