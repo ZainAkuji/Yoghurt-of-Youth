@@ -95,7 +95,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!createResp.ok) throw new Error(data?.message || "PayPal create order failed");
 
     const approvalUrl = data.links?.find((l: any) => l.rel === "approve")?.href;
-    return res.status(200).json({ approvalUrl, id: data.id });
+    return res.status(200).json({ approvalUrl, id: data.id, order_id: orderRef });
   } catch (e: any) {
     console.error("PayPal error:", e);
     return res.status(500).json({ error: e.message });
