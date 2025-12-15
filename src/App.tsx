@@ -1637,7 +1637,7 @@ function PayModal({
               }
 
               if (data?.approvalUrl) {
-                persistPendingOrder("paypal", data?.id);
+                persistPendingOrder("paypal", data?.order_id || data?.id);
                 window.location.href = data.approvalUrl;
               } else {
                 setError("PayPal checkout failed.");
