@@ -104,7 +104,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Build your EmailJS template params (same keys you use everywhere)
     const templateParams = {
       brand: "Yoghurt of Youth",
-      owner_email: process.env.OWNER_EMAIL || "support@yoghurtofyouth.co.uk",
+      owner_email: process.env.OWNER_EMAIL || "zainul_a@hotmail.co.uk",
 
       customer_name: custom.customer_name,
       customer_email: custom.customer_email,
@@ -113,6 +113,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       delivery_date: custom.delivery_date,
       delivery_window: custom.delivery_window,
+      note: custom.note || "",
+
+      order_id: custom.order_id || paypalOrderId,
+      payment_method: "PayPal",
 
       order_lines: custom.order_lines,
       bottles: custom.bottles,
@@ -129,10 +133,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       delivery_fee: fmtGbp(custom.delivery_fee),
       total_paid: fmtGbp(custom.total_paid),
 
-      payment_method: "PayPal",
-      note: custom.note || "",
-
-      order_id: custom.order_id || paypalOrderId,
       subject: `Yoghurt of Youth order – ${custom.delivery_date} – ${custom.customer_name} – ${custom.order_id || paypalOrderId}`,
     };
 
