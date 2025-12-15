@@ -43,7 +43,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         order_lines: m.order_lines || "",
         bottles: m.bottles || "",
-        yoghurt_strain: custom.yoghurt_strain || "",
+        yoghurt_strain: m.yoghurt_strain || "",
 
         plain_qty: m.plain_qty || "",
         flav_qty: m.flav_qty || "",
@@ -56,7 +56,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         delivery_fee: m.delivery_fee || "",
         total_paid: m.total_paid || "",
 
-        subject: `Yoghurt of Youth order – ${custom.delivery_date} – ${custom.customer_name} – ${custom.order_id}`,
+        subject: `Yoghurt of Youth order – ${m.delivery_date} – ${m.customer_name} – ${m.order_id}`,
       };
   
       // 1) owner email
