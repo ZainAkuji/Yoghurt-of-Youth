@@ -1768,6 +1768,10 @@ function OrderConfirmationModal({
           {/* Order reference */}
           <div className="mt-3 rounded-xl bg-black/40 border border-white/15 px-4 py-3 text-sm">
             <div className="text-white/60">Order reference</div>
+            <button onClick={() => navigator.clipboard.writeText(order.orderId || "")}
+              className="text-xs underline hover:text-white/90 mt-1">
+              Copy reference
+            </button>
             <div className="font-mono font-semibold tracking-wide">
               {order.orderId || "—"}
             </div>
