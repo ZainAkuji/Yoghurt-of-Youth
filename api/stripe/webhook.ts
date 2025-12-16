@@ -1,5 +1,3 @@
-console.log("🚀 Stripe webhook hit");
-
 import Stripe from "stripe";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { kv } from "@vercel/kv";
@@ -29,22 +27,23 @@ async function sendEmailJS(templateId: string, templateParams: EmailPayload) {
     }),
   });
 
+  const text = await r.text();
+  console.log("EmailJS response:", r.status, text);
+
   if (!r.ok) {
-    const text = await r.text();
     throw new Error(`EmailJS failed: ${r.status} ${text}`);
   }
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Stripe requires raw body + signature verification.
-  // BUT: Vercel's Node functions don't give raw body by default like Next bodyParser=false.
-  // Easiest production-safe solution on Vercel: use Stripe's "constructEvent" with raw buffer we read ourselves.
+  console.log("🚀 Stripe webhook hit");
 
   const sig = req.headers["stripe-signature"];
   if (!sig || Array.isArray(sig)) return res.status(400).send("Missing signature");
 
   try {
     const rawBody = await readRawBody(req);
+
     const event = stripe.webhooks.constructEvent(
       rawBody,
       sig,
@@ -53,26 +52,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     console.log("✅ Event verified:", event.type);
 
-    // ✅ idempotency: dedupe on event.id (recommended)
-    const dedupeKey = `stripe:event:${event.id}`;
-    const already = await kv.get(dedupeKey);
-    if (already) return res.status(200).json({ received: true, deduped: true });
-    await kv.set(dedupeKey, "1", { ex: 60 * 60 * 24 * 14 }); // 14 days
-
     if (event.type === "checkout.session.completed") {
+      // ✅ idempotency only for the event we actually process
+      const dedupeKey = `stripe:event:${event.id}`;
+      const already = await kv.get(dedupeKey);
+      if (already) return res.status(200).json({ received: true, deduped: true });
+      await kv.set(dedupeKey, "1", { ex: 60 * 60 * 24 * 14 });
+
       const session = event.data.object as Stripe.Checkout.Session;
       const m = session.metadata || {};
 
-      console.log("📦 Session metadata:", session.metadata);
+      console.log("📦 Session metadata:", m);
 
-      let orderLines = "";
+      let orderLinesPretty = "";
       try {
-        orderLines = JSON.parse(m.order_lines || "[]").join("\n");
+        orderLinesPretty = JSON.parse(m.order_lines || "[]").join("\n");
       } catch {
-        orderLines = String(m.order_lines || "");
+        orderLinesPretty = String(m.order_lines || "");
       }
 
-      // Build your EmailJS template params (same keys you use everywhere)
       const templateParams = {
         brand: "Yoghurt of Youth",
         owner_email: process.env.OWNER_EMAIL || "zainul_a@hotmail.co.uk",
@@ -89,7 +87,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         order_id: m.order_id || "",
         payment_method: "Stripe",
 
-        order_lines: m.order_lines || "",
+        order_lines: orderLinesPretty, // ✅ use pretty lines
         bottles: m.bottles || "",
         yoghurt_strain: m.yoghurt_strain || "",
 
@@ -104,28 +102,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         delivery_fee: m.delivery_fee || "",
         total_paid: m.total_paid || "",
 
-        subject: `Yoghurt of Youth order – ${m.delivery_date} – ${m.customer_name} – ${m.order_id}`,
+        subject: `Yoghurt of Youth order – ${m.delivery_date || ""} – ${m.customer_name || ""} – ${m.order_id || ""}`,
       };
-  
-      // 1) owner email
-      console.log("📧 Sending OWNER email");
 
+      console.log("📧 Sending OWNER email");
       await sendEmailJS(process.env.EMAILJS_TEMPLATE_ID as string, {
         ...templateParams,
         to_email: process.env.OWNER_EMAIL || "zainul_a@hotmail.co.uk",
       });
-      
-      // 2) customer email
-      console.log("📧 Sending CUSTOMER email");
 
       if (m.customer_email) {
+        console.log("📧 Sending CUSTOMER email");
         await sendEmailJS(process.env.EMAILJS_CUSTOMER_TEMPLATE_ID as string, {
           ...templateParams,
           to_email: m.customer_email,
         });
       }
     }
-    
+
     return res.status(200).json({ received: true });
   } catch (err: any) {
     console.error("Stripe webhook error:", err?.message || err);
