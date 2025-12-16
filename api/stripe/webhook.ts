@@ -11,12 +11,6 @@ async function sendEmailJS(templateId: string, templateParams: EmailPayload) {
   const publicKey = process.env.EMAILJS_PUBLIC_KEY;
   const privateKey = process.env.EMAILJS_PRIVATE_KEY;
 
-  console.log("🔍 EmailJS env check:", {
-    EMAILJS_SERVICE_ID: process.env.EMAILJS_SERVICE_ID ? "✅ present" : "❌ missing",
-    EMAILJS_PUBLIC_KEY: process.env.EMAILJS_PUBLIC_KEY ? "✅ present" : "❌ missing",
-    EMAILJS_PRIVATE_KEY: process.env.EMAILJS_PRIVATE_KEY ? "✅ present" : "❌ missing",
-  });
-
   if (!serviceId || !publicKey || !privateKey) {
     throw new Error("Missing EmailJS env vars (SERVICE_ID / PUBLIC_KEY / PRIVATE_KEY).");
   }
@@ -42,8 +36,6 @@ async function sendEmailJS(templateId: string, templateParams: EmailPayload) {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  console.log("🚀 Stripe webhook hit");
-
   const sig = req.headers["stripe-signature"];
   if (!sig || Array.isArray(sig)) return res.status(400).send("Missing signature");
 
@@ -56,13 +48,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       process.env.STRIPE_WEBHOOK_SECRET as string
     );
 
-    console.log("✅ Event verified:", event.type);
-
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
       const m = session.metadata || {};
-
-      console.log("📦 Session metadata:", m);
 
       let orderLinesPretty = "";
       try {
@@ -105,20 +93,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         subject: `Yoghurt of Youth order – ${m.delivery_date || ""} – ${m.customer_name || ""} – ${m.order_id || ""}`,
       };
 
-      console.log("🔍 EmailJS env check:", {
-        EMAILJS_SERVICE_ID: process.env.EMAILJS_SERVICE_ID ? "✅ present" : "❌ missing",
-        EMAILJS_PUBLIC_KEY: process.env.EMAILJS_PUBLIC_KEY ? "✅ present" : "❌ missing",
-        EMAILJS_PRIVATE_KEY: process.env.EMAILJS_PRIVATE_KEY ? "✅ present" : "❌ missing",
-      });
-
-      console.log("📧 Sending OWNER email");
       await sendEmailJS(process.env.EMAILJS_TEMPLATE_ID as string, {
         ...templateParams,
         to_email: process.env.OWNER_EMAIL || "zainul_a@hotmail.co.uk",
       });
 
       if (m.customer_email) {
-        console.log("📧 Sending CUSTOMER email");
         await sendEmailJS(process.env.EMAILJS_CUSTOMER_TEMPLATE_ID as string, {
           ...templateParams,
           to_email: m.customer_email,
