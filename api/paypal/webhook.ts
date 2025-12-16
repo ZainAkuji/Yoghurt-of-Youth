@@ -1,6 +1,6 @@
 import { kv } from "@vercel/kv";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { sendEmailJS } from "../../utils/emailjs-server";
+import { sendEmailJS } from "../_lib/emailjs-server";
 
 export const config = { api: { bodyParser: true } };
 
