@@ -11,6 +11,12 @@ async function sendEmailJS(templateId: string, templateParams: EmailPayload) {
   const publicKey = process.env.EMAILJS_PUBLIC_KEY;
   const privateKey = process.env.EMAILJS_PRIVATE_KEY;
 
+  console.log("🔍 EmailJS env check:", {
+    EMAILJS_SERVICE_ID: process.env.EMAILJS_SERVICE_ID ? "✅ present" : "❌ missing",
+    EMAILJS_PUBLIC_KEY: process.env.EMAILJS_PUBLIC_KEY ? "✅ present" : "❌ missing",
+    EMAILJS_PRIVATE_KEY: process.env.EMAILJS_PRIVATE_KEY ? "✅ present" : "❌ missing",
+  });
+
   if (!serviceId || !publicKey || !privateKey) {
     throw new Error("Missing EmailJS env vars (SERVICE_ID / PUBLIC_KEY / PRIVATE_KEY).");
   }
