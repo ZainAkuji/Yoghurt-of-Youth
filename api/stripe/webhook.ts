@@ -4,6 +4,19 @@ import { kv } from "@vercel/kv";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
+function weekdayFromDMY(dmy: string) {
+  // expects "dd/mm/yyyy"
+  const [d, m, y] = dmy.split("/").map(Number);
+  const dt = new Date(y, m - 1, d);
+  return dt.toLocaleDateString("en-GB", { weekday: "long" }); // Monday/Thursday etc
+}
+
+function fmtGbp(v: any) {
+  const n = Number(v);
+  if (!isFinite(n)) return String(v ?? "");
+  return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(n);
+}
+
 type EmailPayload = Record<string, any>;
 
 async function sendEmailJS(templateId: string, templateParams: EmailPayload) {
@@ -59,6 +72,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         orderLinesPretty = String(m.order_lines || "");
       }
 
+      const deliveryWeekday = m.delivery_date ? weekdayFromDMY(m.delivery_date) : "";
+      const deliveryDatePretty = deliveryWeekday
+        ? `${deliveryWeekday} ${m.delivery_date}`
+        : (m.delivery_date || "");
+
       const templateParams = {
         brand: "Yoghurt of Youth",
         owner_email: process.env.OWNER_EMAIL || "zainul_a@hotmail.co.uk",
@@ -68,14 +86,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         customer_phone: m.customer_phone || "",
         customer_address: m.customer_address || "",
 
-        delivery_date: m.delivery_date || "",
+        delivery_date: deliveryDatePretty,
         delivery_window: m.delivery_window || "",
         note: m.note || "",
 
         order_id: m.order_id || "",
         payment_method: "Stripe",
 
-        order_lines: orderLinesPretty, // ✅ use pretty lines
+        order_lines: orderLinesPretty,
         bottles: m.bottles || "",
         yoghurt_strain: m.yoghurt_strain || "",
 
@@ -86,9 +104,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         plain_remainder: m.plain_remainder || "",
         flav_remainder: m.flav_remainder || "",
 
-        merchandise_total: m.merchandise_total || "",
-        delivery_fee: m.delivery_fee || "",
-        total_paid: m.total_paid || "",
+        merchandise_total: fmtGbp(m.merchandise_total),
+        delivery_fee: fmtGbp(m.delivery_fee),
+        total_paid: fmtGbp(m.total_paid),
 
         subject: `Yoghurt of Youth order – ${m.delivery_date || ""} – ${m.customer_name || ""} – ${m.order_id || ""}`,
       };
