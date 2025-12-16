@@ -142,6 +142,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.json({ received: true, warning: "no_custom_id" });
     }
 
+    const deliveryWeekday = custom.delivery_date ? weekdayFromDMY(custom.delivery_date) : "";
+    const deliveryDatePretty = deliveryWeekday
+      ? `${deliveryWeekday} ${custom.delivery_date}`
+      : (custom.delivery_date || "");
+
     // Build your EmailJS template params (same keys you use everywhere)
     const templateParams = {
       brand: "Yoghurt of Youth",
