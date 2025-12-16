@@ -178,8 +178,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       merchandise_total: fmtGbp(custom.merchandise_total),
       delivery_fee: fmtGbp(custom.delivery_fee),
       total_paid: fmtGbp(custom.total_paid),
-
-      subject: `Yoghurt of Youth order – ${custom.delivery_date} – ${custom.customer_name} – ${custom.order_id || paypalOrderId}`,
     };
 
     // 1) owner email
