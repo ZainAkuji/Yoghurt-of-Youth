@@ -35,7 +35,6 @@ async function sendEmailJS(templateId: string, templateParams: EmailPayload) {
   }
 }
 
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Stripe requires raw body + signature verification.
   // BUT: Vercel's Node functions don't give raw body by default like Next bodyParser=false.
