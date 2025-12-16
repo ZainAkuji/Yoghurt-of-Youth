@@ -107,8 +107,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         merchandise_total: fmtGbp(m.merchandise_total),
         delivery_fee: fmtGbp(m.delivery_fee),
         total_paid: fmtGbp(m.total_paid),
-
-        subject: `Yoghurt of Youth order – ${m.delivery_date || ""} – ${m.customer_name || ""} – ${m.order_id || ""}`,
       };
 
       await sendEmailJS(process.env.EMAILJS_TEMPLATE_ID as string, {
