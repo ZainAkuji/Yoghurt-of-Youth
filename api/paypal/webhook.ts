@@ -157,7 +157,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       customer_phone: custom.customer_phone,
       customer_address: custom.customer_address,
 
-      delivery_date: custom.delivery_date,
+      delivery_date: deliveryDatePretty,
       delivery_window: custom.delivery_window,
       note: custom.note || "",
 
@@ -199,10 +199,3 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   return res.json({ received: true });
 }
-
-function fmtGbp(v: any) {
-  const n = Number(v);
-  if (!isFinite(n)) return String(v || "");
-  return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(n);
-}
-
