@@ -3,7 +3,7 @@ console.log("🚀 Stripe webhook hit");
 import Stripe from "stripe";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { kv } from "@vercel/kv";
-import { sendEmailJS } from "/utils/emailjs-server";
+import { sendEmailJS } from "../_lib/emailjs-server";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
