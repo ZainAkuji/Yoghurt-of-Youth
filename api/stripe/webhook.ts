@@ -105,6 +105,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         subject: `Yoghurt of Youth order – ${m.delivery_date || ""} – ${m.customer_name || ""} – ${m.order_id || ""}`,
       };
 
+      console.log("🔍 EmailJS env check:", {
+        EMAILJS_SERVICE_ID: process.env.EMAILJS_SERVICE_ID ? "✅ present" : "❌ missing",
+        EMAILJS_PUBLIC_KEY: process.env.EMAILJS_PUBLIC_KEY ? "✅ present" : "❌ missing",
+        EMAILJS_PRIVATE_KEY: process.env.EMAILJS_PRIVATE_KEY ? "✅ present" : "❌ missing",
+      });
+
       console.log("📧 Sending OWNER email");
       await sendEmailJS(process.env.EMAILJS_TEMPLATE_ID as string, {
         ...templateParams,
