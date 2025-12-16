@@ -64,12 +64,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       process.env.STRIPE_WEBHOOK_SECRET as string
     );
 
-    // ✅ idempotency (after signature verification)
-    const dedupeKey = `stripe:event:${event.id}`;
-    const already = await kv.get(dedupeKey);
-    if (already) return res.status(200).json({ received: true, deduped: true });
-    await kv.set(dedupeKey, "1", { ex: 60 * 60 * 24 * 14 }); // 14 days
-
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
       const m = session.metadata || {};
