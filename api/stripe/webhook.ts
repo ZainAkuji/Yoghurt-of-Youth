@@ -1,3 +1,5 @@
+console.log("🚀 Stripe webhook hit");
+
 import Stripe from "stripe";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { kv } from "@vercel/kv";
@@ -21,6 +23,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       process.env.STRIPE_WEBHOOK_SECRET as string
     );
 
+    console.log("✅ Event verified:", event.type);
+
     // ✅ idempotency: dedupe on event.id (recommended)
     const dedupeKey = `stripe:event:${event.id}`;
     const already = await kv.get(dedupeKey);
@@ -30,6 +34,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
       const m = session.metadata || {};
+
+      console.log("📦 Session metadata:", session.metadata);
 
       let orderLines = "";
       try {
@@ -74,12 +80,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       };
   
       // 1) owner email
+      console.log("📧 Sending OWNER email");
+
       await sendEmailJS(process.env.EMAILJS_TEMPLATE_ID as string, {
         ...templateParams,
         to_email: process.env.OWNER_EMAIL || "zainul_a@hotmail.co.uk",
       });
       
       // 2) customer email
+      console.log("📧 Sending CUSTOMER email");
+
       if (m.customer_email) {
         await sendEmailJS(process.env.EMAILJS_CUSTOMER_TEMPLATE_ID as string, {
           ...templateParams,
