@@ -3,6 +3,19 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 export const config = { api: { bodyParser: true } };
 
+function weekdayFromDMY(dmy: string) {
+  // expects "dd/mm/yyyy"
+  const [d, m, y] = dmy.split("/").map(Number);
+  const dt = new Date(y, m - 1, d);
+  return dt.toLocaleDateString("en-GB", { weekday: "long" }); // Monday/Thursday etc
+}
+
+function fmtGbp(v: any) {
+  const n = Number(v);
+  if (!isFinite(n)) return String(v ?? "");
+  return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(n);
+}
+
 type EmailPayload = Record<string, any>;
 
 async function sendEmailJS(templateId: string, templateParams: EmailPayload) {
