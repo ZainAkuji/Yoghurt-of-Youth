@@ -19,11 +19,6 @@ const ADDRESS_LINES = [
 ];
 const MAPS_QUERY = encodeURIComponent(`${ADDRESS_LINES.join(", ")}, United Kingdom`);
 
-// EmailJS
-const EMAILJS_SERVICE_ID = "service_oh51win";
-const EMAILJS_TEMPLATE_ID = "template_yoghurtofyouth";
-const EMAILJS_PUBLIC_KEY = "-Ko2GYKHx1EYIJgM5";
-
 // ---------- Utils ----------
 const gbp = (n: number) => new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(n);
 const cn = (...a: (string | false | null | undefined)[]) => a.filter(Boolean).join(" ");
