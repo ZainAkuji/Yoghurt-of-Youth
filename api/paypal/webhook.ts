@@ -102,12 +102,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // We only email when money is actually captured
   if (eventType === "PAYMENT.CAPTURE.COMPLETED") {
-    // idempotency
-    const dedupeKey = `paypal:event:${event.id}`;
-    const already = await kv.get(dedupeKey);
-    if (already) return res.json({ received: true, deduped: true });
-    await kv.set(dedupeKey, "1", { ex: 60 * 60 * 24 * 14 });
-
     // capture object includes "custom_id" at purchase unit level in most cases.
     // Sometimes you may need to fetch order details by "supplementary_data.related_ids.order_id".
     const pu = event?.resource?.supplementary_data?.related_ids?.order_id
