@@ -480,6 +480,44 @@ type ConfirmOrder = {
   paymentMethod: string;
 };
 
+function buildConfirmOrderFromDraft(
+  draft: any,
+  orderId: string,
+  paymentMethod: string
+): ConfirmOrder | null {
+  if (!draft) return null;
+
+  const lines: string[] = Array.isArray(draft.lines) ? draft.lines : [];
+
+  const iso = String(draft.delivery_date_iso || "");
+  const formattedDate = iso
+    ? `${formatDateUK(iso)} (${weekdayFromISO(iso)})`
+    : String(draft.delivery_date || "");
+
+  const totals = draft.totals || {};
+  const qtyTotal = Number(totals.qtyTotal ?? 0);
+  const plainQty = Number(totals.plainQty ?? 0);
+  const flavQty = Number(totals.flavQty ?? 0);
+  const total = Number(totals.total ?? 0);
+
+  const address = String(draft?.customer?.address || "");
+  const name = String(draft?.customer?.name || "");
+
+  return {
+    orderId: orderId || "",
+    formattedDate,
+    deliveryWindow: String(draft.delivery_window || "18:30–20:00"),
+    lines,
+    qtyTotal,
+    plainQty,
+    flavQty,
+    totalText: gbp(total),
+    address,
+    name,
+    paymentMethod,
+  };
+}
+
 export default function App(){
   const [query, setQuery] = useState("");
   const [cart, setCart] = useState<Record<string,number>>(()=>{ try{ return JSON.parse(localStorage.getItem("yoy_cart") || "{}"); }catch{ return {}; }});
@@ -561,11 +599,112 @@ export default function App(){
     const pay = params.get("pay");
     const provider = params.get("provider");
   
-    if (pay === "cancel" && (provider === "stripe" || provider === "paypal")) {
-      // reopen checkout modal
-      setReserveOpen(true);
+    // ✅ Only handle success here
+    if (pay !== "success") return;
+  
+    async function run() {
+      try {
+        // ---------- STRIPE ----------
+        if (provider === "stripe") {
+          const sessionId = params.get("session_id");
+          if (!sessionId) return;
+  
+          // Verify payment server-side
+          const r = await fetch(
+            `/api/stripe/verify-session?session_id=${encodeURIComponent(sessionId)}`
+          );
+          const data = await r.json();
+          if (!data?.paid) return;
+  
+          // ✅ Build confirmation payload
+          // Try legacy localStorage first (if you still use it),
+          // otherwise reconstruct from the draft (sessionStorage).
+          const rawPending = localStorage.getItem("yoy_pending_order");
+          let order: ConfirmOrder | null = null;
+  
+          if (rawPending) {
+            const pending = JSON.parse(rawPending);
+            order = {
+              ...pending,
+              orderId: data.order_id || pending.orderId || "",
+              paymentMethod: "Stripe",
+            };
+          } else {
+            const rawDraft = sessionStorage.getItem("yoy_checkout_draft");
+            const draft = rawDraft ? JSON.parse(rawDraft) : null;
+            order = buildConfirmOrderFromDraft(
+              draft,
+              data.order_id || "",
+              "Stripe"
+            );
+          }
+  
+          if (!order) return;
+  
+          setConfirmOrder(order);
+          setConfirmOpen(true);
+  
+          // ✅ Clear basket AFTER successful verification
+          setCart({});
+          localStorage.removeItem("yoy_cart");
+          localStorage.removeItem("yoy_pending_order");
+          sessionStorage.removeItem("yoy_checkout_draft");
+  
+          // ✅ Clean URL so refresh doesn't re-trigger
+          window.history.replaceState({}, "", window.location.pathname);
+          return;
+        }
+  
+        // ---------- PAYPAL ----------
+        if (provider === "paypal") {
+          const token = params.get("token"); // PayPal order id
+          if (!token) return;
+  
+          const r = await fetch(`/api/paypal/capture?token=${encodeURIComponent(token)}`);
+          const data = await r.json();
+          if (!data?.paid) return;
+  
+          const rawPending = localStorage.getItem("yoy_pending_order");
+          let order: ConfirmOrder | null = null;
+  
+          if (rawPending) {
+            const pending = JSON.parse(rawPending);
+            order = {
+              ...pending,
+              orderId: data.order_id || pending.orderId || token || "",
+              paymentMethod: "PayPal",
+            };
+          } else {
+            const rawDraft = sessionStorage.getItem("yoy_checkout_draft");
+            const draft = rawDraft ? JSON.parse(rawDraft) : null;
+            order = buildConfirmOrderFromDraft(
+              draft,
+              data.order_id || token || "",
+              "PayPal"
+            );
+          }
+  
+          if (!order) return;
+  
+          setConfirmOrder(order);
+          setConfirmOpen(true);
+  
+          setCart({});
+          localStorage.removeItem("yoy_cart");
+          localStorage.removeItem("yoy_pending_order");
+          sessionStorage.removeItem("yoy_checkout_draft");
+  
+          window.history.replaceState({}, "", window.location.pathname);
+          return;
+        }
+      } catch (e) {
+        console.error(e);
+      }
     }
+  
+    run();
   }, []);
+
 
   const results = useMemo(()=>{
     if(!query) return PRODUCTS;
