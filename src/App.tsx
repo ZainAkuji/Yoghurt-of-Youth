@@ -556,6 +556,17 @@ export default function App(){
     run();
   }, []);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const pay = params.get("pay");
+    const provider = params.get("provider");
+  
+    if (pay === "cancel" && (provider === "stripe" || provider === "paypal")) {
+      // reopen checkout modal
+      setReserveOpen(true);
+    }
+  }, []);
+
   const results = useMemo(()=>{
     if(!query) return PRODUCTS;
     const q = query.toLowerCase();
