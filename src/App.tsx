@@ -1340,7 +1340,6 @@ function PayModal({
   const {
     qtyTotal,
     total,
-    merchTotal,
     savings,
     plainQty,
     flavQty,
@@ -1370,18 +1369,15 @@ function PayModal({
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
-  // Build these BEFORE helper functions
+  // lines (used in summary + draft)
   const lines = Object.entries(cart).map(([id, qty]) => {
     const p = PRODUCTS.find((p) => p.id === id);
     return `${p?.name ?? id} × ${qty}`;
   });
 
   const normalizedPostcode = postcode.trim().toUpperCase();
-  const fullAddress = [streetAddress.trim(), normalizedPostcode]
-    .filter(Boolean)
-    .join(", ");
+  const fullAddress = [streetAddress.trim(), normalizedPostcode].filter(Boolean).join(", ");
 
-  // Validation (no paymentMethod now)
   const valid =
     !!name &&
     !!email &&
@@ -1391,34 +1387,12 @@ function PayModal({
     !!date &&
     qtyTotal > 0;
 
-  function persistPendingOrder(method: "stripe" | "paypal", externalId?: string) {
-    const pending: ConfirmOrder = {
-      orderId: externalId || "",
-      formattedDate,
-      deliveryWindow,
-      lines,
-      qtyTotal,
-      plainQty,
-      flavQty,
-      totalText: gbp(total),
-      address: fullAddress,
-      name,
-      paymentMethod: method === "stripe" ? "Stripe" : "PayPal",
-    };
-
-    try {
-      localStorage.setItem("yoy_pending_order", JSON.stringify(pending));
-    } catch {
-      // ignore
-    }
-  }
-
   function validateBeforePay(): boolean {
     if (!valid) {
       setError("Please complete all required fields first.");
       return false;
     }
-    if (!/^BB[12]\b/.test(normalizedPostcode)) {
+    if (!/^BB[12]\b/i.test(normalizedPostcode)) {
       setError("Sorry, we do not deliver outside of Blackburn (postcodes BB1–BB2).");
       return false;
     }
@@ -1428,6 +1402,47 @@ function PayModal({
     }
     return true;
   }
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+  
+    const params = new URLSearchParams(window.location.search);
+    const pay = params.get("pay");
+    const provider = params.get("provider");
+  
+    if (pay === "cancel" && (provider === "stripe" || provider === "paypal")) {
+      const raw = sessionStorage.getItem("yoy_checkout_draft");
+      if (raw) {
+        try {
+          const draft = JSON.parse(raw);
+  
+          setName(draft?.customer?.name || "");
+          setEmail(draft?.customer?.email || "");
+          setPhone(draft?.customer?.phone || "");
+          setNote(draft?.note || "");
+  
+          const addr = String(draft?.customer?.address || "");
+          const parts = addr.split(",");
+          setStreetAddress((parts[0] || "").trim());
+          setPostcode((parts.slice(1).join(",") || "").trim());
+  
+          if (draft?.delivery_date_iso) {
+            setDate(draft.delivery_date_iso);
+          }
+        } catch (e) {
+          console.error("Failed to restore checkout draft", e);
+        }
+      }
+  
+      // ✅ clean URL so refresh doesn't loop
+      const url = new URL(window.location.href);
+      url.searchParams.delete("pay");
+      url.searchParams.delete("provider");
+      url.searchParams.delete("session_id");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, []);
+
 
   return (
     <Modal onClose={onClose} title="Checkout & Delivery">
@@ -1550,6 +1565,26 @@ function PayModal({
             setError("");
 
             try {
+              // ✅ STEP 1: save draft BEFORE redirecting away
+              const draft = {
+                cart,
+                totals,
+                customer: {
+                  name,
+                  email,
+                  phone,
+                  address: fullAddress,
+                },
+                delivery_date_iso: date,       // important for restoring <select>
+                delivery_date: formattedDate,  // optional, nice for emails/records
+                delivery_window: deliveryWindow,
+                note,
+                lines,
+                savedAt: Date.now(),
+                provider: "stripe",
+              };
+              sessionStorage.setItem("yoy_checkout_draft", JSON.stringify(draft));
+
               const res = await fetch("/api/stripe/create-checkout-session", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -1571,8 +1606,10 @@ function PayModal({
 
               const text = await res.text();
               let data: any = {};
-              try { data = JSON.parse(text); } catch {}
-              
+              try {
+                data = JSON.parse(text);
+              } catch {}
+
               if (!res.ok) {
                 console.error("Checkout error:", text);
                 setError(data?.error || "Checkout failed (server error).");
@@ -1580,7 +1617,6 @@ function PayModal({
               }
 
               if (data?.url) {
-                persistPendingOrder("stripe", data?.order_id || data?.id);
                 window.location.href = data.url;
               } else {
                 setError("Stripe checkout failed.");
@@ -1602,11 +1638,31 @@ function PayModal({
           disabled={sending}
           onClick={async () => {
             if (!validateBeforePay()) return;
-
+          
             setSending(true);
             setError("");
-
+          
             try {
+              // ✅ SAVE DRAFT (same as Stripe)
+              const draft = {
+                cart,
+                totals,
+                customer: {
+                  name,
+                  email,
+                  phone,
+                  address: fullAddress,
+                },
+                delivery_date_iso: date,
+                delivery_date: formattedDate,
+                delivery_window: deliveryWindow,
+                note,
+                lines,
+                savedAt: Date.now(),
+                provider: "paypal",
+              };
+              sessionStorage.setItem("yoy_checkout_draft", JSON.stringify(draft));
+          
               const res = await fetch("/api/paypal/create-order", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -1618,21 +1674,20 @@ function PayModal({
                   delivery_date: formattedDate,
                   delivery_window: deliveryWindow,
                   note,
-                })
+                }),
               });
-
+          
               const text = await res.text();
               let data: any = {};
               try { data = JSON.parse(text); } catch {}
-              
+          
               if (!res.ok) {
                 console.error("Checkout error:", text);
                 setError(data?.error || "Checkout failed (server error).");
                 return;
               }
-
+          
               if (data?.approvalUrl) {
-                persistPendingOrder("paypal", data?.order_id || data?.id);
                 window.location.href = data.approvalUrl;
               } else {
                 setError("PayPal checkout failed.");
