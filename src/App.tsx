@@ -100,7 +100,7 @@ function computeTotals(cart: Record<string, number>) {
   const flavQty  = flavItems.reduce((s, i) => s + i.qty, 0);
 
   // unit prices (taken from products so it's future-proof)
-  const plainUnit = plainItems[0]?.price ?? 2.0;
+  const plainUnit = plainItems[0]?.price ?? 0.01;
   const flavUnit  = flavItems[0]?.price ?? 3.0;
 
   // "no bundle" full price (for savings display)
@@ -132,7 +132,7 @@ function computeTotals(cart: Record<string, number>) {
 
   // £2 delivery if there is any order and threshold not reached
   const deliveryFee =
-    merchTotal === 0 ? 0 : freeDeliveryUnlocked ? 0 : 0.02;
+    merchTotal === 0 ? 0 : freeDeliveryUnlocked ? 0 : 0.01;
 
   // final amount customer pays (bottles + delivery)
   const total = merchTotal + deliveryFee;
