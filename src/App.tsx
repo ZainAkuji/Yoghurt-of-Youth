@@ -523,180 +523,65 @@ export default function App(){
   const [cart, setCart] = useState<Record<string,number>>(()=>{ try{ return JSON.parse(localStorage.getItem("yoy_cart") || "{}"); }catch{ return {}; }});
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [reserveOpen, setReserveOpen] = useState(false);
+  
   useEffect(()=>{ localStorage.setItem("yoy_cart", JSON.stringify(cart)); }, [cart]);
-  
-  const [confirmOrder, setConfirmOrder] = useState<ConfirmOrder | null>(null);
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const pay = params.get("pay");
-    const provider = params.get("provider");
 
-    // only handle success
-    if (pay !== "success") return;
-  
-    async function run() {
-      try {
-        if (provider === "stripe") {
-          const sessionId = params.get("session_id");
-          if (!sessionId) return;
-  
-          // Verify payment server-side
-          const r = await fetch(`/api/stripe/verify-session?session_id=${encodeURIComponent(sessionId)}`);
-          const data = await r.json();
-          if (!data?.paid) return;
-  
-          // Load what we saved before redirect
-          const raw = localStorage.getItem("yoy_pending_order");
-          if (!raw) return;
-  
-          const order = JSON.parse(raw);
-          setConfirmOrder(order);
-          setConfirmOpen(true);
-  
-          // clear basket AFTER successful verification
-          setCart({});
-          localStorage.removeItem("yoy_cart");
-          localStorage.removeItem("yoy_pending_order");
-  
-          // clean URL (remove query params so refreshing doesn't re-trigger)
-          window.history.replaceState({}, "", window.location.pathname);
-        }
-  
-        // PayPal flow
-        if (provider === "paypal") {
-          const token = params.get("token"); // PayPal order id
-          if (!token) return;
-        
-          const r = await fetch(`/api/paypal/capture?token=${encodeURIComponent(token)}`);
-          const data = await r.json();
-          if (!data?.paid) return;
-        
-          const raw = localStorage.getItem("yoy_pending_order");
-          if (!raw) return;
-        
-          const order = JSON.parse(raw);
-          setConfirmOrder(order);
-          setConfirmOpen(true);
-        
-          setCart({});
-          localStorage.removeItem("yoy_cart");
-          localStorage.removeItem("yoy_pending_order");
-        
-          window.history.replaceState({}, "", window.location.pathname);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  
-    run();
-  }, []);
+  const [payMode, setPayMode] = useState<"checkout" | "success">("checkout");
+  const [confirmedOrder, setConfirmedOrder] = useState<ConfirmOrder | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const pay = params.get("pay");
     const provider = params.get("provider");
   
-    // ✅ Only handle success here
     if (pay !== "success") return;
   
     async function run() {
       try {
-        // ---------- STRIPE ----------
+        let paid = false;
+        let orderId = "";
+  
         if (provider === "stripe") {
           const sessionId = params.get("session_id");
           if (!sessionId) return;
   
-          // Verify payment server-side
           const r = await fetch(
             `/api/stripe/verify-session?session_id=${encodeURIComponent(sessionId)}`
           );
           const data = await r.json();
           if (!data?.paid) return;
   
-          // ✅ Build confirmation payload
-          // Try legacy localStorage first (if you still use it),
-          // otherwise reconstruct from the draft (sessionStorage).
-          const rawPending = localStorage.getItem("yoy_pending_order");
-          let order: ConfirmOrder | null = null;
-  
-          if (rawPending) {
-            const pending = JSON.parse(rawPending);
-            order = {
-              ...pending,
-              orderId: data.order_id || pending.orderId || "",
-              paymentMethod: "Stripe",
-            };
-          } else {
-            const rawDraft = sessionStorage.getItem("yoy_checkout_draft");
-            const draft = rawDraft ? JSON.parse(rawDraft) : null;
-            order = buildConfirmOrderFromDraft(
-              draft,
-              data.order_id || "",
-              "Stripe"
-            );
-          }
-  
-          if (!order) return;
-  
-          setConfirmOrder(order);
-          setConfirmOpen(true);
-  
-          // ✅ Clear basket AFTER successful verification
-          setCart({});
-          localStorage.removeItem("yoy_cart");
-          localStorage.removeItem("yoy_pending_order");
-          sessionStorage.removeItem("yoy_checkout_draft");
-  
-          // ✅ Clean URL so refresh doesn't re-trigger
-          window.history.replaceState({}, "", window.location.pathname);
-          return;
+          paid = true;
+          orderId = data.order_id || "";
         }
   
-        // ---------- PAYPAL ----------
-        if (provider === "paypal") {
-          const token = params.get("token"); // PayPal order id
-          if (!token) return;
+        if (!paid) return;
   
-          const r = await fetch(`/api/paypal/capture?token=${encodeURIComponent(token)}`);
-          const data = await r.json();
-          if (!data?.paid) return;
+        const rawDraft = sessionStorage.getItem("yoy_checkout_draft");
+        if (!rawDraft) return;
   
-          const rawPending = localStorage.getItem("yoy_pending_order");
-          let order: ConfirmOrder | null = null;
+        const draft = JSON.parse(rawDraft);
+        const order = buildConfirmOrderFromDraft(
+          draft,
+          orderId,
+          provider === "stripe" ? "Stripe" : "PayPal"
+        );
   
-          if (rawPending) {
-            const pending = JSON.parse(rawPending);
-            order = {
-              ...pending,
-              orderId: data.order_id || pending.orderId || token || "",
-              paymentMethod: "PayPal",
-            };
-          } else {
-            const rawDraft = sessionStorage.getItem("yoy_checkout_draft");
-            const draft = rawDraft ? JSON.parse(rawDraft) : null;
-            order = buildConfirmOrderFromDraft(
-              draft,
-              data.order_id || token || "",
-              "PayPal"
-            );
-          }
+        if (!order) return;
   
-          if (!order) return;
+        setConfirmedOrder(order);
+        setPayMode("success");
+        setReserveOpen(true);
   
-          setConfirmOrder(order);
-          setConfirmOpen(true);
+        // clear basket AFTER success
+        setCart({});
+        localStorage.removeItem("yoy_cart");
+        sessionStorage.removeItem("yoy_checkout_draft");
   
-          setCart({});
-          localStorage.removeItem("yoy_cart");
-          localStorage.removeItem("yoy_pending_order");
-          sessionStorage.removeItem("yoy_checkout_draft");
-  
-          window.history.replaceState({}, "", window.location.pathname);
-          return;
-        }
+        // clean URL
+        const url = new URL(window.location.href);
+        url.search = "";
+        window.history.replaceState({}, "", url.toString());
       } catch (e) {
         console.error(e);
       }
@@ -704,7 +589,6 @@ export default function App(){
   
     run();
   }, []);
-
 
   const results = useMemo(()=>{
     if(!query) return PRODUCTS;
@@ -1069,21 +953,17 @@ export default function App(){
 
       {reserveOpen && (
         <PayModal
-          onClose={() => setReserveOpen(false)}
+          onClose={() => {
+            setReserveOpen(false);
+            setPayMode("checkout");
+            setConfirmedOrder(null);
+          }}
           cart={cart}
           totals={totals}
+          mode={payMode}
+          confirmedOrder={confirmedOrder}
         />
       )}
-
-      {confirmOpen && confirmOrder && (
-        <OrderConfirmationModal
-          order={confirmOrder as any}
-          onClose={() => {
-            setConfirmOpen(false);
-            setConfirmOrder(null);
-          }}
-        />
-      )}   
     </div>
   );
 }
@@ -1482,10 +1362,14 @@ function PayModal({
   onClose,
   cart,
   totals,
+  mode = "checkout",
+  confirmedOrder,
 }: {
   onClose: () => void;
   cart: Record<string, number>;
   totals: ReturnType<typeof computeTotals>;
+  mode?: "checkout" | "success";
+  confirmedOrder?: ConfirmOrder | null;
 }) {
   const {
     qtyTotal,
@@ -1593,6 +1477,126 @@ function PayModal({
     }
   }, []);
 
+  // ✅ SUCCESS MODE: show confirmation instead of checkout
+  if (mode === "success" && confirmedOrder) {
+    const order = confirmedOrder;
+  
+    return (
+      <Modal onClose={onClose} title="Order confirmed">
+        {/* Confetti */}
+        <ConfettiOverlay />
+  
+        {/* Header */}
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h3 className="text-xl font-semibold">Order confirmed</h3>
+            <p className="text-sm text-white/70 mt-1">
+              Thank you for your order, {order.name}.
+            </p>
+          </div>
+  
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="rounded-full w-8 h-8 grid place-items-center hover:bg-white/10 transition"
+          >
+            ✕
+          </button>
+        </div>
+  
+        {/* Order reference */}
+        <div className="mt-3 rounded-xl bg-black/40 border border-white/15 px-4 py-3 text-sm">
+          <div className="text-white/60">Order reference</div>
+          <button
+            onClick={() =>
+              navigator.clipboard.writeText(order.orderId || "")
+            }
+            className="text-xs underline hover:text-white/90 mt-1"
+          >
+            Copy reference
+          </button>
+          <div className="font-mono font-semibold tracking-wide">
+            {order.orderId || "—"}
+          </div>
+        </div>
+  
+        <div className="my-4 border-t border-white/20" />
+  
+        {/* Key info */}
+        <div className="grid sm:grid-cols-2 gap-4 text-sm">
+          <div>
+            <div className="text-white/60">Delivery date</div>
+            <div className="font-medium">{order.formattedDate}</div>
+          </div>
+  
+          <div>
+            <div className="text-white/60">Delivery window</div>
+            <div className="font-medium">{order.deliveryWindow}</div>
+          </div>
+  
+          <div>
+            <div className="text-white/60">Payment method</div>
+            <div className="font-medium">{order.paymentMethod}</div>
+          </div>
+  
+          <div>
+            <div className="text-white/60">Total paid</div>
+            <div className="font-semibold text-emerald-400">
+              {order.totalText}
+            </div>
+          </div>
+        </div>
+  
+        {/* Address */}
+        <div className="mt-4 text-sm">
+          <div className="text-white/60 mb-1">Delivery address</div>
+          <div className="leading-relaxed">{order.address}</div>
+        </div>
+  
+        {/* Items */}
+        <div className="mt-5 rounded-2xl bg-black/40 border border-white/15 p-4 text-sm">
+          <div className="font-semibold mb-2">Order summary</div>
+  
+          <div className="space-y-1 text-white/85">
+            {order.lines.map((line, i) => (
+              <div key={i}>• {line}</div>
+            ))}
+          </div>
+  
+          <div className="mt-3 grid grid-cols-3 gap-2 text-xs text-white/70">
+            <div>
+              Bottles:{" "}
+              <strong className="text-white">{order.qtyTotal}</strong>
+            </div>
+            <div>
+              Plain:{" "}
+              <strong className="text-white">{order.plainQty}</strong>
+            </div>
+            <div>
+              Flavoured:{" "}
+              <strong className="text-white">{order.flavQty}</strong>
+            </div>
+          </div>
+        </div>
+  
+        {/* Email notice */}
+        <p className="mt-4 text-xs text-white/70 leading-relaxed">
+          Your yoghurt is fermented on the day before delivery for freshness.
+          You’ll receive an email receipt with full order details shortly.
+          If it doesn’t arrive within 5 minutes, check spam.
+          If you have any questions, email support@yoghurtofyouth.co.uk.
+        </p>
+  
+        {/* Close */}
+        <button
+          onClick={onClose}
+          className="mt-5 w-full rounded-2xl bg-white text-slate-900 py-3 text-sm font-semibold hover:bg-amber-300 transition"
+        >
+          Close
+        </button>
+      </Modal>
+    );
+  }
 
   return (
     <Modal onClose={onClose} title="Checkout & Delivery">
@@ -1903,151 +1907,6 @@ function Modal({
           </div>
 
           <div className="mt-3">{children}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function OrderConfirmationModal({
-  order,
-  onClose,
-}: {
-  order: {
-    orderId?: string;
-    formattedDate: string;
-    deliveryWindow: string;
-    lines: string[];
-    qtyTotal: number;
-    plainQty: number;
-    flavQty: number;
-    totalText: string;
-    address: string;
-    name: string;
-    paymentMethod: string;
-  };
-  onClose: () => void;
-}) {
-  return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
-      {/* Confetti layer */}
-      <ConfettiOverlay />
-
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={onClose}
-      />
-
-      {/* Modal */}
-      <div className="absolute inset-0 flex items-center justify-center p-4">
-        <div
-          className="relative w-full max-w-xl rounded-3xl border border-white/20 shadow-2xl p-6 text-white"
-          style={{ backgroundColor: "rgba(0,0,0,0.65)" }}
-        >
-          {/* Header */}
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h3 className="text-xl font-semibold">
-                Order confirmed
-              </h3>
-              <p className="text-sm text-white/70 mt-1">
-                Thank you for your order, {order.name}.
-              </p>
-            </div>
-
-            <button
-              onClick={onClose}
-              aria-label="Close"
-              className="rounded-full w-8 h-8 grid place-items-center hover:bg-white/10 transition"
-            >
-              ✕
-            </button>
-          </div>
-
-          {/* Order reference */}
-          <div className="mt-3 rounded-xl bg-black/40 border border-white/15 px-4 py-3 text-sm">
-            <div className="text-white/60">Order reference</div>
-            <button onClick={() => navigator.clipboard.writeText(order.orderId || "")}
-              className="text-xs underline hover:text-white/90 mt-1">
-              Copy reference
-            </button>
-            <div className="font-mono font-semibold tracking-wide">
-              {order.orderId || "—"}
-            </div>
-          </div>
-
-          <div className="my-4 border-t border-white/20" />
-
-          {/* Key info */}
-          <div className="grid sm:grid-cols-2 gap-4 text-sm">
-            <div>
-              <div className="text-white/60">Delivery date</div>
-              <div className="font-medium">{order.formattedDate}</div>
-            </div>
-
-            <div>
-              <div className="text-white/60">Delivery window</div>
-              <div className="font-medium">{order.deliveryWindow}</div>
-            </div>
-
-            <div>
-              <div className="text-white/60">Payment method</div>
-              <div className="font-medium">{order.paymentMethod}</div>
-            </div>
-
-            <div>
-              <div className="text-white/60">Total paid</div>
-              <div className="font-semibold text-emerald-400">
-                {order.totalText}
-              </div>
-            </div>
-          </div>
-
-          {/* Address */}
-          <div className="mt-4 text-sm">
-            <div className="text-white/60 mb-1">Delivery address</div>
-            <div className="leading-relaxed">{order.address}</div>
-          </div>
-
-          {/* Items */}
-          <div className="mt-5 rounded-2xl bg-black/40 border border-white/15 p-4 text-sm">
-            <div className="font-semibold mb-2">Order summary</div>
-
-            <div className="space-y-1 text-white/85">
-              {order.lines.map((line, i) => (
-                <div key={i}>• {line}</div>
-              ))}
-            </div>
-
-            <div className="mt-3 grid grid-cols-3 gap-2 text-xs text-white/70">
-              <div>
-                Bottles: <strong className="text-white">{order.qtyTotal}</strong>
-              </div>
-              <div>
-                Plain: <strong className="text-white">{order.plainQty}</strong>
-              </div>
-              <div>
-                Flavoured: <strong className="text-white">{order.flavQty}</strong>
-              </div>
-            </div>
-          </div>
-
-          {/* Email notice */}
-          <p className="mt-4 text-xs text-white/70 leading-relaxed">
-            Your yoghurt is fermented on the day before delivery for freshness.
-            You’ll receive an email receipt with full order details shortly.
-            If it doesn’t arrive within 5 minutes, check spam.
-            If you have any questions or queries, please email support@yoghurtofyouth.co.uk.
-          </p>
-
-          {/* Action */}
-          <button
-            onClick={onClose}
-            className="mt-5 w-full rounded-2xl bg-white text-slate-900 py-3 text-sm font-semibold hover:bg-amber-300 transition"
-          >
-            Close
-          </button>
         </div>
       </div>
     </div>
