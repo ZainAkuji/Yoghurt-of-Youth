@@ -132,7 +132,7 @@ function computeTotals(cart: Record<string, number>) {
 
   // £2 delivery if there is any order and threshold not reached
   const deliveryFee =
-    merchTotal === 0 ? 0 : freeDeliveryUnlocked ? 0 : 0.01;
+    merchTotal === 0 ? 0 : freeDeliveryUnlocked ? 0 : 0.02;
 
   // final amount customer pays (bottles + delivery)
   const total = merchTotal + deliveryFee;
