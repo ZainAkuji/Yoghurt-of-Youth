@@ -1502,12 +1502,20 @@ function PayModal({
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div>
+            <h3 className="text-xl font-semibold">Order confirmed</h3>
             <p className="text-sm text-white/70 mt-1">
               Thank you for your order, {order.name}.
             </p>
           </div>
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="rounded-full w-8 h-8 grid place-items-center hover:bg-white/10 transition"
+          >
+            ✕
+          </button>
         </div>
-  
+        
         {/* Order reference */}
         <div className="mt-3 rounded-xl bg-black/40 border border-white/15 px-4 py-3 text-sm">
           <div className="text-white/60">Order reference</div>
