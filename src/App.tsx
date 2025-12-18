@@ -590,6 +590,20 @@ export default function App(){
     run();
   }, []);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const pay = params.get("pay");
+  
+    if (pay === "cancel") {
+      setReserveOpen(true);
+  
+      const url = new URL(window.location.href);
+      url.searchParams.delete("pay");
+      url.searchParams.delete("provider");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, []);
+
   const results = useMemo(()=>{
     if(!query) return PRODUCTS;
     const q = query.toLowerCase();
