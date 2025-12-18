@@ -74,7 +74,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         purchase_units: [
           {
             reference_id: orderRef,
-            custom_id: JSON.stringify(custom),
+            custom_id: orderRef,
             amount: {
               currency_code: "GBP",
               value: Number(totals.total).toFixed(2),
@@ -91,8 +91,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }),
     });
 
-    const data = await createResp.json();
-    if (!createResp.ok) throw new Error(data?.message || "PayPal create order failed");
+    const text = await createResp.text();
+    let data: any = null;
+    try { data = JSON.parse(text); } catch {}
+    
+    if (!createResp.ok) {
+      console.error("PayPal create-order status:", createResp.status);
+      console.error("PayPal create-order body:", data || text);
+      const details = data?.details?.map((d:any)=> `${d.issue}: ${d.description}`).join(" | ");
+      throw new Error(details || data?.message || "PayPal create order failed");
+    }
 
     const approvalUrl = data.links?.find((l: any) => l.rel === "approve")?.href;
     return res.status(200).json({ approvalUrl, id: data.id, order_id: orderRef });
