@@ -1502,32 +1502,15 @@ function PayModal({
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h3 className="text-xl font-semibold">Order confirmed</h3>
             <p className="text-sm text-white/70 mt-1">
               Thank you for your order, {order.name}.
             </p>
           </div>
-  
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            className="rounded-full w-8 h-8 grid place-items-center hover:bg-white/10 transition"
-          >
-            ✕
-          </button>
         </div>
   
         {/* Order reference */}
         <div className="mt-3 rounded-xl bg-black/40 border border-white/15 px-4 py-3 text-sm">
           <div className="text-white/60">Order reference</div>
-          <button
-            onClick={() =>
-              navigator.clipboard.writeText(order.orderId || "")
-            }
-            className="text-xs underline hover:text-white/90 mt-1"
-          >
-            Copy reference
-          </button>
           <div className="font-mono font-semibold tracking-wide">
             {order.orderId || "—"}
           </div>
@@ -1574,21 +1557,6 @@ function PayModal({
             {order.lines.map((line, i) => (
               <div key={i}>• {line}</div>
             ))}
-          </div>
-  
-          <div className="mt-3 grid grid-cols-3 gap-2 text-xs text-white/70">
-            <div>
-              Bottles:{" "}
-              <strong className="text-white">{order.qtyTotal}</strong>
-            </div>
-            <div>
-              Plain:{" "}
-              <strong className="text-white">{order.plainQty}</strong>
-            </div>
-            <div>
-              Flavoured:{" "}
-              <strong className="text-white">{order.flavQty}</strong>
-            </div>
           </div>
         </div>
   
