@@ -85,7 +85,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           brand_name: "Yoghurt of Youth",
           landing_page: "NO_PREFERENCE",
           user_action: "PAY_NOW",
-          success_url: `${siteUrl}/?pay=success&provider=paypal`,
+          return_url: `${siteUrl}/?pay=success&provider=paypal`,
           cancel_url: `${siteUrl}/?pay=cancel&provider=paypal`,
         },
       }),
