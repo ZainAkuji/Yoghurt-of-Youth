@@ -93,7 +93,7 @@ function computeTotals(cart: Record<string, number>) {
   const qtyTotal = items.reduce((s, i) => s + i.qty, 0);
 
   // classify by price: £2 = "plain", £3 = "flavoured"
-  const plainItems = items.filter((i) => i.price === 2.0);
+  const plainItems = items.filter((i) => i.price === 0.01);
   const flavItems = items.filter((i) => i.price === 3.0);
 
   const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
