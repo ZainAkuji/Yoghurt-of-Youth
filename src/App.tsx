@@ -597,10 +597,9 @@ export default function App(){
     if (pay === "cancel") {
       setReserveOpen(true);
   
-      const url = new URL(window.location.href);
-      url.searchParams.delete("pay");
-      url.searchParams.delete("provider");
-      window.history.replaceState({}, "", url.toString());
+      if (pay === "cancel") {
+        setReserveOpen(true);
+      }
     }
   }, []);
 
