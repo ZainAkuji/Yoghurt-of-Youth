@@ -920,6 +920,76 @@ export default function App(){
                     </p>
                   </div>
                 </div>
+
+                {/* Existing flavour selection panel */}
+                <div className="mt-6 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
+                  {/* ... your existing table + pricing/badges ... */}
+                </div>
+                
+                {/* ===================== */}
+                {/* Weekly Gut Punch */}
+                {/* ===================== */}
+                <div className="mt-8 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
+                  <h3 className="text-xl sm:text-2xl font-bold mb-2">Weekly Gut Punch</h3>
+                
+                  <div className="text-sm sm:text-base text-white/90 max-w-3xl space-y-1.5">
+                    <p><strong>Subscribe and save.</strong> Receive your yoghurts every <strong>Monday</strong>, fermented the day before for freshness.</p>
+                    <p><strong>Minimum 3 weeks</strong> order, then you will be charged every week on the day of delivery.</p>
+                    <p>We alternate between <strong>PRCXN</strong> and <strong>SPCTRL</strong> yoghurt variants every week.</p>
+                    <p className="text-white/80">Please choose a plan.</p>
+                  </div>
+                
+                  {/* Plans table */}
+                  <div className="mt-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-px text-sm text-white">
+                      {[
+                        { key: "PLN", label: "PLN", price: "£11", bg: "bg-white/15" },
+                        { key: "BFC", label: "BFC", price: "£16.50", bg: "bg-rose-900/40" },
+                        { key: "STR", label: "STR", price: "£16.50", bg: "bg-pink-500/35" },
+                        { key: "MNG", label: "MNG", price: "£16.50", bg: "bg-amber-300/45" },
+                        { key: "MIX", label: "MIX", price: "£15.70", bg: "MIX_STRIPES" },
+                      ].map((p) => {
+                        const isMix = p.bg === "MIX_STRIPES";
+                
+                        return (
+                          <div key={p.key} className="grid grid-rows-[auto,auto] gap-px">
+                            {/* header cell */}
+                            <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
+                              {p.label}
+                            </div>
+                
+                            {/* price cell */}
+                            <div
+                              className={cn(
+                                "relative px-2 py-3 flex items-center justify-center font-semibold",
+                                !isMix && p.bg
+                              )}
+                            >
+                              {/* MIX: 3 vertical stripes */}
+                              {isMix && (
+                                <div className="absolute inset-0 grid grid-cols-3">
+                                  <div className="bg-rose-900/40" />
+                                  <div className="bg-pink-500/35" />
+                                  <div className="bg-amber-300/45" />
+                                </div>
+                              )}
+                
+                              {/* darken slightly so text reads well on MIX */}
+                              {isMix && <div className="absolute inset-0 bg-black/25" />}
+                
+                              <span className="relative z-10">{p.price}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                
+                    <p className="mt-3 text-xs text-white/75 leading-relaxed">
+                      <strong>MIX</strong> contains 1 PLN, 2 BFC, 2 STR, and 2 MNG.
+                    </p>
+                  </div>
+                </div>
+
               </>
             );
           })()}
