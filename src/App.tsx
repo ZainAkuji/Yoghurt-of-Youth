@@ -44,9 +44,9 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 
 const PRODUCTS = [
   { id: "PLN", name: "PLN", price: 2.0, size: "250 mL", img: "/plain.png" },
-  { id: "BFC", name: "BFC", price: 3.0, size: "250 mL", img: "/bfc.png" },
-  { id: "STR", name: "STR", price: 3.0, size: "250 mL", img: "/str.png" },
-  { id: "MNG", name: "MNG", price: 3.0, size: "250 mL", img: "/mng.png" },
+  { id: "BFC", name: "BFC", price: 2.5, size: "250 mL", img: "/bfc.png" },
+  { id: "STR", name: "STR", price: 2.5, size: "250 mL", img: "/str.png" },
+  { id: "MNG", name: "MNG", price: 2.5, size: "250 mL", img: "/mng.png" },
 ];
 
 const GROUPED = [
@@ -92,16 +92,16 @@ function computeTotals(cart: Record<string, number>) {
 
   const qtyTotal = items.reduce((s, i) => s + i.qty, 0);
 
-  // classify by price: £2 = "plain", £3 = "flavoured"
+  // classify by price: £2 = "plain", £2.50 = "flavoured"
   const plainItems = items.filter((i) => i.price === 2.0);
-  const flavItems = items.filter((i) => i.price === 3.0);
+  const flavItems = items.filter((i) => i.price === 2.5);
 
   const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
   const flavQty  = flavItems.reduce((s, i) => s + i.qty, 0);
 
   // unit prices (taken from products so it's future-proof)
   const plainUnit = plainItems[0]?.price ?? 2.0;
-  const flavUnit  = flavItems[0]?.price ?? 3.0;
+  const flavUnit  = flavItems[0]?.price ?? 2.5;
 
   // "no bundle" full price (for savings display)
   const plainSubtotalRaw = plainQty * plainUnit;
@@ -869,7 +869,7 @@ export default function App(){
       
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        BFC, STR &amp; MNG: <strong>£3</strong> per bottle ·{" "}
+                        BFC, STR &amp; MNG: <strong>£2.50</strong> per bottle ·{" "}
                         <strong>Buy 7 get one FREE</strong>
                       </span>
                       {totalFlavoured > 0 ? (
@@ -920,15 +920,8 @@ export default function App(){
                     </p>
                   </div>
                 </div>
-
-                {/* Existing flavour selection panel */}
-                <div className="mt-6 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
-                  {/* ... your existing table + pricing/badges ... */}
-                </div>
                 
-                {/* ===================== */}
                 {/* Weekly Gut Punch */}
-                {/* ===================== */}
                 <div className="mt-8 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
                   <h3 className="text-xl sm:text-2xl font-bold mb-2">Weekly Gut Punch</h3>
                 
@@ -944,10 +937,10 @@ export default function App(){
                     <div className="grid grid-cols-2 sm:grid-cols-5 gap-px text-sm text-white">
                       {[
                         { key: "PLN", label: "PLN", price: "£11", bg: "bg-white/15" },
-                        { key: "BFC", label: "BFC", price: "£16.50", bg: "bg-rose-900/40" },
-                        { key: "STR", label: "STR", price: "£16.50", bg: "bg-pink-500/35" },
-                        { key: "MNG", label: "MNG", price: "£16.50", bg: "bg-amber-300/45" },
-                        { key: "MIX", label: "MIX", price: "£15.70", bg: "MIX_STRIPES" },
+                        { key: "BFC", label: "BFC", price: "£14", bg: "bg-rose-900/40" },
+                        { key: "STR", label: "STR", price: "£14", bg: "bg-pink-500/35" },
+                        { key: "MNG", label: "MNG", price: "£14", bg: "bg-amber-300/45" },
+                        { key: "MIX", label: "MIX", price: "£13", bg: "MIX_STRIPES" },
                       ].map((p) => {
                         const isMix = p.bg === "MIX_STRIPES";
                 
@@ -1309,7 +1302,7 @@ function Basket({
         {flavRemainder > 0 && (
           <div className="flex justify-between">
             <span>Flavoured</span>
-            <span>{flavRemainder} × £3.00</span>
+            <span>{flavRemainder} × £2.50</span>
           </div>
         )}
 
@@ -1732,7 +1725,7 @@ function PayModal({
               <div>Bottles: {qtyTotal}</div>
               {plainRemainder > 0 && <div>PLN: {plainRemainder} × £2.00</div>}
               {plainBundles > 0 && <div>Free PLN (7 for 6): {plainBundles}</div>}
-              {flavRemainder > 0 && <div>Flavoured: {flavRemainder} × £3.00</div>}
+              {flavRemainder > 0 && <div>Flavoured: {flavRemainder} × £2.50</div>}
               {flavBundles > 0 && <div>Free flavoured (7 for 6): {flavBundles}</div>}
 
               {deliveryFee > 0 && !freeDeliveryUnlocked && (
