@@ -962,8 +962,9 @@ export default function App(){
                   <h3 className="text-xl sm:text-2xl font-bold mb-2">Weekly Gut Punch</h3>
                 
                   <div className="text-sm sm:text-base text-white max-w-3xl space-y-1.5">
-                    <p><strong>Subscribe and save.</strong> Receive 7 bottle of yoghurts every <strong>Monday</strong>, fermented the day before for freshness.</p>
+                    <p><strong>Subscribe and save.</strong> Receive <strong>7 bottle of yoghurts every Monday</strong>, fermented the day before for freshness.</p>
                     <p><strong>Minimum 3 weeks</strong> order. You will be charged every week on the day of delivery.</p>
+                    <p>You will receive your first batch on the coming <strong>available Monday</strong> (book by <strong>Friday</strong> for <strong>coming Monday</strong>).</p>
                     <p>We alternate between <strong>PRCXN</strong> and <strong>SPCTRL</strong> yoghurt variants every week.</p>
                     <p>If later you wish to cancel your subscription, please email us via support@yoghurtofyouth.co.uk.</p>
                     <p className="text-white">Please choose a plan:</p>
