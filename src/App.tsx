@@ -1551,6 +1551,9 @@ function PayModal({
   const deliveryOptions = deliveryDateOptions();
   const initialDate = deliveryOptions[0] || "";
 
+  const firstISO = nextEligibleMondayISO();
+  const firstText = `${formatDateUK(firstISO)} (${weekdayFromISO(firstISO)})`;
+
   // form state
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
