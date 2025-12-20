@@ -1595,6 +1595,114 @@ function PayModal({
     }
   }, []);
 
+  // ✅ SUBSCRIPTION MODE (Weekly Gut Punch)
+  if (mode === "subscription") {
+    const plan = subscriptionPlan;
+
+    return (
+      <Modal onClose={onClose} title="Weekly Gut Punch">
+        <p className="text-sm text-white/80">
+          You’ll be charged on the <strong>day of delivery (Mondays)</strong>. Minimum <strong>3 weeks</strong>, then weekly.
+        </p>
+
+        {/* reuse the SAME customer fields you already have */}
+        <div className="mt-4 grid md:grid-cols-2 gap-4">
+          <input value={name} onChange={(e) => setName(e.target.value)} required placeholder="Full name"
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
+          <input value={email} onChange={(e) => setEmail(e.target.value)} required type="email" placeholder="Email"
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
+          <input value={phone} onChange={(e) => setPhone(e.target.value)} required type="tel" placeholder="Mobile number"
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
+          <input value={postcode} onChange={(e) => setPostcode(e.target.value)} required placeholder="Postcode (BB1 / BB2 only)"
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
+          <input value={streetAddress} onChange={(e) => setStreetAddress(e.target.value)} required placeholder="Street address"
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2" />
+          <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Order note (optional)"
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2" />
+        </div>
+
+        {error && <p className="mt-3 text-sm text-rose-300">{error}</p>}
+
+        <div className="mt-5 flex flex-col sm:flex-row gap-3">
+          <button
+            disabled={sending}
+            onClick={async () => {
+              // validate required fields (no date select in subscription mode)
+              if (!name || !email || !phone || !postcode || !streetAddress) {
+                setError("Please complete all required fields first.");
+                return;
+              }
+              const normalized = postcode.trim().toUpperCase();
+              if (!/^BB[12]\b/i.test(normalized)) {
+                setError("Sorry, we do not deliver outside of Blackburn (postcodes BB1–BB2).");
+                return;
+              }
+              if (!plan) {
+                setError("Missing subscription plan.");
+                return;
+              }
+
+              setSending(true);
+              setError("");
+
+              try {
+                const fullAddressSub = [streetAddress.trim(), normalized].filter(Boolean).join(", ");
+
+                // ✅ save draft so success modal can show details
+                const draft = {
+                  provider: "stripe_sub",
+                  subscriptionPlan: plan,
+                  customer: { name, email, phone, address: fullAddressSub },
+                  delivery_window: "18:30–20:00",
+                  note,
+                  // optional: show something in confirmation lines
+                  lines: [`Weekly Gut Punch (${plan})`],
+                  totals: { total: 0, qtyTotal: 0, plainQty: 0, flavQty: 0 },
+                  savedAt: Date.now(),
+                };
+                sessionStorage.setItem("yoy_checkout_draft", JSON.stringify(draft));
+
+                const res = await fetch("/api/stripe/create-subscription-session", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    subscriptionPlan: plan,
+                    customer: { name, email, phone, address: fullAddressSub },
+                    delivery_window: "18:30–20:00",
+                    note,
+                  }),
+                });
+
+                const data = await res.json();
+                if (!res.ok) {
+                  setError(data?.error || "Checkout failed (server error).");
+                  return;
+                }
+                if (data?.url) window.location.href = data.url;
+                else setError("Stripe subscription checkout failed.");
+              } catch (e) {
+                console.error(e);
+                setError("Stripe subscription checkout failed.");
+              } finally {
+                setSending(false);
+              }
+            }}
+            className="rounded-2xl px-5 py-3 text-sm font-semibold bg-white text-slate-900 hover:bg-amber-300 transition"
+          >
+            Subscribe with Stripe
+          </button>
+
+          <button
+            onClick={onClose}
+            className="rounded-2xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
+          >
+            Cancel
+          </button>
+        </div>
+      </Modal>
+    );
+  }
+
   // ✅ SUCCESS MODE: show confirmation instead of checkout
   if (mode === "success" && confirmedOrder) {
     const order = confirmedOrder;
