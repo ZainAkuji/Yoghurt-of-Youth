@@ -642,6 +642,20 @@ export default function App(){
   const remove = (id:string)=> setCart(c=>{ const n={...c}; delete n[id]; return n; });
   const clear = ()=> setCart({});
 
+  const SUBSCRIPTION_PLANS = [
+    { key: "PLN", label: "PLN", priceLabel: "£11", bg: "bg-white/15" },
+    { key: "BFC", label: "BFC", priceLabel: "£14", bg: "bg-rose-900/40" },
+    { key: "STR", label: "STR", priceLabel: "£14", bg: "bg-pink-500/35" },
+    { key: "MNG", label: "MNG", priceLabel: "£14", bg: "bg-amber-300/45" },
+    { key: "MIX", label: "MIX", priceLabel: "£13", bg: "MIX_STRIPES" },
+  ] as const;
+  
+  type SubscriptionPlanKey = typeof SUBSCRIPTION_PLANS[number]["key"];
+  type SubscriptionPlan = typeof SUBSCRIPTION_PLANS[number];
+
+  const [payKind, setPayKind] = useState<"oneoff" | "subscription">("oneoff");
+  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null);
+
   function openCheckout(mode: "checkout" | "subscription", plan?: "PLN" | "BFC" | "STR" | "MNG" | "MIX") {
     // always close any other UI that could be open
     setDrawerOpen(false);
@@ -960,30 +974,34 @@ export default function App(){
                   {/* Plans table */}
                   <div className="mt-4">
                     <div className="grid grid-cols-2 sm:grid-cols-5 gap-px text-sm text-white">
-                      {[
-                        { key: "PLN", label: "PLN", price: "£11 / week", bg: "bg-white/15" },
-                        { key: "BFC", label: "BFC", price: "£14 / week", bg: "bg-rose-900/40" },
-                        { key: "STR", label: "STR", price: "£14 / week", bg: "bg-pink-500/35" },
-                        { key: "MNG", label: "MNG", price: "£14 / week", bg: "bg-amber-300/45" },
-                        { key: "MIX", label: "MIX", price: "£13 / week", bg: "MIX_STRIPES" },
-                      ].map((p) => {
+                      {SUBSCRIPTION_PLANS.map((p) => {
                         const isMix = p.bg === "MIX_STRIPES";
-                
+                  
                         return (
-                          <div key={p.key} className="grid grid-rows-[auto,auto] gap-px">
+                          <button
+                            key={p.key}
+                            type="button"
+                            onClick={() => {
+                              setSelectedPlan(p);
+                              setPayKind("subscription");
+                              setReserveOpen(true);
+                            }}
+                            className="text-left grid grid-rows-[auto,auto] gap-px focus:outline-none"
+                          >
                             {/* header cell */}
                             <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
                               {p.label}
                             </div>
-                
-                            {/* price cell */}
+                  
+                            {/* price cell (clickable) */}
                             <div
                               className={cn(
-                                "relative px-2 py-3 flex items-center justify-center font-semibold",
+                                "relative px-2 py-3 flex items-center justify-center font-semibold transition",
+                                "hover:brightness-110 active:brightness-125",
                                 !isMix && p.bg
                               )}
                             >
-                              {/* MIX: 3 vertical stripes */}
+                              {/* MIX stripes */}
                               {isMix && (
                                 <div className="absolute inset-0 grid grid-cols-3">
                                   <div className="bg-rose-900/40" />
@@ -991,30 +1009,25 @@ export default function App(){
                                   <div className="bg-amber-300/45" />
                                 </div>
                               )}
-                
-                              {/* darken slightly so text reads well on MIX */}
+                  
                               {isMix && <div className="absolute inset-0 bg-black/25" />}
-                
-                              <div className="relative z-10 flex flex-col items-center gap-2">
-                                <div className="font-semibold">{p.price}</div>
-                              
-                                <button
-                                  onClick={() => openCheckout("subscription", p.key as any)}
-                                  className="rounded-xl bg-white text-slate-900 px-3 py-1.5 text-xs font-semibold hover:bg-amber-300 transition"
-                                >
-                                  Subscribe
-                                </button>
-                              </div>
+                  
+                              <span className="relative z-10">{p.priceLabel}</span>
                             </div>
-                          </div>
+                          </button>
                         );
                       })}
                     </div>
-                
+                  
                     <p className="mt-3 text-xs text-white/75 leading-relaxed">
                       <strong>MIX</strong> contains 1 PLN, 2 BFC, 2 STR, and 2 MNG.
                     </p>
+                  
+                    <p className="mt-2 text-xs text-white/70 leading-relaxed">
+                      Tap a plan to subscribe (weekly recurring payment).
+                    </p>
                   </div>
+
                 </div>
 
               </>
@@ -1063,14 +1076,16 @@ export default function App(){
           onClose={() => {
             setReserveOpen(false);
             setPayMode("checkout");
-            setSubscriptionPlan(null);
             setConfirmedOrder(null);
+            setPayKind("oneoff");
+            setSelectedPlan(null);
           }}
           cart={cart}
           totals={totals}
           mode={payMode}
           confirmedOrder={confirmedOrder}
-          subscriptionPlan={subscriptionPlan}
+          payKind={payKind}
+          subscriptionPlan={selectedPlan}
         />
       )}
     </div>
@@ -1471,16 +1486,19 @@ function PayModal({
   onClose,
   cart,
   totals,
-  mode,
+  mode = "checkout",
   confirmedOrder,
+  payKind = "oneoff",
   subscriptionPlan,
 }: {
   onClose: () => void;
   cart: Record<string, number>;
   totals: ReturnType<typeof computeTotals>;
-  mode: "checkout" | "success" | "subscription";
-  confirmedOrder: ConfirmOrder | null;
-  subscriptionPlan: "PLN" | "BFC" | "STR" | "MNG" | "MIX" | null;
+  mode?: "checkout" | "success";
+  confirmedOrder?: ConfirmOrder | null;
+
+  payKind?: "oneoff" | "subscription";
+  subscriptionPlan?: SubscriptionPlan | null;
 }) {
   const {
     qtyTotal,
@@ -1496,7 +1514,7 @@ function PayModal({
     freeDeliveryUnlocked,
   } = totals;
 
-  const isSubscription = mode === "subscription";
+  const isSubscription = payKind === "subscription" && !!subscriptionPlan;
 
   const deliveryOptions = deliveryDateOptions();
   const initialDate = deliveryOptions[0] || "";
@@ -1531,7 +1549,7 @@ function PayModal({
     !!phone &&
     !!postcode &&
     !!streetAddress &&
-    (mode === "subscription" ? !!subscriptionPlan : (!!date && qtyTotal > 0));
+    (isSubscription ? true : (qtyTotal > 0 && !!date));
 
   function validateBeforePay(): boolean {
     if (!valid) {
@@ -1542,11 +1560,15 @@ function PayModal({
       setError("Sorry, we do not deliver outside of Blackburn (postcodes BB1–BB2).");
       return false;
     }
-    if (mode !== "subscription") {
+    if (!isSubscription) {
       if (!deliveryOptions.includes(date)) {
         setError("Please choose a valid delivery date (Monday or Thursday).");
         return false;
       }
+    }
+    if (isSubscription && !subscriptionPlan) {
+      setError("Please choose a subscription plan.");
+      return false;
     }
     return true;
   }
@@ -1602,24 +1624,38 @@ function PayModal({
     return (
       <Modal onClose={onClose} title="Weekly Gut Punch">
         <p className="text-sm text-white/80">
-          You’ll be charged on the <strong>day of delivery (Mondays)</strong>. Minimum <strong>3 weeks</strong>, then weekly.
+          {isSubscription ? (
+            <>
+              You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span>. Billing is{" "}
+              <span className="font-semibold">weekly</span> and starts on the{" "}
+              <span className="font-semibold">coming Monday</span>, then repeats every Monday.
+              Delivery is every Monday <span className="font-semibold">18:30–20:00</span>.
+            </>
+          ) : (
+            <>
+              Choose your delivery day and enter your Blackburn address. We deliver on{" "}
+              <span className="font-semibold">Mondays and Thursdays</span> between{" "}
+              <span className="font-semibold">{deliveryWindow}</span>.
+            </>
+          )}
         </p>
 
-        {/* reuse the SAME customer fields you already have */}
-        <div className="mt-4 grid md:grid-cols-2 gap-4">
-          <input value={name} onChange={(e) => setName(e.target.value)} required placeholder="Full name"
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-          <input value={email} onChange={(e) => setEmail(e.target.value)} required type="email" placeholder="Email"
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-          <input value={phone} onChange={(e) => setPhone(e.target.value)} required type="tel" placeholder="Mobile number"
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-          <input value={postcode} onChange={(e) => setPostcode(e.target.value)} required placeholder="Postcode (BB1 / BB2 only)"
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-          <input value={streetAddress} onChange={(e) => setStreetAddress(e.target.value)} required placeholder="Street address"
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2" />
-          <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Order note (optional)"
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2" />
-        </div>
+        {!isSubscription && (
+          <div className="mt-4 grid md:grid-cols-2 gap-4">
+            <input value={name} onChange={(e) => setName(e.target.value)} required placeholder="Full name"
+              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
+            <input value={email} onChange={(e) => setEmail(e.target.value)} required type="email" placeholder="Email"
+              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
+            <input value={phone} onChange={(e) => setPhone(e.target.value)} required type="tel" placeholder="Mobile number"
+              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
+            <input value={postcode} onChange={(e) => setPostcode(e.target.value)} required placeholder="Postcode (BB1 / BB2 only)"
+              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
+            <input value={streetAddress} onChange={(e) => setStreetAddress(e.target.value)} required placeholder="Street address"
+              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2" />
+            <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Order note (optional)"
+              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2" />
+          </div>
+        )}
 
         {error && <p className="mt-3 text-sm text-rose-300">{error}</p>}
 
@@ -1627,69 +1663,107 @@ function PayModal({
           <button
             disabled={sending}
             onClick={async () => {
-              // validate required fields (no date select in subscription mode)
-              if (!name || !email || !phone || !postcode || !streetAddress) {
-                setError("Please complete all required fields first.");
-                return;
-              }
-              const normalized = postcode.trim().toUpperCase();
-              if (!/^BB[12]\b/i.test(normalized)) {
-                setError("Sorry, we do not deliver outside of Blackburn (postcodes BB1–BB2).");
-                return;
-              }
-              if (!plan) {
-                setError("Missing subscription plan.");
-                return;
-              }
-
+              if (!validateBeforePay()) return;
+          
               setSending(true);
               setError("");
-
+          
               try {
-                const fullAddressSub = [streetAddress.trim(), normalized].filter(Boolean).join(", ");
-
-                // ✅ save draft so success modal can show details
+                const customer = {
+                  name,
+                  email,
+                  phone,
+                  address: fullAddress,
+                };
+          
+                if (isSubscription && subscriptionPlan) {
+                  // Save draft so cancel-return can repopulate fields
+                  const draft = {
+                    kind: "subscription",
+                    plan: subscriptionPlan,
+                    customer,
+                    note,
+                    savedAt: Date.now(),
+                    provider: "stripe",
+                  };
+                  sessionStorage.setItem("yoy_checkout_draft", JSON.stringify(draft));
+          
+                  const res = await fetch("/api/stripe/create-subscription-session", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      planKey: subscriptionPlan.key,
+                      customer,
+                      note,
+                    }),
+                  });
+          
+                  const text = await res.text();
+                  let data: any = {};
+                  try { data = JSON.parse(text); } catch {}
+          
+                  if (!res.ok) {
+                    console.error("Subscription checkout error:", text);
+                    setError(data?.error || "Subscription checkout failed (server error).");
+                    return;
+                  }
+          
+                  if (data?.url) window.location.href = data.url;
+                  else setError("Stripe subscription checkout failed.");
+                  return;
+                }
+          
+                // ---- existing ONE-OFF checkout (your current code) ----
                 const draft = {
-                  provider: "stripe_sub",
-                  subscriptionPlan: plan,
-                  customer: { name, email, phone, address: fullAddressSub },
-                  delivery_window: "18:30–20:00",
+                  cart,
+                  totals,
+                  customer,
+                  delivery_date_iso: date,
+                  delivery_date: formattedDate,
+                  delivery_window: deliveryWindow,
                   note,
-                  // optional: show something in confirmation lines
-                  lines: [`Weekly Gut Punch (${plan})`],
-                  totals: { total: 0, qtyTotal: 0, plainQty: 0, flavQty: 0 },
+                  lines,
                   savedAt: Date.now(),
+                  provider: "stripe",
                 };
                 sessionStorage.setItem("yoy_checkout_draft", JSON.stringify(draft));
-
-                const res = await fetch("/api/stripe/create-subscription-session", {
+          
+                const res = await fetch("/api/stripe/create-checkout-session", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
-                    subscriptionPlan: plan,
-                    customer: { name, email, phone, address: fullAddressSub },
-                    delivery_window: "18:30–20:00",
+                    cart,
+                    totals,
+                    lines,
+                    customer,
+                    delivery_date: formattedDate,
+                    delivery_window: deliveryWindow,
                     note,
                   }),
                 });
-
-                const data = await res.json();
+          
+                const text = await res.text();
+                let data: any = {};
+                try { data = JSON.parse(text); } catch {}
+          
                 if (!res.ok) {
+                  console.error("Checkout error:", text);
                   setError(data?.error || "Checkout failed (server error).");
                   return;
                 }
+          
                 if (data?.url) window.location.href = data.url;
-                else setError("Stripe subscription checkout failed.");
+                else setError("Stripe checkout failed.");
               } catch (e) {
                 console.error(e);
-                setError("Stripe subscription checkout failed.");
+                setError(isSubscription ? "Stripe subscription checkout failed." : "Stripe checkout failed.");
               } finally {
                 setSending(false);
               }
             }}
             className="rounded-2xl px-5 py-3 text-sm font-semibold bg-white text-slate-900 hover:bg-amber-300 transition"
           >
-            Subscribe with Stripe
+            {isSubscription ? "Subscribe with Stripe" : "Pay with Stripe"}
           </button>
 
           <button
