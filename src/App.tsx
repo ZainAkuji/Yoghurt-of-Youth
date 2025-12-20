@@ -965,9 +965,10 @@ export default function App(){
                   <h3 className="text-xl sm:text-2xl font-bold mb-2">Weekly Gut Punch</h3>
                 
                   <div className="text-sm sm:text-base text-white max-w-3xl space-y-1.5">
-                    <p><strong>Subscribe and save.</strong> Receive your yoghurts every <strong>Monday</strong>, fermented the day before for freshness.</p>
-                    <p><strong>Minimum 3 weeks</strong> order, then you will be charged every week on the day of delivery.</p>
+                    <p><strong>Subscribe and save.</strong> Receive 7 bottle of yoghurts every <strong>Monday</strong>, fermented the day before for freshness.</p>
+                    <p><strong>Minimum 3 weeks</strong> order. You will be charged every week on the day of delivery.</p>
                     <p>We alternate between <strong>PRCXN</strong> and <strong>SPCTRL</strong> yoghurt variants every week.</p>
+                    <p>If later you wish to cancel your subscription, please email us via support@yoghurtofyouth.co.uk.</p>
                     <p className="text-white">Please choose a plan:</p>
                   </div>
                 
@@ -1629,7 +1630,8 @@ function PayModal({
       <Modal onClose={onClose} title="Weekly Gut Punch">
         <p className="text-sm text-white/80">
           You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span>. Billing is{" "}
-          weekly and starts on the{" "} coming Monday between 18:30–20:00, then repeats every Monday.
+          weekly and starts on the{" "} coming Monday between 18:30–20:00, then repeats every Monday. Please fill
+          in the details below.
         </p>
 
         <div className="mt-4 grid md:grid-cols-2 gap-4">
