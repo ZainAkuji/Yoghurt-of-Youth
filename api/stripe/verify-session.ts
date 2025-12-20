@@ -10,7 +10,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const session = await stripe.checkout.sessions.retrieve(session_id);
 
-    const paid = session.payment_status === "paid";
+    const paid =
+      session.payment_status === "paid" ||
+      session.mode === "subscription";
 
     // IMPORTANT: use whatever key you actually store in metadata
     const order_id =
