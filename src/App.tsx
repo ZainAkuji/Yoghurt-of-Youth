@@ -515,6 +515,31 @@ function buildConfirmOrderFromDraft(
   };
 }
 
+function nextEligibleMondayISO(): string {
+  const now = new Date();
+  const twoDaysMs = 2 * 24 * 60 * 60 * 1000;
+
+  // candidate = next Monday
+  const d = new Date(now);
+  d.setHours(0, 0, 0, 0);
+
+  const day = d.getDay(); // 0 Sun .. 6 Sat
+  let daysUntilMonday = (8 - day) % 7;
+  if (daysUntilMonday === 0) daysUntilMonday = 7;
+  d.setDate(d.getDate() + daysUntilMonday);
+
+  // Stripe rule: must be >= 48h away → if too soon, push 7 days
+  if (d.getTime() < now.getTime() + twoDaysMs) {
+    d.setDate(d.getDate() + 7);
+  }
+
+  // ISO yyyy-mm-dd
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${dd}`;
+}
+
 export default function App(){
   const [query, setQuery] = useState("");
   const [cart, setCart] = useState<Record<string,number>>(()=>{ try{ return JSON.parse(localStorage.getItem("yoy_cart") || "{}"); }catch{ return {}; }});
@@ -1629,9 +1654,9 @@ function PayModal({
     return (
       <Modal onClose={onClose} title="Weekly Gut Punch">
         <p className="text-sm text-white">
-          You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span> Weekly Gut Punch. Billing is{" "}
-          weekly and starts on the{" "} coming <span className="font-semibold">Monday</span> then repeats every <span className="font-semibold">Monday</span>.
-          We deliver every <span className="font-semibold">Monday</span> between <span className="font-semibold">18:30-20:00</span>.
+          You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span> Weekly Gut Punch.
+          You will receive your first batch on {" "}<span className="font-semibold">{firstText}</span> then every <span className="font-semibold">Monday</span> following.
+          We deliver between <span className="font-semibold">18:30-20:00</span>.
           We deliver to Blackurn residents only. Please fill in the details below.
         </p>
 
