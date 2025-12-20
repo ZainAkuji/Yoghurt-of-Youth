@@ -996,9 +996,14 @@ export default function App(){
                               className={cn(
                                 "relative px-2 py-3 flex items-center justify-center font-semibold",
                                 "transition-all duration-200 ease-out",
-                                "hover:brightness-125 active:brightness-150",
-                                "hover:ring-1 hover:ring-white/30",
-                                !isMix && p.bg
+                                "hover:ring-1 hover:ring-white/30 active:ring-white/45",
+                                !isMix
+                                  ? cn(
+                                      p.bg,                 // e.g. bg-white/15, bg-rose-900/40, etc.
+                                      "hover:bg-white/25",  // <- makes PLN visibly lighten
+                                      "active:bg-white/35"
+                                    )
+                                  : "" // MIX handled by stripes below
                               )}
                             >
                               {/* MIX stripes */}
