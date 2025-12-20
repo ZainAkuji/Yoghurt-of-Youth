@@ -964,11 +964,11 @@ export default function App(){
                 <div className="mt-8 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
                   <h3 className="text-xl sm:text-2xl font-bold mb-2">Weekly Gut Punch</h3>
                 
-                  <div className="text-sm sm:text-base text-white/90 max-w-3xl space-y-1.5">
+                  <div className="text-sm sm:text-base text-white max-w-3xl space-y-1.5">
                     <p><strong>Subscribe and save.</strong> Receive your yoghurts every <strong>Monday</strong>, fermented the day before for freshness.</p>
                     <p><strong>Minimum 3 weeks</strong> order, then you will be charged every week on the day of delivery.</p>
                     <p>We alternate between <strong>PRCXN</strong> and <strong>SPCTRL</strong> yoghurt variants every week.</p>
-                    <p className="text-white/80">Please choose a plan.</p>
+                    <p className="text-white">Please choose a plan:</p>
                   </div>
                 
                   {/* Plans table */}
@@ -1019,12 +1019,16 @@ export default function App(){
                       })}
                     </div>
                   
-                    <p className="mt-3 text-xs text-white/75 leading-relaxed">
+                    <p className="mt-3 text-sm text-white leading-relaxed">
                       <strong>MIX</strong> contains 1 PLN, 2 BFC, 2 STR, and 2 MNG.
                     </p>
                   
-                    <p className="mt-2 text-xs text-white/70 leading-relaxed">
+                    <p className="mt-2 text-sm text-white leading-relaxed">
                       Tap a plan to subscribe (weekly recurring payment).
+                    </p>
+
+                    <p className="mt-2 text-sm text-white leading-relaxed">
+                      <strong>FREE</strong> delivery for Weekly Gut Punch.
                     </p>
                   </div>
 
@@ -1624,38 +1628,24 @@ function PayModal({
     return (
       <Modal onClose={onClose} title="Weekly Gut Punch">
         <p className="text-sm text-white/80">
-          {isSubscription ? (
-            <>
-              You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span>. Billing is{" "}
-              <span className="font-semibold">weekly</span> and starts on the{" "}
-              <span className="font-semibold">coming Monday</span>, then repeats every Monday.
-              Delivery is every Monday <span className="font-semibold">18:30–20:00</span>.
-            </>
-          ) : (
-            <>
-              Choose your delivery day and enter your Blackburn address. We deliver on{" "}
-              <span className="font-semibold">Mondays and Thursdays</span> between{" "}
-              <span className="font-semibold">{deliveryWindow}</span>.
-            </>
-          )}
+          You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span>. Billing is{" "}
+          weekly and starts on the{" "} coming Monday between 18:30–20:00, then repeats every Monday.
         </p>
 
-        {!isSubscription && (
-          <div className="mt-4 grid md:grid-cols-2 gap-4">
-            <input value={name} onChange={(e) => setName(e.target.value)} required placeholder="Full name"
-              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-            <input value={email} onChange={(e) => setEmail(e.target.value)} required type="email" placeholder="Email"
-              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-            <input value={phone} onChange={(e) => setPhone(e.target.value)} required type="tel" placeholder="Mobile number"
-              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-            <input value={postcode} onChange={(e) => setPostcode(e.target.value)} required placeholder="Postcode (BB1 / BB2 only)"
-              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-            <input value={streetAddress} onChange={(e) => setStreetAddress(e.target.value)} required placeholder="Street address"
-              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2" />
-            <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Order note (optional)"
-              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2" />
-          </div>
-        )}
+        <div className="mt-4 grid md:grid-cols-2 gap-4">
+          <input value={name} onChange={(e) => setName(e.target.value)} required placeholder="Full name"
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
+          <input value={email} onChange={(e) => setEmail(e.target.value)} required type="email" placeholder="Email"
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
+          <input value={phone} onChange={(e) => setPhone(e.target.value)} required type="tel" placeholder="Mobile number"
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
+          <input value={postcode} onChange={(e) => setPostcode(e.target.value)} required placeholder="Postcode (BB1 / BB2 only)"
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
+          <input value={streetAddress} onChange={(e) => setStreetAddress(e.target.value)} required placeholder="Street address"
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2" />
+          <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Order note (optional)"
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2" />
+        </div>
 
         {error && <p className="mt-3 text-sm text-rose-300">{error}</p>}
 
