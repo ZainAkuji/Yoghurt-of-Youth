@@ -1629,9 +1629,9 @@ function PayModal({
       <Modal onClose={onClose} title="Weekly Gut Punch">
         <p className="text-sm text-white">
           You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span> Weekly Gut Punch. Billing is{" "}
-          weekly and starts on the{" "} coming <span className="font-semibold">Monday</span> then repeats every
-          <span className="font-semibold">Monday</span>. We deliver every <span className="font-semibold">Monday</span> between
-          <span className="font-semibold">18:30-20:00</span>.
+          weekly and starts on the{" "} coming <span className="font-semibold">Monday</span>
+          then repeats every <span className="font-semibold">Monday</span>.
+          We deliver every <span className="font-semibold">Monday</span> between <span className="font-semibold">18:30-20:00</span>.
           We deliver to Blackurn residents only. Please fill in the details below.
         </p>
 
