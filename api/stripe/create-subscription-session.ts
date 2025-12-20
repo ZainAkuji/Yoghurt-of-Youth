@@ -11,42 +11,30 @@ function getPriceId(planKey: string) {
     MNG: process.env.STRIPE_PRICE_SUB_MNG,
     MIX: process.env.STRIPE_PRICE_SUB_MIX,
   };
-  const id = map[planKey];
+  const id = map[String(planKey)];
   if (!id) throw new Error("Missing Stripe price for plan: " + planKey);
   return id;
 }
 
-function nextEligibleMondayUnix(): number {
-  const nowMs = Date.now();
-  const nowSec = Math.floor(nowMs / 1000);
-
-  const TWO_DAYS_SEC = 2 * 24 * 60 * 60;
-
+// Next Monday 18:30 Europe/London-ish as a unix timestamp.
+// (No trial_end. We anchor billing to Monday.)
+function nextMondayAnchorUnix(): number {
   const now = new Date();
 
-  // Start from "today at 18:30 UTC"
-  const d = new Date(Date.UTC(
-    now.getUTCFullYear(),
-    now.getUTCMonth(),
-    now.getUTCDate(),
-    18, 30, 0, 0
-  ));
+  // Start from today's date at 00:00
+  const d = new Date(now);
+  d.setHours(0, 0, 0, 0);
 
-  // Find next Monday (always in the future)
-  const day = now.getUTCDay(); // 0 Sun .. 6 Sat
-  let daysUntilMonday = (8 - day) % 7;
-  if (daysUntilMonday === 0) daysUntilMonday = 7;
-  d.setUTCDate(d.getUTCDate() + daysUntilMonday);
+  const day = d.getDay(); // 0..6
+  let add = (8 - day) % 7;
+  if (add === 0) add = 7; // always coming Monday
 
-  let anchor = Math.floor(d.getTime() / 1000);
+  d.setDate(d.getDate() + add);
 
-  // Stripe: trial_end must be >= 2 days in the future
-  if (anchor < nowSec + TWO_DAYS_SEC) {
-    d.setUTCDate(d.getUTCDate() + 7);
-    anchor = Math.floor(d.getTime() / 1000);
-  }
+  // set to 18:30 local server time (good enough for your use case)
+  d.setHours(18, 30, 0, 0);
 
-  return anchor;
+  return Math.floor(d.getTime() / 1000);
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -62,7 +50,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const price = getPriceId(String(planKey));
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-    const anchor = nextEligibleMondayUnix();
+    const anchor = nextMondayAnchorUnix();
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -73,16 +61,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       billing_address_collection: "required",
 
       subscription_data: {
-        // Take payment method now, first charge at anchor, then weekly from there
-        trial_end: anchor,
+        billing_cycle_anchor: anchor,
         proration_behavior: "none",
-
         metadata: {
           kind: "weekly_gut_punch",
           planKey: String(planKey),
-          name: String(customer?.name || ""),
-          phone: String(customer?.phone || ""),
-          address: String(customer?.address || ""),
+          name: String(customer.name || ""),
+          phone: String(customer.phone || ""),
+          address: String(customer.address || ""),
           note: String(note || ""),
         },
       },
