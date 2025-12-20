@@ -994,8 +994,10 @@ export default function App(){
                             {/* price cell (clickable) */}
                             <div
                               className={cn(
-                                "relative px-2 py-3 flex items-center justify-center font-semibold transition",
-                                "hover:brightness-110 active:brightness-125",
+                                "relative px-2 py-3 flex items-center justify-center font-semibold",
+                                "transition-all duration-200 ease-out",
+                                "hover:brightness-125 active:brightness-150",
+                                "hover:ring-1 hover:ring-white/30",
                                 !isMix && p.bg
                               )}
                             >
@@ -1623,9 +1625,9 @@ function PayModal({
   if (isSubscription && subscriptionPlan) {
     return (
       <Modal onClose={onClose} title="Weekly Gut Punch">
-        <p className="text-sm text-white/80">
+        <p className="text-sm text-white">
           You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span>. Billing is{" "}
-          weekly and starts on the{" "} coming Monday between 18:30–20:00, then repeats every Monday. Please fill
+          weekly and starts on the{" "} coming Monday then repeats every Monday. Please fill
           in the details below.
         </p>
 
