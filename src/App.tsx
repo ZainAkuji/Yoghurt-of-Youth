@@ -1626,9 +1626,11 @@ function PayModal({
     return (
       <Modal onClose={onClose} title="Weekly Gut Punch">
         <p className="text-sm text-white">
-          You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span>. Billing is{" "}
-          weekly and starts on the{" "} coming Monday then repeats every Monday. Please fill
-          in the details below.
+          You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span> Weekly Gut Punch. Billing is{" "}
+          weekly and starts on the{" "} coming <span className="font-semibold">Monday</span> then repeats every
+          <span className="font-semibold">Monday</span>. We deliver every <span className="font-semibold">Monday</span> between
+          <span className="font-semibold">18:30-20:00</span>.
+          We deliver to Blackurn residents only. Please fill in the details below.
         </p>
 
         <div className="mt-4 grid md:grid-cols-2 gap-4">
@@ -1858,12 +1860,9 @@ function PayModal({
   return (
     <Modal onClose={onClose} title="Checkout & Delivery">
       <p className="text-sm text-white/80">
-        Choose your delivery day and enter your Blackburn address. We deliver on{" "}
-        <span className="font-semibold">
-          {isSubscription ? "Mondays" : "Mondays and Thursdays"}
-        </span>{" "}
-        between{" "}
-        <span className="font-semibold">{deliveryWindow}</span>.
+        Please fill in the details below. We deliver every <span className="font-semibold">Monday</span> between
+        <span className="font-semibold">18:30-20:00</span>.
+        We deliver to Blackurn residents only.
       </p>
 
       {/* customer details */}
