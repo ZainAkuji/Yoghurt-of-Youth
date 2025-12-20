@@ -642,6 +642,22 @@ export default function App(){
   const remove = (id:string)=> setCart(c=>{ const n={...c}; delete n[id]; return n; });
   const clear = ()=> setCart({});
 
+  function openCheckout(mode: "checkout" | "subscription", plan?: "PLN" | "BFC" | "STR" | "MNG" | "MIX") {
+    // always close any other UI that could be open
+    setDrawerOpen(false);
+  
+    // set state in a predictable order
+    setPayMode(mode);
+  
+    if (mode === "subscription") {
+      setSubscriptionPlan(plan ?? null);
+    } else {
+      setSubscriptionPlan(null);
+    }
+  
+    setReserveOpen(true);
+  }
+
   return (
     <div className="scroll-smooth min-h-screen bg-gradient-to-b from-white to-slate-50 text-slate-800">
       <Header brand={BRAND} query={query} setQuery={setQuery} itemsCount={qtyTotal} openCart={()=>setDrawerOpen(true)} />
@@ -983,11 +999,7 @@ export default function App(){
                                 <div className="font-semibold">{p.price}</div>
                               
                                 <button
-                                  onClick={() => {
-                                    setSubscriptionPlan(p.key as any);
-                                    setPayMode("subscription");
-                                    setReserveOpen(true);
-                                  }}
+                                  onClick={() => openCheckout("subscription", p.key as any)}
                                   className="rounded-xl bg-white text-slate-900 px-3 py-1.5 text-xs font-semibold hover:bg-amber-300 transition"
                                 >
                                   Subscribe
@@ -1042,10 +1054,7 @@ export default function App(){
           sub={sub}
           remove={remove}
           clear={clear}
-          onReserve={() => {
-            setDrawerOpen(false);
-            setReserveOpen(true);
-          }}
+          onReserve={() => openCheckout("checkout")}
         />
       </Drawer>
 
@@ -1054,8 +1063,8 @@ export default function App(){
           onClose={() => {
             setReserveOpen(false);
             setPayMode("checkout");
-            setConfirmedOrder(null);
             setSubscriptionPlan(null);
+            setConfirmedOrder(null);
           }}
           cart={cart}
           totals={totals}
@@ -1462,16 +1471,16 @@ function PayModal({
   onClose,
   cart,
   totals,
-  mode = "checkout",
+  mode,
   confirmedOrder,
-  checkoutKind = "oneoff",
+  subscriptionPlan,
 }: {
   onClose: () => void;
   cart: Record<string, number>;
   totals: ReturnType<typeof computeTotals>;
-  mode?: "checkout" | "success";
-  confirmedOrder?: ConfirmOrder | null;
-  checkoutKind?: "oneoff" | "subscription";
+  mode: "checkout" | "success" | "subscription";
+  confirmedOrder: ConfirmOrder | null;
+  subscriptionPlan: "PLN" | "BFC" | "STR" | "MNG" | "MIX" | null;
 }) {
   const {
     qtyTotal,
@@ -1821,13 +1830,18 @@ function PayModal({
               };
               sessionStorage.setItem("yoy_checkout_draft", JSON.stringify(draft));
 
-              const res = await fetch("/api/stripe/create-checkout-session", {
+              const endpoint = isSubscription
+                ? "/api/stripe/create-subscription-session"
+                : "/api/stripe/create-checkout-session";
+
+              const res = await fetch(endpoint, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   cart,
                   totals,
                   lines,
+                  subscriptionPlan,
                   customer: {
                     name,
                     email,
