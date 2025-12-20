@@ -1,7 +1,10 @@
+// /api/stripe/create-subscription-session.ts
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+  apiVersion: "2025-11-17.clover",
+});
 
 function getPriceId(planKey: string) {
   const map: Record<string, string | undefined> = {
@@ -16,21 +19,18 @@ function getPriceId(planKey: string) {
   return id;
 }
 
-// Compute the coming Monday 00:00 in Europe/London as a Unix timestamp.
-// (Keeps “starts on coming Monday” stable even around DST.)
-function nextMondayLondonUnix(): number {
+/**
+ * "Coming Monday" anchor as a Unix timestamp (seconds).
+ * - Always the next Monday (if today is Monday, it anchors to next week's Monday).
+ * - Midnight UTC is fine for “weekly on Monday” billing; keeps code simple.
+ */
+function nextMondayUnix(): number {
   const now = new Date();
-
-  // We’ll approximate London midnight by constructing a date in UTC based on London local date.
-  // Best practice is using a TZ library; this works well in most cases.
-  // If you want rock-solid DST handling, I’ll give you a Luxon version too.
   const day = now.getUTCDay(); // 0 Sun .. 6 Sat
-  const daysUntilMonday = (8 - day) % 7 || 7; // always at least 1 day ahead
+  const daysUntilMonday = ((8 - day) % 7) || 7; // always at least 1 day ahead
+
   const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
   d.setUTCDate(d.getUTCDate() + daysUntilMonday);
-
-  // "Monday 00:00 London" ~ "Monday 00:00 UTC" for winter,
-  // off by 1 hour during BST — if that matters to you, use Luxon below.
   d.setUTCHours(0, 0, 0, 0);
 
   return Math.floor(d.getTime() / 1000);
@@ -40,30 +40,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-    const { planKey, customer, note } = req.body || {};
+    const { planKey, customer, note } = (req.body || {}) as {
+      planKey?: string;
+      customer?: { name?: string; email?: string; phone?: string; address?: string };
+      note?: string;
+    };
+
     if (!planKey) return res.status(400).json({ error: "Missing planKey" });
     if (!customer?.email) return res.status(400).json({ error: "Missing customer email" });
 
     const price = getPriceId(String(planKey));
-
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-    const anchor = nextMondayLondonUnix();
+
+    const anchor = nextMondayUnix();
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       line_items: [{ price, quantity: 1 }],
       customer_email: String(customer.email),
 
-      // Collect address / phone in Stripe too (optional but nice)
+      // Keep it simple: collect in Stripe too (fine even if you already collect in your modal)
       phone_number_collection: { enabled: true },
       billing_address_collection: "required",
 
       subscription_data: {
-        // Start billing on coming Monday, then weekly after that.
+        // Weekly recurring payment every Monday.
         billing_cycle_anchor: anchor,
         proration_behavior: "none",
 
-        // Ensure they enter payment now, but first charge occurs at anchor:
+        // Customer pays now (sets up payment method), first charge happens on the anchor.
+        // (Stripe will treat this as a trial until the anchor.)
         trial_end: anchor,
 
         metadata: {
