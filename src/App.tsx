@@ -1,11 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-/** App code (trimmed for brevity in the generator) — identical to the canvas version **/
-
-// ---------- Configuration ----------
 const BRAND = "Yoghurt of Youth";
 const OWNER_EMAIL = "zainul_a@hotmail.co.uk";
-const OWNER_PHONE = "+44 7756231844"; // optional
+const OWNER_PHONE = "+44 7756231844";
 
 const PICKUP_START_HOUR = 9;
 const PICKUP_END_HOUR = 18;
@@ -1623,9 +1620,7 @@ function PayModal({
   }, []);
 
   // ✅ SUBSCRIPTION MODE (Weekly Gut Punch)
-  if (mode === "subscription") {
-    const plan = subscriptionPlan;
-
+  if (isSubscription && subscriptionPlan) {
     return (
       <Modal onClose={onClose} title="Weekly Gut Punch">
         <p className="text-sm text-white/80">
