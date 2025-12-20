@@ -62,14 +62,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       billing_address_collection: "required",
 
       subscription_data: {
-        // Weekly recurring payment every Monday.
-        billing_cycle_anchor: anchor,
-        proration_behavior: "none",
-
-        // Customer pays now (sets up payment method), first charge happens on the anchor.
-        // (Stripe will treat this as a trial until the anchor.)
         trial_end: anchor,
-
+        proration_behavior: "none",
         metadata: {
           kind: "weekly_gut_punch",
           planKey: String(planKey),
