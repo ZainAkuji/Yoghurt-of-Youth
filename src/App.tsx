@@ -999,7 +999,7 @@ export default function App(){
                                 "hover:brightness-125 active:brightness-150",
                                 "hover:ring-1 hover:ring-white/30 active:ring-white/45",
                                 !isMix && (p.key === "PLN"
-                                  ? "bg-white/15 hover:bg-white/25 active:bg-white/35"
+                                  ? "bg-white/15 hover:bg-white/20 active:bg-white/25"
                                   : p.bg)
                               )}
                             >
