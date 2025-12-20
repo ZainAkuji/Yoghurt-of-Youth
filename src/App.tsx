@@ -526,7 +526,8 @@ export default function App(){
   
   useEffect(()=>{ localStorage.setItem("yoy_cart", JSON.stringify(cart)); }, [cart]);
 
-  const [payMode, setPayMode] = useState<"checkout" | "success">("checkout");
+  const [payMode, setPayMode] = useState<"checkout" | "success" | "subscription">("checkout");
+  const [subscriptionPlan, setSubscriptionPlan] = useState<"PLN" | "BFC" | "STR" | "MNG" | "MIX" | null>(null);
   const [confirmedOrder, setConfirmedOrder] = useState<ConfirmOrder | null>(null);
 
   useEffect(() => {
@@ -541,7 +542,7 @@ export default function App(){
         let paid = false;
         let orderId = "";
   
-        if (provider === "stripe") {
+        if (provider === "stripe" || provider === "stripe_sub") {
           const sessionId = params.get("session_id");
           if (!sessionId) return;
   
@@ -564,7 +565,7 @@ export default function App(){
         const order = buildConfirmOrderFromDraft(
           draft,
           orderId,
-          provider === "stripe" ? "Stripe" : "PayPal"
+          provider === "stripe" ? "Stripe" : provider === "stripe_sub" ? "Weekly Gut Punch (Stripe)" : "PayPal"
         );
   
         if (!order) return;
@@ -573,9 +574,13 @@ export default function App(){
         setPayMode("success");
         setReserveOpen(true);
   
-        // clear basket AFTER success
-        setCart({});
-        localStorage.removeItem("yoy_cart");
+        // clear basket AFTER success (only for one-off checkout)
+        if (provider === "stripe" || provider === "paypal") {
+          setCart({});
+          localStorage.removeItem("yoy_cart");
+        }
+        
+        // always clear draft after success
         sessionStorage.removeItem("yoy_checkout_draft");
   
         // clean URL
@@ -593,13 +598,17 @@ export default function App(){
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const pay = params.get("pay");
+    const provider = params.get("provider");
   
-    if (pay === "cancel") {
+    if (pay !== "cancel") return;
+  
+    // if user cancelled subscription checkout, reopen modal in subscription mode
+    if (provider === "stripe_sub") {
+      setPayMode("subscription");
       setReserveOpen(true);
-  
-      if (pay === "cancel") {
-        setReserveOpen(true);
-      }
+    } else {
+      setPayMode("checkout");
+      setReserveOpen(true);
     }
   }, []);
 
@@ -936,11 +945,11 @@ export default function App(){
                   <div className="mt-4">
                     <div className="grid grid-cols-2 sm:grid-cols-5 gap-px text-sm text-white">
                       {[
-                        { key: "PLN", label: "PLN", price: "£11", bg: "bg-white/15" },
-                        { key: "BFC", label: "BFC", price: "£14", bg: "bg-rose-900/40" },
-                        { key: "STR", label: "STR", price: "£14", bg: "bg-pink-500/35" },
-                        { key: "MNG", label: "MNG", price: "£14", bg: "bg-amber-300/45" },
-                        { key: "MIX", label: "MIX", price: "£13", bg: "MIX_STRIPES" },
+                        { key: "PLN", label: "PLN", price: "£11 / week", bg: "bg-white/15" },
+                        { key: "BFC", label: "BFC", price: "£14 / week", bg: "bg-rose-900/40" },
+                        { key: "STR", label: "STR", price: "£14 / week", bg: "bg-pink-500/35" },
+                        { key: "MNG", label: "MNG", price: "£14 / week", bg: "bg-amber-300/45" },
+                        { key: "MIX", label: "MIX", price: "£13 / week", bg: "MIX_STRIPES" },
                       ].map((p) => {
                         const isMix = p.bg === "MIX_STRIPES";
                 
@@ -970,7 +979,20 @@ export default function App(){
                               {/* darken slightly so text reads well on MIX */}
                               {isMix && <div className="absolute inset-0 bg-black/25" />}
                 
-                              <span className="relative z-10">{p.price}</span>
+                              <div className="relative z-10 flex flex-col items-center gap-2">
+                                <div className="font-semibold">{p.price}</div>
+                              
+                                <button
+                                  onClick={() => {
+                                    setSubscriptionPlan(p.key as any);
+                                    setPayMode("subscription");
+                                    setReserveOpen(true);
+                                  }}
+                                  className="rounded-xl bg-white text-slate-900 px-3 py-1.5 text-xs font-semibold hover:bg-amber-300 transition"
+                                >
+                                  Subscribe
+                                </button>
+                              </div>
                             </div>
                           </div>
                         );
@@ -1033,11 +1055,13 @@ export default function App(){
             setReserveOpen(false);
             setPayMode("checkout");
             setConfirmedOrder(null);
+            setSubscriptionPlan(null);
           }}
           cart={cart}
           totals={totals}
           mode={payMode}
           confirmedOrder={confirmedOrder}
+          subscriptionPlan={subscriptionPlan}
         />
       )}
     </div>
@@ -1440,12 +1464,14 @@ function PayModal({
   totals,
   mode = "checkout",
   confirmedOrder,
+  checkoutKind = "oneoff",
 }: {
   onClose: () => void;
   cart: Record<string, number>;
   totals: ReturnType<typeof computeTotals>;
   mode?: "checkout" | "success";
   confirmedOrder?: ConfirmOrder | null;
+  checkoutKind?: "oneoff" | "subscription";
 }) {
   const {
     qtyTotal,
@@ -1460,6 +1486,8 @@ function PayModal({
     deliveryFee,
     freeDeliveryUnlocked,
   } = totals;
+
+  const isSubscription = checkoutKind === "subscription";
 
   const deliveryOptions = deliveryDateOptions();
   const initialDate = deliveryOptions[0] || "";
@@ -1494,8 +1522,7 @@ function PayModal({
     !!phone &&
     !!postcode &&
     !!streetAddress &&
-    !!date &&
-    qtyTotal > 0;
+    (mode === "subscription" ? !!subscriptionPlan : (!!date && qtyTotal > 0));
 
   function validateBeforePay(): boolean {
     if (!valid) {
@@ -1506,9 +1533,11 @@ function PayModal({
       setError("Sorry, we do not deliver outside of Blackburn (postcodes BB1–BB2).");
       return false;
     }
-    if (!deliveryOptions.includes(date)) {
-      setError("Please choose a valid delivery date (Monday or Thursday).");
-      return false;
+    if (mode !== "subscription") {
+      if (!deliveryOptions.includes(date)) {
+        setError("Please choose a valid delivery date (Monday or Thursday).");
+        return false;
+      }
     }
     return true;
   }
@@ -1520,11 +1549,15 @@ function PayModal({
     const pay = params.get("pay");
     const provider = params.get("provider");
   
-    if (pay === "cancel" && (provider === "stripe" || provider === "paypal")) {
+    if (pay === "cancel" && (provider === "stripe" || provider === "paypal" || provider === "stripe_sub")) {
       const raw = sessionStorage.getItem("yoy_checkout_draft");
       if (raw) {
         try {
           const draft = JSON.parse(raw);
+
+          if (provider === "stripe_sub" && draft?.subscriptionPlan) {
+            // nothing here yet, parent holds subscriptionPlan
+          }
   
           setName(draft?.customer?.name || "");
           setEmail(draft?.customer?.email || "");
@@ -1646,7 +1679,10 @@ function PayModal({
     <Modal onClose={onClose} title="Checkout & Delivery">
       <p className="text-sm text-white/80">
         Choose your delivery day and enter your Blackburn address. We deliver on{" "}
-        <span className="font-semibold">Mondays and Thursdays</span> between{" "}
+        <span className="font-semibold">
+          {isSubscription ? "Mondays" : "Mondays and Thursdays"}
+        </span>{" "}
+        between{" "}
         <span className="font-semibold">{deliveryWindow}</span>.
       </p>
 
@@ -1676,17 +1712,19 @@ function PayModal({
           className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
         />
 
-        <select
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/40"
-        >
-          {deliveryOptions.map((d) => (
-            <option key={d} value={d} className="bg-slate-900 text-white">
-              {formatDateUK(d)} ({weekdayFromISO(d)})
-            </option>
-          ))}
-        </select>
+        {!isSubscription && (
+          <select
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/40"
+          >
+            {deliveryOptions.map((d) => (
+              <option key={d} value={d} className="bg-slate-900 text-white">
+                {formatDateUK(d)} ({weekdayFromISO(d)})
+              </option>
+            ))}
+          </select>
+        )}
 
         <input
           value={postcode}
