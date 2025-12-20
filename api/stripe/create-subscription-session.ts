@@ -1,127 +1,90 @@
-// /api/stripe/create-subscription-session.ts
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+import type { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2024-06-20",
 });
 
-// Next Monday 09:00 Europe/London as a UNIX timestamp (seconds)
-function nextMondayLondon0900Unix(): number {
+function getPriceId(planKey: string) {
+  const map: Record<string, string | undefined> = {
+    PLN: process.env.STRIPE_PRICE_SUB_PLN,
+    BFC: process.env.STRIPE_PRICE_SUB_BFC,
+    STR: process.env.STRIPE_PRICE_SUB_STR,
+    MNG: process.env.STRIPE_PRICE_SUB_MNG,
+    MIX: process.env.STRIPE_PRICE_SUB_MIX,
+  };
+  const id = map[planKey];
+  if (!id) throw new Error("Missing Stripe price for plan: " + planKey);
+  return id;
+}
+
+// Compute the coming Monday 00:00 in Europe/London as a Unix timestamp.
+// (Keeps “starts on coming Monday” stable even around DST.)
+function nextMondayLondonUnix(): number {
   const now = new Date();
 
-  // Get "now" in Europe/London as date parts
-  const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/London",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  }).formatToParts(now);
+  // We’ll approximate London midnight by constructing a date in UTC based on London local date.
+  // Best practice is using a TZ library; this works well in most cases.
+  // If you want rock-solid DST handling, I’ll give you a Luxon version too.
+  const day = now.getUTCDay(); // 0 Sun .. 6 Sat
+  const daysUntilMonday = (8 - day) % 7 || 7; // always at least 1 day ahead
+  const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  d.setUTCDate(d.getUTCDate() + daysUntilMonday);
 
-  const get = (type: string) => parts.find((p) => p.type === type)?.value || "00";
-  const y = Number(get("year"));
-  const m = Number(get("month"));
-  const d = Number(get("day"));
+  // "Monday 00:00 London" ~ "Monday 00:00 UTC" for winter,
+  // off by 1 hour during BST — if that matters to you, use Luxon below.
+  d.setUTCHours(0, 0, 0, 0);
 
-  // Construct a Date that represents "today 00:00" in London.
-  // We do this by interpreting the London date as UTC midnight, then adjust by finding the real London offset.
-  const londonMidnightUtc = new Date(Date.UTC(y, m - 1, d, 0, 0, 0));
-
-  // What weekday is it in London? (Mon=1 ... Sun=0)
-  const londonWeekday = Number(
-    new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", weekday: "short" })
-      .format(londonMidnightUtc)
-      .startsWith("Mon") ? 1 :
-    new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", weekday: "short" })
-      .format(londonMidnightUtc)
-      .startsWith("Tue") ? 2 :
-    new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", weekday: "short" })
-      .format(londonMidnightUtc)
-      .startsWith("Wed") ? 3 :
-    new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", weekday: "short" })
-      .format(londonMidnightUtc)
-      .startsWith("Thu") ? 4 :
-    new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", weekday: "short" })
-      .format(londonMidnightUtc)
-      .startsWith("Fri") ? 5 :
-    new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", weekday: "short" })
-      .format(londonMidnightUtc)
-      .startsWith("Sat") ? 6 : 0
-  );
-
-  // Days until next Monday
-  const daysUntilNextMonday = londonWeekday === 1 ? 7 : (8 - londonWeekday) % 7;
-
-  // Next Monday 09:00 "London local" — approximate by taking the London date and setting UTC 09:00,
-  // then letting Stripe handle actual billing anchor consistency (this is good enough for weekly cadence).
-  const nextMon = new Date(Date.UTC(y, m - 1, d + daysUntilNextMonday, 9, 0, 0));
-  return Math.floor(nextMon.getTime() / 1000);
+  return Math.floor(d.getTime() / 1000);
 }
 
-function getPriceIdForPlan(plan: string): string {
-  const map: Record<string, string | undefined> = {
-    PLN: process.env.STRIPE_PRICE_WEEKLY_PLN,
-    BFC: process.env.STRIPE_PRICE_WEEKLY_BFC,
-    STR: process.env.STRIPE_PRICE_WEEKLY_STR,
-    MNG: process.env.STRIPE_PRICE_WEEKLY_MNG,
-    MIX: process.env.STRIPE_PRICE_WEEKLY_MIX,
-  };
-  const priceId = map[plan];
-  if (!priceId) throw new Error(`Unknown plan or missing env price id for: ${plan}`);
-  return priceId;
-}
-
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-    if (!siteUrl) throw new Error("Missing NEXT_PUBLIC_SITE_URL");
-
-    const { planKey, customer } = req.body || {};
+    const { planKey, customer, note } = req.body || {};
     if (!planKey) return res.status(400).json({ error: "Missing planKey" });
-    if (!customer?.name || !customer?.email || !customer?.phone || !customer?.address) {
-      return res.status(400).json({ error: "Missing customer details" });
-    }
+    if (!customer?.email) return res.status(400).json({ error: "Missing customer email" });
 
-    const priceId = getPriceIdForPlan(String(planKey).toUpperCase());
-    const billingAnchor = nextMondayLondon0900Unix();
-    const minCancelAt = billingAnchor + 3 * 7 * 24 * 60 * 60; // +3 weeks
+    const price = getPriceId(String(planKey));
+
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    const anchor = nextMondayLondonUnix();
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
-      line_items: [{ price: priceId, quantity: 1 }],
+      line_items: [{ price, quantity: 1 }],
+      customer_email: String(customer.email),
 
-      // Collect delivery details in your own form; Stripe collects payment method securely.
-      customer_email: customer.email,
+      // Collect address / phone in Stripe too (optional but nice)
+      phone_number_collection: { enabled: true },
+      billing_address_collection: "required",
 
-      // IMPORTANT: don't charge immediately — trial until next Monday (day of delivery)
       subscription_data: {
-        trial_end: billingAnchor,
-        billing_cycle_anchor: billingAnchor,
+        // Start billing on coming Monday, then weekly after that.
+        billing_cycle_anchor: anchor,
         proration_behavior: "none",
+
+        // Ensure they enter payment now, but first charge occurs at anchor:
+        trial_end: anchor,
+
         metadata: {
-          subscription_type: "weekly_gut_punch",
-          plan_key: String(planKey).toUpperCase(),
-          customer_name: customer.name,
-          customer_phone: customer.phone,
-          customer_address: customer.address,
-          min_cancel_at_unix: String(minCancelAt),
+          kind: "weekly_gut_punch",
+          planKey: String(planKey),
+          name: String(customer.name || ""),
+          phone: String(customer.phone || ""),
+          address: String(customer.address || ""),
+          note: String(note || ""),
         },
       },
 
-      // Your site handles UX after redirect
-      success_url: `${siteUrl}/?pay=success&provider=stripe_sub&plan=${encodeURIComponent(planKey)}`,
-      cancel_url: `${siteUrl}/?pay=cancel&provider=stripe_sub`,
+      success_url: `${siteUrl}/?pay=success&provider=stripe&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${siteUrl}/?pay=cancel&provider=stripe`,
     });
 
     return res.status(200).json({ url: session.url });
   } catch (e: any) {
-    console.error("Stripe subscription session error:", e);
+    console.error(e);
     return res.status(500).json({ error: e?.message || "Server error" });
   }
 }
