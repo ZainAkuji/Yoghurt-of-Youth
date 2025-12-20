@@ -1496,7 +1496,7 @@ function PayModal({
     freeDeliveryUnlocked,
   } = totals;
 
-  const isSubscription = checkoutKind === "subscription";
+  const isSubscription = mode === "subscription";
 
   const deliveryOptions = deliveryDateOptions();
   const initialDate = deliveryOptions[0] || "";
