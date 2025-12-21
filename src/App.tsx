@@ -2039,8 +2039,7 @@ function PayModal({
   return (
     <Modal onClose={onClose} title="Checkout & Delivery">
       <p className="text-sm text-white/80">
-        Please fill in the details below. We deliver every <span className="font-semibold">Monday</span> between
-        <span className="font-semibold">18:30-20:00</span>.
+        Please fill in the details below. We deliver every <span className="font-semibold">Monday</span> between <span className="font-semibold">18:30-20:00</span>.
         We deliver to Blackurn residents only.
       </p>
 
