@@ -669,6 +669,8 @@ export default function App(){
     run();
   }, []);
 
+  const closingDueToCancelRef = React.useRef(false);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const pay = params.get("pay");
@@ -676,14 +678,23 @@ export default function App(){
   
     if (pay !== "cancel") return;
   
-    // if user cancelled subscription checkout, reopen modal in subscription mode
+    // mark that this open came from a Stripe cancel
+    closingDueToCancelRef.current = true;
+  
     if (provider === "stripe_sub") {
       setPayMode("subscription");
+      setPayKind("subscription");
       setReserveOpen(true);
     } else {
       setPayMode("checkout");
+      setPayKind("oneoff");
       setReserveOpen(true);
     }
+  
+    // clean URL
+    const url = new URL(window.location.href);
+    url.search = "";
+    window.history.replaceState({}, "", url.toString());
   }, []);
 
   const results = useMemo(()=>{
@@ -1162,10 +1173,17 @@ export default function App(){
         <PayModal
           onClose={() => {
             setReserveOpen(false);
-            setPayMode("checkout");
             setConfirmedOrder(null);
-            setPayKind("oneoff");
-            setSelectedPlan(null);
+          
+            // 🔑 Only hard-reset if user closed manually
+            if (!closingDueToCancelRef.current) {
+              setPayMode("checkout");
+              setPayKind("oneoff");
+              setSelectedPlan(null);
+            }
+          
+            // reset flag after handling
+            closingDueToCancelRef.current = false;
           }}
           cart={cart}
           totals={totals}
@@ -2039,8 +2057,8 @@ function PayModal({
   return (
     <Modal onClose={onClose} title="Checkout & Delivery">
       <p className="text-sm text-white/80">
-        Please fill in the details below. We deliver every <span className="font-semibold">Monday</span> between
-        <span className="font-semibold">18:30-20:00</span>.
+        Please fill in the details below.
+        We deliver every <span className="font-semibold">Monday & Thursday</span> between <span className="font-semibold">18:30-20:00</span>.
         We deliver to Blackurn residents only.
       </p>
 
