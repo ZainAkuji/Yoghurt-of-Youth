@@ -484,55 +484,6 @@ function buildConfirmOrderFromDraft(
 ): ConfirmOrder | null {
   if (!draft) return null;
 
-  // ---------- SUBSCRIPTION DRAFT ----------
-  if (draft?.kind === "subscription") {
-    const plan = draft?.plan || {};
-    const planKey = String(plan?.key || "");
-    const planLabel = String(plan?.label || planKey || "Plan");
-
-    const firstISO = String(draft?.first_delivery_iso || "");
-    const firstText =
-      String(draft?.first_delivery_text || "") ||
-      (firstISO ? `${formatDateUK(firstISO)} (${weekdayFromISO(firstISO)})` : "");
-
-    const deliveryWindow = String(draft?.delivery_window || "18:30–20:00");
-
-    // derive weekly box contents (7 bottles)
-    const lines: string[] = (() => {
-      if (planKey === "MIX") return ["Weekly box: 1× PLN, 2× BFC, 2× STR, 2× MNG (7 bottles)"];
-      if (planKey) return [`Weekly box: 7× ${planKey} (${planLabel})`];
-      return ["Weekly box (7 bottles)"];
-    })();
-
-    // parse price label like "£11"
-    const priceLabel = String(plan?.priceLabel || "");
-    const numeric = Number(priceLabel.replace(/[^\d.]/g, "")) || 0;
-
-    const address = String(draft?.customer?.address || "");
-    const name = String(draft?.customer?.name || "");
-
-    // qty breakdown (nice to show)
-    const qtyTotal = 7;
-    const plainQty = planKey === "PLN" ? 7 : planKey === "MIX" ? 1 : 0;
-    const flavQty =
-      planKey === "MIX" ? 6 : ["BFC", "STR", "MNG"].includes(planKey) ? 7 : 0;
-
-    return {
-      orderId: orderId || "",
-      formattedDate: firstText || "Monday",
-      deliveryWindow,
-      lines,
-      qtyTotal,
-      plainQty,
-      flavQty,
-      totalText: numeric ? gbp(numeric) : priceLabel || "—",
-      address,
-      name,
-      paymentMethod,
-    };
-  }
-
-  // ---------- ONE-OFF DRAFT (existing behaviour) ----------
   const lines: string[] = Array.isArray(draft.lines) ? draft.lines : [];
 
   const iso = String(draft.delivery_date_iso || "");
@@ -1759,11 +1710,8 @@ function PayModal({
                     plan: subscriptionPlan,
                     customer,
                     note,
-                    first_delivery_iso: firstISO,
-                    first_delivery_text: firstText,
-                    delivery_window: "18:30–20:00",
                     savedAt: Date.now(),
-                    provider: "stripe_sub",
+                    provider: "stripe",
                   };
                   sessionStorage.setItem("yoy_checkout_draft", JSON.stringify(draft));
           
@@ -1860,97 +1808,6 @@ function PayModal({
   if (mode === "success" && confirmedOrder) {
     const order = confirmedOrder;
   
-    const isSubscriptionSuccess =
-      typeof order.paymentMethod === "string" &&
-      order.paymentMethod.toLowerCase().includes("weekly gut punch");
-  
-    // ----- SUBSCRIPTION CONFIRMATION -----
-    if (isSubscriptionSuccess) {
-      return (
-        <Modal onClose={onClose} title="Subscription confirmed">
-          <ConfettiOverlay />
-  
-          <p className="text-sm text-white/80 mt-1">
-            Thank you, {order.name}. Your <span className="font-semibold">Weekly Gut Punch</span> subscription is live.
-          </p>
-  
-          <div className="mt-3 rounded-xl bg-black/40 border border-white/15 px-4 py-3 text-sm">
-            <div className="text-white/60">Subscription reference</div>
-            <div className="font-mono font-semibold tracking-wide">
-              {order.orderId || "—"}
-            </div>
-          </div>
-  
-          <div className="my-4 border-t border-white/20" />
-  
-          <div className="grid sm:grid-cols-2 gap-4 text-sm">
-            <div>
-              <div className="text-white/60">First delivery</div>
-              <div className="font-medium">{order.formattedDate}</div>
-            </div>
-  
-            <div>
-              <div className="text-white/60">Delivery window</div>
-              <div className="font-medium">{order.deliveryWindow}</div>
-            </div>
-  
-            <div>
-              <div className="text-white/60">Billing</div>
-              <div className="font-medium">
-                Weekly · charged on <span className="font-semibold">Monday</span>
-              </div>
-            </div>
-  
-            <div>
-              <div className="text-white/60">Weekly price</div>
-              <div className="font-semibold text-emerald-400">{order.totalText}</div>
-            </div>
-          </div>
-  
-          <div className="mt-4 text-sm">
-            <div className="text-white/60 mb-1">Delivery address</div>
-            <div className="leading-relaxed">{order.address}</div>
-          </div>
-  
-          <div className="mt-5 rounded-2xl bg-black/40 border border-white/15 p-4 text-sm">
-            <div className="font-semibold mb-2">What you’ll receive each week</div>
-  
-            <div className="space-y-1 text-white/85">
-              {order.lines.map((line, i) => (
-                <div key={i}>• {line}</div>
-              ))}
-            </div>
-  
-            <div className="mt-3 text-white/70 text-xs leading-relaxed">
-              We alternate PRCXN and SPCTRL by week.
-              Your yoghurt is fermented on the day before delivery for freshness.
-              Delivery is <span className="font-semibold">FREE</span> for Weekly Gut Punch.
-            </div>
-          </div>
-  
-          <p className="mt-4 text-xs text-white/70 leading-relaxed">
-            You’ll receive an email receipt with full order details shortly.
-            If it doesn’t arrive within 5 minutes, please check spam.
-            If you have any questions, please email support@yoghurtofyouth.co.uk.
-          </p>
-
-          <p className="mt-4 text-xs text-white/70 leading-relaxed">
-            If you wish to cancel, please email support@yoghurtofyouth.co.uk.
-            Please also provide your name and address.
-            We will cancel your subscription shortly.
-          </p>
-  
-          <button
-            onClick={onClose}
-            className="mt-5 w-full rounded-2xl bg-white text-slate-900 py-3 text-sm font-semibold hover:bg-amber-300 transition"
-          >
-            Close
-          </button>
-        </Modal>
-      );
-    }
-  
-    // ----- ONE-OFF CONFIRMATION (your existing UI) -----
     return (
       <Modal onClose={onClose} title="Order confirmed">
         {/* Confetti */}
@@ -1964,7 +1821,7 @@ function PayModal({
             </p>
           </div>
         </div>
-  
+        
         {/* Order reference */}
         <div className="mt-3 rounded-xl bg-black/40 border border-white/15 px-4 py-3 text-sm">
           <div className="text-white/60">Order reference</div>
