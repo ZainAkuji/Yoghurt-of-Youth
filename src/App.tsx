@@ -678,23 +678,31 @@ export default function App(){
   
     if (pay !== "cancel") return;
   
-    // mark that this open came from a Stripe cancel
-    closingDueToCancelRef.current = true;
-  
     if (provider === "stripe_sub") {
+      // restore subscription plan + mode from draft
+      try {
+        const raw = sessionStorage.getItem("yoy_checkout_draft");
+        if (raw) {
+          const draft = JSON.parse(raw);
+  
+          // your draft uses: { kind:"subscription", plan: subscriptionPlan, ... }
+          if (draft?.kind === "subscription" && draft?.plan) {
+            setPayKind("subscription");
+            setSelectedPlan(draft.plan);
+          }
+        }
+      } catch (e) {
+        console.error("Failed to restore subscription draft", e);
+      }
+  
       setPayMode("subscription");
-      setPayKind("subscription");
       setReserveOpen(true);
-    } else {
-      setPayMode("checkout");
-      setPayKind("oneoff");
-      setReserveOpen(true);
+      return;
     }
   
-    // clean URL
-    const url = new URL(window.location.href);
-    url.search = "";
-    window.history.replaceState({}, "", url.toString());
+    // one-off cancel
+    setPayMode("checkout");
+    setReserveOpen(true);
   }, []);
 
   const results = useMemo(()=>{
