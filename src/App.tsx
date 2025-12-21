@@ -678,33 +678,39 @@ export default function App(){
   
     if (pay !== "cancel") return;
   
-    if (provider === "stripe_sub") {
-      // restore subscription plan + mode from draft
+    // Restore draft so we reopen the *correct* modal
+    const raw = sessionStorage.getItem("yoy_checkout_draft");
+    if (raw) {
       try {
-        const raw = sessionStorage.getItem("yoy_checkout_draft");
-        if (raw) {
-          const draft = JSON.parse(raw);
+        const draft = JSON.parse(raw);
   
-          // your draft uses: { kind:"subscription", plan: subscriptionPlan, ... }
-          if (draft?.kind === "subscription" && draft?.plan) {
-            setPayKind("subscription");
-            setSelectedPlan(draft.plan);
-          }
+        // If subscription checkout was cancelled, force subscription mode + restore plan
+        if (provider === "stripe_sub" && draft?.kind === "subscription" && draft?.plan) {
+          setSelectedPlan(draft.plan);          // ✅ restore plan
+          setPayKind("subscription");           // ✅ make PayModal render subscription modal
+          setPayMode("subscription");           // optional, but consistent with your state
+          setReserveOpen(true);
+        } else {
+          // one-off cancel
+          setPayKind("oneoff");
+          setPayMode("checkout");
+          setReserveOpen(true);
         }
       } catch (e) {
-        console.error("Failed to restore subscription draft", e);
+        console.error("Failed to restore cancel draft", e);
+        // fallback
+        setPayKind("oneoff");
+        setPayMode("checkout");
+        setReserveOpen(true);
       }
-  
-      setPayMode("subscription");
+    } else {
+      // no draft → fallback
+      setPayKind("oneoff");
+      setPayMode("checkout");
       setReserveOpen(true);
-      return;
     }
-  
-    // one-off cancel
-    setPayMode("checkout");
-    setReserveOpen(true);
   }, []);
-
+  
   const results = useMemo(()=>{
     if(!query) return PRODUCTS;
     const q = query.toLowerCase();
@@ -1078,6 +1084,7 @@ export default function App(){
                             onClick={() => {
                               setSelectedPlan(p);
                               setPayKind("subscription");
+                              setPayMode("subscription");
                               setReserveOpen(true);
                             }}
                             className="text-left grid grid-rows-[auto,auto] gap-px focus:outline-none"
