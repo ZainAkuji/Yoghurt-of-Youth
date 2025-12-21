@@ -16,39 +16,37 @@ function getPriceId(planKey: string) {
   return id;
 }
 
-// Next Monday 18:30 (server-local time) as a unix timestamp.
-// If today is Sunday, start on NEXT week's Monday (not tomorrow).
-function nextMondayAnchorUnix(): number {
+// Next Monday 21:00 (server local time). If that's < 48h away, push to the Monday after.
+function nextMonday2100With48hRuleUnix(): number {
   const now = new Date();
 
-  // Start from today's date at 00:00
   const d = new Date(now);
   d.setHours(0, 0, 0, 0);
 
   const day = d.getDay(); // 0..6 (Sun..Sat)
+  let addDays = (8 - day) % 7;
+  if (addDays === 0) addDays = 7; // always "coming" Monday
+  d.setDate(d.getDate() + addDays);
 
-  let add: number;
-  if (day === 0) {
-    // Sunday -> skip tomorrow, use Monday after next day (next week's Monday)
-    add = 8;
-  } else {
-    add = (8 - day) % 7;
-    if (add === 0) add = 7; // always coming Monday
+  // Monday 21:00
+  d.setHours(21, 0, 0, 0);
+
+  let trialEnd = Math.floor(d.getTime() / 1000);
+
+  // Stripe requires trial_end at least 48h in the future
+  const nowUnix = Math.floor(now.getTime() / 1000);
+  const MIN_SECONDS = 48 * 60 * 60;
+
+  if (trialEnd - nowUnix < MIN_SECONDS) {
+    trialEnd += 7 * 24 * 60 * 60; // push one week
   }
 
-  d.setDate(d.getDate() + add);
-
-  // set to 18:30 local server time
-  d.setHours(18, 30, 0, 0);
-
-  return Math.floor(d.getTime() / 1000);
+  return trialEnd;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
-    if (req.method !== "POST") {
-      return res.status(405).json({ error: "Method not allowed" });
-    }
+    if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
     const { planKey, customer, note } = req.body || {};
     if (!planKey) return res.status(400).json({ error: "Missing planKey" });
@@ -57,7 +55,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const price = getPriceId(String(planKey));
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-    const anchor = nextMondayAnchorUnix();
+    const trialEnd = nextMonday2100With48hRuleUnix();
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -68,8 +66,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       billing_address_collection: "required",
 
       subscription_data: {
-        billing_cycle_anchor: anchor,
-        proration_behavior: "none",
+        // ✅ first charge occurs at trial_end; repeats weekly because Price is weekly
+        trial_end: trialEnd,
         metadata: {
           kind: "weekly_gut_punch",
           planKey: String(planKey),
