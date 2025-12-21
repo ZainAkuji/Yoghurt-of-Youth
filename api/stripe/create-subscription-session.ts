@@ -53,7 +53,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!customer?.email) return res.status(400).json({ error: "Missing customer email" });
 
     const price = getPriceId(String(planKey));
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_DOMAIN;
+    if (!siteUrl) return res.status(500).json({ error: "Missing NEXT_PUBLIC_SITE_URL / NEXT_PUBLIC_DOMAIN" });
 
     const trialEnd = nextMonday2100With48hRuleUnix();
 
