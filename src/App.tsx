@@ -1922,14 +1922,22 @@ function PayModal({
             </div>
   
             <div className="mt-3 text-white/70 text-xs leading-relaxed">
-              We alternate PRCXN and SPCTRL by week. Your batch is fermented the day before delivery for freshness.
+              We alternate PRCXN and SPCTRL by week.
+              Your yoghurt is fermented on the day before delivery for freshness.
               Delivery is <span className="font-semibold">FREE</span> for Weekly Gut Punch.
             </div>
           </div>
   
           <p className="mt-4 text-xs text-white/70 leading-relaxed">
-            You’ll receive an email receipt from Stripe shortly.
-            To cancel, email support@yoghurtofyouth.co.uk from the email address used at checkout.
+            You’ll receive an email receipt with full order details shortly.
+            If it doesn’t arrive within 5 minutes, please check spam.
+            If you have any questions, please email support@yoghurtofyouth.co.uk.
+          </p>
+
+          <p className="mt-4 text-xs text-white/70 leading-relaxed">
+            If you wish to cancel, please email support@yoghurtofyouth.co.uk.
+            Please also provide your name and address.
+            We will cancel your subscription shortly.
           </p>
   
           <button
@@ -2013,8 +2021,8 @@ function PayModal({
         <p className="mt-4 text-xs text-white/70 leading-relaxed">
           Your yoghurt is fermented on the day before delivery for freshness.
           You’ll receive an email receipt with full order details shortly.
-          If it doesn’t arrive within 5 minutes, check spam.
-          If you have any questions, email support@yoghurtofyouth.co.uk.
+          If it doesn’t arrive within 5 minutes, please check spam.
+          If you have any questions, please email support@yoghurtofyouth.co.uk.
         </p>
   
         {/* Close */}
