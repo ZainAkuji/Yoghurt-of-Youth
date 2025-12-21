@@ -686,11 +686,13 @@ export default function App(){
   
         // If subscription checkout was cancelled, force subscription mode + restore plan
         if (provider === "stripe_sub" && draft?.kind === "subscription" && draft?.plan) {
-          setSelectedPlan(draft.plan);          // ✅ restore plan
-          setPayKind("subscription");           // ✅ make PayModal render subscription modal
-          setPayMode("subscription");           // optional, but consistent with your state
-          setReserveOpen(true);
-        } else {
+            closingDueToCancelRef.current = true;   // ✅ ADD THIS LINE
+          
+            setSelectedPlan(draft.plan);
+            setPayKind("subscription");
+            setPayMode("subscription");
+            setReserveOpen(true);
+          } else {
           // one-off cancel
           setPayKind("oneoff");
           setPayMode("checkout");
