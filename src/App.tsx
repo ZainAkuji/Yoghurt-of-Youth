@@ -991,7 +991,6 @@ export default function App(){
                     <p><strong>Minimum 3 weeks</strong> order. You will be charged every week on the day of delivery.</p>
                     <p>You will receive your first batch on the coming <strong>available Monday</strong> (book by <strong>Friday</strong> for <strong>coming Monday</strong>).</p>
                     <p>We alternate between <strong>PRCXN</strong> and <strong>SPCTRL</strong> yoghurt variants every week.</p>
-                    <p>If later you wish to cancel your subscription, please email us via support@yoghurtofyouth.co.uk.</p>
                     <p className="text-white">Please choose a plan:</p>
                   </div>
                 
@@ -1048,15 +1047,19 @@ export default function App(){
                     </div>
                   
                     <p className="mt-3 text-sm text-white leading-relaxed">
-                      <strong>MIX</strong> contains 1 PLN, 2 BFC, 2 STR, and 2 MNG.
+                      <strong>MIX</strong> contains 1 PLN, 2 BFC, 2 STR, and 2 MNG
                     </p>
                   
                     <p className="mt-2 text-sm text-white leading-relaxed">
-                      Tap a plan to subscribe (weekly recurring payment).
+                      Tap a plan to subscribe (weekly recurring payment)
                     </p>
 
                     <p className="mt-2 text-sm text-white leading-relaxed">
-                      <strong>FREE</strong> delivery for Weekly Gut Punch.
+                      <strong>FREE</strong> delivery for Weekly Gut Punch
+                    </p>
+
+                    <p className="mt-2 text-sm text-white leading-relaxed">
+                      To cancel, please email support@yoghurtofyouth.co.uk
                     </p>
                   </div>
 
