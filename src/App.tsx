@@ -517,7 +517,7 @@ function buildConfirmOrderFromDraft(
 
 function nextEligibleMondayISO(): string {
   const now = new Date();
-  const twoDaysMs = 2 * 24 * 60 * 60 * 1000;
+  const oneDaysMs = 1 * 24 * 60 * 60 * 1000;
 
   // candidate = next Monday
   const d = new Date(now);
@@ -528,8 +528,8 @@ function nextEligibleMondayISO(): string {
   if (daysUntilMonday === 0) daysUntilMonday = 7;
   d.setDate(d.getDate() + daysUntilMonday);
 
-  // Stripe rule: must be >= 48h away → if too soon, push 7 days
-  if (d.getTime() < now.getTime() + twoDaysMs) {
+  // Stripe rule: must be >= 24h away → if too soon, push 7 days
+  if (d.getTime() < now.getTime() + oneDaysMs) {
     d.setDate(d.getDate() + 7);
   }
 
