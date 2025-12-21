@@ -669,8 +669,6 @@ export default function App(){
     run();
   }, []);
 
-  const closingDueToCancelRef = React.useRef(false);
-
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const pay = params.get("pay");
@@ -678,41 +676,16 @@ export default function App(){
   
     if (pay !== "cancel") return;
   
-    // Restore draft so we reopen the *correct* modal
-    const raw = sessionStorage.getItem("yoy_checkout_draft");
-    if (raw) {
-      try {
-        const draft = JSON.parse(raw);
-  
-        // If subscription checkout was cancelled, force subscription mode + restore plan
-        if (provider === "stripe_sub" && draft?.kind === "subscription" && draft?.plan) {
-            closingDueToCancelRef.current = true;   // ✅ ADD THIS LINE
-          
-            setSelectedPlan(draft.plan);
-            setPayKind("subscription");
-            setPayMode("subscription");
-            setReserveOpen(true);
-          } else {
-          // one-off cancel
-          setPayKind("oneoff");
-          setPayMode("checkout");
-          setReserveOpen(true);
-        }
-      } catch (e) {
-        console.error("Failed to restore cancel draft", e);
-        // fallback
-        setPayKind("oneoff");
-        setPayMode("checkout");
-        setReserveOpen(true);
-      }
+    // if user cancelled subscription checkout, reopen modal in subscription mode
+    if (provider === "stripe_sub") {
+      setPayMode("subscription");
+      setReserveOpen(true);
     } else {
-      // no draft → fallback
-      setPayKind("oneoff");
       setPayMode("checkout");
       setReserveOpen(true);
     }
   }, []);
-  
+
   const results = useMemo(()=>{
     if(!query) return PRODUCTS;
     const q = query.toLowerCase();
@@ -1086,7 +1059,6 @@ export default function App(){
                             onClick={() => {
                               setSelectedPlan(p);
                               setPayKind("subscription");
-                              setPayMode("subscription");
                               setReserveOpen(true);
                             }}
                             className="text-left grid grid-rows-[auto,auto] gap-px focus:outline-none"
@@ -1190,17 +1162,10 @@ export default function App(){
         <PayModal
           onClose={() => {
             setReserveOpen(false);
+            setPayMode("checkout");
             setConfirmedOrder(null);
-          
-            // 🔑 Only hard-reset if user closed manually
-            if (!closingDueToCancelRef.current) {
-              setPayMode("checkout");
-              setPayKind("oneoff");
-              setSelectedPlan(null);
-            }
-          
-            // reset flag after handling
-            closingDueToCancelRef.current = false;
+            setPayKind("oneoff");
+            setSelectedPlan(null);
           }}
           cart={cart}
           totals={totals}
@@ -2074,8 +2039,8 @@ function PayModal({
   return (
     <Modal onClose={onClose} title="Checkout & Delivery">
       <p className="text-sm text-white/80">
-        Please fill in the details below.
-        We deliver every <span className="font-semibold">Monday & Thursday</span> between <span className="font-semibold">18:30-20:00</span>.
+        Please fill in the details below. We deliver every <span className="font-semibold">Monday</span> between
+        <span className="font-semibold">18:30-20:00</span>.
         We deliver to Blackurn residents only.
       </p>
 
