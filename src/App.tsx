@@ -40,7 +40,7 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  { id: "PLN", name: "PLN", price: 2.0, size: "250 mL", img: "/plain.png" },
+  { id: "PLN", name: "PLN", price: 0.5, size: "250 mL", img: "/plain.png" },
   { id: "BFC", name: "BFC", price: 2.5, size: "250 mL", img: "/bfc.png" },
   { id: "STR", name: "STR", price: 2.5, size: "250 mL", img: "/str.png" },
   { id: "MNG", name: "MNG", price: 2.5, size: "250 mL", img: "/mng.png" },
@@ -90,14 +90,14 @@ function computeTotals(cart: Record<string, number>) {
   const qtyTotal = items.reduce((s, i) => s + i.qty, 0);
 
   // classify by price: £2 = "plain", £2.50 = "flavoured"
-  const plainItems = items.filter((i) => i.price === 2.0);
+  const plainItems = items.filter((i) => i.price === 0.5);
   const flavItems = items.filter((i) => i.price === 2.5);
 
   const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
   const flavQty  = flavItems.reduce((s, i) => s + i.qty, 0);
 
   // unit prices (taken from products so it's future-proof)
-  const plainUnit = plainItems[0]?.price ?? 2.0;
+  const plainUnit = plainItems[0]?.price ?? 0.5;
   const flavUnit  = flavItems[0]?.price ?? 2.5;
 
   // "no bundle" full price (for savings display)
@@ -129,7 +129,7 @@ function computeTotals(cart: Record<string, number>) {
 
   // £2 delivery if there is any order and threshold not reached
   const deliveryFee =
-    merchTotal === 0 ? 0 : freeDeliveryUnlocked ? 0 : 2;
+    merchTotal === 0 ? 0 : freeDeliveryUnlocked ? 0 : 0.01;
 
   // final amount customer pays (bottles + delivery)
   const total = merchTotal + deliveryFee;
@@ -1122,11 +1122,11 @@ export default function App(){
                     </div>
                   
                     <p className="mt-3 text-sm text-white leading-relaxed">
-                      <strong>MIX</strong> contains 1 PLN, 2 BFC, 2 STR, and 2 MNG
+                      Tap a plan to subscribe (weekly recurring payment)
                     </p>
                   
                     <p className="mt-2 text-sm text-white leading-relaxed">
-                      Tap a plan to subscribe (weekly recurring payment)
+                      <strong>MIX</strong> contains 1 PLN, 2 BFC, 2 STR, and 2 MNG
                     </p>
 
                     <p className="mt-2 text-sm text-white leading-relaxed">
