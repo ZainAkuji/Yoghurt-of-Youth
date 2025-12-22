@@ -740,11 +740,11 @@ export default function App(){
   const clear = ()=> setCart({});
 
   const SUBSCRIPTION_PLANS = [
-    { key: "PLN", label: "PLN", priceLabel: "£11", bg: "bg-white/15" },
-    { key: "BFC", label: "BFC", priceLabel: "£14", bg: "bg-rose-900/40" },
-    { key: "STR", label: "STR", priceLabel: "£14", bg: "bg-pink-500/35" },
-    { key: "MNG", label: "MNG", priceLabel: "£14", bg: "bg-amber-300/45" },
-    { key: "MIX", label: "MIX", priceLabel: "£13", bg: "MIX_STRIPES" },
+    { key: "PLN", label: "PLN (plain)", priceLabel: "£11", bg: "bg-white/15" },
+    { key: "BFC", label: "BFC (black forest chocolate)", priceLabel: "£14", bg: "bg-rose-900/40" },
+    { key: "STR", label: "STR (strawberry)", priceLabel: "£14", bg: "bg-pink-500/35" },
+    { key: "MNG", label: "MNG (mango)", priceLabel: "£14", bg: "bg-amber-300/45" },
+    { key: "MIX", label: "MIX (mixed)", priceLabel: "£13", bg: "MIX_STRIPES" },
   ] as const;
   
   type SubscriptionPlanKey = typeof SUBSCRIPTION_PLANS[number]["key"];
