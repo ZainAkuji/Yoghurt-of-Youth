@@ -1905,7 +1905,7 @@ function PayModal({
   
           <div className="mt-3 rounded-xl bg-black/40 border border-white/15 px-4 py-3 text-sm">
             <div className="text-white/60">Subscription reference</div>
-            <div className="font-mono font-semibold tracking-wide">
+            <div className="font-mono font-semibold tracking-wide break-all">
               {order.orderId || "—"}
             </div>
           </div>
