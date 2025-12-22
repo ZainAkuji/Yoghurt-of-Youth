@@ -672,18 +672,41 @@ export default function App(){
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const pay = params.get("pay");
-    const provider = params.get("provider");
   
     if (pay !== "cancel") return;
   
-    // if user cancelled subscription checkout, reopen modal in subscription mode
-    if (provider === "stripe_sub") {
-      setPayMode("subscription");
-      setReserveOpen(true);
-    } else {
-      setPayMode("checkout");
-      setReserveOpen(true);
+    const raw = sessionStorage.getItem("yoy_checkout_draft");
+  
+    // Default fallback
+    let nextPayKind: "oneoff" | "subscription" = "oneoff";
+    let nextSelectedPlan: any = null;
+  
+    if (raw) {
+      try {
+        const draft = JSON.parse(raw);
+  
+        // ✅ Decide from the draft, not the URL
+        if (draft?.kind === "subscription" && draft?.plan) {
+          nextPayKind = "subscription";
+          nextSelectedPlan = draft.plan;
+        } else {
+          nextPayKind = "oneoff";
+        }
+      } catch (e) {
+        console.error("Failed to parse cancel draft", e);
+      }
     }
+  
+    // ✅ Apply state
+    setPayKind(nextPayKind);
+    setSelectedPlan(nextSelectedPlan);
+    setPayMode("checkout");     // keep PayModal in "checkout" mode; subscription is controlled by payKind+selectedPlan
+    setReserveOpen(true);
+  
+    // Optional: clean URL here (or let PayModal do it, but do it in ONE place only)
+    const url = new URL(window.location.href);
+    url.search = "";
+    window.history.replaceState({}, "", url.toString());
   }, []);
 
   const results = useMemo(()=>{
@@ -1675,10 +1698,6 @@ function PayModal({
       if (raw) {
         try {
           const draft = JSON.parse(raw);
-
-          if (provider === "stripe_sub" && draft?.subscriptionPlan) {
-            // nothing here yet, parent holds subscriptionPlan
-          }
   
           setName(draft?.customer?.name || "");
           setEmail(draft?.customer?.email || "");
