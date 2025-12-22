@@ -54,8 +54,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const price = getPriceId(String(planKey));
     
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_DOMAIN;
-    if (!siteUrl) return res.status(500).json({ error: "Missing NEXT_PUBLIC_SITE_URL / NEXT_PUBLIC_DOMAIN" });
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
     const trialEnd = nextMonday2100With48hRuleUnix();
 
