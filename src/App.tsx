@@ -1689,40 +1689,29 @@ function PayModal({
   useEffect(() => {
     if (typeof window === "undefined") return;
   
-    const params = new URLSearchParams(window.location.search);
-    const pay = params.get("pay");
-    const provider = params.get("provider");
+    const raw = sessionStorage.getItem("yoy_checkout_draft");
+    if (!raw) return;
   
-    if (pay === "cancel" && (provider === "stripe" || provider === "paypal" || provider === "stripe_sub")) {
-      const raw = sessionStorage.getItem("yoy_checkout_draft");
-      if (raw) {
-        try {
-          const draft = JSON.parse(raw);
+    try {
+      const draft = JSON.parse(raw);
   
-          setName(draft?.customer?.name || "");
-          setEmail(draft?.customer?.email || "");
-          setPhone(draft?.customer?.phone || "");
-          setNote(draft?.note || "");
+      // Restore customer fields for BOTH one-off and subscription
+      setName(draft?.customer?.name || "");
+      setEmail(draft?.customer?.email || "");
+      setPhone(draft?.customer?.phone || "");
+      setNote(draft?.note || "");
   
-          const addr = String(draft?.customer?.address || "");
-          const parts = addr.split(",");
-          setStreetAddress((parts[0] || "").trim());
-          setPostcode((parts.slice(1).join(",") || "").trim());
+      const addr = String(draft?.customer?.address || "");
+      const parts = addr.split(",");
+      setStreetAddress((parts[0] || "").trim());
+      setPostcode((parts.slice(1).join(",") || "").trim());
   
-          if (draft?.delivery_date_iso) {
-            setDate(draft.delivery_date_iso);
-          }
-        } catch (e) {
-          console.error("Failed to restore checkout draft", e);
-        }
+      // Only restore date for ONE-OFF drafts
+      if (draft?.kind !== "subscription" && draft?.delivery_date_iso) {
+        setDate(draft.delivery_date_iso);
       }
-  
-      // ✅ clean URL so refresh doesn't loop
-      const url = new URL(window.location.href);
-      url.searchParams.delete("pay");
-      url.searchParams.delete("provider");
-      url.searchParams.delete("session_id");
-      window.history.replaceState({}, "", url.toString());
+    } catch (e) {
+      console.error("Failed to restore checkout draft", e);
     }
   }, []);
 
