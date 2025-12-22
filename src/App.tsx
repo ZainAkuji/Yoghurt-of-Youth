@@ -1715,6 +1715,27 @@ function PayModal({
     }
   }, []);
 
+  useEffect(() => {
+    const raw = sessionStorage.getItem("yoy_checkout_draft");
+    let existing: any = {};
+    try { existing = raw ? JSON.parse(raw) : {}; } catch {}
+  
+    const updated = {
+      ...existing,
+      customer: {
+        ...(existing.customer || {}),
+        name,
+        email,
+        phone,
+        address: fullAddress,
+      },
+      note,
+      // keep kind/plan if already there
+    };
+  
+    sessionStorage.setItem("yoy_checkout_draft", JSON.stringify(updated));
+  }, [name, email, phone, fullAddress, note]);
+
   // ✅ SUBSCRIPTION MODE (Weekly Gut Punch)
   if (isSubscription && subscriptionPlan) {
     return (
