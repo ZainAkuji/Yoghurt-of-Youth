@@ -1655,13 +1655,40 @@ function PayModal({
   const [error, setError] = useState("");
 
   const [giftCode, setGiftCode] = useState("");
-  const [giftApplied, setGiftApplied] = useState(false);
 
-  // lines (used in summary + draft)
+  const normalizedGiftCode = giftCode.trim().toUpperCase();
+  const giftStrQty =
+    normalizedGiftCode === "WHATSAPP25" || normalizedGiftCode === "INSTA25"
+      ? 1
+      : 0;
+
+  // ✅ Use totals that include the gift bottle count (but not price)
+  const totalsWithGift = useMemo(() => {
+    return computeTotals(cart, giftStrQty);
+  }, [cart, giftStrQty]);
+
+  const {
+    qtyTotal,
+    total,
+    savings,
+    plainQty,
+    flavQty,
+    plainBundles,
+    flavBundles,
+    plainRemainder,
+    flavRemainder,
+    deliveryFee,
+    freeDeliveryUnlocked,
+  } = totalsWithGift;
+
   const lines = Object.entries(cart).map(([id, qty]) => {
     const p = PRODUCTS.find((p) => p.id === id);
     return `${p?.name ?? id} × ${qty}`;
   });
+
+  if (giftStrQty > 0) {
+    lines.push(`STR × 1 (FREE — ${normalizedGiftCode})`);
+  }
 
   const normalizedPostcode = postcode.trim().toUpperCase();
   const fullAddress = [streetAddress.trim(), normalizedPostcode].filter(Boolean).join(", ");
@@ -1854,13 +1881,15 @@ function PayModal({
                 // ---- existing ONE-OFF checkout (your current code) ----
                 const draft = {
                   cart,
-                  totals,
+                  totals: totalsWithGift,
                   customer,
                   delivery_date_iso: date,
                   delivery_date: formattedDate,
                   delivery_window: deliveryWindow,
                   note,
                   lines,
+                  gift_code: normalizedGiftCode,
+                  gift_str_qty: giftStrQty,
                   savedAt: Date.now(),
                   provider: "stripe",
                 };
@@ -1877,6 +1906,8 @@ function PayModal({
                     delivery_date: formattedDate,
                     delivery_window: deliveryWindow,
                     note,
+                    gift_code: normalizedGiftCode,
+                    gift_str_qty: giftStrQty,
                   }),
                 });
           
@@ -2167,28 +2198,29 @@ function PayModal({
 
       {/* Gift code */}
       {!isSubscription && (
-        <div className="mt-4 rounded-xl bg-black/30 border border-white/20 p-3">
+        <div className="md:col-span-2">
+          <div className="text-xs text-white/70 mb-1">
+            Gift code (optional) — WHATSAPP25 / INSTA25
+          </div>
+
           <div className="flex gap-2">
             <input
               value={giftCode}
               onChange={(e) => setGiftCode(e.target.value)}
-              placeholder="Gift code"
-              className="flex-1 rounded-lg border border-white/30 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none"
+              placeholder="Enter gift code"
+              className="flex-1 rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
             />
-            <button
-              type="button"
-              onClick={applyGiftCode}
-              className="rounded-lg px-4 py-2 text-sm font-semibold bg-white text-slate-900 hover:bg-amber-300 transition"
-            >
-              Apply
-            </button>
+
+            {giftStrQty > 0 ? (
+              <div className="px-3 py-2 rounded-xl bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-sm font-semibold">
+                Applied: +1 STR
+              </div>
+            ) : (
+              <div className="px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white/60 text-sm">
+                Not applied
+              </div>
+            )}
           </div>
-      
-          {giftApplied && (
-            <p className="mt-2 text-xs text-emerald-400">
-              🎁 Free STR yoghurt added to your order
-            </p>
-          )}
         </div>
       )}
 
@@ -2247,7 +2279,7 @@ function PayModal({
               // ✅ STEP 1: save draft BEFORE redirecting away
               const draft = {
                 cart,
-                totals,
+                totals: totalsWithGift,
                 customer: {
                   name,
                   email,
@@ -2259,6 +2291,8 @@ function PayModal({
                 delivery_window: deliveryWindow,
                 note,
                 lines,
+                gift_code: normalizedGiftCode,
+                gift_str_qty: giftStrQty,
                 savedAt: Date.now(),
                 provider: "stripe",
               };
@@ -2285,6 +2319,8 @@ function PayModal({
                   delivery_date: formattedDate,
                   delivery_window: deliveryWindow,
                   note,
+                  gift_code: normalizedGiftCode,
+                  gift_str_qty: giftStrQty,
                 }),
               });
 
@@ -2330,7 +2366,7 @@ function PayModal({
               // ✅ SAVE DRAFT (same as Stripe)
               const draft = {
                 cart,
-                totals,
+                totals: totalsWithGift,
                 customer: {
                   name,
                   email,
@@ -2342,6 +2378,8 @@ function PayModal({
                 delivery_window: deliveryWindow,
                 note,
                 lines,
+                gift_code: normalizedGiftCode,
+                gift_str_qty: giftStrQty,
                 savedAt: Date.now(),
                 provider: "paypal",
               };
@@ -2358,6 +2396,8 @@ function PayModal({
                   delivery_date: formattedDate,
                   delivery_window: deliveryWindow,
                   note,
+                  gift_code: normalizedGiftCode,
+                  gift_str_qty: giftStrQty,
                 }),
               });
           
