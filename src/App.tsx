@@ -1650,6 +1650,9 @@ function PayModal({
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
+  const [giftCode, setGiftCode] = useState("");
+  const [giftApplied, setGiftApplied] = useState(false);
+
   // lines (used in summary + draft)
   const lines = Object.entries(cart).map(([id, qty]) => {
     const p = PRODUCTS.find((p) => p.id === id);
@@ -1687,6 +1690,26 @@ function PayModal({
       return false;
     }
     return true;
+  }
+
+  function applyGiftCode() {
+    const code = giftCode.trim().toUpperCase();
+  
+    if (giftApplied) {
+      setError("Gift already applied.");
+      return;
+    }
+  
+    if (code !== "WHATSAPP25" && code !== "INSTA25") {
+      setError("Invalid gift code.");
+      return;
+    }
+  
+    // add 1 free STR
+    setCart((c) => ({ ...c, STR: (c.STR || 0) + 1 }));
+    setGiftApplied(true);
+    setGiftCode("");
+    setError("");
   }
 
   useEffect(() => {
@@ -2137,6 +2160,33 @@ function PayModal({
           className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2"
         />
       </div>
+
+      {/* Gift code */}
+      {!isSubscription && (
+        <div className="mt-4 rounded-xl bg-black/30 border border-white/20 p-3">
+          <div className="flex gap-2">
+            <input
+              value={giftCode}
+              onChange={(e) => setGiftCode(e.target.value)}
+              placeholder="Gift code"
+              className="flex-1 rounded-lg border border-white/30 bg-black/40 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none"
+            />
+            <button
+              type="button"
+              onClick={applyGiftCode}
+              className="rounded-lg px-4 py-2 text-sm font-semibold bg-white text-slate-900 hover:bg-amber-300 transition"
+            >
+              Apply
+            </button>
+          </div>
+      
+          {giftApplied && (
+            <p className="mt-2 text-xs text-emerald-400">
+              🎁 Free STR yoghurt added to your order
+            </p>
+          )}
+        </div>
+      )}
 
       {/* summary */}
       {qtyTotal > 0 && (
