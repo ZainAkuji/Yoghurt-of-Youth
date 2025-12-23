@@ -1066,7 +1066,7 @@ export default function App(){
                 <div className="mt-8 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
                   <h3 className="text-xl sm:text-2xl font-bold mb-2">Weekly Gut Punch</h3>
                 
-                  <div className="text-sm sm:text-base text-white max-w-3xl space-y-1.5">
+                  <div className="text-sm sm:text-base text-white max-w-4xl space-y-1.5">
                     <p><strong>Subscribe and save.</strong> Receive <strong>7 bottle of yoghurts every Monday</strong>, fermented the day before for freshness.</p>
                     <p><strong>Minimum 3 weeks</strong> order. You will be charged <strong>every week</strong> on the day of delivery.</p>
                     <p>You will receive your first batch on the coming <strong>available Monday</strong>. Book by <strong>Saturday evening</strong> for the <strong>coming Monday</strong>).</p>
