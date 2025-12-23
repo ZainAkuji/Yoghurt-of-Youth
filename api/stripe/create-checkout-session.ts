@@ -6,20 +6,43 @@ function poundsToPence(amount: number) {
   return Math.round(Number(amount || 0) * 100);
 }
 
+// Ensure URLs always include protocol (Stripe redirects behave better this way)
+function normalizeSiteUrl(url: string) {
+  const u = String(url || "").trim();
+  if (!u) return u;
+  if (u.startsWith("http://") || u.startsWith("https://")) return u;
+  return `https://${u}`;
+}
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed." });
 
   try {
-    const { cart, totals, customer, delivery_date, delivery_window, note, lines } = req.body as {
+    const {
+      cart,
+      totals,
+      customer,
+      delivery_date,
+      delivery_window,
+      note,
+      lines,
+
+      // ✅ new (gift)
+      gift_code,
+      gift_str_qty,
+    } = req.body as {
       cart: Record<string, number>;
       totals: any;
       customer: { name: string; email: string; phone: string; address: string };
       delivery_date: string;
       delivery_window: string;
       note?: string;
-      lines?: string[]; // optional: let frontend send pretty lines
+      lines?: string[];
+
+      gift_code?: string;
+      gift_str_qty?: number;
     };
 
     if (!cart || !totals || !customer?.email) {
@@ -69,6 +92,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       delivery_fee: String(totals.deliveryFee ?? ""),
       total_paid: String(totals.total ?? ""),
 
+      // ✅ gift fields (new)
+      gift_code: String(gift_code || ""),
+      gift_str_qty: String(gift_str_qty ?? ""),
+
       // internal id you like
       order_id: orderId,
       payment_provider: "stripe",
@@ -77,7 +104,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       yoghurt_strain: String(totals.deliveryBrand || ""),
     };
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_DOMAIN;
+    const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_DOMAIN;
+    const siteUrl = normalizeSiteUrl(rawSiteUrl || "");
     if (!siteUrl) return res.status(500).json({ error: "Missing NEXT_PUBLIC_SITE_URL / NEXT_PUBLIC_DOMAIN" });
 
     const session = await stripe.checkout.sessions.create({
@@ -96,8 +124,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       success_url: `${siteUrl}/?pay=success&provider=stripe&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/?pay=cancel&provider=stripe`,
       metadata,
-    });   
-        
+    });
+
     return res.status(200).json({ url: session.url, id: session.id });
   } catch (e: any) {
     console.error(e);
