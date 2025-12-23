@@ -53,7 +53,7 @@ const GROUPED = [
     blurb: <>Yoghurt fermented by <em>L. reuteri</em> DSM 17648.<br />
       1 trillion CFU.<br />
       Targets <em>H. pylori</em>.<br />
-      Pair with SPCTRL for full gut restoration.<br />
+      Alternated with SPCTRL for full gut restoration.<br />
       No added sweeteners.<br />
       Lactose-free.<br />
       250ml.
@@ -67,7 +67,7 @@ const GROUPED = [
     blurb: <>Yoghurt fermented by <em>L. reuteri</em> DSM 17938.<br />
       1 trillion CFU.<br />
       Targets pathogens including <em>Candida</em>.<br />
-      Pair with PRCXN for full gut restoration.<br />
+      Alternated with PRCXN for full gut restoration.<br />
       No added sweeteners.<br />
       Lactose-free.<br />
       250ml.
@@ -412,8 +412,13 @@ function AboutSection() {
         <h3 className="mt-8 text-xl font-semibold text-white">
           Instructions
         </h3>
+
         <p className="mt-2 text-white text-sm leading-relaxed">
-          It is advised to do the following:
+          The yoghurt may be consumed at any time in the day, but for best effect, it is recommended to have it right in between lunch and dinner.
+        </p>
+        
+        <p className="mt-2 text-white text-sm leading-relaxed">
+          Please do the following:
         </p>
 
         <div className="mt-2 text-sm text-white leading-relaxed">
@@ -741,7 +746,7 @@ export default function App(){
 
   const SUBSCRIPTION_PLANS = [
     { key: "PLN", label: "PLN (plain)", priceLabel: "£11", bg: "bg-white/15" },
-    { key: "BFC", label: "BFC (black forest chocolate)", priceLabel: "£14", bg: "bg-rose-900/40" },
+    { key: "BFC", label: "BFC (black forest)", priceLabel: "£14", bg: "bg-rose-900/40" },
     { key: "STR", label: "STR (strawberry)", priceLabel: "£14", bg: "bg-pink-500/35" },
     { key: "MNG", label: "MNG (mango)", priceLabel: "£14", bg: "bg-amber-300/45" },
     { key: "MIX", label: "MIX (mixed)", priceLabel: "£13", bg: "MIX_STRIPES" },
@@ -927,7 +932,7 @@ export default function App(){
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-px text-sm text-white">
                     {[
                       { id: ids.PLN, label: "PLN (plain)", bg: "bg-white/15" },
-                      { id: ids.BFC, label: "BFC (black forest chocolate)", bg: "bg-rose-900/40" },
+                      { id: ids.BFC, label: "BFC (black forest)", bg: "bg-rose-900/40" },
                       { id: ids.STR, label: "STR (strawberry)", bg: "bg-pink-500/35" },
                       { id: ids.MNG, label: "MNG (mango)", bg: "bg-amber-300/45" },
                     ].map((f) => {
@@ -980,7 +985,7 @@ export default function App(){
                   <div className="mt-2 text-xs text-white space-y-1.5">
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        PLN: <strong>£2</strong> per bottle ·{" "}
+                        PLN: <strong>£2</strong> each ·{" "}
                         <strong>Buy 7 get one FREE</strong>
                       </span>
                       {totalPlain > 0 ? (
@@ -1005,7 +1010,7 @@ export default function App(){
       
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        BFC, STR &amp; MNG: <strong>£2.50</strong> per bottle ·{" "}
+                        BFC, STR &amp; MNG: <strong>£2.50</strong> each ·{" "}
                         <strong>Buy 7 get one FREE</strong>
                       </span>
                       {totalFlavoured > 0 ? (
@@ -1063,10 +1068,10 @@ export default function App(){
                 
                   <div className="text-sm sm:text-base text-white max-w-3xl space-y-1.5">
                     <p><strong>Subscribe and save.</strong> Receive <strong>7 bottle of yoghurts every Monday</strong>, fermented the day before for freshness.</p>
-                    <p><strong>Minimum 3 weeks</strong> order. You will be charged every week on the day of delivery.</p>
-                    <p>You will receive your first batch on the coming <strong>available Monday</strong> (book by <strong>Friday</strong> for <strong>coming Monday</strong>).</p>
+                    <p><strong>Minimum 3 weeks</strong> order. You will be charged <strong>every week</strong> on the day of delivery.</p>
+                    <p>You will receive your first batch on the coming <strong>available Monday</strong>. Book by <strong>Saturday evening</strong> for the <strong>coming Monday</strong>).</p>
                     <p>We alternate between <strong>PRCXN</strong> and <strong>SPCTRL</strong> yoghurt variants every week.</p>
-                    <p className="text-white">Please choose a plan:</p>
+                    <p>Tap a plan below to subscribe.</p>
                   </div>
                 
                   {/* Plans table */}
@@ -1120,10 +1125,6 @@ export default function App(){
                         );
                       })}
                     </div>
-                  
-                    <p className="mt-3 text-xs text-white leading-relaxed">
-                      Tap a plan to subscribe (weekly recurring payment)
-                    </p>
                   
                     <p className="mt-2 text-xs text-white leading-relaxed">
                       <strong>MIX</strong> contains 1 PLN, 2 BFC, 2 STR, and 2 MNG
