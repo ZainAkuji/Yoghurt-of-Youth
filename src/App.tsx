@@ -1723,6 +1723,7 @@ function PayModal({
       setEmail(draft?.customer?.email || "");
       setPhone(draft?.customer?.phone || "");
       setNote(draft?.note || "");
+      setGiftCode(draft?.gift_code || "");
   
       const addr = String(draft?.customer?.address || "");
       const parts = addr.split(",");
@@ -1753,7 +1754,7 @@ function PayModal({
         address: fullAddress,
       },
       note,
-      // keep kind/plan if already there
+      gift_code: giftCode.trim().toUpperCase(),
     };
   
     sessionStorage.setItem("yoy_checkout_draft", JSON.stringify(updated));
@@ -2165,10 +2166,6 @@ function PayModal({
       {/* Gift code */}
       {!isSubscription && (
         <div className="md:col-span-2">
-          <div className="text-xs text-white/70 mb-1">
-            Gift code (optional) — WHATSAPP25 / INSTA25
-          </div>
-
           <div className="flex gap-2">
             <input
               value={giftCode}
