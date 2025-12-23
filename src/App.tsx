@@ -1754,7 +1754,7 @@ function PayModal({
         address: fullAddress,
       },
       note,
-      gift_code: giftCode.trim().toUpperCase(),
+      gift_code: giftCode,
     };
   
     sessionStorage.setItem("yoy_checkout_draft", JSON.stringify(updated));
@@ -2165,7 +2165,7 @@ function PayModal({
 
       {/* Gift code */}
       {!isSubscription && (
-        <div className="md:col-span-2">
+        <div className="mt-5 md:col-span-2">
           <div className="flex gap-2">
             <input
               value={giftCode}
