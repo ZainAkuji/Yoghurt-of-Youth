@@ -77,7 +77,7 @@ const GROUPED = [
   },
 ];
 
-function computeTotals(cart: Record<string, number>) {
+function computeTotals(cart: Record<string, number>, giftStrQty: number = 0) {
   // expand cart into full product objects + qty
   const items = Object.entries(cart)
     .map(([id, qty]) => {
@@ -87,7 +87,8 @@ function computeTotals(cart: Record<string, number>) {
     })
     .filter(Boolean) as Array<(typeof PRODUCTS)[number] & { qty: number }>;
 
-  const qtyTotal = items.reduce((s, i) => s + i.qty, 0);
+  // ✅ bottles count includes gift STR
+  const qtyTotal = items.reduce((s, i) => s + i.qty, 0) + (giftStrQty || 0);
 
   // classify by price: £2 = "plain", £2.50 = "flavoured"
   const plainItems = items.filter((i) => i.price === 2.0);
@@ -145,10 +146,10 @@ function computeTotals(cart: Record<string, number>) {
     remainder,
 
     // money
-    total,              // final charge INCLUDING delivery
+    total,
     savings,
-    plainSubtotal: fullPrice,  // keep old name for "full price" row
-    merchTotal,         // bottles only, after bundles, no delivery
+    plainSubtotal: fullPrice,
+    merchTotal,
     deliveryFee,
     freeDeliveryUnlocked,
 
@@ -159,6 +160,9 @@ function computeTotals(cart: Record<string, number>) {
     flavBundles,
     plainRemainder,
     flavRemainder,
+
+    // ✅ gift
+    giftStrQty,
   };
 }
 
