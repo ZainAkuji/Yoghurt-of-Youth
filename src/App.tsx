@@ -1617,19 +1617,6 @@ function PayModal({
   payKind?: "oneoff" | "subscription";
   subscriptionPlan?: SubscriptionPlan | null;
 }) {
-  const {
-    qtyTotal,
-    total,
-    savings,
-    plainQty,
-    flavQty,
-    plainBundles,
-    flavBundles,
-    plainRemainder,
-    flavRemainder,
-    deliveryFee,
-    freeDeliveryUnlocked,
-  } = totals;
 
   const isSubscription = payKind === "subscription" && !!subscriptionPlan;
 
@@ -1639,7 +1626,6 @@ function PayModal({
   const firstISO = nextEligibleMondayISO();
   const firstText = `${formatDateUK(firstISO)} (${weekdayFromISO(firstISO)})`;
 
-  // form state
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -1721,26 +1707,6 @@ function PayModal({
       return false;
     }
     return true;
-  }
-
-  function applyGiftCode() {
-    const code = giftCode.trim().toUpperCase();
-  
-    if (giftApplied) {
-      setError("Gift already applied.");
-      return;
-    }
-  
-    if (code !== "WHATSAPP25" && code !== "INSTA25") {
-      setError("Invalid gift code.");
-      return;
-    }
-  
-    // add 1 free STR
-    setCart((c) => ({ ...c, STR: (c.STR || 0) + 1 }));
-    setGiftApplied(true);
-    setGiftCode("");
-    setError("");
   }
 
   useEffect(() => {
@@ -1900,7 +1866,7 @@ function PayModal({
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({
                     cart,
-                    totals,
+                    totals: totalsWithGift,
                     lines,
                     customer,
                     delivery_date: formattedDate,
@@ -2307,7 +2273,7 @@ function PayModal({
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   cart,
-                  totals,
+                  totals: totalsWithGift,
                   lines,
                   subscriptionPlan,
                   customer: {
@@ -2390,7 +2356,7 @@ function PayModal({
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   cart,
-                  totals,
+                  totals: totalsWithGift,
                   lines,
                   customer: { name, email, phone, address: fullAddress },
                   delivery_date: formattedDate,
