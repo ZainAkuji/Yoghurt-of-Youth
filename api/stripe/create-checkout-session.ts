@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import Stripe from "stripe";
+import { kv } from "@vercel/kv";
 
 // If your totals are in GBP pounds (e.g. 12.50), convert to pence (1250)
 function poundsToPence(amount: number) {
@@ -20,19 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed." });
 
   try {
-    const {
-      cart,
-      totals,
-      customer,
-      delivery_date,
-      delivery_window,
-      note,
-      lines,
-
-      // ✅ new (gift)
-      gift_code,
-      gift_str_qty,
-    } = req.body as {
+    const { cart, totals, customer, delivery_date, delivery_window, note, lines, gift_code, gift_str_qty } = req.body as {
       cart: Record<string, number>;
       totals: any;
       customer: { name: string; email: string; phone: string; address: string };
@@ -40,13 +29,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       delivery_window: string;
       note?: string;
       lines?: string[];
-
       gift_code?: string;
       gift_str_qty?: number;
     };
 
     if (!cart || !totals || !customer?.email) {
       return res.status(400).json({ error: "Missing required checkout data." });
+    }
+
+    // ---- Gift code: one-time per email (enforced server-side) ----
+    const giftCode = String(gift_code || "").trim().toUpperCase();
+    const giftStrQty = Number(gift_str_qty || 0);
+    
+    if (giftStrQty > 0) {
+      const emailKey = String(customer.email || "").trim().toLowerCase();
+      const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
+    
+      const alreadyUsed = await kv.get(usedKey);
+      if (alreadyUsed) {
+        return res.status(400).json({ error: "Gift code already used for this email." });
+      }
     }
 
     // ✅ Your computeTotals looks like pounds (because you do gbp(total) in UI)
@@ -92,9 +94,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       delivery_fee: String(totals.deliveryFee ?? ""),
       total_paid: String(totals.total ?? ""),
 
-      // ✅ gift fields (new)
-      gift_code: String(gift_code || ""),
-      gift_str_qty: String(gift_str_qty ?? ""),
+      // gift fields
+      gift_code: giftCode,
+      gift_str_qty: String(giftStrQty || 0),
 
       // internal id you like
       order_id: orderId,
