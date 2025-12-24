@@ -1644,7 +1644,7 @@ function PayModal({
 
   const normalizedGiftCode = giftCode.trim().toUpperCase();
   const giftStrQty =
-    normalizedGiftCode === "WHATSAPP25" || normalizedGiftCode === "INSTA25"
+    normalizedGiftCode === "YOY25"
       ? 1
       : 0;
 
