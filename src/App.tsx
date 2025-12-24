@@ -1073,7 +1073,7 @@ export default function App(){
                   <div className="text-sm sm:text-base text-white max-w-4xl space-y-1.5">
                     <p><strong>Subscribe and save.</strong> Receive <strong>7 bottle of yoghurts every Monday</strong>, fermented the day before for freshness.</p>
                     <p><strong>Minimum 3 weeks</strong> order. You will be charged <strong>every week</strong> on the day of delivery.</p>
-                    <p>You will receive your first batch on the coming <strong>available Monday</strong>. Book by <strong>Saturday evening</strong> for the <strong>coming Monday</strong>).</p>
+                    <p>You will receive your first batch on the coming <strong>available Monday</strong>. Book by <strong>Saturday evening</strong> for the <strong>coming Monday</strong>.</p>
                     <p>We alternate between <strong>PRCXN</strong> and <strong>SPCTRL</strong> yoghurt variants every week.</p>
                     <p>Tap a plan below to subscribe.</p>
                   </div>
