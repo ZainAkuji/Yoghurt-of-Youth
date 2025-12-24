@@ -272,6 +272,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           total_paid: fmtGbp(m.total_paid),
         };
 
+        // ---- Gift code: mark one-time use (per email) after successful payment ----
+        const giftCode = String(m.gift_code || "").trim().toUpperCase();
+        const giftStrQty = Number(m.gift_str_qty || 0);
+        const emailKey = String(m.customer_email || "").trim().toLowerCase();
+        
+        if (giftStrQty > 0 && giftCode && emailKey) {
+          const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
+          await kv.set(usedKey, {
+            order_id: m.order_id || "",
+            session_id: session.id || "",
+            usedAt: Date.now(),
+          });
+        }
+
         await sendEmailJS(process.env.EMAILJS_TEMPLATE_ID as string, {
           ...templateParams,
           to_email: ownerEmail,
