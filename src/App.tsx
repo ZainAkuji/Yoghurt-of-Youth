@@ -2481,13 +2481,12 @@ function ConfettiOverlay() {
   );
 }
 
-
 function Footer() {
   return (
     <footer
       className="relative bg-cover bg-center text-white flex items-center"
       style={{
-        backgroundImage: "url('skyline_reflected.png')",
+        backgroundImage: "url('footer_bg.png')",
         backgroundPosition: "center 75%",
         height: "8rem", // same height as header (adjust if you like)
       }}
