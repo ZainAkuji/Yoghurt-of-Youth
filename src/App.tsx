@@ -1158,7 +1158,7 @@ export default function App(){
       <AboutSection />
 
       
-      <Footer brand={BRAND} />
+      < brand={BRAND} />
 
       
       <Drawer
@@ -2527,7 +2527,7 @@ function Footer() {
         <div className="flex justify-center md:justify-center gap-4">
           {/* Instagram */}
           <a
-            href="https://www.instagram.com/yoghurtofyouth?igsh=MW1pdzg3amU4NGtvcQ=="
+            href="https://www.instagram.com/yoghurtofyouth"
             target="_blank"
             rel="noreferrer"
           >
