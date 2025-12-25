@@ -1262,11 +1262,20 @@ function Header({ brand, itemsCount, openCart }) {
               {/* Basket button perfectly aligned */}
               <button
                 onClick={openCart}
-                className="flex items-center gap-1 border border-white/70 px-4 py-2 rounded-xl hover:bg-white/10 transition-all leading-none"
+                className="flex items-center gap-2 border border-white/70 px-4 py-2 rounded-xl hover:bg-white/10 transition-all leading-none"
               >
-                <span role="img" aria-label="basket">🧺</span>
-                <span>Basket</span>
-                {itemsCount > 0 && <span>({itemsCount})</span>}
+                <img
+                  src="/basket_icon.png"
+                  alt="Basket"
+                  className="h-5 w-5 select-none"
+                  draggable={false}
+                />
+              
+                {itemsCount > 0 && (
+                  <span className="ml-1 inline-flex items-center justify-center min-w-[26px] h-[26px] px-2 rounded-lg bg-emerald-500/80 text-black text-xs font-semibold leading-none">
+                    {itemsCount}
+                  </span>
+                )}
               </button>
             </nav>
           </div>
