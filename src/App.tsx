@@ -2488,7 +2488,6 @@ function Footer() {
       style={{
         backgroundImage: "url('footer_bg.png')",
         backgroundPosition: "center 75%",
-        height: "8rem", // same height as header (adjust if you like)
       }}
     >
       {/* Dark overlay for contrast */}
