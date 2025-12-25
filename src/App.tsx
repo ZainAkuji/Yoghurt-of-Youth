@@ -2484,10 +2484,9 @@ function ConfettiOverlay() {
 function Footer() {
   return (
     <footer
-      className="relative bg-cover bg-center text-white flex items-center"
+      className="relative bg-no-repeat bg-contain bg-center text-white flex items-center py-8"
       style={{
         backgroundImage: "url('footer_bg.png')",
-        backgroundPosition: "center 75%",
       }}
     >
       {/* Dark overlay for contrast */}
