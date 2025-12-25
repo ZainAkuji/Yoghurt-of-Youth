@@ -1262,7 +1262,7 @@ function Header({ brand, itemsCount, openCart }) {
               {/* Basket button perfectly aligned */}
               <button
                 onClick={openCart}
-                className="flex items-center gap-2 border border-white/70 px-4 py-2 rounded-xl hover:bg-white/10 transition-all leading-none"
+                className="flex items-center gap-2 h-[40px] border border-white/70 px-4 rounded-xl hover:bg-white/10 transition-all leading-none"
               >
                 <img
                   src="/basket_icon.png"
