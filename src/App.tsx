@@ -2490,7 +2490,7 @@ function Footer() {
       }}
     >
       {/* Dark overlay for contrast */}
-      <div className="absolute inset-0 bg-black/35" />
+      <div className="absolute inset-0 bg-black/50" />
 
       <div
         className="
