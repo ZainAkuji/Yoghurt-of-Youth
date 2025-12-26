@@ -2484,7 +2484,7 @@ function ConfettiOverlay() {
 function Footer() {
   return (
     <footer
-      className="relative bg-no-repeat bg-contain bg-center text-white flex items-center"
+      className="relative bg-no-repeat bg-contain bg-center text-white flex items-center w-full"
       style={{
         backgroundImage: "url('/footer_bg.png')",
       }}
