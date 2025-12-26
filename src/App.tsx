@@ -1158,7 +1158,7 @@ export default function App(){
       <AboutSection />
 
       
-      < brand={BRAND} />
+      <Footer brand={BRAND} />
 
       
       <Drawer
