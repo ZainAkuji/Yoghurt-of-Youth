@@ -1235,7 +1235,7 @@ function Header({ brand, itemsCount, openCart }) {
         }}
       >
         {/* Darken bottom for readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-black/55 pointer-events-none" />
+        <div className="absolute inset-0 bg-black/50 pointer-events-none" />
 
         {/* Content anchored to bottom (so shrink is from top) */}
         <div className="relative mx-auto max-w-6xl px-4 h-full flex items-center justify-between">
