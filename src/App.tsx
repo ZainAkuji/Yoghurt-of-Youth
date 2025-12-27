@@ -2320,7 +2320,7 @@ function PayModal({
               setSending(false);
             }
           }}
-          className="rounded-2xl px-5 py-3 text-sm font-semibold text-slate-900 bg-[#635BFF] hover:bg-[#5147ff] transition"
+          className="rounded-2xl px-5 py-3 text-sm font-semibold text-slate-900 bg-[#635BFF] hover:bg-[#5147ff] transition flex items-center justify-center"
         >
           <img
             src="/stripe_logo.png"
@@ -2399,7 +2399,7 @@ function PayModal({
               setSending(false);
             }
           }}
-          className="rounded-2xl px-5 py-3 text-sm font-semibold bg-[#ffc439] text-slate-900 hover:bg-[#ffcf43] transition"
+          className="rounded-2xl px-5 py-3 text-sm font-semibold bg-[#ffc439] text-slate-900 hover:bg-[#ffcf43] transition flex items-center justify-center"
         >
           <img
             src="/paypal_logo.png"
