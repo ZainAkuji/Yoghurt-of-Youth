@@ -2399,7 +2399,7 @@ function PayModal({
               setSending(false);
             }
           }}
-          className="rounded-2xl px-5 py-3 text-sm font-semibold bg-[#ffc439] text-slate-900 hover:bg-[#ffcf43] transition flex items-center justify-center"
+          className="rounded-2xl px-1 py-1 text-sm font-semibold bg-[#ffc439] text-slate-900 hover:bg-[#ffcf43] transition flex items-center justify-center"
         >
           <img
             src="/paypal_logo.png"
