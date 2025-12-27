@@ -2105,7 +2105,8 @@ function PayModal({
   return (
     <Modal onClose={onClose} title="Checkout & Delivery">
       <p className="text-sm text-white/80">
-        Please fill in the details below. We deliver every <span className="font-semibold">Monday</span> between <span className="font-semibold">18:30-20:00</span>.
+        Please fill in the details below then select your payment method.
+        We deliver every <span className="font-semibold">Monday</span> between <span className="font-semibold">18:30-20:00</span>.
         We deliver to Blackurn residents only.
       </p>
 
@@ -2320,12 +2321,12 @@ function PayModal({
               setSending(false);
             }
           }}
-          className="sm:w-72 h-14 rounded-2xl px-1 text-sm font-semibold text-slate-900 bg-[#635BFF] hover:bg-[#5147ff] transition flex items-center justify-center"
+          className="sm:w-72 h-12 rounded-2xl px-1 text-sm font-semibold text-slate-900 bg-[#635BFF] hover:bg-[#5147ff] transition flex items-center justify-center"
         >
           <img
             src="/stripe_logo.png"
             alt="Pay with Stripe"
-            className="h-10 w-auto"
+            className="h-12"
           />
         </button>
 
@@ -2399,7 +2400,7 @@ function PayModal({
               setSending(false);
             }
           }}
-          className="sm:w-72 h-14 rounded-2xl px-1 py-1 text-sm font-semibold bg-[#ffc439] text-slate-900 hover:bg-[#ffcf43] transition flex items-center justify-center"
+          className="sm:w-72 h-12 rounded-2xl px-1 py-1 text-sm font-semibold bg-[#ffc439] text-slate-900 hover:bg-[#ffcf43] transition flex items-center justify-center"
         >
           <img
             src="/paypal_logo.png"
@@ -2410,7 +2411,7 @@ function PayModal({
 
         <button
           onClick={onClose}
-          className="sm:w-72 h-14 rounded-2xl border border-white/30 px-1 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
+          className="sm:w-72 h-12 rounded-2xl border border-white/30 px-1 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
         >
           Cancel
         </button>
