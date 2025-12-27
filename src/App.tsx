@@ -2320,7 +2320,7 @@ function PayModal({
               setSending(false);
             }
           }}
-          className="rounded-2xl px-5 py-3 text-sm font-semibold text-slate-900 bg-[#635BFF] hover:bg-[#5147ff] transition flex items-center justify-center"
+          className="rounded-2xl px-1 py-1 text-sm font-semibold text-slate-900 bg-[#635BFF] hover:bg-[#5147ff] transition flex items-center justify-center"
         >
           <img
             src="/stripe_logo.png"
