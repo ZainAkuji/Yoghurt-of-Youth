@@ -2404,7 +2404,7 @@ function PayModal({
           <img
             src="/paypal_button.jpeg"
             alt="Pay with PayPal"
-            className="h-6 w-auto"
+            className="h-6"
            />
         </button>
 
