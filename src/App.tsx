@@ -2320,7 +2320,7 @@ function PayModal({
               setSending(false);
             }
           }}
-          className="sm:w-72 rounded-2xl px-1 py-1 text-sm font-semibold text-slate-900 bg-[#635BFF] hover:bg-[#5147ff] transition flex items-center justify-center"
+          className="sm:w-72 rounded-2xl px-1 text-sm font-semibold text-slate-900 bg-[#635BFF] hover:bg-[#5147ff] transition flex items-center justify-center"
         >
           <img
             src="/stripe_logo.png"
@@ -2410,7 +2410,7 @@ function PayModal({
 
         <button
           onClick={onClose}
-          className="sm:w-72 rounded-2xl border border-white/30 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
+          className="sm:w-72 rounded-2xl border border-white/30 px-1 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"
         >
           Cancel
         </button>
