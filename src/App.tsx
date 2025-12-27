@@ -2325,7 +2325,7 @@ function PayModal({
           <img
             src="/stripe_logo.png"
             alt="Pay with Stripe"
-            className="h-6 w-auto"
+            className="h-10 w-auto"
           />
         </button>
 
