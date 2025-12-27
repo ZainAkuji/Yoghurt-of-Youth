@@ -2322,7 +2322,11 @@ function PayModal({
           }}
           className="rounded-2xl px-5 py-3 text-sm font-semibold bg-white text-slate-900 hover:bg-amber-300 transition"
         >
-          Pay with Stripe
+          <img
+            src="/stripe_button.png"
+            alt="Pay with Stripe"
+            className="h-6 w-auto"
+          />
         </button>
 
         {/* PAYPAL */}
@@ -2397,7 +2401,11 @@ function PayModal({
           }}
           className="rounded-2xl px-5 py-3 text-sm font-semibold bg-[#ffc439] text-slate-900 hover:bg-[#ffcf43] transition"
         >
-          Pay with PayPal
+          <img
+            src="/paypal_button.png"
+            alt="Pay with PayPal"
+            className="h-6 w-auto"
+           />
         </button>
 
         <button
