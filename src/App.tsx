@@ -2106,7 +2106,7 @@ function PayModal({
     <Modal onClose={onClose} title="Checkout & Delivery">
       <p className="text-sm text-white/80">
         Please fill in the details below then select your payment method.
-        We deliver every <span className="font-semibold">Monday</span> between <span className="font-semibold">18:30-20:00</span>.
+        We deliver every <span className="font-semibold">Monday</span> & <span className="font-semibold">Thursday</span> between <span className="font-semibold">18:30-20:00</span>.
         We deliver to Blackurn residents only.
       </p>
 
