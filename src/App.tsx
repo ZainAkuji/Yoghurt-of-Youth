@@ -2320,10 +2320,10 @@ function PayModal({
               setSending(false);
             }
           }}
-          className="rounded-2xl px-5 py-3 text-sm font-semibold bg-white text-slate-900 hover:bg-amber-300 transition"
+          className="rounded-2xl px-5 py-3 text-sm font-semibold text-slate-900 bg-[#635BFF] hover:bg-[#5147ff] transition"
         >
           <img
-            src="/stripe_button.jpg"
+            src="/stripe_logo.png"
             alt="Pay with Stripe"
             className="h-6 w-auto"
           />
@@ -2402,7 +2402,7 @@ function PayModal({
           className="rounded-2xl px-5 py-3 text-sm font-semibold bg-[#ffc439] text-slate-900 hover:bg-[#ffcf43] transition"
         >
           <img
-            src="/paypal_button.jpg"
+            src="/paypal_logo.png"
             alt="Pay with PayPal"
             className="h-6"
            />
