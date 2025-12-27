@@ -2174,7 +2174,7 @@ function PayModal({
 
       {/* Gift code */}
       {!isSubscription && (
-        <div className="mt-5 md:col-span-2">
+        <div className="mt-4 md:col-span-2">
           <div className="flex gap-2">
             <input
               value={giftCode}
@@ -2198,7 +2198,7 @@ function PayModal({
 
       {/* summary */}
       {qtyTotal > 0 && (
-        <div className="mt-5 rounded-2xl bg-black/40 border border-white/15 p-4 text-sm text-white/85">
+        <div className="mt-4 rounded-2xl bg-black/40 border border-white/15 p-4 text-sm text-white/85">
           <div className="font-semibold mb-2">Summary</div>
           <div className="grid sm:grid-cols-2 gap-2">
             <div>
