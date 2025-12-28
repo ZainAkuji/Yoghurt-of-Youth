@@ -1911,7 +1911,7 @@ function PayModal({
             <img
               src="/stripe_logo.png"
               alt="Subscribe with Stripe"
-              className="h-24"
+              className="h-14"
             />
           </button>
           
@@ -2330,7 +2330,7 @@ function PayModal({
           <img
             src="/stripe_logo.png"
             alt="Pay with Stripe"
-            className="h-24"
+            className="h-14"
           />
         </button>
 
@@ -2409,7 +2409,7 @@ function PayModal({
           <img
             src="/paypal_logo.png"
             alt="Pay with PayPal"
-            className="h-10"
+            className="h-6"
            />
         </button>
 
