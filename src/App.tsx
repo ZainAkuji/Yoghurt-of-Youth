@@ -1911,7 +1911,7 @@ function PayModal({
             <img
               src="/stripe_logo.png"
               alt="Subscribe with Stripe"
-              className="h-12"
+              className="h-24"
             />
           </button>
           
