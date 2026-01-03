@@ -481,7 +481,13 @@ function AboutSection() {
             </a>
           </p>
           <p>
-            📞 Phone: 07756 231844
+            📞 Phone:{" "}
+            <a
+              href="tel:+447756231844"
+              className="underline hover:text-amber-300 transition"
+            >
+              07756 231844
+            </a>
           </p>
           <p className="text-xs text-white">We aim to respond within one working day.</p>
         </div>
