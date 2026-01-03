@@ -1082,7 +1082,7 @@ export default function App(){
                       )}
                     </p>
 
-                    <p className="mt-5 flex flex-wrap items-center gap-2">
+                    <p className="mt-7 flex flex-wrap items-center gap-2">
                       <span>
                         Collect for <strong>FREE</strong>
                       </span>
