@@ -1082,7 +1082,7 @@ export default function App(){
                       )}
                     </p>
 
-                    <p className="mt-3 flex flex-wrap items-center gap-2">
+                    <p className="mt-4 flex flex-wrap items-center gap-2">
                       <span>
                         Collect for <strong>FREE</strong>
                       </span>
@@ -2176,7 +2176,7 @@ function PayModal({
           className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
         />
 
-        <div className="mt-4 flex gap-2">
+        <div className="flex gap-2">
           <button
             type="button"
             onClick={() => setFulfilment("delivery")}
