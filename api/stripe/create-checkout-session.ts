@@ -21,7 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed." });
 
   try {
-    const { cart, totals, customer, delivery_date, delivery_window, note, lines, gift_code, gift_str_qty } = req.body as {
+    const { cart, totals, customer, fulfilment_method, delivery_date, delivery_window, note, lines, gift_code, gift_str_qty } = req.body as {
       cart: Record<string, number>;
       totals: any;
       customer: { name: string; email: string; phone: string; address: string };
@@ -31,6 +31,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       lines?: string[];
       gift_code?: string;
       gift_str_qty?: number;
+      fulfilment_method?: "delivery" | "collection";
     };
 
     if (!cart || !totals || !customer?.email) {
@@ -80,6 +81,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       delivery_date: delivery_date || "",
       delivery_window: delivery_window || "",
       note: note || "",
+
+      fulfilment_method: String(fulfilment_method || "delivery"),
+      fulfilment_label: fulfilment_method === "collection" ? "Collection" : "Delivery",
 
       // order summary fields used by your EmailJS template
       order_lines: JSON.stringify(orderLines).slice(0, 480), // safety cap
