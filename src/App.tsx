@@ -2223,7 +2223,7 @@ function PayModal({
           </>
         )}
 
-        <div className="mt-3 text-sm text-white/80">
+        <div className="text-sm text-white/80">
           {fulfilment === "delivery" ? "Please select delivery date" : "Please select collection date"}
         </div>
 
