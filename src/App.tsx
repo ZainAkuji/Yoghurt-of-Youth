@@ -1082,11 +1082,13 @@ export default function App(){
                       )}
                     </p>
 
-                    <p className="flex flex-wrap items-center gap-4">
-                      <span>
-                        Collect for <strong>FREE</strong>
-                      </span>
-                    </p>
+                    <div className="mt-1">
+                      <p className="flex flex-wrap items-center gap-2">
+                        <span>
+                          Collect for <strong>FREE</strong>
+                        </span>
+                      </p>
+                    </div>
                     
                   </div>
                 </div>
