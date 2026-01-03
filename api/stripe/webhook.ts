@@ -183,6 +183,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           order_id: subId || session.id || "", // "Subscription reference" in templates
           payment_method: "Stripe (Subscription)",
 
+          is_collection: m.delivery_method === "collection" ? "1" : "",
+
           // “Delivery” style fields re-used by templates
           delivery_date: firstDelivery,              // “First delivery”
           delivery_window: "18:30–20:00",            // fixed in your modal
