@@ -77,7 +77,11 @@ const GROUPED = [
   },
 ];
 
-function computeTotals(cart: Record<string, number>, giftStrQty: number = 0) {
+function computeTotals(
+  cart: Record<string, number>,
+  giftStrQty: number = 0,
+  fulfilment: "delivery" | "collect" = "delivery"
+) {
   // expand cart into full product objects + qty
   const items = Object.entries(cart)
     .map(([id, qty]) => {
@@ -126,11 +130,20 @@ function computeTotals(cart: Record<string, number>, giftStrQty: number = 0) {
 
   // ---- DELIVERY LOGIC ----
   const FREE_DELIVERY_THRESHOLD = 20; // £20 of yoghurt (after discounts)
-  const freeDeliveryUnlocked = merchTotal >= FREE_DELIVERY_THRESHOLD;
 
-  // £2 delivery if there is any order and threshold not reached
+  // ✅ collection = no delivery fee, ever
+  const freeDeliveryUnlocked =
+    fulfilment === "collect" ? true : merchTotal >= FREE_DELIVERY_THRESHOLD;
+
+  // ✅ collection = £0, delivery = existing logic
   const deliveryFee =
-    merchTotal === 0 ? 0 : freeDeliveryUnlocked ? 0 : 2;
+    fulfilment === "collect"
+      ? 0
+      : merchTotal === 0
+        ? 0
+        : freeDeliveryUnlocked
+          ? 0
+          : 2;
 
   // final amount customer pays (bottles + delivery)
   const total = merchTotal + deliveryFee;
@@ -152,6 +165,7 @@ function computeTotals(cart: Record<string, number>, giftStrQty: number = 0) {
     merchTotal,
     deliveryFee,
     freeDeliveryUnlocked,
+    fulfilment,
 
     // breakdown
     plainQty,
@@ -418,7 +432,8 @@ function AboutSection() {
         </h3>
 
         <p className="mt-2 text-white text-sm leading-relaxed">
-          The yoghurt may be consumed at any time in the day, but for best effect, it is recommended to have it right in between lunch and dinner.
+          The yoghurt may be consumed at any time in the day, but for best effect, it is recommended to have it right in between lunch and dinner
+          on an empty stomach, with at least <strong>one hour of no food or drink before and after</strong> the yoghurt.
         </p>
         
         <p className="mt-2 text-white text-sm leading-relaxed">
@@ -427,7 +442,7 @@ function AboutSection() {
 
         <div className="mt-2 text-sm text-white leading-relaxed">
           <ul className="list-disc list-inside space-y-1">
-            <li>Shake well before use.</li>
+            <li>Natural yoghurt can separate, which is perfectly natural, so shake well before use.</li>
             <li>Keep refrigerated.</li>
             <li>Consume within 3 days of opening.</li>
           </ul>
@@ -464,6 +479,9 @@ function AboutSection() {
             <a href="mailto:support@yoghurtofyouth.co.uk" className="underline hover:text-slate-900">
               support@yoghurtofyouth.co.uk
             </a>
+          </p>
+          <p>
+            📞 Phone: 07756 231844
           </p>
           <p className="text-xs text-white">We aim to respond within one working day.</p>
         </div>
@@ -923,11 +941,11 @@ export default function App(){
                   </p>
                   <p>
                     Delivered on <strong>Monday</strong> and <strong>Thursday</strong>{" "}
-                    <strong>18:30–20:00</strong>.
+                    <strong>18:30–20:00</strong>. Collection available.
                   </p>
-                  <p>Fermented on the day before delivery for freshness.</p>
+                  <p>Fermented on the day before delivery or collection for freshness.</p>
                   <p>
-                    Delivered to <strong>Blackburn</strong> residents only.
+                    Currently for <strong>Blackburn</strong> residents only.
                   </p>
                 </div>
       
@@ -1063,6 +1081,13 @@ export default function App(){
                         </span>
                       )}
                     </p>
+
+                    <p className="flex flex-wrap items-center gap-2">
+                      <span>
+                        Collect for <strong>FREE</strong>
+                      </span>
+                    </p>
+                    
                   </div>
                 </div>
                 
@@ -1632,6 +1657,8 @@ function PayModal({
   const deliveryOptions = deliveryDateOptions();
   const initialDate = deliveryOptions[0] || "";
 
+  const [fulfilment, setFulfilment] = useState<"delivery" | "collect">("delivery");
+
   const firstISO = nextEligibleMondayISO();
   const firstText = `${formatDateUK(firstISO)} (${weekdayFromISO(firstISO)})`;
 
@@ -1659,8 +1686,8 @@ function PayModal({
 
   // ✅ Use totals that include the gift bottle count (but not price)
   const totalsWithGift = useMemo(() => {
-    return computeTotals(cart, giftStrQty);
-  }, [cart, giftStrQty]);
+    return computeTotals(cart, giftStrQty, fulfilment);
+  }, [cart, giftStrQty, fulfilment]);
 
   const {
     qtyTotal,
@@ -1686,24 +1713,29 @@ function PayModal({
   }
 
   const normalizedPostcode = postcode.trim().toUpperCase();
-  const fullAddress = [streetAddress.trim(), normalizedPostcode].filter(Boolean).join(", ");
+
+  const fullAddress =
+    fulfilment === "collect"
+      ? "Click & Collect"
+      : [streetAddress.trim(), normalizedPostcode].filter(Boolean).join(", ");
 
   const valid =
     !!name &&
     !!email &&
     !!phone &&
-    !!postcode &&
-    !!streetAddress &&
-    (isSubscription ? true : (qtyTotal > 0 && !!date));
+    (isSubscription ? true : (qtyTotal > 0 && !!date)) &&
+    (isSubscription ? true : (fulfilment === "delivery" ? (!!postcode && !!streetAddress) : true));
 
   function validateBeforePay(): boolean {
     if (!valid) {
       setError("Please complete all required fields first.");
       return false;
     }
-    if (!/^BB[12]\b/i.test(normalizedPostcode)) {
-      setError("Sorry, we do not deliver outside of Blackburn (postcodes BB1–BB2).");
-      return false;
+    if (!isSubscription && fulfilment === "delivery") {
+      if (!/^BB[12]\b/i.test(normalizedPostcode)) {
+        setError("Sorry, we do not deliver outside of Blackburn (postcodes BB1–BB2).");
+        return false;
+      }
     }
     if (!isSubscription) {
       if (!deliveryOptions.includes(date)) {
@@ -1732,6 +1764,7 @@ function PayModal({
       setEmail(draft?.customer?.email || "");
       setPhone(draft?.customer?.phone || "");
       setNote(draft?.note || "");
+      setFulfilment(draft?.fulfilment || "delivery");
       setGiftCode(draft?.gift_code || "");
   
       const addr = String(draft?.customer?.address || "");
@@ -1764,10 +1797,11 @@ function PayModal({
       },
       note,
       gift_code: giftCode,
+      fulfilment,
     };
   
     sessionStorage.setItem("yoy_checkout_draft", JSON.stringify(updated));
-  }, [name, email, phone, fullAddress, note]);
+  }, [name, email, phone, fullAddress, note, fulfilment, giftCode]);
 
   // ✅ SUBSCRIPTION MODE (Weekly Gut Punch)
   if (isSubscription && subscriptionPlan) {
@@ -1865,6 +1899,7 @@ function PayModal({
                   note,
                   lines,
                   gift_code: normalizedGiftCode,
+                  fulfilment,
                   gift_str_qty: giftStrQty,
                   savedAt: Date.now(),
                   provider: "stripe",
@@ -1883,6 +1918,7 @@ function PayModal({
                     delivery_window: deliveryWindow,
                     note,
                     gift_code: normalizedGiftCode,
+                    fulfilment,
                     gift_str_qty: giftStrQty,
                   }),
                 });
@@ -2140,6 +2176,57 @@ function PayModal({
           className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
         />
 
+        <div className="mt-3 flex gap-2">
+          <button
+            type="button"
+            onClick={() => setFulfilment("delivery")}
+            className={
+              "flex-1 rounded-xl border px-3 py-2 text-sm font-semibold transition " +
+              (fulfilment === "delivery"
+                ? "border-white/60 bg-white/15 text-white"
+                : "border-white/25 bg-black/20 text-white/80 hover:bg-white/10")
+            }
+          >
+            Delivery
+          </button>
+        
+          <button
+            type="button"
+            onClick={() => setFulfilment("collect")}
+            className={
+              "flex-1 rounded-xl border px-3 py-2 text-sm font-semibold transition " +
+              (fulfilment === "collect"
+                ? "border-white/60 bg-white/15 text-white"
+                : "border-white/25 bg-black/20 text-white/80 hover:bg-white/10")
+            }
+          >
+            Click &amp; Collect
+          </button>
+        </div>
+
+        {fulfilment === "delivery" && (
+          <>
+            <input
+              value={postcode}
+              onChange={(e) => setPostcode(e.target.value)}
+              required
+              placeholder="Postcode (BB1 / BB2 only)"
+              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+            />
+            <input
+              value={streetAddress}
+              onChange={(e) => setStreetAddress(e.target.value)}
+              required
+              placeholder="Street address"
+              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+            />
+          </>
+        )}
+
+        <div className="mt-3 text-sm text-white/80">
+          {fulfilment === "delivery" ? "Please select delivery date" : "Please select collection date"}
+        </div>
+
         {!isSubscription && (
           <select
             value={date}
@@ -2153,21 +2240,6 @@ function PayModal({
             ))}
           </select>
         )}
-
-        <input
-          value={postcode}
-          onChange={(e) => setPostcode(e.target.value)}
-          required
-          placeholder="Postcode (BB1 / BB2 only)"
-          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
-        />
-        <input
-          value={streetAddress}
-          onChange={(e) => setStreetAddress(e.target.value)}
-          required
-          placeholder="Street address"
-          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
-        />
 
         <input
           value={note}
@@ -2269,6 +2341,7 @@ function PayModal({
                 note,
                 lines,
                 gift_code: normalizedGiftCode,
+                fulfilment,
                 gift_str_qty: giftStrQty,
                 savedAt: Date.now(),
                 provider: "stripe",
@@ -2297,6 +2370,7 @@ function PayModal({
                   delivery_window: deliveryWindow,
                   note,
                   gift_code: normalizedGiftCode,
+                  fulfilment,
                   gift_str_qty: giftStrQty,
                 }),
               });
@@ -2360,6 +2434,7 @@ function PayModal({
                 note,
                 lines,
                 gift_code: normalizedGiftCode,
+                fulfilment,
                 gift_str_qty: giftStrQty,
                 savedAt: Date.now(),
                 provider: "paypal",
@@ -2378,6 +2453,7 @@ function PayModal({
                   delivery_window: deliveryWindow,
                   note,
                   gift_code: normalizedGiftCode,
+                  fulfilment,
                   gift_str_qty: giftStrQty,
                 }),
               });
