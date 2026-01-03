@@ -5,7 +5,7 @@
 html, body, #root { height: 100%; }
 
 html {
-  scroll-padding-top: 1rem;
+  scroll-padding-top: 2rem;
   scroll-behavior: smooth;
 }
 
