@@ -1082,7 +1082,7 @@ export default function App(){
                       )}
                     </p>
 
-                    <p className="mt-4 flex flex-wrap items-center gap-2">
+                    <p className="mt-5 flex flex-wrap items-center gap-2">
                       <span>
                         Collect for <strong>FREE</strong>
                       </span>
@@ -1519,28 +1519,9 @@ function Basket({
           </div>
         )}
 
-        {/* Delivery row – only when there is at least one bottle */}
-        {qtyTotal > 0 && (
-          <div className="flex justify-between">
-            <span>
-              Delivery{" "}
-              <span className="text-xs text-white/60">
-                (£2 · free over £20)
-              </span>
-            </span>
-            <span
-              className={
-                freeDeliveryUnlocked ? "text-emerald-400 font-semibold" : ""
-              }
-            >
-              {freeDeliveryUnlocked ? "FREE" : gbp(deliveryFee)}
-            </span>
-          </div>
-        )}
-
         <div className="flex justify-between font-semibold text-white">
           <span>Total due to be paid</span>
-          <span>{gbp(total)}</span>
+          <span>{gbp(merchTotal)}</span>
         </div>
       </div>
 
@@ -2223,7 +2204,7 @@ function PayModal({
           </>
         )}
 
-        <div className="text-sm text-white/80">
+        <div className="mt-2 text-sm text-white/80">
           {fulfilment === "delivery" ? "Please select delivery date" : "Please select collection date"}
         </div>
 
@@ -2284,7 +2265,7 @@ function PayModal({
               ))}
             </div>
             <div>
-              <div>Bottles: {qtyTotal}</div>
+              <div className="mb-1">Bottles: {qtyTotal}</div>
               {plainRemainder > 0 && <div>PLN: {plainRemainder} × £2.00</div>}
               {plainBundles > 0 && <div>Free PLN (7 for 6): {plainBundles}</div>}
               {flavRemainder > 0 && <div>Flavoured: {flavRemainder} × £2.50</div>}
@@ -2293,7 +2274,8 @@ function PayModal({
               {deliveryFee > 0 && !freeDeliveryUnlocked && (
                 <div className="mt-1">Delivery: {gbp(deliveryFee)}</div>
               )}
-              {freeDeliveryUnlocked && (
+
+              {fulfilment === "delivery" && freeDeliveryUnlocked && (
                 <div className="mt-1 text-emerald-400">
                   Free delivery unlocked (orders over £20)
                 </div>
