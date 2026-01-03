@@ -252,6 +252,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           delivery_date: deliveryDatePretty,
           delivery_window: m.delivery_window || "",
           note: m.note || "",
+          is_collection: m.fulfilment === "collection" ? "1" : "",
 
           order_id: m.order_id || "",
           payment_method: "Stripe",
