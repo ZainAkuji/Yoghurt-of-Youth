@@ -1,4 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { kv } from "@vercel/kv";
+await kv.set(`paypal_order_${orderRef}`, custom, { ex: 60 * 60 * 24 }); // 24h
 
 async function paypalAccessToken() {
   const auth = Buffer.from(
@@ -22,7 +24,7 @@ async function paypalAccessToken() {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const { cart, totals, customer, delivery_date, delivery_window, note, lines } = req.body;
+  const { cart, totals, customer, delivery_date, delivery_window, note, lines, gift_code, gift_str_qty, delivery_method } = req.body;
 
   const access_token = await paypalAccessToken();
 
@@ -31,8 +33,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const orderRef = `YOY-${Date.now().toString().slice(-6)}`;
 
-  // IMPORTANT: Put all your “EmailJS template fields” into custom_id (string)
-  // We’ll read this later from capture + webhook.
   const custom = {
     order_id: orderRef,
 
@@ -41,6 +41,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     customer_phone: customer.phone,
     customer_address: customer.address,
 
+    delivery_method: String(delivery_method || "delivery"),
     delivery_date,
     delivery_window,
     note: note || "",
@@ -57,6 +58,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     merchandise_total: String(totals.merchTotal),
     delivery_fee: String(totals.deliveryFee),
     total_paid: String(totals.total),
+
+    gift_code: String(gift_code || ""),
+    gift_str_qty: String(gift_str_qty ?? ""),
 
     yoghurt_strain: String(totals.deliveryBrand || ""),
     payment_provider: "paypal",
