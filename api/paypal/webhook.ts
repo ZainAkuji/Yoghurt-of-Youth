@@ -235,7 +235,5 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  try { await kv.del(`paypal_order_${orderRef}`); } catch {}
-
   return res.json({ received: true });
 }
