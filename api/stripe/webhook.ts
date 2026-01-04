@@ -1,3 +1,4 @@
+// api/stripe/webhook.ts
 import Stripe from "stripe";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { kv } from "@vercel/kv";
@@ -6,7 +7,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 function weekdayFromDMY(dmy: string) {
   // expects "dd/mm/yyyy"
-  const [d, m, y] = dmy.split("/").map(Number);
+  const [d, m, y] = String(dmy).split("/").map(Number);
   const dt = new Date(y, m - 1, d);
   return dt.toLocaleDateString("en-GB", { weekday: "long" }); // Monday/Thursday etc
 }
@@ -28,7 +29,6 @@ function formatDateUKFromUnixSeconds(unixSeconds: number) {
 }
 
 function safeJoinAddress(addr: any) {
-  // Stripe customer_details.address is an object
   if (!addr || typeof addr !== "object") return "";
   const parts = [
     addr.line1,
@@ -81,19 +81,6 @@ async function sendEmailJS(templateId: string, templateParams: EmailPayload) {
   }
 }
 
-async function alreadyProcessedOnce(key: string) {
-  try {
-    const hit = await kv.get(key);
-    if (hit) return true;
-    await kv.set(key, "1", { ex: 60 * 60 * 24 * 7 }); // 7 days
-    return false;
-  } catch (e) {
-    // If KV fails, do not block sending (better to send than lose emails)
-    console.warn("KV idempotency check failed:", e);
-    return false;
-  }
-}
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).send("Method not allowed");
 
@@ -109,198 +96,176 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       process.env.STRIPE_WEBHOOK_SECRET as string
     );
 
-    // Idempotency per Stripe event id
-    const idKey = `stripe_webhook_done:${event.id}`;
-    if (await alreadyProcessedOnce(idKey)) {
-      return res.status(200).json({ received: true, deduped: true });
+    if (event.type !== "checkout.session.completed") {
+      return res.status(200).json({ received: true, ignored: true, type: event.type });
     }
 
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object as Stripe.Checkout.Session;
+    const session = event.data.object as Stripe.Checkout.Session;
+    const ownerEmail = process.env.OWNER_EMAIL || "zainul_a@hotmail.co.uk";
 
-      const ownerEmail = process.env.OWNER_EMAIL || "zainul_a@hotmail.co.uk";
+    // ----------------------------
+    // SUBSCRIPTION (Weekly Gut Punch)
+    // ----------------------------
+    if (session.mode === "subscription") {
+      const subId = typeof session.subscription === "string" ? session.subscription : "";
+      let sub: Stripe.Subscription | null = null;
 
-      // ----------------------------
-      // SUBSCRIPTION (Weekly Gut Punch)
-      // ----------------------------
-      if (session.mode === "subscription") {
-        // Pull metadata from the *subscription*, because you set it in subscription_data.metadata
-        const subId = typeof session.subscription === "string" ? session.subscription : "";
-        let sub: Stripe.Subscription | null = null;
-
-        if (subId) {
-          sub = await stripe.subscriptions.retrieve(subId);
-        }
-
-        const sm = sub?.metadata || {};
-        const planKey = String(sm.planKey || "");
-        const linesArr = subscriptionLinesFromPlanKey(planKey);
-
-        // get weekly price from line item price amount (more reliable than guessing)
-        let weeklyPriceText = "";
-        try {
-          const li = await stripe.checkout.sessions.listLineItems(session.id, { limit: 5 });
-          const first = li.data?.[0];
-          const unitAmount = first?.price?.unit_amount;
-          const currency = (first?.price?.currency || "gbp").toUpperCase();
-          if (typeof unitAmount === "number") {
-            // Stripe unit_amount is in minor currency units (pence)
-            const v = unitAmount / 100;
-            weeklyPriceText =
-              currency === "GBP"
-                ? new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(v)
-                : `${v.toFixed(2)} ${currency}`;
-          }
-        } catch (e) {
-          console.warn("Could not read subscription line items:", e);
-        }
-
-        // customer details: prefer Stripe customer_details (filled at checkout)
-        const cd = (session.customer_details || {}) as any;
-
-        const customer_name = String(sm.name || cd?.name || "");
-        const customer_email = String(cd?.email || session.customer_email || "");
-        const customer_phone = String(sm.phone || cd?.phone || "");
-        const customer_address =
-          String(sm.address || "") ||
-          safeJoinAddress(cd?.address) ||
-          "";
-
-        // first delivery: you set trial_end to Monday 21:00; we can display it as "dd/mm/yyyy (Monday)"
-        const firstDelivery = sub?.trial_end ? formatDateUKFromUnixSeconds(sub.trial_end) : "";
-
-        // Build template params (match your naming style)
-        const templateParams = {
-          brand: "Yoghurt of Youth",
-          owner_email: ownerEmail,
-
-          customer_name,
-          customer_email,
-          customer_phone,
-          customer_address,
-
-          // subscription-focused fields (use existing names where possible)
-          order_id: subId || session.id || "", // "Subscription reference" in templates
-          payment_method: "Stripe (Subscription)",
-
-          is_collection: m.delivery_method === "collection" ? "1" : "",
-
-          // “Delivery” style fields re-used by templates
-          delivery_date: firstDelivery,              // “First delivery”
-          delivery_window: "18:30–20:00",            // fixed in your modal
-
-          // quantities / pricing
-          bottles: 7,
-          total_paid: weeklyPriceText || "",         // “Weekly price” on customer email
-          merchandise_total: "",                      // not applicable
-          delivery_fee: "FREE",                       // subscription is free delivery
-
-          // lines
-          order_lines: linesArr.join("\n"),
-
-          // optional
-          note: String(sm.note || ""),
-        };
-
-        // Owner email
-        const ownerTpl = process.env.EMAILJS_TEMPLATE_SUB_OWNER as string;
-        const custTpl = process.env.EMAILJS_TEMPLATE_SUB_CUSTOMER as string;
-
-        if (!ownerTpl) throw new Error("Missing EMAILJS_TEMPLATE_SUB_OWNER");
-        if (!custTpl) throw new Error("Missing EMAILJS_TEMPLATE_SUB_CUSTOMER");
-
-        await sendEmailJS(ownerTpl, {
-          ...templateParams,
-          to_email: ownerEmail,
-        });
-
-        if (customer_email) {
-          await sendEmailJS(custTpl, {
-            ...templateParams,
-            to_email: customer_email,
-          });
-        }
-
-        return res.status(200).json({ received: true });
+      if (subId) {
+        sub = await stripe.subscriptions.retrieve(subId);
       }
 
-      // ----------------------------
-      // ONE-OFF (existing behaviour)
-      // ----------------------------
-      {
-        const m = session.metadata || {};
+      const sm = sub?.metadata || {};
+      const planKey = String(sm.planKey || "");
+      const linesArr = subscriptionLinesFromPlanKey(planKey);
 
-        let orderLinesPretty = "";
-        try {
-          orderLinesPretty = JSON.parse(m.order_lines || "[]").join("\n");
-        } catch {
-          orderLinesPretty = String(m.order_lines || "");
+      // weekly price (from Checkout line item)
+      let weeklyPriceText = "";
+      try {
+        const li = await stripe.checkout.sessions.listLineItems(session.id, { limit: 5 });
+        const first = li.data?.[0];
+        const unitAmount = first?.price?.unit_amount;
+        const currency = (first?.price?.currency || "gbp").toUpperCase();
+        if (typeof unitAmount === "number") {
+          const v = unitAmount / 100;
+          weeklyPriceText =
+            currency === "GBP"
+              ? new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(v)
+              : `${v.toFixed(2)} ${currency}`;
         }
-
-        const deliveryWeekday = m.delivery_date ? weekdayFromDMY(m.delivery_date) : "";
-        const deliveryDatePretty = deliveryWeekday
-          ? `${deliveryWeekday} ${m.delivery_date}`
-          : (m.delivery_date || "");
-
-        const templateParams = {
-          brand: "Yoghurt of Youth",
-          owner_email: ownerEmail,
-
-          customer_name: m.customer_name || "",
-          customer_email: m.customer_email || "",
-          customer_phone: m.customer_phone || "",
-          customer_address: m.customer_address || "",
-
-          delivery_date: deliveryDatePretty,
-          delivery_window: m.delivery_window || "",
-          note: m.note || "",
-          is_collection: m.fulfilment === "collection" ? "1" : "",
-
-          order_id: m.order_id || "",
-          payment_method: "Stripe",
-
-          order_lines: orderLinesPretty,
-          bottles: m.bottles || "",
-          yoghurt_strain: m.yoghurt_strain || "",
-
-          plain_qty: m.plain_qty || "",
-          flav_qty: m.flav_qty || "",
-          plain_bundles: m.plain_bundles || "",
-          flav_bundles: m.flav_bundles || "",
-          plain_remainder: m.plain_remainder || "",
-          flav_remainder: m.flav_remainder || "",
-
-          merchandise_total: fmtGbp(m.merchandise_total),
-          delivery_fee: fmtGbp(m.delivery_fee),
-          total_paid: fmtGbp(m.total_paid),
-        };
-
-        // ---- Gift code: mark one-time use (per email) after successful payment ----
-        const giftCode = String(m.gift_code || "").trim().toUpperCase();
-        const giftStrQty = Number(m.gift_str_qty || 0);
-        const emailKey = String(m.customer_email || "").trim().toLowerCase();
-        
-        if (giftStrQty > 0 && giftCode && emailKey) {
-          const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
-          await kv.set(usedKey, {
-            order_id: m.order_id || "",
-            session_id: session.id || "",
-            usedAt: Date.now(),
-          });
-        }
-
-        await sendEmailJS(process.env.EMAILJS_TEMPLATE_ID as string, {
-          ...templateParams,
-          to_email: ownerEmail,
-        });
-
-        if (m.customer_email) {
-          await sendEmailJS(process.env.EMAILJS_CUSTOMER_TEMPLATE_ID as string, {
-            ...templateParams,
-            to_email: m.customer_email,
-          });
-        }
+      } catch (e) {
+        console.warn("Could not read subscription line items:", e);
       }
+
+      // customer details
+      const cd = (session.customer_details || {}) as any;
+
+      const customer_name = String(sm.name || cd?.name || "");
+      const customer_email = String(cd?.email || session.customer_email || "");
+      const customer_phone = String(sm.phone || cd?.phone || "");
+      const customer_address =
+        String(sm.address || "") ||
+        safeJoinAddress(cd?.address) ||
+        "";
+
+      const firstDelivery = sub?.trial_end ? formatDateUKFromUnixSeconds(sub.trial_end) : "";
+
+      const templateParams = {
+        brand: "Yoghurt of Youth",
+        owner_email: ownerEmail,
+
+        customer_name,
+        customer_email,
+        customer_phone,
+        customer_address,
+
+        order_id: subId || session.id || "",
+        payment_method: "Stripe (Subscription)",
+
+        // keep the same flag used by your templates
+        is_collection: "",
+
+        delivery_date: firstDelivery,
+        delivery_window: "18:30–20:00",
+
+        bottles: "7",
+        total_paid: weeklyPriceText || "",
+        merchandise_total: "",
+        delivery_fee: "FREE",
+
+        order_lines: linesArr.join("\n"),
+        note: String(sm.note || ""),
+      };
+
+      const ownerTpl = process.env.EMAILJS_TEMPLATE_SUB_OWNER as string;
+      const custTpl = process.env.EMAILJS_TEMPLATE_SUB_CUSTOMER as string;
+      if (!ownerTpl) throw new Error("Missing EMAILJS_TEMPLATE_SUB_OWNER");
+      if (!custTpl) throw new Error("Missing EMAILJS_TEMPLATE_SUB_CUSTOMER");
+
+      await sendEmailJS(ownerTpl, { ...templateParams, to_email: ownerEmail });
+
+      if (customer_email) {
+        await sendEmailJS(custTpl, { ...templateParams, to_email: customer_email });
+      }
+
+      return res.status(200).json({ received: true });
+    }
+
+    // ----------------------------
+    // ONE-OFF
+    // ----------------------------
+    const m = session.metadata || {};
+
+    let orderLinesPretty = "";
+    try {
+      orderLinesPretty = JSON.parse(m.order_lines || "[]").join("\n");
+    } catch {
+      orderLinesPretty = String(m.order_lines || "");
+    }
+
+    const deliveryWeekday = m.delivery_date ? weekdayFromDMY(m.delivery_date) : "";
+    const deliveryDatePretty = deliveryWeekday
+      ? `${deliveryWeekday} ${m.delivery_date}`
+      : (m.delivery_date || "");
+
+    const templateParams = {
+      brand: "Yoghurt of Youth",
+      owner_email: ownerEmail,
+
+      customer_name: m.customer_name || "",
+      customer_email: m.customer_email || "",
+      customer_phone: m.customer_phone || "",
+      customer_address: m.customer_address || "",
+
+      delivery_date: deliveryDatePretty,
+      delivery_window: m.delivery_window || "",
+      note: m.note || "",
+
+      // ✅ consistent with create-session-checkout metadata
+      is_collection: m.fulfilment_method === "collection" ? "1" : "",
+
+      order_id: m.order_id || "",
+      payment_method: "Stripe",
+
+      order_lines: orderLinesPretty,
+      bottles: m.bottles || "",
+      yoghurt_strain: m.yoghurt_strain || "",
+
+      plain_qty: m.plain_qty || "",
+      flav_qty: m.flav_qty || "",
+      plain_bundles: m.plain_bundles || "",
+      flav_bundles: m.flav_bundles || "",
+      plain_remainder: m.plain_remainder || "",
+      flav_remainder: m.flav_remainder || "",
+
+      merchandise_total: fmtGbp(m.merchandise_total),
+      delivery_fee: fmtGbp(m.delivery_fee),
+      total_paid: fmtGbp(m.total_paid),
+    };
+
+    // ---- Gift code: mark one-time use (per email) after successful payment ----
+    const giftCode = String(m.gift_code || "").trim().toUpperCase();
+    const giftStrQty = Number(m.gift_str_qty || 0);
+    const emailKey = String(m.customer_email || "").trim().toLowerCase();
+
+    if (giftStrQty > 0 && giftCode && emailKey) {
+      const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
+      await kv.set(usedKey, {
+        order_id: m.order_id || "",
+        session_id: session.id || "",
+        usedAt: Date.now(),
+      });
+    }
+
+    await sendEmailJS(process.env.EMAILJS_TEMPLATE_ID as string, {
+      ...templateParams,
+      to_email: ownerEmail,
+    });
+
+    if (m.customer_email) {
+      await sendEmailJS(process.env.EMAILJS_CUSTOMER_TEMPLATE_ID as string, {
+        ...templateParams,
+        to_email: m.customer_email,
+      });
     }
 
     return res.status(200).json({ received: true });
