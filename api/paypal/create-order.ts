@@ -1,6 +1,12 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { kv } from "@vercel/kv";
-await kv.set(`paypal_order_${orderRef}`, custom, { ex: 60 * 60 * 24 }); // 24h
+
+function normalizeSiteUrl(url: string) {
+  const u = String(url || "").trim();
+  if (!u) return u;
+  if (u.startsWith("http://") || u.startsWith("https://")) return u;
+  return `https://${u}`;
+}
 
 async function paypalAccessToken() {
   const auth = Buffer.from(
@@ -24,16 +30,32 @@ async function paypalAccessToken() {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const { cart, totals, customer, delivery_date, delivery_window, note, lines, gift_code, gift_str_qty, delivery_method } = req.body;
+  const { cart, totals, customer, fulfilment_method, delivery_date, delivery_window, note, lines, gift_code, gift_str_qty } = req.body;
+
+  const giftCode = String(gift_code || "").trim().toUpperCase();
+  const giftStrQty = Number(gift_str_qty || 0);
+  
+  if (giftStrQty > 0) {
+    const emailKey = String(customer?.email || "").trim().toLowerCase();
+    const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
+  
+    const alreadyUsed = await kv.get(usedKey);
+    if (alreadyUsed) {
+      return res.status(400).json({ error: "Gift code already used for this email." });
+    }
+  }
 
   const access_token = await paypalAccessToken();
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-  if (!siteUrl) throw new Error("Missing NEXT_PUBLIC_SITE_URL");
+  const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_DOMAIN;
+  const siteUrl = normalizeSiteUrl(rawSiteUrl || "");
+  if (!siteUrl) throw new Error("Missing NEXT_PUBLIC_SITE_URL / NEXT_PUBLIC_DOMAIN");
 
   const orderRef = `YOY-${Date.now().toString().slice(-6)}`;
 
   const custom = {
+    await kv.set(`paypal_order_${orderRef}`, custom, { ex: 60 * 60 * 24 }); // 24h
+
     order_id: orderRef,
 
     customer_name: customer.name,
@@ -41,7 +63,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     customer_phone: customer.phone,
     customer_address: customer.address,
 
-    delivery_method: String(delivery_method || "delivery"),
+    fulfilment_method: String(fulfilment_method || "delivery"),
+    fulfilment_label: fulfilment_method === "collection" ? "Collection" : "Delivery",
     delivery_date,
     delivery_window,
     note: note || "",
@@ -59,8 +82,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     delivery_fee: String(totals.deliveryFee),
     total_paid: String(totals.total),
 
-    gift_code: String(gift_code || ""),
-    gift_str_qty: String(gift_str_qty ?? ""),
+    gift_code: giftCode,
+    gift_str_qty: String(giftStrQty || 0),
 
     yoghurt_strain: String(totals.deliveryBrand || ""),
     payment_provider: "paypal",
