@@ -4,6 +4,10 @@ import { kv } from "@vercel/kv";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
+export const config = {
+  api: { bodyParser: false },
+};
+
 function weekdayFromDMY(dmy: string) {
   // expects "dd/mm/yyyy"
   const [d, m, y] = dmy.split("/").map(Number);
@@ -183,8 +187,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           order_id: subId || session.id || "", // "Subscription reference" in templates
           payment_method: "Stripe (Subscription)",
 
-          is_collection: m.delivery_method === "collection" ? "1" : "",
-
           // “Delivery” style fields re-used by templates
           delivery_date: firstDelivery,              // “First delivery”
           delivery_window: "18:30–20:00",            // fixed in your modal
@@ -254,7 +256,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           delivery_date: deliveryDatePretty,
           delivery_window: m.delivery_window || "",
           note: m.note || "",
-          is_collection: m.fulfilment === "collection" ? "1" : "",
+          is_collection: m.fulfilment_method === "collection" ? "1" : "",
 
           order_id: m.order_id || "",
           payment_method: "Stripe",
