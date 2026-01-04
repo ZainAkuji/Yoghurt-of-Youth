@@ -216,9 +216,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     plain_remainder: String(custom.plain_remainder ?? ""),
     flav_remainder: String(custom.flav_remainder ?? ""),
 
-    gift_code: String(custom.gift_code || ""),
-    gift_str_qty: String(custom.gift_str_qty || "0"),
-
     merchandise_total: fmtGbp(custom.merchandise_total),
     delivery_fee: fmtGbp(custom.delivery_fee),
     total_paid: fmtGbp(custom.total_paid),
@@ -231,15 +228,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   
   if (giftStrQty > 0 && giftCode && emailKey) {
     const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
-    await kv.set(
-      usedKey,
-      {
-        order_id: custom.order_id || orderRef || paypalOrderId || "",
-        paypal_order_id: paypalOrderId || "",
-        usedAt: Date.now(),
-      },
-      { ex: 60 * 60 * 24 * 365 } // 1 year (match your Stripe choice)
-    );
+    await kv.set(usedKey, {
+      order_id: custom.order_id || orderRef || paypalOrderId || "",
+      paypal_order_id: paypalOrderId || "",
+      usedAt: Date.now(),
+    });
   }
 
   // 1) Owner email
