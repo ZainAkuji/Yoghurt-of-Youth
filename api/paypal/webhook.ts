@@ -1,5 +1,5 @@
-// api/paypal/webhook.ts
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { kv } from "@vercel/kv";
 
 function weekdayFromDMY(dmy: string) {
   // expects "dd/mm/yyyy"
@@ -142,36 +142,47 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const paypalOrderId = event?.resource?.supplementary_data?.related_ids?.order_id || "";
 
   let custom: any = null;
-
-  // Fetch order to read purchase_units[0].custom_id (your JSON metadata)
+  let orderRef = "";
+  
+  // Fetch order to read custom_id (= your orderRef)
   if (paypalOrderId) {
     try {
       const { access_token } = await paypalAccessToken();
-
+  
       const orderResp = await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${paypalOrderId}`, {
         headers: { Authorization: `Bearer ${access_token}` },
       });
-
+  
       const order = await orderResp.json();
-
+  
       if (!orderResp.ok) {
         console.error("PayPal order fetch failed:", order);
       } else {
-        const customRaw = order?.purchase_units?.[0]?.custom_id || "";
-        try {
-          custom = JSON.parse(customRaw);
-        } catch {
-          custom = null;
-        }
+        orderRef =
+          String(order?.purchase_units?.[0]?.custom_id || "") ||
+          String(order?.purchase_units?.[0]?.reference_id || "");
       }
     } catch (e) {
       console.error("Failed to fetch PayPal order for custom_id", e);
     }
   }
-
+  
+  if (!orderRef) {
+    console.error("No orderRef (custom_id) found for PayPal webhook", { paypalOrderId });
+    return res.json({ received: true, warning: "no_order_ref" });
+  }
+  
+  // ✅ OPTION 2: load full payload from KV
+  try {
+    custom = await kv.get(`paypal_order_${orderRef}`);
+  } catch (e) {
+    console.error("KV read failed for PayPal orderRef", orderRef, e);
+    custom = null;
+  }
+  
   if (!custom) {
-    console.error("No custom_id metadata found for PayPal webhook", { paypalOrderId });
-    return res.json({ received: true, warning: "no_custom_id" });
+    console.error("No KV payload found for PayPal webhook", { orderRef, paypalOrderId });
+    return res.json({ received: true, warning: "no_kv_payload" });
   }
 
   const deliveryWeekday = custom.delivery_date ? weekdayFromDMY(custom.delivery_date) : "";
@@ -207,9 +218,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     merchandise_total: fmtGbp(custom.merchandise_total),
     delivery_fee: fmtGbp(custom.delivery_fee),
     total_paid: fmtGbp(custom.total_paid),
-
-    subject: `Yoghurt of Youth order – ${custom.delivery_date || ""} – ${custom.customer_name || ""} – ${
-      custom.order_id || paypalOrderId
     }`,
   };
 
@@ -226,6 +234,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       to_email: custom.customer_email,
     });
   }
+
+  try { await kv.del(`paypal_order_${orderRef}`); } catch {}
 
   return res.json({ received: true });
 }
