@@ -54,8 +54,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const orderRef = `YOY-${Date.now().toString().slice(-6)}`;
 
   const custom = {
-    await kv.set(`paypal_order_${orderRef}`, custom, { ex: 60 * 60 * 24 }); // 24h
-
     order_id: orderRef,
 
     customer_name: customer.name,
