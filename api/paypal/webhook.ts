@@ -197,6 +197,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     customer_phone: custom.customer_phone || "",
     customer_address: custom.customer_address || "",
 
+    is_collection: custom.delivery_method === "collection" ? "1" : "",
     delivery_date: deliveryDatePretty,
     delivery_window: custom.delivery_window || "",
     note: custom.note || "",
@@ -218,7 +219,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     merchandise_total: fmtGbp(custom.merchandise_total),
     delivery_fee: fmtGbp(custom.delivery_fee),
     total_paid: fmtGbp(custom.total_paid),
-    }`,
   };
 
   // 1) Owner email
