@@ -1880,6 +1880,7 @@ function PayModal({
                   cart,
                   totals: totalsWithGift,
                   customer,
+                  delivery_method: deliveryMethod,
                   delivery_date_iso: date,
                   delivery_date: formattedDate,
                   delivery_window: deliveryWindow,
@@ -1901,6 +1902,7 @@ function PayModal({
                     totals: totalsWithGift,
                     lines,
                     customer,
+                    delivery_method: deliveryMethod,
                     delivery_date: formattedDate,
                     delivery_window: deliveryWindow,
                     note,
@@ -1952,6 +1954,19 @@ function PayModal({
   // ✅ SUCCESS MODE: show confirmation instead of checkout
   if (mode === "success" && confirmedOrder) {
     const order = confirmedOrder;
+
+    const isCollection =
+      typeof order.deliveryMethod === "string" &&
+      order.deliveryMethod.toLowerCase() === "collection";
+    
+    const dateLabel = isCollection ? "Collection date" : "Delivery date";
+    const windowLabel = isCollection ? "Collection window" : "Delivery window";
+    const addressLabel = isCollection ? "Collection address" : "Delivery address";
+    
+    const windowText = isCollection ? "09:00–21:00" : order.deliveryWindow;
+    
+    const collectionMapsUrl =
+      "https://www.google.com/maps/search/?api=1&query=11+Billinge+Avenue,+Blackburn,+Lancashire,+BB2+6SD";
   
     const isSubscriptionSuccess =
       typeof order.paymentMethod === "string" &&
@@ -2071,13 +2086,13 @@ function PayModal({
         {/* Key info */}
         <div className="grid sm:grid-cols-2 gap-4 text-sm">
           <div>
-            <div className="text-white/60">Delivery date</div>
+            <div className="text-white/60">{dateLabel}</div>
             <div className="font-medium">{order.formattedDate}</div>
           </div>
   
           <div>
-            <div className="text-white/60">Delivery window</div>
-            <div className="font-medium">{order.deliveryWindow}</div>
+            <div className="text-white/60">{windowLabel}</div>
+            <div className="font-medium">{windowText}</div>
           </div>
   
           <div>
@@ -2095,8 +2110,20 @@ function PayModal({
   
         {/* Address */}
         <div className="mt-4 text-sm">
-          <div className="text-white/60 mb-1">Delivery address</div>
-          <div className="leading-relaxed">{order.address}</div>
+          <div className="text-white/60 mb-1">{addressLabel}</div>
+        
+          {isCollection ? (
+            <a
+              href={collectionMapsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="leading-relaxed underline underline-offset-2 hover:text-amber-300 transition"
+            >
+              11 Billinge Avenue, Blackburn, Lancashire, BB2 6SD
+            </a>
+          ) : (
+            <div className="leading-relaxed">{order.address}</div>
+          )}
         </div>
   
         {/* Items */}
@@ -2112,10 +2139,17 @@ function PayModal({
   
         {/* Email notice */}
         <p className="mt-4 text-xs text-white/70 leading-relaxed">
-          Your yoghurt is fermented on the day before delivery for freshness.
-          You’ll receive an email receipt with full order details shortly.
-          If it doesn’t arrive within 5 minutes, please check spam.
-          If you have any questions, please email support@yoghurtofyouth.co.uk.
+          {isCollection ? (
+            <>Your yoghurt is fermented on the day before collection for freshness.
+              You’ll receive an email receipt with full order details shortly.
+              If it doesn’t arrive within 5 minutes, please check spam.
+              If you have any questions, please email support@yoghurtofyouth.co.uk.</>
+          ) : (
+            <>Your yoghurt is fermented on the day before delivery for freshness.
+              You’ll receive an email receipt with full order details shortly.
+              If it doesn’t arrive within 5 minutes, please check spam.
+              If you have any questions, please email support@yoghurtofyouth.co.uk.</>
+          )}
         </p>
   
         {/* Close */}
@@ -2323,6 +2357,7 @@ function PayModal({
                   phone,
                   address: fullAddress,
                 },
+                delivery_method: deliveryMethod,
                 delivery_date_iso: date,       // important for restoring <select>
                 delivery_date: formattedDate,  // optional, nice for emails/records
                 delivery_window: deliveryWindow,
@@ -2354,6 +2389,7 @@ function PayModal({
                     phone,
                     address: fullAddress,
                   },
+                  delivery_method: deliveryMethod,
                   delivery_date: formattedDate,
                   delivery_window: deliveryWindow,
                   note,
@@ -2416,6 +2452,7 @@ function PayModal({
                   phone,
                   address: fullAddress,
                 },
+                delivery_method: deliveryMethod,
                 delivery_date_iso: date,
                 delivery_date: formattedDate,
                 delivery_window: deliveryWindow,
@@ -2437,6 +2474,7 @@ function PayModal({
                   totals: totalsWithGift,
                   lines,
                   customer: { name, email, phone, address: fullAddress },
+                  delivery_method: deliveryMethod,
                   delivery_date: formattedDate,
                   delivery_window: deliveryWindow,
                   note,
