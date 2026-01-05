@@ -30,7 +30,7 @@ async function paypalAccessToken() {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const { cart, totals, customer, fulfilment_method, delivery_date, delivery_window, note, lines, gift_code, gift_str_qty } = req.body;
+  const { cart, totals, customer, delivery_method, delivery_date, delivery_window, note, lines, gift_code, gift_str_qty } = req.body;
 
   const giftCode = String(gift_code || "").trim().toUpperCase();
   const giftStrQty = Number(gift_str_qty || 0);
@@ -61,8 +61,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     customer_phone: customer.phone,
     customer_address: customer.address,
 
-    fulfilment_method: String(fulfilment_method || "delivery"),
-    fulfilment_label: fulfilment_method === "collection" ? "Collection" : "Delivery",
+    delivery_method: String(delivery_method || "delivery"),
+    delivery_label: delivery_method === "collection" ? "Collection" : "Delivery",
     delivery_date,
     delivery_window,
     note: note || "",
