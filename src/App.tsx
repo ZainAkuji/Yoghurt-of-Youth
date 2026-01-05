@@ -1964,7 +1964,7 @@ function PayModal({
     const windowLabel = isCollection ? "Collection window" : "Delivery window";
     const addressLabel = isCollection ? "Collection address" : "Delivery address";
     
-    const windowText = isCollection ? "09:00–21:00" : order.deliveryWindow;
+    const windowText = isCollection ? "12:00–21:00" : order.deliveryWindow;
     
     const collectionMapsUrl =
       "https://www.google.com/maps/search/?api=1&query=11+Billinge+Avenue,+Blackburn,+Lancashire,+BB2+6SD";
