@@ -197,7 +197,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     customer_phone: custom.customer_phone || "",
     customer_address: custom.customer_address || "",
 
-    is_collection: custom.fulfilment_method === "collection" ? "1" : "",
+    is_collection: custom.delivery_method === "collection" ? "1" : "",
     delivery_date: deliveryDatePretty,
     delivery_window: custom.delivery_window || "",
     note: custom.note || "",
