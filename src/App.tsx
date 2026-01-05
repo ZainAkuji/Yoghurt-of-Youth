@@ -508,6 +508,7 @@ type ConfirmOrder = {
   address: string;
   name: string;
   paymentMethod: string;
+  delivery_method?: "delivery" | "collection";
 };
 
 function buildConfirmOrderFromDraft(
@@ -562,6 +563,7 @@ function buildConfirmOrderFromDraft(
       address,
       name,
       paymentMethod,
+      delivery_method: (draft?.delivery_method || "delivery"),
     };
   }
 
@@ -594,6 +596,7 @@ function buildConfirmOrderFromDraft(
     address,
     name,
     paymentMethod,
+    delivery_method: (draft?.delivery_method || "delivery"),
   };
 }
 
