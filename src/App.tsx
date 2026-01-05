@@ -80,7 +80,7 @@ const GROUPED = [
 function computeTotals(
   cart: Record<string, number>,
   giftStrQty: number = 0,
-  delivery_method: "delivery" | "collect" = "delivery"
+  delivery_method: "delivery" | "collection" = "delivery"
 ) {
   // expand cart into full product objects + qty
   const items = Object.entries(cart)
@@ -133,11 +133,11 @@ function computeTotals(
 
   // ✅ collection = no delivery fee, ever
   const freeDeliveryUnlocked =
-    delivery_method === "collect" ? true : merchTotal >= FREE_DELIVERY_THRESHOLD;
+    delivery_method === "collection" ? true : merchTotal >= FREE_DELIVERY_THRESHOLD;
 
   // ✅ collection = £0, delivery = existing logic
   const deliveryFee =
-    delivery_method === "collect"
+    delivery_method === "collection"
       ? 0
       : merchTotal === 0
         ? 0
@@ -1644,7 +1644,7 @@ function PayModal({
   const deliveryOptions = deliveryDateOptions();
   const initialDate = deliveryOptions[0] || "";
 
-  const [delivery_method, setDeliveryMethod] = useState<"delivery" | "collect">("delivery");
+  const [delivery_method, setDeliveryMethod] = useState<"delivery" | "collection">("delivery");
 
   const firstISO = nextEligibleMondayISO();
   const firstText = `${formatDateUK(firstISO)} (${weekdayFromISO(firstISO)})`;
@@ -1702,8 +1702,8 @@ function PayModal({
   const normalizedPostcode = postcode.trim().toUpperCase();
 
   const fullAddress =
-    delivery_method === "collect"
-      ? "Click & Collect"
+    delivery_method === "collection"
+      ? "Collection"
       : [streetAddress.trim(), normalizedPostcode].filter(Boolean).join(", ");
 
   const valid =
@@ -1880,14 +1880,13 @@ function PayModal({
                   cart,
                   totals: totalsWithGift,
                   customer,
-                  delivery_method: deliveryMethod,
+                  delivery_method,
                   delivery_date_iso: date,
                   delivery_date: formattedDate,
                   delivery_window: deliveryWindow,
                   note,
                   lines,
                   gift_code: normalizedGiftCode,
-                  delivery_method,
                   gift_str_qty: giftStrQty,
                   savedAt: Date.now(),
                   provider: "stripe",
@@ -1902,12 +1901,11 @@ function PayModal({
                     totals: totalsWithGift,
                     lines,
                     customer,
-                    delivery_method: deliveryMethod,
+                    delivery_method,
                     delivery_date: formattedDate,
                     delivery_window: deliveryWindow,
                     note,
                     gift_code: normalizedGiftCode,
-                    delivery_method,
                     gift_str_qty: giftStrQty,
                   }),
                 });
@@ -1956,8 +1954,8 @@ function PayModal({
     const order = confirmedOrder;
 
     const isCollection =
-      typeof order.deliveryMethod === "string" &&
-      order.deliveryMethod.toLowerCase() === "collection";
+      typeof order.delivery_method === "string" &&
+      order.delivery_method.toLowerCase() === "collection";
     
     const dateLabel = isCollection ? "Collection date" : "Delivery date";
     const windowLabel = isCollection ? "Collection window" : "Delivery window";
@@ -2213,10 +2211,10 @@ function PayModal({
         
           <button
             type="button"
-            onClick={() => setDeliveryMethod("collect")}
+            onClick={() => setDeliveryMethod("collection")}
             className={
               "flex-1 rounded-xl border px-3 py-2 text-sm font-semibold transition " +
-              (delivery_method === "collect"
+              (delivery_method === "collection"
                 ? "border-white/60 bg-white/15 text-white"
                 : "border-white/25 bg-black/20 text-white/80 hover:bg-white/10")
             }
@@ -2357,14 +2355,13 @@ function PayModal({
                   phone,
                   address: fullAddress,
                 },
-                delivery_method: deliveryMethod,
+                delivery_method,
                 delivery_date_iso: date,       // important for restoring <select>
                 delivery_date: formattedDate,  // optional, nice for emails/records
                 delivery_window: deliveryWindow,
                 note,
                 lines,
                 gift_code: normalizedGiftCode,
-                delivery_method,
                 gift_str_qty: giftStrQty,
                 savedAt: Date.now(),
                 provider: "stripe",
@@ -2389,12 +2386,11 @@ function PayModal({
                     phone,
                     address: fullAddress,
                   },
-                  delivery_method: deliveryMethod,
+                  delivery_method,
                   delivery_date: formattedDate,
                   delivery_window: deliveryWindow,
                   note,
                   gift_code: normalizedGiftCode,
-                  delivery_method,
                   gift_str_qty: giftStrQty,
                 }),
               });
@@ -2452,14 +2448,13 @@ function PayModal({
                   phone,
                   address: fullAddress,
                 },
-                delivery_method: deliveryMethod,
+                delivery_method,
                 delivery_date_iso: date,
                 delivery_date: formattedDate,
                 delivery_window: deliveryWindow,
                 note,
                 lines,
                 gift_code: normalizedGiftCode,
-                delivery_method,
                 gift_str_qty: giftStrQty,
                 savedAt: Date.now(),
                 provider: "paypal",
@@ -2474,12 +2469,11 @@ function PayModal({
                   totals: totalsWithGift,
                   lines,
                   customer: { name, email, phone, address: fullAddress },
-                  delivery_method: deliveryMethod,
+                  delivery_method,
                   delivery_date: formattedDate,
                   delivery_window: deliveryWindow,
                   note,
                   gift_code: normalizedGiftCode,
-                  delivery_method,
                   gift_str_qty: giftStrQty,
                 }),
               });
