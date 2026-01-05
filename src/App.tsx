@@ -80,7 +80,7 @@ const GROUPED = [
 function computeTotals(
   cart: Record<string, number>,
   giftStrQty: number = 0,
-  fulfilment: "delivery" | "collect" = "delivery"
+  delivery_method: "delivery" | "collect" = "delivery"
 ) {
   // expand cart into full product objects + qty
   const items = Object.entries(cart)
@@ -133,11 +133,11 @@ function computeTotals(
 
   // ✅ collection = no delivery fee, ever
   const freeDeliveryUnlocked =
-    fulfilment === "collect" ? true : merchTotal >= FREE_DELIVERY_THRESHOLD;
+    delivery_method === "collect" ? true : merchTotal >= FREE_DELIVERY_THRESHOLD;
 
   // ✅ collection = £0, delivery = existing logic
   const deliveryFee =
-    fulfilment === "collect"
+    delivery_method === "collect"
       ? 0
       : merchTotal === 0
         ? 0
@@ -165,7 +165,7 @@ function computeTotals(
     merchTotal,
     deliveryFee,
     freeDeliveryUnlocked,
-    fulfilment,
+    delivery_method,
 
     // breakdown
     plainQty,
@@ -1644,7 +1644,7 @@ function PayModal({
   const deliveryOptions = deliveryDateOptions();
   const initialDate = deliveryOptions[0] || "";
 
-  const [fulfilment, setFulfilment] = useState<"delivery" | "collect">("delivery");
+  const [delivery_method, setDeliveryMethod] = useState<"delivery" | "collect">("delivery");
 
   const firstISO = nextEligibleMondayISO();
   const firstText = `${formatDateUK(firstISO)} (${weekdayFromISO(firstISO)})`;
@@ -1673,8 +1673,8 @@ function PayModal({
 
   // ✅ Use totals that include the gift bottle count (but not price)
   const totalsWithGift = useMemo(() => {
-    return computeTotals(cart, giftStrQty, fulfilment);
-  }, [cart, giftStrQty, fulfilment]);
+    return computeTotals(cart, giftStrQty, delivery_method);
+  }, [cart, giftStrQty, delivery_method]);
 
   const {
     qtyTotal,
@@ -1702,7 +1702,7 @@ function PayModal({
   const normalizedPostcode = postcode.trim().toUpperCase();
 
   const fullAddress =
-    fulfilment === "collect"
+    delivery_method === "collect"
       ? "Click & Collect"
       : [streetAddress.trim(), normalizedPostcode].filter(Boolean).join(", ");
 
@@ -1711,14 +1711,14 @@ function PayModal({
     !!email &&
     !!phone &&
     (isSubscription ? true : (qtyTotal > 0 && !!date)) &&
-    (isSubscription ? true : (fulfilment === "delivery" ? (!!postcode && !!streetAddress) : true));
+    (isSubscription ? true : (delivery_method === "delivery" ? (!!postcode && !!streetAddress) : true));
 
   function validateBeforePay(): boolean {
     if (!valid) {
       setError("Please complete all required fields first.");
       return false;
     }
-    if (!isSubscription && fulfilment === "delivery") {
+    if (!isSubscription && delivery_method === "delivery") {
       if (!/^BB[12]\b/i.test(normalizedPostcode)) {
         setError("Sorry, we do not deliver outside of Blackburn (postcodes BB1–BB2).");
         return false;
@@ -1751,7 +1751,7 @@ function PayModal({
       setEmail(draft?.customer?.email || "");
       setPhone(draft?.customer?.phone || "");
       setNote(draft?.note || "");
-      setFulfilment(draft?.fulfilment || "delivery");
+      setDeliveryMethod(draft?.delivery_method || "delivery");
       setGiftCode(draft?.gift_code || "");
   
       const addr = String(draft?.customer?.address || "");
@@ -1784,11 +1784,11 @@ function PayModal({
       },
       note,
       gift_code: giftCode,
-      fulfilment,
+      delivery_method,
     };
   
     sessionStorage.setItem("yoy_checkout_draft", JSON.stringify(updated));
-  }, [name, email, phone, fullAddress, note, fulfilment, giftCode]);
+  }, [name, email, phone, fullAddress, note, delivery_method, giftCode]);
 
   // ✅ SUBSCRIPTION MODE (Weekly Gut Punch)
   if (isSubscription && subscriptionPlan) {
@@ -1887,7 +1887,7 @@ function PayModal({
                   note,
                   lines,
                   gift_code: normalizedGiftCode,
-                  fulfilment,
+                  delivery_method,
                   gift_str_qty: giftStrQty,
                   savedAt: Date.now(),
                   provider: "stripe",
@@ -1907,7 +1907,7 @@ function PayModal({
                     delivery_window: deliveryWindow,
                     note,
                     gift_code: normalizedGiftCode,
-                    fulfilment,
+                    delivery_method,
                     gift_str_qty: giftStrQty,
                   }),
                 });
@@ -2200,10 +2200,10 @@ function PayModal({
         <div className="flex gap-2">
           <button
             type="button"
-            onClick={() => setFulfilment("delivery")}
+            onClick={() => setDeliveryMethod("delivery")}
             className={
               "flex-1 rounded-xl border px-3 py-2 text-sm font-semibold transition " +
-              (fulfilment === "delivery"
+              (delivery_method === "delivery"
                 ? "border-white/60 bg-white/15 text-white"
                 : "border-white/25 bg-black/20 text-white/80 hover:bg-white/10")
             }
@@ -2213,10 +2213,10 @@ function PayModal({
         
           <button
             type="button"
-            onClick={() => setFulfilment("collect")}
+            onClick={() => setDeliveryMethod("collect")}
             className={
               "flex-1 rounded-xl border px-3 py-2 text-sm font-semibold transition " +
-              (fulfilment === "collect"
+              (delivery_method === "collect"
                 ? "border-white/60 bg-white/15 text-white"
                 : "border-white/25 bg-black/20 text-white/80 hover:bg-white/10")
             }
@@ -2225,7 +2225,7 @@ function PayModal({
           </button>
         </div>
 
-        {fulfilment === "delivery" && (
+        {delivery_method === "delivery" && (
           <>
             <input
               value={postcode}
@@ -2245,7 +2245,7 @@ function PayModal({
         )}
 
         <div className="mt-2 text-sm text-white/80">
-          {fulfilment === "delivery" ? "Please select delivery date" : "Please select collection date"}
+          {delivery_method === "delivery" ? "Please select delivery date" : "Please select collection date"}
         </div>
 
         {!isSubscription && (
@@ -2315,7 +2315,7 @@ function PayModal({
                 <div className="mt-1">Delivery: {gbp(deliveryFee)}</div>
               )}
 
-              {fulfilment === "delivery" && freeDeliveryUnlocked && (
+              {delivery_method === "delivery" && freeDeliveryUnlocked && (
                 <div className="mt-1 text-emerald-400">
                   Free delivery unlocked (orders over £20)
                 </div>
@@ -2364,7 +2364,7 @@ function PayModal({
                 note,
                 lines,
                 gift_code: normalizedGiftCode,
-                fulfilment,
+                delivery_method,
                 gift_str_qty: giftStrQty,
                 savedAt: Date.now(),
                 provider: "stripe",
@@ -2394,7 +2394,7 @@ function PayModal({
                   delivery_window: deliveryWindow,
                   note,
                   gift_code: normalizedGiftCode,
-                  fulfilment,
+                  delivery_method,
                   gift_str_qty: giftStrQty,
                 }),
               });
@@ -2459,7 +2459,7 @@ function PayModal({
                 note,
                 lines,
                 gift_code: normalizedGiftCode,
-                fulfilment,
+                delivery_method,
                 gift_str_qty: giftStrQty,
                 savedAt: Date.now(),
                 provider: "paypal",
@@ -2479,7 +2479,7 @@ function PayModal({
                   delivery_window: deliveryWindow,
                   note,
                   gift_code: normalizedGiftCode,
-                  fulfilment,
+                  delivery_method,
                   gift_str_qty: giftStrQty,
                 }),
               });
