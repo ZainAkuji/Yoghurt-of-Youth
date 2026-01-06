@@ -533,7 +533,7 @@ function buildConfirmOrderFromDraft(
 
     // derive weekly box contents (7 bottles)
     const lines: string[] = (() => {
-      if (planKey === "MIX") return ["Weekly box: 1× PLN, 2× BFC, 2× STR, 2× MNG (7 bottles)"];
+      if (planKey === "MIX") return ["Weekly box: 2× BFC, 3× STR, 2× MNG (7 bottles)"];
       if (planKey) return [`Weekly box: 7× ${planKey} (${planLabel})`];
       return ["Weekly box (7 bottles)"];
     })();
@@ -780,7 +780,7 @@ export default function App(){
     { key: "BFC", label: "BFC (black forest)", priceLabel: "£14", bg: "bg-rose-900/40" },
     { key: "STR", label: "STR (strawberry)", priceLabel: "£14", bg: "bg-pink-500/35" },
     { key: "MNG", label: "MNG (mango)", priceLabel: "£14", bg: "bg-amber-300/45" },
-    { key: "MIX", label: "MIX (mixed)", priceLabel: "£13", bg: "MIX_STRIPES" },
+    { key: "MIX", label: "MIX (mixed)", priceLabel: "£14", bg: "MIX_STRIPES" },
   ] as const;
   
   type SubscriptionPlanKey = typeof SUBSCRIPTION_PLANS[number]["key"];
