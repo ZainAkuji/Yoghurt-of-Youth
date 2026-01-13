@@ -1718,12 +1718,6 @@ function PayModal({
       setError("Please complete all required fields first.");
       return false;
     }
-    if (!isSubscription && delivery_method === "delivery") {
-      if (!/^BB[12]\b/i.test(normalizedPostcode)) {
-        setError("Sorry, we do not deliver outside of Blackburn (postcodes BB1–BB2).");
-        return false;
-      }
-    }
     if (!isSubscription) {
       if (!deliveryOptions.includes(date)) {
         setError("Please choose a valid delivery date (Monday or Thursday).");
@@ -1796,9 +1790,10 @@ function PayModal({
       <Modal onClose={onClose} title="Weekly Gut Punch">
         <p className="text-sm text-white">
           You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span> Weekly Gut Punch.
-          You will receive your first batch on {" "}<span className="font-semibold">{firstText}</span> then every <span className="font-semibold">Monday</span> following.
-          We deliver between <span className="font-semibold">18:30-20:00</span>.
-          We deliver to Blackurn residents only. Please fill in the details below.
+          We dispatch your first batch on {" "}<span className="font-semibold">{firstText}</span> then every <span className="font-semibold">Monday</span> following.
+          We deliver UK-wide.
+          We use Evri Next Day delivery.
+          Please fill in the details below.
         </p>
 
         <div className="mt-4 grid md:grid-cols-2 gap-4">
@@ -1808,7 +1803,7 @@ function PayModal({
             className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
           <input value={phone} onChange={(e) => setPhone(e.target.value)} required type="tel" placeholder="Mobile number"
             className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-          <input value={postcode} onChange={(e) => setPostcode(e.target.value)} required placeholder="Postcode (BB1 / BB2 only)"
+          <input value={postcode} onChange={(e) => setPostcode(e.target.value)} required placeholder="Postcode (UK)"
             className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
           <input value={streetAddress} onChange={(e) => setStreetAddress(e.target.value)} required placeholder="Street address"
             className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2" />
@@ -2165,8 +2160,9 @@ function PayModal({
     <Modal onClose={onClose} title="Checkout & Delivery">
       <p className="text-sm text-white/80">
         Please fill in the details below then select your payment method.
-        We deliver every <span className="font-semibold">Monday</span> & <span className="font-semibold">Thursday</span> between <span className="font-semibold">18:30-20:00</span>.
-        We deliver to Blackurn residents only.
+        We deliver UK-wide.
+        We dispatch every <span className="font-semibold">Monday</span> & <span className="font-semibold">Thursday</span>.
+        We use Evri Next Day delivery.
       </p>
 
       {/* customer details */}
