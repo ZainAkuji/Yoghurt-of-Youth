@@ -143,7 +143,7 @@ function computeTotals(
         ? 0
         : freeDeliveryUnlocked
           ? 0
-          : 2;
+          : 3.95;
 
   // final amount customer pays (bottles + delivery)
   const total = merchTotal + deliveryFee;
