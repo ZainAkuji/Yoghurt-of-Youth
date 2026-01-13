@@ -2231,19 +2231,11 @@ function PayModal({
               className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
             />
              <input
-              type="text"
-              placeholder="Town/City"
               value={townCity}
               onChange={(e) => setTownCity(e.target.value)}
-              className="w-full rounded-xl bg-black/40 border border-white/20 px-4 py-3 text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-amber-300"
-            />
-            <input
-              type="text"
+              required
               placeholder="Town/City"
-              value={townCity}
-              onChange={(e) => setTownCity(e.target.value)}
-              className="invisible w-full rounded-xl bg-black/40 border border-white/20 px-4 py-3 text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-amber-300"
-            />
+              className="md:col-span-2 rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"            />
           </>
         )}
 
