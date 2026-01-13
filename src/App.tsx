@@ -1791,9 +1791,8 @@ function PayModal({
       <Modal onClose={onClose} title="Weekly Gut Punch">
         <p className="text-sm text-white">
           You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span> Weekly Gut Punch.
-          We dispatch your first batch on {" "}<span className="font-semibold">{firstText}</span> then every <span className="font-semibold">Monday</span> following.
-          We deliver UK-wide.
-          We use Evri Next Day delivery.
+          We dispatch your first batch on {" "}<span className="font-semibold">{firstText}</span> then every following <span className="font-semibold">Monday</span>.
+          We deliver UK-wide, and use Evri Next Day delivery.
           Please fill in the details below.
         </p>
 
@@ -2155,9 +2154,9 @@ function PayModal({
     <Modal onClose={onClose} title="Checkout & Delivery">
       <p className="text-sm text-white/80">
         Please fill in the details below then select your payment method.
-        We deliver UK-wide.
-        We dispatch every <span className="font-semibold">Monday</span> & <span className="font-semibold">Thursday</span>.
-        We use Evri Next Day delivery.
+        We deliver UK-wide,
+        dispatch every <span className="font-semibold">Monday</span> & <span className="font-semibold">Thursday</span>,
+        and use Evri Next Day delivery.
       </p>
 
       {/* customer details */}
