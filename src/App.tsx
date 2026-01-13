@@ -129,7 +129,7 @@ function computeTotals(
   const savings = Math.max(0, fullPrice - merchTotal);
 
   // ---- DELIVERY LOGIC ----
-  const FREE_DELIVERY_THRESHOLD = 20; // £20 of yoghurt (after discounts)
+  const FREE_DELIVERY_THRESHOLD = 24; // £24 of yoghurt (after discounts)
 
   // ✅ collection = no delivery fee, ever
   const freeDeliveryUnlocked =
@@ -949,13 +949,14 @@ export default function App(){
                     <strong>{nextWeekBrand}</strong> week.
                   </p>
                   <p>
-                    Delivered on <strong>Monday</strong> and <strong>Thursday</strong>{" "}
-                    <strong>18:30–20:00</strong>. Collection available.
+                    UK-wide chilled next-day delivery available.
+                    Dispatched on <strong>Monday</strong> and <strong>Thursday</strong>.
                   </p>
-                  <p>Fermented on the day before delivery or collection for freshness.</p>
                   <p>
-                    Currently for <strong>Blackburn</strong> residents only.
+                    Collection available at our Blackburn premises (BB2) on <strong>Monday</strong> and <strong>Thursday</strong> from 12:00-21:00.
+                    Please ensure you can collect within the specified window. UK-wide delivery is recommended for distant locations.
                   </p>
+                  <p>Fermented on the day before dispatch / collection for freshness.</p>
                 </div>
       
                 <div className="mt-6 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
@@ -1067,8 +1068,8 @@ export default function App(){
                     {/* Delivery info + "Spent" badge */}
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        Delivery <strong>£2</strong> ·{" "}
-                        <strong>FREE delivery on orders over £20</strong>
+                        Delivery <strong>£3.95</strong> ·{" "}
+                        <strong>FREE delivery on orders over £24</strong>
                       </span>
       
                       {merchTotal > 0 ? (
@@ -1166,10 +1167,6 @@ export default function App(){
                   
                     <p className="mt-2 text-xs text-white leading-relaxed">
                       <strong>MIX</strong> contains 2 BFC, 3 STR, and 2 MNG
-                    </p>
-
-                    <p className="mt-2 text-xs text-white leading-relaxed">
-                      <strong>FREE</strong> delivery for Weekly Gut Punch
                     </p>
 
                     <p className="mt-2 text-xs text-white leading-relaxed">
