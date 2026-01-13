@@ -1952,11 +1952,8 @@ function PayModal({
       typeof order.delivery_method === "string" &&
       order.delivery_method.toLowerCase() === "collection";
     
-    const dateLabel = isCollection ? "Collection date" : "Delivery date";
-    const windowLabel = isCollection ? "Collection window" : "Delivery window";
+    const dateLabel = isCollection ? "Collection date" : "Dispatch date";
     const addressLabel = isCollection ? "Collection address" : "Delivery address";
-    
-    const windowText = isCollection ? "12:00–21:00" : order.deliveryWindow;
     
     const collectionMapsUrl =
       "https://www.google.com/maps/search/?api=1&query=11+Billinge+Avenue,+Blackburn,+Lancashire,+BB2+6SD";
@@ -1980,19 +1977,14 @@ function PayModal({
             <div className="font-mono font-semibold tracking-wide break-all">
               {order.orderId || "—"}
             </div>
-          </div>
+          </div>0
   
           <div className="my-4 border-t border-white/20" />
   
           <div className="grid sm:grid-cols-2 gap-4 text-sm">
             <div>
-              <div className="text-white/60">First delivery</div>
+              <div className="text-white/60">First dispatch</div>
               <div className="font-medium">{order.formattedDate}</div>
-            </div>
-  
-            <div>
-              <div className="text-white/60">Delivery window</div>
-              <div className="font-medium">{order.deliveryWindow}</div>
             </div>
   
             <div>
@@ -2024,8 +2016,8 @@ function PayModal({
   
             <div className="mt-3 text-white/70 text-xs leading-relaxed">
               We alternate PRCXN and SPCTRL by week.
-              Your yoghurt is fermented on the day before delivery for freshness.
-              Delivery is <span className="font-semibold">FREE</span> for Weekly Gut Punch.
+              Your yoghurt is fermented on the day before dispatch for freshness.
+              Delivery is £3.95 for Weekly Gut Punch.
             </div>
           </div>
   
@@ -2083,10 +2075,12 @@ function PayModal({
             <div className="font-medium">{order.formattedDate}</div>
           </div>
   
-          <div>
-            <div className="text-white/60">{windowLabel}</div>
-            <div className="font-medium">{windowText}</div>
-          </div>
+          {isCollection && (
+            <div>
+              <div className="text-white/60">Collection window</div>
+              <div className="font-medium">12:00–21:00</div>
+            </div>
+          )}
   
           <div>
             <div className="text-white/60">Payment method</div>
@@ -2138,7 +2132,7 @@ function PayModal({
               If it doesn’t arrive within 5 minutes, please check spam.
               If you have any questions, please email support@yoghurtofyouth.co.uk.</>
           ) : (
-            <>Your yoghurt is fermented on the day before delivery for freshness.
+            <>Your yoghurt is fermented on the day before dispatch for freshness.
               You’ll receive an email receipt with full order details shortly.
               If it doesn’t arrive within 5 minutes, please check spam.
               If you have any questions, please email support@yoghurtofyouth.co.uk.</>
