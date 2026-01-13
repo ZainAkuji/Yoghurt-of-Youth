@@ -1654,6 +1654,7 @@ function PayModal({
   const [phone, setPhone] = useState("");
   const [postcode, setPostcode] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
+  const [townCity, setTownCity] = useState("");
 
   const [date, setDate] = useState(initialDate);
   const formattedDate = formatDateUK(date);
@@ -1704,14 +1705,14 @@ function PayModal({
   const fullAddress =
     delivery_method === "collection"
       ? "Collection"
-      : [streetAddress.trim(), normalizedPostcode].filter(Boolean).join(", ");
+      : [streetAddress.trim(), townCity.trim(), normalizedPostcode].filter(Boolean).join(", ");
 
   const valid =
     !!name &&
     !!email &&
     !!phone &&
     (isSubscription ? true : (qtyTotal > 0 && !!date)) &&
-    (isSubscription ? true : (delivery_method === "delivery" ? (!!postcode && !!streetAddress) : true));
+    (isSubscription ? true : (delivery_method === "delivery" ? (!!postcode && !!streetAddress && !!townCity) : true));
 
   function validateBeforePay(): boolean {
     if (!valid) {
@@ -2219,7 +2220,7 @@ function PayModal({
               value={postcode}
               onChange={(e) => setPostcode(e.target.value)}
               required
-              placeholder="Postcode (BB1 / BB2 only)"
+              placeholder="Postcode (UK)"
               className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
             />
             <input
@@ -2228,6 +2229,13 @@ function PayModal({
               required
               placeholder="Street address"
               className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+            />
+             <input
+              type="text"
+              placeholder="Town/City"
+              value={townCity}
+              onChange={(e) => setTownCity(e.target.value)}
+              className="w-full rounded-xl bg-black/40 border border-white/20 px-4 py-3 text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-amber-300"
             />
           </>
         )}
