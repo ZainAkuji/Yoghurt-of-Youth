@@ -2525,6 +2525,14 @@ function Modal({
   title: string;
   children: React.ReactNode;
 }) {
+  React.useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 z-50">
       {/* Dim / blur the page behind */}
@@ -2536,7 +2544,7 @@ function Modal({
       {/* Centered frosted panel */}
       <div className="absolute inset-0 flex items-center justify-center p-4">
         <div
-          className="w-full max-w-lg rounded-2xl border border-white/20 shadow-2xl p-6 text-white backdrop-blur-sm"
+          className="w-full max-w-lg rounded-2xl border border-white/20 shadow-2xl p-6 text-white backdrop-blur-sm max-h-[85vh] overflow-y-auto overscroll-contain"
           style={{
             // REAL transparency – same vibe as the drawer
             backgroundColor: "rgba(0, 0, 0, 0.55)",
