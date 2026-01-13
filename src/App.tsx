@@ -2237,6 +2237,13 @@ function PayModal({
               onChange={(e) => setTownCity(e.target.value)}
               className="w-full rounded-xl bg-black/40 border border-white/20 px-4 py-3 text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-amber-300"
             />
+            <input
+              type="text"
+              placeholder="Town/City"
+              value={townCity}
+              onChange={(e) => setTownCity(e.target.value)}
+              className="invisible w-full rounded-xl bg-black/40 border border-white/20 px-4 py-3 text-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-amber-300"
+            />
           </>
         )}
 
