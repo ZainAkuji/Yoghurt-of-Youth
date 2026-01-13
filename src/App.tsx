@@ -1106,9 +1106,9 @@ export default function App(){
                   <h3 className="text-xl sm:text-2xl font-bold mb-2">Weekly Gut Punch</h3>
                 
                   <div className="text-sm sm:text-base text-white max-w-4xl space-y-1.5">
-                    <p><strong>Subscribe and save.</strong> Receive <strong>7 bottle of yoghurts every Monday</strong>, fermented the day before for freshness.</p>
-                    <p><strong>Minimum 3 weeks</strong> order. You will be charged <strong>every week</strong> on the day of delivery.</p>
-                    <p>You will receive your first batch on the coming <strong>available Monday</strong>. Book by <strong>Saturday evening</strong> for the <strong>coming Monday</strong>.</p>
+                    <p><strong>Subscribe and save.</strong> Receive <strong>7 bottle of yoghurts every week</strong>, fermented the day before dispatch for freshness.</p>
+                    <p>Your first batch will be dispatched on the coming <strong>available Monday</strong>. Book by <strong>Saturday evening</strong> for the <strong>coming Monday</strong>.</p>
+                    <p><strong>Minimum 3 weeks</strong> order. You will be charged <strong>every week</strong> on the day of dispatch.</p>
                     <p>We alternate between <strong>PRCXN</strong> and <strong>SPCTRL</strong> yoghurt variants every week.</p>
                     <p>Tap a plan below to subscribe.</p>
                   </div>
@@ -1167,6 +1167,10 @@ export default function App(){
                   
                     <p className="mt-2 text-xs text-white leading-relaxed">
                       <strong>MIX</strong> contains 2 BFC, 3 STR, and 2 MNG
+                    </p>
+
+                    <p className="mt-2 text-xs text-white leading-relaxed">
+                      Standard weekly delivery charge of <strong>£1.95</strong>
                     </p>
 
                     <p className="mt-2 text-xs text-white leading-relaxed">
@@ -1793,6 +1797,7 @@ function PayModal({
           You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span> Weekly Gut Punch.
           We dispatch your first batch on {" "}<span className="font-semibold">{firstText}</span> then every following <span className="font-semibold">Monday</span>.
           We deliver UK-wide, and use Evri Next Day delivery.
+          The weekly delivery charge is <span className="font-semibold">£1.95</span>.
           Please fill in the details below.
         </p>
 
@@ -1806,7 +1811,9 @@ function PayModal({
           <input value={postcode} onChange={(e) => setPostcode(e.target.value)} required placeholder="Postcode (UK)"
             className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
           <input value={streetAddress} onChange={(e) => setStreetAddress(e.target.value)} required placeholder="Street address"
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2" />
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
+          <input value={townCity} onChange={(e) => setTownCity(e.target.value)} required placeholder="Town/City"
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
           <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Order note (optional)"
             className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2" />
         </div>
@@ -2218,23 +2225,21 @@ function PayModal({
             <input
               value={postcode}
               onChange={(e) => setPostcode(e.target.value)}
-              required
-              placeholder="Postcode (UK)"
+              required placeholder="Postcode (UK)"
               className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
             />
             <input
               value={streetAddress}
               onChange={(e) => setStreetAddress(e.target.value)}
-              required
-              placeholder="Street address"
+              required placeholder="Street address"
               className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
             />
-             <input
-              value={townCity}
-              onChange={(e) => setTownCity(e.target.value)}
-              required
-              placeholder="Town/City"
-              className="md:col-span-2 rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"            />
+            <input
+             value={townCity}
+             onChange={(e) => setTownCity(e.target.value)}
+             required placeholder="Town/City"
+             className="md:col-span-2 rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+            />
           </>
         )}
 
