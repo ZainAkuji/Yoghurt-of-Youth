@@ -1796,7 +1796,7 @@ function PayModal({
           You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span> Weekly Gut Punch.
           We dispatch your first batch on {" "}<span className="font-semibold">{firstText}</span> then every following <span className="font-semibold">Monday</span>.
           We deliver UK-wide, and use Evri Next Day delivery.
-          The weekly delivery charge is <span className="font-semibold">£1.95</span>.
+          The weekly delivery charge is <span className="font-semibold">£3.95</span>.
           Please fill in the details below.
         </p>
 
