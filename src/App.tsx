@@ -129,7 +129,7 @@ function computeTotals(
   const savings = Math.max(0, fullPrice - merchTotal);
 
   // ---- DELIVERY LOGIC ----
-  const FREE_DELIVERY_THRESHOLD = 24; // £24 of yoghurt (after discounts)
+  const FREE_DELIVERY_THRESHOLD = 1000; // £24 of yoghurt (after discounts)
 
   // ✅ collection = no delivery fee, ever
   const freeDeliveryUnlocked =
@@ -1068,8 +1068,7 @@ export default function App(){
                     {/* Delivery info + "Spent" badge */}
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        Delivery <strong>£3.95</strong> ·{" "}
-                        <strong>FREE delivery on orders over £24</strong>
+                        Delivery <strong>£3.95</strong>
                       </span>
       
                       {merchTotal > 0 ? (
@@ -1167,10 +1166,6 @@ export default function App(){
                   
                     <p className="mt-2 text-xs text-white leading-relaxed">
                       <strong>MIX</strong> contains 2 BFC, 3 STR, and 2 MNG
-                    </p>
-
-                    <p className="mt-2 text-xs text-white leading-relaxed">
-                      Standard weekly delivery charge of <strong>£1.95</strong>
                     </p>
 
                     <p className="mt-2 text-xs text-white leading-relaxed">
