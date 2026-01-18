@@ -1016,7 +1016,7 @@ export default function App(){
                   <div className="mt-2 text-xs text-white space-y-1.5">
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        PLN: <strong>£2</strong> each ·{" "}
+                        PLN: <strong>£2.50</strong> each ·{" "}
                         <strong>Buy 7 get one FREE</strong>
                       </span>
                       {totalPlain > 0 ? (
@@ -1041,7 +1041,7 @@ export default function App(){
       
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        BFC, STR &amp; MNG: <strong>£2.50</strong> each ·{" "}
+                        BFC, STR &amp; MNG: <strong>£3.00</strong> each ·{" "}
                         <strong>Buy 7 get one FREE</strong>
                       </span>
                       {totalFlavoured > 0 ? (
@@ -1104,7 +1104,7 @@ export default function App(){
                   <h3 className="text-xl sm:text-2xl font-bold mb-2">Weekly Gut Punch</h3>
                 
                   <div className="text-sm sm:text-base text-white max-w-4xl space-y-1.5">
-                    <p><strong>Subscribe and save.</strong> Receive <strong>7 bottle of yoghurts every week</strong>
+                    <p><strong>Subscribe and save.</strong> Receive <strong>7 bottle of yoghurts every week</strong>{" "}
                       at a <strong>discount</strong>,
                       fermented the day before dispatch for freshness.</p>
                     <p>Your first batch will be dispatched on the coming <strong>available Monday</strong>. Book by <strong>Saturday evening</strong> for the <strong>coming Monday</strong>.</p>
