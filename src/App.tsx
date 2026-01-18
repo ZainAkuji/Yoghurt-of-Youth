@@ -632,6 +632,7 @@ export default function App(){
   const [cart, setCart] = useState<Record<string,number>>(()=>{ try{ return JSON.parse(localStorage.getItem("yoy_cart") || "{}"); }catch{ return {}; }});
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [reserveOpen, setReserveOpen] = useState(false);
+  const [nutritionModal, setNutritionModal] = React.useState<null | { title: string; src: string }>(null);
   
   useEffect(()=>{ localStorage.setItem("yoy_cart", JSON.stringify(cart)); }, [cart]);
 
@@ -959,22 +960,31 @@ export default function App(){
                 </div>
       
                 <div className="mt-6 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
+                  <div className="text-sm sm:text-base text-white max-w-4xl space-y-1.5">
+                    <p>Browse our selection.</p>
+                    <p>Click on a flavour header to view the nutrition information.</p>
+                  </div>
+                  
                   {/* 2-row cards per flavour: header + controls */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-px text-sm text-white">
                     {[
-                      { id: ids.PLN, label: "PLN (plain)", bg: "bg-white/15" },
-                      { id: ids.BFC, label: "BFC (black forest)", bg: "bg-rose-900/40" },
-                      { id: ids.STR, label: "STR (strawberry)", bg: "bg-pink-500/35" },
-                      { id: ids.MNG, label: "MNG (mango)", bg: "bg-amber-300/45" },
+                      { id: ids.PLN, label: "PLN (plain)", bg: "bg-white/15", nutritionSrc: "/pln_nutrition.png" },
+                      { id: ids.BFC, label: "BFC (black forest)", bg: "bg-rose-900/40", nutritionSrc: "/bfc_nutrition.png" },
+                      { id: ids.STR, label: "STR (strawberry)", bg: "bg-pink-500/35", nutritionSrc: "/str_nutrition.png" },
+                      { id: ids.MNG, label: "MNG (mango)", bg: "bg-amber-300/45", nutritionSrc: "/mng_nutrition.png" },
                     ].map((f) => {
                       const currentQty = qty(f.id);
                   
                       return (
                         <div key={f.id} className="grid grid-rows-[auto,auto] gap-px">
                           {/* header cell */}
-                          <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
+                          <button
+                            type="button"
+                            onClick={() => setNutritionModal({ title: `${f.label} – Nutrition`, src: f.nutritionSrc })}
+                            className="bg-black/70 px-2 py-1.5 font-semibold text-center hover:bg-black/60 transition"
+                          >
                             {f.label}
-                          </div>
+                          </button>
                   
                           {/* controls cell */}
                           <div
@@ -1187,6 +1197,19 @@ export default function App(){
           })()}
         </div>
       </section>
+
+      {nutritionModal && (
+        <Modal
+          title={nutritionModal.title}
+          onClose={() => setNutritionModal(null)}
+        >
+          <img
+            src={nutritionModal.src}
+            alt={nutritionModal.title}
+            className="w-full rounded-xl border border-white/15"
+          />
+        </Modal>
+      )}
 
 
       {/* About */}
