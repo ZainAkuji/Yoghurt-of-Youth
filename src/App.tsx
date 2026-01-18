@@ -40,10 +40,10 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  { id: "PLN", name: "PLN", price: 2.0, size: "250 mL", img: "/plain.png" },
-  { id: "BFC", name: "BFC", price: 2.5, size: "250 mL", img: "/bfc.png" },
-  { id: "STR", name: "STR", price: 2.5, size: "250 mL", img: "/str.png" },
-  { id: "MNG", name: "MNG", price: 2.5, size: "250 mL", img: "/mng.png" },
+  { id: "PLN", name: "PLN", price: 2.5, size: "250 mL", img: "/plain.png" },
+  { id: "BFC", name: "BFC", price: 3, size: "250 mL", img: "/bfc.png" },
+  { id: "STR", name: "STR", price: 3, size: "250 mL", img: "/str.png" },
+  { id: "MNG", name: "MNG", price: 3, size: "250 mL", img: "/mng.png" },
 ];
 
 const GROUPED = [
@@ -95,15 +95,15 @@ function computeTotals(
   const qtyTotal = items.reduce((s, i) => s + i.qty, 0) + (giftStrQty || 0);
 
   // classify by price: £2 = "plain", £2.50 = "flavoured"
-  const plainItems = items.filter((i) => i.price === 2.0);
-  const flavItems = items.filter((i) => i.price === 2.5);
+  const plainItems = items.filter((i) => i.price === 2.5);
+  const flavItems = items.filter((i) => i.price === 3);
 
   const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
   const flavQty  = flavItems.reduce((s, i) => s + i.qty, 0);
 
   // unit prices (taken from products so it's future-proof)
-  const plainUnit = plainItems[0]?.price ?? 2.0;
-  const flavUnit  = flavItems[0]?.price ?? 2.5;
+  const plainUnit = plainItems[0]?.price ?? 2.5;
+  const flavUnit  = flavItems[0]?.price ?? 3;
 
   // "no bundle" full price (for savings display)
   const plainSubtotalRaw = plainQty * plainUnit;
@@ -143,7 +143,7 @@ function computeTotals(
         ? 0
         : freeDeliveryUnlocked
           ? 0
-          : 3.95;
+          : 4.95;
 
   // final amount customer pays (bottles + delivery)
   const total = merchTotal + deliveryFee;
