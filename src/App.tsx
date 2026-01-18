@@ -966,7 +966,7 @@ export default function App(){
                   </div>
                   
                   {/* 2-row cards per flavour: header + controls */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-px text-sm text-white">
+                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-px text-sm text-white">
                     {[
                       { id: ids.PLN, label: "PLN (plain)", bg: "bg-white/15", nutritionSrc: "/pln_nutrition.png" },
                       { id: ids.BFC, label: "BFC (black forest)", bg: "bg-rose-900/40", nutritionSrc: "/bfc_nutrition.png" },
