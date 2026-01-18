@@ -94,7 +94,7 @@ function computeTotals(
   // ✅ bottles count includes gift STR
   const qtyTotal = items.reduce((s, i) => s + i.qty, 0) + (giftStrQty || 0);
 
-  // classify by price: £2 = "plain", £2.50 = "flavoured"
+  // classify by price: £2.50 = "plain", £3 = "flavoured"
   const plainItems = items.filter((i) => i.price === 2.5);
   const flavItems = items.filter((i) => i.price === 3);
 
@@ -129,7 +129,7 @@ function computeTotals(
   const savings = Math.max(0, fullPrice - merchTotal);
 
   // ---- DELIVERY LOGIC ----
-  const FREE_DELIVERY_THRESHOLD = 1000; // £24 of yoghurt (after discounts)
+  const FREE_DELIVERY_THRESHOLD = 1000;
 
   // ✅ collection = no delivery fee, ever
   const freeDeliveryUnlocked =
@@ -537,7 +537,7 @@ function buildConfirmOrderFromDraft(
       return ["Weekly box (7 bottles)"];
     })();
 
-    // parse price label like "£11"
+    // parse price label
     const priceLabel = String(plan?.priceLabel || "");
     const numeric = Number(priceLabel.replace(/[^\d.]/g, "")) || 0;
 
@@ -1497,7 +1497,7 @@ function Basket({
         {plainRemainder > 0 && (
           <div className="flex justify-between">
             <span>PLN</span>
-            <span>{plainRemainder} × £2</span>
+            <span>{plainRemainder} × £2.50</span>
           </div>
         )}
 
@@ -1511,7 +1511,7 @@ function Basket({
         {flavRemainder > 0 && (
           <div className="flex justify-between">
             <span>Flavoured</span>
-            <span>{flavRemainder} × £2.50</span>
+            <span>{flavRemainder} × £3.00</span>
           </div>
         )}
 
@@ -2305,9 +2305,9 @@ function PayModal({
             </div>
             <div>
               <div className="mb-1">Bottles: {qtyTotal}</div>
-              {plainRemainder > 0 && <div>PLN: {plainRemainder} × £2.00</div>}
+              {plainRemainder > 0 && <div>PLN: {plainRemainder} × £2.50</div>}
               {plainBundles > 0 && <div>Free PLN (7 for 6): {plainBundles}</div>}
-              {flavRemainder > 0 && <div>Flavoured: {flavRemainder} × £2.50</div>}
+              {flavRemainder > 0 && <div>Flavoured: {flavRemainder} × £3.00</div>}
               {flavBundles > 0 && <div>Free flavoured (7 for 6): {flavBundles}</div>}
 
               {deliveryFee > 0 && !freeDeliveryUnlocked && (
@@ -2316,7 +2316,7 @@ function PayModal({
 
               {delivery_method === "delivery" && freeDeliveryUnlocked && (
                 <div className="mt-1 text-emerald-400">
-                  Free delivery unlocked (orders over £20)
+                  Free delivery unlocked (orders over £50)
                 </div>
               )}
 
