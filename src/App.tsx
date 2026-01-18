@@ -775,11 +775,11 @@ export default function App(){
   const clear = ()=> setCart({});
 
   const SUBSCRIPTION_PLANS = [
-    { key: "PLN", label: "PLN (plain)", priceLabel: "£11", bg: "bg-white/15" },
-    { key: "BFC", label: "BFC (black forest)", priceLabel: "£14", bg: "bg-rose-900/40" },
-    { key: "STR", label: "STR (strawberry)", priceLabel: "£14", bg: "bg-pink-500/35" },
-    { key: "MNG", label: "MNG (mango)", priceLabel: "£14", bg: "bg-amber-300/45" },
-    { key: "MIX", label: "MIX (mixed)", priceLabel: "£14", bg: "MIX_STRIPES" },
+    { key: "PLN", label: "PLN (plain)", priceLabel: "£13.50", bg: "bg-white/15" },
+    { key: "BFC", label: "BFC (black forest)", priceLabel: "£16.20", bg: "bg-rose-900/40" },
+    { key: "STR", label: "STR (strawberry)", priceLabel: "£16.20", bg: "bg-pink-500/35" },
+    { key: "MNG", label: "MNG (mango)", priceLabel: "£16.20", bg: "bg-amber-300/45" },
+    { key: "MIX", label: "MIX (mixed)", priceLabel: "£16.20", bg: "MIX_STRIPES" },
   ] as const;
   
   type SubscriptionPlanKey = typeof SUBSCRIPTION_PLANS[number]["key"];
@@ -1067,7 +1067,7 @@ export default function App(){
                     {/* Delivery info + "Spent" badge */}
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        Chilled Next Day Delivery charge of <strong>£3.95</strong>
+                        Chilled Next Day Delivery charge of <strong>£4.95</strong>
                       </span>
       
                       {merchTotal > 0 ? (
@@ -1104,7 +1104,9 @@ export default function App(){
                   <h3 className="text-xl sm:text-2xl font-bold mb-2">Weekly Gut Punch</h3>
                 
                   <div className="text-sm sm:text-base text-white max-w-4xl space-y-1.5">
-                    <p><strong>Subscribe and save.</strong> Receive <strong>7 bottle of yoghurts every week</strong>, fermented the day before dispatch for freshness.</p>
+                    <p><strong>Subscribe and save.</strong> Receive <strong>7 bottle of yoghurts every week</strong>
+                      at a <strong>discount</strong>,
+                      fermented the day before dispatch for freshness.</p>
                     <p>Your first batch will be dispatched on the coming <strong>available Monday</strong>. Book by <strong>Saturday evening</strong> for the <strong>coming Monday</strong>.</p>
                     <p><strong>Minimum 3 weeks</strong> order. You will be charged <strong>every week</strong> on the day of dispatch.</p>
                     <p>We alternate between <strong>PRCXN</strong> and <strong>SPCTRL</strong> yoghurt variants every week.</p>
@@ -1168,7 +1170,7 @@ export default function App(){
                     </p>
 
                     <p className="mt-2 text-xs text-white leading-relaxed">
-                      Standard weekly delivery charge of <strong>£3.95</strong>
+                      Standard weekly delivery charge of <strong>£4.95</strong>
                     </p>
 
                     <p className="mt-2 text-xs text-white leading-relaxed">
@@ -1795,7 +1797,7 @@ function PayModal({
           You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span> Weekly Gut Punch.
           We dispatch your first batch on {" "}<span className="font-semibold">{firstText}</span> then every following <span className="font-semibold">Monday</span>.
           We deliver UK-wide, and use Evri Next Day delivery.
-          The weekly delivery charge is <span className="font-semibold">£3.95</span>.
+          The weekly delivery charge is <span className="font-semibold">£4.95</span>.
           Please fill in the details below.
         </p>
 
@@ -2022,7 +2024,7 @@ function PayModal({
             <div className="mt-3 text-white/70 text-xs leading-relaxed">
               We alternate PRCXN and SPCTRL by week.
               Your yoghurt is fermented on the day before dispatch for freshness.
-              Delivery is £3.95 for Weekly Gut Punch.
+              Delivery is £4.95 for Weekly Gut Punch.
             </div>
           </div>
   
