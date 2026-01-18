@@ -302,7 +302,7 @@ function AboutSection() {
         
         <p className="mt-2 text-white text-sm leading-relaxed">
           When harmful microbes dominate the gut or stomach, inflammation and discomfort follow.
-          Our two <em>L. reuteri</em> strains address this at the source — each through a complementary mechanism:
+          Our two <em>L. reuteri</em> strains address this at the root each through a complementary mechanism:
         </p>
         
         <ul className="mt-2 list-disc list-inside text-sm text-white space-y-1">
@@ -313,13 +313,13 @@ function AboutSection() {
           </li>
           <li>
             <strong>DSM&nbsp;17938 (“SPCTRL”)</strong> promotes a balanced gut environment by
-            limiting the overgrowth of opportunistic species — including <em>Candida</em> —
+            limiting the overgrowth of opportunistic species, including <em>Candida</em>,
             while reinforcing a healthy microbial community along the intestinal tract.
           </li>
         </ul>
         
         <p className="mt-2 text-white text-sm leading-relaxed">
-          Used together — for example by alternating them daily or weekly —
+          Used together, like by alternating them daily or weekly,
           <strong>PRCXN and SPCTRL act in synergy</strong>:
           one targets <em>H.&nbsp;pylori</em> directly in the stomach, while the other restores microbial
           diversity and suppresses residual pathogens downstream. This dual approach
@@ -328,17 +328,15 @@ function AboutSection() {
         </p>
         
         <p className="mt-2 text-white text-sm leading-relaxed">
-          When both yoghurts are taken in rotation, they help create a more resilient digestive ecosystem —
-          one less prone to chronic irritation, reflux, bloating, and secondary infections —
+          When both yoghurts are taken in rotation, they help create a more resilient digestive ecosystem
+          less prone to chronic irritation, reflux, bloating, and secondary infections,
           laying a foundation for lasting digestive harmony and whole-body wellbeing.
         </p>
 
         <p className="mt-2 text-white text-sm leading-relaxed">
           Each bottle of yoghurt contains 250&nbsp;ml,
-          delivering live counts on the order of <strong>one trillion CFU</strong> — a level consistent
-          with genuine biological effect. For best results, enjoy one serving on an empty stomach,
-          around <strong>60&nbsp;minutes before a meal</strong>, to allow the beneficial bacteria to reach
-          the gut unimpeded.
+          delivering live counts on the order of <strong>one trillion CFU</strong>, a level consistent
+          with genuine biological effect.
         </p>
         
         <p className="mt-2 text-white text-sm leading-relaxed">
@@ -359,7 +357,7 @@ function AboutSection() {
         </h3>
         <p className="mt-2 text-white text-sm leading-relaxed">
           <strong>N-acetylcysteine (NAC)</strong> is a mucolytic antioxidant that can help
-          <em> disrupt microbial biofilms</em> in the stomach — including those formed by
+          <em> disrupt microbial biofilms</em> in the stomach, including those formed by
           <em> Helicobacter pylori</em>. By breaking disulfide bonds in the mucus layer and
           loosening biofilm structure, NAC may improve access for the body’s defenses and for
           antimicrobials where used.<span className="text-slate-500">†</span>
@@ -376,8 +374,8 @@ function AboutSection() {
         <p className="mt-2 text-white text-sm leading-relaxed">
           Scientific studies exploring NAC for <em>H.&nbsp;pylori</em> biofilm disruption commonly use
           daily amounts in the range of <strong>600 – 1200 mg</strong>, divided into one or two servings.
-          For example, many individuals take <strong>600 mg twice daily</strong> — once in the morning and once
-          in the late afternoon or evening — though exact routines can vary depending on tolerance
+          For example, many individuals take <strong>600 mg twice daily</strong>, once in the morning and once
+          in the late afternoon or evening, though exact routines can vary depending on tolerance
           and professional guidance.
         </p>
         <p className="mt-3 text-white text-xs leading-relaxed">
@@ -434,6 +432,7 @@ function AboutSection() {
         <p className="mt-2 text-white text-sm leading-relaxed">
           The yoghurt may be consumed at any time in the day, but for best effect, it is recommended to have it right in between lunch and dinner
           on an empty stomach, with at least <strong>one hour of no food or drink before and after</strong> the yoghurt.
+          This allows the beneficial bacteria to reach the gut unimpeded while also easing the enteric stress it may cause.
         </p>
         
         <p className="mt-2 text-white text-sm leading-relaxed">
@@ -953,7 +952,7 @@ export default function App(){
                     Dispatched on <strong>Monday</strong> and <strong>Thursday</strong>.
                   </p>
                   <p>
-                    Collection available at our Blackburn premises (BB2) on <strong>Monday</strong> and <strong>Thursday</strong> from 12:00-21:00.
+                    Collection available at our Blackburn premises on <strong>Monday</strong> and <strong>Thursday</strong> from 12:00-21:00.
                     Please ensure you can collect within the specified window. UK-wide delivery is recommended for distant locations.
                   </p>
                   <p>Fermented on the day before dispatch / collection for freshness.</p>
