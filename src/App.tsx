@@ -1110,11 +1110,39 @@ export default function App(){
                       const isMix = p.bg === "MIX_STRIPES";
                       const isTaster = p.bg === "TASTER_STRIPES";
                   
+                      // total packs currently in basket for this pack
+                      const packQty =
+                        Object.entries(p.items).reduce((s, [id, n]) => s + (cart[id] || 0), 0) /
+                        Object.values(p.items).reduce((s, n) => s + n, 0);
+                  
+                      const currentQty = Number.isFinite(packQty) ? Math.max(0, Math.floor(packQty)) : 0;
+                  
+                      const nutritionKey =
+                        p.key === "PLN" || p.key === "BFC" || p.key === "STR" || p.key === "MNG"
+                          ? p.key
+                          : null;
+                  
                       return (
                         <div key={p.key} className="grid grid-rows-[auto,auto] gap-px">
                           {/* header cell */}
                           <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
-                            {p.label}
+                            {nutritionKey ? (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  // assumes you already have these in scope from earlier:
+                                  // setNutritionOpen(true); setNutritionKey(nutritionKey);
+                                  setNutritionKey(nutritionKey);
+                                  setNutritionOpen(true);
+                                }}
+                                className="w-full hover:text-amber-300 transition-colors"
+                                aria-label={`${p.label} nutrition`}
+                              >
+                                {p.label}
+                              </button>
+                            ) : (
+                              <span>{p.label}</span>
+                            )}
                           </div>
                   
                           {/* controls cell */}
@@ -1162,6 +1190,11 @@ export default function App(){
                               <span className="translate-y-[-1px] text-sm font-semibold">−</span>
                             </button>
                   
+                            {/* quantity signifier */}
+                            <span className="relative z-10 w-6 text-center text-sm font-semibold">
+                              {currentQty}
+                            </span>
+                  
                             <button
                               onClick={() => addPack(p)}
                               className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
@@ -1175,7 +1208,7 @@ export default function App(){
                     })}
                   </div>
                   
-                  <div className="mt-2 text-xs text-white space-y-1.5">
+                  <div className="mt-4 text-xs text-white space-y-1.5">
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
                         <strong>MIX</strong> contains 2 BFC, 3 STR, and 2 MNG
