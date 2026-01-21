@@ -928,7 +928,79 @@ export default function App(){
             const ids = { PLN: "PLN", BFC: "BFC", STR: "STR", MNG: "MNG" };
       
             const qty = (id: string) => cart[id] || 0;
-      
+            
+            const PACKS = [
+              {
+                key: "TASTER",
+                label: "Taster",
+                priceLabel: "£11.50",
+                bg: "TASTER_STRIPES",
+                contents: { PLN: 1, BFC: 1, STR: 1, MNG: 1 },
+              },
+              {
+                key: "PLN",
+                label: "PLN (plain)",
+                priceLabel: "£15",
+                bg: "bg-white/15",
+                contents: { PLN: 7 },
+              },
+              {
+                key: "BFC",
+                label: "BFC (black forest)",
+                priceLabel: "£18",
+                bg: "bg-rose-900/40",
+                contents: { BFC: 7 },
+              },
+              {
+                key: "STR",
+                label: "STR (strawberry)",
+                priceLabel: "£18",
+                bg: "bg-pink-500/35",
+                contents: { STR: 7 },
+              },
+              {
+                key: "MNG",
+                label: "MNG (mango)",
+                priceLabel: "£18",
+                bg: "bg-amber-300/45",
+                contents: { MNG: 7 },
+              },
+              {
+                key: "MIX",
+                label: "MIX",
+                priceLabel: "£18",
+                bg: "MIX_STRIPES",
+                contents: { BFC: 2, STR: 3, MNG: 2 },
+              },
+            ] as const;
+            
+            function addPack(p: (typeof PACKS)[number]) {
+              setCart((c) => {
+                const n = { ...c };
+                for (const [k, v] of Object.entries(p.contents)) {
+                  const id = k as keyof typeof ids; // PLN/BFC/STR/MNG
+                  if (!ids[id]) continue;
+                  n[ids[id]] = (n[ids[id]] || 0) + Number(v || 0);
+                }
+                return n;
+              });
+            }
+            
+            function subPack(p: (typeof PACKS)[number]) {
+              setCart((c) => {
+                const n: Record<string, number> = { ...c };
+                for (const [k, v] of Object.entries(p.contents)) {
+                  const id = k as keyof typeof ids;
+                  const key = ids[id];
+                  if (!key) continue;
+                  const next = (n[key] || 0) - Number(v || 0);
+                  if (next > 0) n[key] = next;
+                  else delete n[key];
+                }
+                return n;
+              });
+            }
+        
             const totalPlain = qty(ids.PLN);
             const totalFlavoured = qty(ids.BFC) + qty(ids.STR) + qty(ids.MNG);
       
@@ -963,149 +1035,92 @@ export default function App(){
                   <div className="text-sm sm:text-base text-white max-w-4xl space-y-1.5">
                     <p>Browse our selection.</p>
                     <p>Click on a flavour header to view the nutrition information.</p>
+                    <p>Click on the <strong>basket icon</strong> on the top right to complete your purchase.</p>
                   </div>
                   
-                  {/* 2-row cards per flavour: header + controls */}
-                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-px text-sm text-white">
-                    {[
-                      { id: ids.PLN, label: "PLN (plain)", bg: "bg-white/15", nutritionSrc: "/pln_nutrition.png" },
-                      { id: ids.BFC, label: "BFC (black forest)", bg: "bg-rose-900/40", nutritionSrc: "/bfc_nutrition.png" },
-                      { id: ids.STR, label: "STR (strawberry)", bg: "bg-pink-500/35", nutritionSrc: "/str_nutrition.png" },
-                      { id: ids.MNG, label: "MNG (mango)", bg: "bg-amber-300/45", nutritionSrc: "/mng_nutrition.png" },
-                    ].map((f) => {
-                      const currentQty = qty(f.id);
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-px text-sm text-white">
+                    {PACKS.map((p) => {
+                      const isMix = p.bg === "MIX_STRIPES";
+                      const isTaster = p.bg === "TASTER_STRIPES";
                   
                       return (
-                        <div key={f.id} className="grid grid-rows-[auto,auto] gap-px">
+                        <div key={p.key} className="grid grid-rows-[auto,auto] gap-px">
                           {/* header cell */}
-                          <button
-                            type="button"
-                            onClick={() => setNutritionModal({ title: `${f.label} – Nutrition`, src: f.nutritionSrc })}
-                            className="bg-black/70 px-2 py-1.5 font-semibold text-center hover:bg-black/60 transition"
-                          >
-                            {f.label}
-                          </button>
+                          <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
+                            {p.label}
+                          </div>
                   
                           {/* controls cell */}
                           <div
                             className={cn(
-                              "px-2 py-2 flex items-center justify-center gap-2",
-                              f.bg
+                              "relative px-2 py-2 flex items-center justify-center gap-2",
+                              !isMix && !isTaster && p.bg
                             )}
                           >
-                            <button
-                              onClick={() => sub(f.id)}
-                              className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
-                              aria-label="Remove one"
-                            >
-                              <span className="translate-y-[-1px] text-sm font-semibold">
-                                −
-                              </span>
-                            </button>
+                            {/* MIX stripes (3) */}
+                            {isMix && (
+                              <>
+                                <div className="absolute inset-0 grid grid-cols-3">
+                                  <div className="bg-rose-900/40" />
+                                  <div className="bg-pink-500/35" />
+                                  <div className="bg-amber-300/45" />
+                                </div>
+                                <div className="absolute inset-0 bg-black/20" />
+                              </>
+                            )}
                   
-                            <span className="w-6 text-center text-sm font-semibold qty-flash">
-                              {currentQty}
+                            {/* TASTER stripes (4) */}
+                            {isTaster && (
+                              <>
+                                <div className="absolute inset-0 grid grid-cols-4">
+                                  <div className="bg-white/15" />
+                                  <div className="bg-rose-900/40" />
+                                  <div className="bg-pink-500/35" />
+                                  <div className="bg-amber-300/45" />
+                                </div>
+                                <div className="absolute inset-0 bg-black/20" />
+                              </>
+                            )}
+                  
+                            {/* price tag (left of buttons) */}
+                            <span className="relative z-10 text-xs font-semibold text-white/90 w-14 text-left">
+                              {p.priceLabel}
                             </span>
                   
                             <button
-                              onClick={() => add(f.id)}
-                              className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                              aria-label="Add one"
+                              onClick={() => subPack(p)}
+                              className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
+                              aria-label="Remove pack"
                             >
-                              <span className="translate-y-[-1px] text-sm font-semibold">
-                                +
-                              </span>
+                              <span className="translate-y-[-1px] text-sm font-semibold">−</span>
+                            </button>
+                  
+                            <button
+                              onClick={() => addPack(p)}
+                              className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                              aria-label="Add pack"
+                            >
+                              <span className="translate-y-[-1px] text-sm font-semibold">+</span>
                             </button>
                           </div>
                         </div>
                       );
                     })}
                   </div>
-                   
-                  {/* pricing + badges */}
+                  
                   <div className="mt-2 text-xs text-white space-y-1.5">
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        PLN: <strong>£2.50</strong> each ·{" "}
-                        <strong>7 for the price of 6</strong>
+                        <strong>MIX</strong> contains 2 BFC, 3 STR, and 2 MNG
                       </span>
-                      {totalPlain > 0 ? (
-                        <span
-                          className={cn(
-                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs shadow-md backdrop-blur-md",
-                            plainOnBundle
-                              ? "bg-emerald-500/80 text-slate-900"
-                              : "bg-black/60 text-white"
-                          )}
-                        >
-                          In basket:&nbsp;
-                          <strong>{totalPlain}</strong>
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-xs shadow-md backdrop-blur-md invisible">
-                          In basket:&nbsp;
-                          <strong>0</strong>
-                        </span>
-                      )}
-                    </p>
-      
+                    </p>  
+                    
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        BFC, STR &amp; MNG: <strong>£3.00</strong> each ·{" "}
-                        <strong>7 for the price of 6</strong>
-                      </span>
-                      {totalFlavoured > 0 ? (
-                        <span
-                          className={cn(
-                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs shadow-md backdrop-blur-md",
-                            flavOnBundle
-                              ? "bg-emerald-500/80 text-slate-900"
-                              : "bg-black/60 text-white"
-                          )}
-                        >
-                          In basket:&nbsp;
-                          <strong>{totalFlavoured}</strong>
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-xs shadow-md backdrop-blur-md invisible">
-                          In basket:&nbsp;
-                          <strong>0</strong>
-                        </span>
-                      )}
-                    </p>
-      
-                    {/* Delivery info + "Spent" badge */}
-                    <p className="flex flex-wrap items-center gap-2">
-                      <span>
-                        Chilled Next Day Delivery charge of <strong>£4.95</strong>
-                      </span>
-      
-                      {merchTotal > 0 ? (
-                        <span
-                          className={cn(
-                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs shadow-md backdrop-blur-md",
-                            freeDeliveryUnlocked
-                              ? "bg-emerald-500/80 text-slate-900"
-                              : "bg-black/60 text-white"
-                          )}
-                        >
-                          Spent:&nbsp;
-                          <strong>{gbp(merchTotal)}</strong>
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-xs shadow-md backdrop-blur-md invisible">
-                          Spent:&nbsp;
-                          <strong>0</strong>
-                        </span>
-                      )}
-                    </p>
-
-                    <p className="pt-0.5 flex flex-wrap items-center gap-2">
-                      <span>
+                        Chilled Next Day Delivery charge of <strong>£4.95</strong> ·{" "}
                         Collect for <strong>FREE</strong>
                       </span>
-                    </p>
-                    
+                    </p>                    
                   </div>
                 </div>
                 
@@ -1174,10 +1189,6 @@ export default function App(){
                         );
                       })}
                     </div>
-                  
-                    <p className="mt-2 text-xs text-white leading-relaxed">
-                      <strong>MIX</strong> contains 2 BFC, 3 STR, and 2 MNG
-                    </p>
 
                     <p className="mt-2 text-xs text-white leading-relaxed">
                       Standard weekly delivery charge of <strong>£4.95</strong>
