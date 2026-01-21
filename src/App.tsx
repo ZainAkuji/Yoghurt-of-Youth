@@ -1111,11 +1111,14 @@ export default function App(){
                       const isTaster = p.bg === "TASTER_STRIPES";
                   
                       // total packs currently in basket for this pack
-                      const packQty =
-                        Object.entries(p.items).reduce((s, [id, n]) => s + (cart[id] || 0), 0) /
-                        Object.values(p.items).reduce((s, n) => s + n, 0);
+                      const denom = Object.values(p.contents).reduce((s, n) => s + Number(n || 0), 0);
                   
-                      const currentQty = Number.isFinite(packQty) ? Math.max(0, Math.floor(packQty)) : 0;
+                      const numer = Object.entries(p.contents).reduce((s, [k, n]) => {
+                        const id = ids[k as keyof typeof ids];
+                        return s + (cart[id] || 0);
+                      }, 0);
+                  
+                      const currentQty = denom > 0 ? Math.max(0, Math.floor(numer / denom)) : 0;
                   
                       const nutritionKey =
                         p.key === "PLN" || p.key === "BFC" || p.key === "STR" || p.key === "MNG"
@@ -1130,8 +1133,8 @@ export default function App(){
                               <button
                                 type="button"
                                 onClick={() => {
-                                  // assumes you already have these in scope from earlier:
-                                  // setNutritionOpen(true); setNutritionKey(nutritionKey);
+                                  // use whatever you already had for nutrition modal state
+                                  // If you used setNutritionModal({ title, src }), swap to that here.
                                   setNutritionKey(nutritionKey);
                                   setNutritionOpen(true);
                                 }}
@@ -1191,7 +1194,7 @@ export default function App(){
                             </button>
                   
                             {/* quantity signifier */}
-                            <span className="relative z-10 w-6 text-center text-sm font-semibold">
+                            <span className="relative z-10 w-6 text-center text-sm font-semibold qty-flash">
                               {currentQty}
                             </span>
                   
