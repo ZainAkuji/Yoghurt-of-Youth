@@ -1027,7 +1027,7 @@ export default function App(){
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
                         PLN: <strong>£2.50</strong> each ·{" "}
-                        <strong>Buy 7 get one FREE</strong>
+                        <strong>7 for the price of 6</strong>
                       </span>
                       {totalPlain > 0 ? (
                         <span
@@ -1052,7 +1052,7 @@ export default function App(){
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
                         BFC, STR &amp; MNG: <strong>£3.00</strong> each ·{" "}
-                        <strong>Buy 7 get one FREE</strong>
+                        <strong>7 for the price of 6</strong>
                       </span>
                       {totalFlavoured > 0 ? (
                         <span
