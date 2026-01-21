@@ -793,7 +793,7 @@ export default function App(){
 
   return (
     <div className="scroll-smooth min-h-screen bg-gradient-to-b from-white to-slate-50 text-slate-800">
-      <Header brand={BRAND} query={query} setQuery={setQuery} itemsCount={qtyTotal} openCart={()=>setDrawerOpen(true)} />
+      <Header brand={BRAND} itemsCount={qtyTotal} openCart={()=>setDrawerOpen(true)} />
 
       {/* Hero Section */}
       <section
@@ -955,53 +955,167 @@ export default function App(){
                   {/* 2-row cards per flavour: header + controls */}
                   <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-px text-sm text-white">
                     {[
+                      // --- TASTER (new) ---
+                      { id: "TASTER", label: "Taster (1 each)", bg: "TASTER_STRIPES" as const },
+                    
+                      // existing flavours (unchanged labels + nutrition)
                       { id: ids.PLN, label: "PLN (plain)", bg: "bg-white/15", nutritionSrc: "/pln_nutrition.png" },
                       { id: ids.BFC, label: "BFC (black forest)", bg: "bg-rose-900/40", nutritionSrc: "/bfc_nutrition.png" },
                       { id: ids.STR, label: "STR (strawberry)", bg: "bg-pink-500/35", nutritionSrc: "/str_nutrition.png" },
                       { id: ids.MNG, label: "MNG (mango)", bg: "bg-amber-300/45", nutritionSrc: "/mng_nutrition.png" },
+                    
+                      // --- MIX (new) ---
+                      { id: "MIX", label: "MIX (2/3/2)", bg: "MIX_STRIPES" as const },
                     ].map((f) => {
-                      const currentQty = qty(f.id);
-                  
+                      const qPLN = qty(ids.PLN);
+                      const qBFC = qty(ids.BFC);
+                      const qSTR = qty(ids.STR);
+                      const qMNG = qty(ids.MNG);
+                    
+                      const isPreset = f.id === "TASTER" || f.id === "MIX";
+                      const isMix = f.bg === "MIX_STRIPES";
+                      const isTaster = f.bg === "TASTER_STRIPES";
+                    
+                      const tasterSelected = qPLN >= 1 && qBFC >= 1 && qSTR >= 1 && qMNG >= 1;
+                      const mixSelected = qBFC >= 2 && qSTR >= 3 && qMNG >= 2;
+                    
+                      const currentQty =
+                        f.id === "TASTER" ? (tasterSelected ? 1 : 0)
+                        : f.id === "MIX" ? (mixSelected ? 1 : 0)
+                        : qty(f.id);
+                    
+                      function setQty(id: string, n: number) {
+                        setCart((c) => {
+                          const next = { ...c };
+                          if (n <= 0) delete next[id];
+                          else next[id] = n;
+                          return next;
+                        });
+                      }
+                    
+                      function decPreset(kind: "TASTER" | "MIX") {
+                        setCart((c) => {
+                          const next = { ...c };
+                          const dec = (id: string, by: number) => {
+                            const v = Number(next[id] || 0) - by;
+                            if (v <= 0) delete next[id];
+                            else next[id] = v;
+                          };
+                    
+                          if (kind === "TASTER") {
+                            // remove one set: 1 of each
+                            dec(ids.PLN, 1);
+                            dec(ids.BFC, 1);
+                            dec(ids.STR, 1);
+                            dec(ids.MNG, 1);
+                          } else {
+                            // remove one set: 2 BFC, 3 STR, 2 MNG
+                            dec(ids.BFC, 2);
+                            dec(ids.STR, 3);
+                            dec(ids.MNG, 2);
+                          }
+                          return next;
+                        });
+                      }
+                    
+                      function incPreset(kind: "TASTER" | "MIX") {
+                        setCart((c) => {
+                          const next = { ...c };
+                          const put = (id: string, n: number) => { next[id] = n; };
+                    
+                          if (kind === "TASTER") {
+                            // set to exact 1 each
+                            put(ids.PLN, 1);
+                            put(ids.BFC, 1);
+                            put(ids.STR, 1);
+                            put(ids.MNG, 1);
+                          } else {
+                            // set to exact 2/3/2
+                            put(ids.BFC, 2);
+                            put(ids.STR, 3);
+                            put(ids.MNG, 2);
+                          }
+                          return next;
+                        });
+                      }
+                    
                       return (
                         <div key={f.id} className="grid grid-rows-[auto,auto] gap-px">
                           {/* header cell */}
-                          <button
-                            type="button"
-                            onClick={() => setNutritionModal({ title: `${f.label} – Nutrition`, src: f.nutritionSrc })}
-                            className="bg-black/70 px-2 py-1.5 font-semibold text-center hover:bg-black/50 hover:text-amber-300 transition-colors"
-                          >
-                            {f.label}
-                          </button>
-                  
-                          {/* controls cell */}
-                          <div
-                            className={cn(
-                              "px-2 py-2 flex items-center justify-center gap-2",
-                              f.bg
-                            )}
-                          >
+                          {isPreset ? (
+                            <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
+                              {f.label}
+                            </div>
+                          ) : (
                             <button
-                              onClick={() => sub(f.id)}
-                              className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
+                              type="button"
+                              onClick={() => setNutritionModal({ title: `${f.label} – Nutrition`, src: (f as any).nutritionSrc })}
+                              className="bg-black/70 px-2 py-1.5 font-semibold text-center hover:bg-black/50 hover:text-amber-300 transition-colors"
+                            >
+                              {f.label}
+                            </button>
+                          )}
+                    
+                          {/* controls cell */}
+                          <div className={cn("relative px-2 py-2 flex items-center justify-center gap-2", !isMix && !isTaster && (f as any).bg)}>
+                            {/* preset stripes backgrounds */}
+                            {isMix && (
+                              <>
+                                <div className="absolute inset-0 grid grid-cols-3">
+                                  <div className="bg-rose-900/40" />
+                                  <div className="bg-pink-500/35" />
+                                  <div className="bg-amber-300/45" />
+                                </div>
+                                <div className="absolute inset-0 bg-black/25" />
+                              </>
+                            )}
+                    
+                            {isTaster && (
+                              <>
+                                <div className="absolute inset-0 grid grid-cols-4">
+                                  <div className="bg-white/15" />
+                                  <div className="bg-rose-900/40" />
+                                  <div className="bg-pink-500/35" />
+                                  <div className="bg-amber-300/45" />
+                                </div>
+                                <div className="absolute inset-0 bg-black/25" />
+                              </>
+                            )}
+                    
+                            <button
+                              onClick={() => {
+                                if (f.id === "TASTER") return decPreset("TASTER");
+                                if (f.id === "MIX") return decPreset("MIX");
+                                return sub(f.id);
+                              }}
+                              className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
                               aria-label="Remove one"
                             >
-                              <span className="translate-y-[-1px] text-sm font-semibold">
-                                −
-                              </span>
+                              <span className="translate-y-[-1px] text-sm font-semibold">−</span>
                             </button>
-                  
-                            <span className="w-6 text-center text-sm font-semibold qty-flash">
+                    
+                            <span className="relative z-10 w-6 text-center text-sm font-semibold qty-flash">
                               {currentQty}
                             </span>
-                  
+                    
                             <button
-                              onClick={() => add(f.id)}
-                              className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                              aria-label="Add one"
+                              onClick={() => {
+                                // ✅ your requested “+ behaviour”
+                                if (f.id === ids.PLN) return setQty(ids.PLN, 7);
+                                if (f.id === ids.BFC) return setQty(ids.BFC, 7);
+                                if (f.id === ids.STR) return setQty(ids.STR, 7);
+                    
+                                // keep MNG normal (you didn’t ask to change it)
+                                if (f.id === ids.MNG) return add(ids.MNG);
+                    
+                                // presets
+                                if (f.id === "TASTER") return incPreset("TASTER");
+                                if (f.id === "MIX") return incPreset("MIX");
+                              }}
+                              className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                              aria-label="Add"
                             >
-                              <span className="translate-y-[-1px] text-sm font-semibold">
-                                +
-                              </span>
+                              <span className="translate-y-[-1px] text-sm font-semibold">+</span>
                             </button>
                           </div>
                         </div>
