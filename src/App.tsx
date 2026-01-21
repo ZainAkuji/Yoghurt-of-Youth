@@ -1,19 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-const BRAND = "Yoghurt of Youth";
-const OWNER_EMAIL = "zainul_a@hotmail.co.uk";
-const OWNER_PHONE = "+44 7756231844";
-
-const PICKUP_START_HOUR = 9;
-const PICKUP_END_HOUR = 18;
-const PICKUP_INTERVAL_MIN = 30;
-
-const ADDRESS_LINES = [
-  "11 Billinge Avenue",
-  "Blackburn",
-  "Lancashire",
-  "BB2 6SD",
-];
 const MAPS_QUERY = encodeURIComponent(`${ADDRESS_LINES.join(", ")}, United Kingdom`);
 
 // ---------- Utils ----------
