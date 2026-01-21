@@ -91,108 +91,51 @@ function computeTotals(
     })
     .filter(Boolean) as Array<(typeof PRODUCTS)[number] & { qty: number }>;
 
-  // --- qty breakdown by flavour id (pack pricing is based on ids) ---
-  const plnQty = Number(cart["PLN"] || 0);
-  const bfcQty = Number(cart["BFC"] || 0);
-  const strQty = Number(cart["STR"] || 0);
-  const mngQty = Number(cart["MNG"] || 0);
-
   // ✅ bottles count includes gift STR
-  const qtyTotal = plnQty + bfcQty + strQty + mngQty + (giftStrQty || 0);
+  const qtyTotal = items.reduce((s, i) => s + i.qty, 0) + (giftStrQty || 0);
 
-  // --- PACK PRICING ---
-  // Recipes:
-  // Taster: 1 PLN, 1 BFC, 1 STR, 1 MNG  => £11.50
-  // PLN:    7 PLN                        => £15
-  // BFC:    7 BFC                        => £18
-  // STR:    7 STR                        => £18
-  // MNG:    7 MNG                        => £18
-  // MIX:    2 BFC, 3 STR, 2 MNG          => £18
-  const PACK_PRICE = {
-    TASTER: 11.5,
-    PLN: 15,
-    BFC: 18,
-    STR: 18,
-    MNG: 18,
-    MIX: 18,
-  } as const;
+  // classify by price: £2.50 = "plain", £3 = "flavoured"
+  const plainItems = items.filter((i) => i.price === 2.5);
+  const flavItems = items.filter((i) => i.price === 3);
 
-  function packDecomposeExact() {
-    const maxTaster = Math.min(plnQty, bfcQty, strQty, mngQty);
+  const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
+  const flavQty  = flavItems.reduce((s, i) => s + i.qty, 0);
 
-    // MIX uses BFC/STR/MNG only; compute upper bound (we'll also apply after taster subtraction)
-    for (let taster = 0; taster <= maxTaster; taster++) {
-      const bfcAfterT = bfcQty - taster;
-      const strAfterT = strQty - taster;
-      const mngAfterT = mngQty - taster;
+  // unit prices (taken from products so it's future-proof)
+  const plainUnit = plainItems[0]?.price ?? 2.5;
+  const flavUnit  = flavItems[0]?.price ?? 3;
 
-      const maxMix = Math.min(
-        Math.floor(bfcAfterT / 2),
-        Math.floor(strAfterT / 3),
-        Math.floor(mngAfterT / 2)
-      );
+  // "no bundle" full price (for savings display)
+  const plainSubtotalRaw = plainQty * plainUnit;
+  const flavSubtotalRaw  = flavQty * flavUnit;
 
-      for (let mix = 0; mix <= maxMix; mix++) {
-        const remPln = plnQty - taster;
-        const remBfc = bfcQty - taster - 2 * mix;
-        const remStr = strQty - taster - 3 * mix;
-        const remMng = mngQty - taster - 2 * mix;
+  // ── DEAL: 7 for the price of 6, separately for plain and flavoured ──
+  const plainBundles   = Math.floor(plainQty / 7);
+  const plainRemainder = plainQty % 7;
+  const plainBundleTotal =
+    plainBundles * 6 * plainUnit + plainRemainder * plainUnit;
 
-        if (remPln < 0 || remBfc < 0 || remStr < 0 || remMng < 0) continue;
+  const flavBundles   = Math.floor(flavQty / 7);
+  const flavRemainder = flavQty % 7;
+  const flavBundleTotal =
+    flavBundles * 6 * flavUnit + flavRemainder * flavUnit;
 
-        // remaining must be divisible into 7-packs
-        if (
-          remPln % 7 === 0 &&
-          remBfc % 7 === 0 &&
-          remStr % 7 === 0 &&
-          remMng % 7 === 0
-        ) {
-          const packs = {
-            TASTER: taster,
-            MIX: mix,
-            PLN: remPln / 7,
-            BFC: remBfc / 7,
-            STR: remStr / 7,
-            MNG: remMng / 7,
-          };
+  // discounted merchandise total (bottles only, no delivery)
+  const merchTotal = plainBundleTotal + flavBundleTotal;
 
-          const merchTotal =
-            packs.TASTER * PACK_PRICE.TASTER +
-            packs.MIX * PACK_PRICE.MIX +
-            packs.PLN * PACK_PRICE.PLN +
-            packs.BFC * PACK_PRICE.BFC +
-            packs.STR * PACK_PRICE.STR +
-            packs.MNG * PACK_PRICE.MNG;
+  // "full price" if no bundles at all (also bottles only)
+  const fullPrice = plainSubtotalRaw + flavSubtotalRaw;
 
-          return { packs, merchTotal };
-        }
-      }
-    }
-
-    return null; // if somehow cart isn't an exact pack-combo
-  }
-
-  const packResult = packDecomposeExact();
-
-  // If we can decompose exactly (normal case), use pack pricing.
-  // If not, fall back to old per-bottle pricing so the site never breaks.
-  let merchTotal = 0;
-
-  if (packResult) {
-    merchTotal = packResult.merchTotal;
-  } else {
-    // fallback: sum per-product prices
-    merchTotal = items.reduce((s, i) => s + Number(i.price || 0) * i.qty, 0);
-  }
-
-  // savings no longer applies (packs are the price)
-  const savings = 0;
+  const savings = Math.max(0, fullPrice - merchTotal);
 
   // ---- DELIVERY LOGIC ----
-  // (Keep as you currently have it in App.tsx(5).txt)
   const FREE_DELIVERY_THRESHOLD = 1000;
-  const freeDeliveryUnlocked = merchTotal >= FREE_DELIVERY_THRESHOLD;
 
+  // ✅ collection = no delivery fee, ever
+  const freeDeliveryUnlocked =
+    delivery_method === "collection" ? true : merchTotal >= FREE_DELIVERY_THRESHOLD;
+
+  // ✅ collection = £0, delivery = existing logic
   const deliveryFee =
     delivery_method === "collection"
       ? 0
@@ -202,20 +145,12 @@ function computeTotals(
           ? 0
           : 4.95;
 
+  // final amount customer pays (bottles + delivery)
   const total = merchTotal + deliveryFee;
 
-  // Keep legacy fields so your existing UI + metadata doesn’t explode
-  const plainQty = plnQty;
-  const flavQty = bfcQty + strQty + mngQty;
-
-  // “bundle” fields are now meaningless; keep them stable as 0
-  const plainBundles = 0;
-  const flavBundles = 0;
-  const plainRemainder = 0;
-  const flavRemainder = 0;
-
-  const bundles = 0;
-  const remainder = 0;
+  // legacy combined bundle/remainder if you still show them anywhere
+  const bundles   = plainBundles + flavBundles;
+  const remainder = plainRemainder + flavRemainder;
 
   return {
     items,
@@ -226,10 +161,11 @@ function computeTotals(
     // money
     total,
     savings,
-    plainSubtotal: merchTotal, // keep key, now equals merchTotal
+    plainSubtotal: fullPrice,
     merchTotal,
     deliveryFee,
     freeDeliveryUnlocked,
+    delivery_method,
 
     // breakdown
     plainQty,
@@ -241,9 +177,6 @@ function computeTotals(
 
     // ✅ gift
     giftStrQty,
-
-    // (optional extra, harmless to include)
-    packs: packResult?.packs || null,
   };
 }
 
@@ -995,79 +928,7 @@ export default function App(){
             const ids = { PLN: "PLN", BFC: "BFC", STR: "STR", MNG: "MNG" };
       
             const qty = (id: string) => cart[id] || 0;
-            
-            const PACKS = [
-              {
-                key: "TASTER",
-                label: "Taster",
-                priceLabel: "£11.50",
-                bg: "TASTER_STRIPES",
-                contents: { PLN: 1, BFC: 1, STR: 1, MNG: 1 },
-              },
-              {
-                key: "PLN",
-                label: "PLN (plain)",
-                priceLabel: "£15",
-                bg: "bg-white/15",
-                contents: { PLN: 7 },
-              },
-              {
-                key: "BFC",
-                label: "BFC (black forest)",
-                priceLabel: "£18",
-                bg: "bg-rose-900/40",
-                contents: { BFC: 7 },
-              },
-              {
-                key: "STR",
-                label: "STR (strawberry)",
-                priceLabel: "£18",
-                bg: "bg-pink-500/35",
-                contents: { STR: 7 },
-              },
-              {
-                key: "MNG",
-                label: "MNG (mango)",
-                priceLabel: "£18",
-                bg: "bg-amber-300/45",
-                contents: { MNG: 7 },
-              },
-              {
-                key: "MIX",
-                label: "MIX",
-                priceLabel: "£18",
-                bg: "MIX_STRIPES",
-                contents: { BFC: 2, STR: 3, MNG: 2 },
-              },
-            ] as const;
-            
-            function addPack(p: (typeof PACKS)[number]) {
-              setCart((c) => {
-                const n = { ...c };
-                for (const [k, v] of Object.entries(p.contents)) {
-                  const id = k as keyof typeof ids; // PLN/BFC/STR/MNG
-                  if (!ids[id]) continue;
-                  n[ids[id]] = (n[ids[id]] || 0) + Number(v || 0);
-                }
-                return n;
-              });
-            }
-            
-            function subPack(p: (typeof PACKS)[number]) {
-              setCart((c) => {
-                const n: Record<string, number> = { ...c };
-                for (const [k, v] of Object.entries(p.contents)) {
-                  const id = k as keyof typeof ids;
-                  const key = ids[id];
-                  if (!key) continue;
-                  const next = (n[key] || 0) - Number(v || 0);
-                  if (next > 0) n[key] = next;
-                  else delete n[key];
-                }
-                return n;
-              });
-            }
-        
+      
             const totalPlain = qty(ids.PLN);
             const totalFlavoured = qty(ids.BFC) + qty(ids.STR) + qty(ids.MNG);
       
@@ -1102,129 +963,149 @@ export default function App(){
                   <div className="text-sm sm:text-base text-white max-w-4xl space-y-1.5">
                     <p>Browse our selection.</p>
                     <p>Click on a flavour header to view the nutrition information.</p>
-                    <p>Click on the <strong>basket icon</strong> on the top right to complete your purchase.</p>
                   </div>
                   
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-px text-sm text-white">
-                    {PACKS.map((p) => {
-                      const isMix = p.bg === "MIX_STRIPES";
-                      const isTaster = p.bg === "TASTER_STRIPES";
-                  
-                      // total packs currently in basket for this pack
-                      const denom = Object.values(p.contents).reduce((s, n) => s + Number(n || 0), 0);
-                  
-                      const numer = Object.entries(p.contents).reduce((s, [k, n]) => {
-                        const id = ids[k as keyof typeof ids];
-                        return s + (cart[id] || 0);
-                      }, 0);
-                  
-                      const currentQty = denom > 0 ? Math.max(0, Math.floor(numer / denom)) : 0;
-                  
-                      const nutritionSrc =
-                        p.key === "PLN"
-                          ? "/pln_nutrition.png"
-                          : p.key === "BFC"
-                          ? "/bfc_nutrition.png"
-                          : p.key === "STR"
-                          ? "/str_nutrition.png"
-                          : p.key === "MNG"
-                          ? "/mng_nutrition.png"
-                          : "";
+                  {/* 2-row cards per flavour: header + controls */}
+                  <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-px text-sm text-white">
+                    {[
+                      { id: ids.PLN, label: "PLN (plain)", bg: "bg-white/15", nutritionSrc: "/pln_nutrition.png" },
+                      { id: ids.BFC, label: "BFC (black forest)", bg: "bg-rose-900/40", nutritionSrc: "/bfc_nutrition.png" },
+                      { id: ids.STR, label: "STR (strawberry)", bg: "bg-pink-500/35", nutritionSrc: "/str_nutrition.png" },
+                      { id: ids.MNG, label: "MNG (mango)", bg: "bg-amber-300/45", nutritionSrc: "/mng_nutrition.png" },
+                    ].map((f) => {
+                      const currentQty = qty(f.id);
                   
                       return (
-                        <div key={p.key} className="grid grid-rows-[auto,auto] gap-px">
+                        <div key={f.id} className="grid grid-rows-[auto,auto] gap-px">
                           {/* header cell */}
-                          <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
-                            {nutritionSrc ? (
-                              <button
-                                type="button"
-                                onClick={() => setNutritionModal({ title: `${p.label} nutrition`, src: nutritionSrc })}
-                                className="w-full hover:text-amber-300 transition-colors"
-                                aria-label={`${p.label} nutrition`}
-                              >
-                                {p.label}
-                              </button>
-                            ) : (
-                              <span>{p.label}</span>
-                            )}
-                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setNutritionModal({ title: `${f.label} – Nutrition`, src: f.nutritionSrc })}
+                            className="bg-black/70 px-2 py-1.5 font-semibold text-center hover:bg-black/60 transition"
+                          >
+                            {f.label}
+                          </button>
                   
                           {/* controls cell */}
                           <div
                             className={cn(
-                              "relative px-2 py-2 flex items-center justify-center gap-2",
-                              !isMix && !isTaster && p.bg
+                              "px-2 py-2 flex items-center justify-center gap-2",
+                              f.bg
                             )}
                           >
-                            {/* MIX stripes (3) */}
-                            {isMix && (
-                              <>
-                                <div className="absolute inset-0 grid grid-cols-3">
-                                  <div className="bg-rose-900/40" />
-                                  <div className="bg-pink-500/35" />
-                                  <div className="bg-amber-300/45" />
-                                </div>
-                                <div className="absolute inset-0 bg-black/20" />
-                              </>
-                            )}
-                  
-                            {/* TASTER stripes (4) */}
-                            {isTaster && (
-                              <>
-                                <div className="absolute inset-0 grid grid-cols-4">
-                                  <div className="bg-white/15" />
-                                  <div className="bg-rose-900/40" />
-                                  <div className="bg-pink-500/35" />
-                                  <div className="bg-amber-300/45" />
-                                </div>
-                                <div className="absolute inset-0 bg-black/20" />
-                              </>
-                            )}
-                  
-                            {/* price tag (left of buttons) */}
-                            <span className="relative z-10 text-xs font-semibold text-white/90 w-14 text-left">
-                              {p.priceLabel}
-                            </span>
-                  
                             <button
-                              onClick={() => subPack(p)}
-                              className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
-                              aria-label="Remove pack"
+                              onClick={() => sub(f.id)}
+                              className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
+                              aria-label="Remove one"
                             >
-                              <span className="translate-y-[-1px] text-sm font-semibold">−</span>
+                              <span className="translate-y-[-1px] text-sm font-semibold">
+                                −
+                              </span>
                             </button>
                   
-                            {/* quantity signifier */}
-                            <span className="relative z-10 w-6 text-center text-sm font-semibold qty-flash">
+                            <span className="w-6 text-center text-sm font-semibold qty-flash">
                               {currentQty}
                             </span>
                   
                             <button
-                              onClick={() => addPack(p)}
-                              className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
-                              aria-label="Add pack"
+                              onClick={() => add(f.id)}
+                              className="w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
+                              aria-label="Add one"
                             >
-                              <span className="translate-y-[-1px] text-sm font-semibold">+</span>
+                              <span className="translate-y-[-1px] text-sm font-semibold">
+                                +
+                              </span>
                             </button>
                           </div>
                         </div>
                       );
                     })}
                   </div>
-                  
-                  <div className="mt-4 text-xs text-white space-y-1.5">
+                   
+                  {/* pricing + badges */}
+                  <div className="mt-2 text-xs text-white space-y-1.5">
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        <strong>MIX</strong> contains 2 BFC, 3 STR, and 2 MNG
+                        PLN: <strong>£2.50</strong> each ·{" "}
+                        <strong>7 for the price of 6</strong>
                       </span>
-                    </p>  
-                    
+                      {totalPlain > 0 ? (
+                        <span
+                          className={cn(
+                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs shadow-md backdrop-blur-md",
+                            plainOnBundle
+                              ? "bg-emerald-500/80 text-slate-900"
+                              : "bg-black/60 text-white"
+                          )}
+                        >
+                          In basket:&nbsp;
+                          <strong>{totalPlain}</strong>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-xs shadow-md backdrop-blur-md invisible">
+                          In basket:&nbsp;
+                          <strong>0</strong>
+                        </span>
+                      )}
+                    </p>
+      
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        Chilled Next Day Delivery charge of <strong>£4.95</strong> ·{" "}
+                        BFC, STR &amp; MNG: <strong>£3.00</strong> each ·{" "}
+                        <strong>7 for the price of 6</strong>
+                      </span>
+                      {totalFlavoured > 0 ? (
+                        <span
+                          className={cn(
+                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs shadow-md backdrop-blur-md",
+                            flavOnBundle
+                              ? "bg-emerald-500/80 text-slate-900"
+                              : "bg-black/60 text-white"
+                          )}
+                        >
+                          In basket:&nbsp;
+                          <strong>{totalFlavoured}</strong>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-xs shadow-md backdrop-blur-md invisible">
+                          In basket:&nbsp;
+                          <strong>0</strong>
+                        </span>
+                      )}
+                    </p>
+      
+                    {/* Delivery info + "Spent" badge */}
+                    <p className="flex flex-wrap items-center gap-2">
+                      <span>
+                        Chilled Next Day Delivery charge of <strong>£4.95</strong>
+                      </span>
+      
+                      {merchTotal > 0 ? (
+                        <span
+                          className={cn(
+                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs shadow-md backdrop-blur-md",
+                            freeDeliveryUnlocked
+                              ? "bg-emerald-500/80 text-slate-900"
+                              : "bg-black/60 text-white"
+                          )}
+                        >
+                          Spent:&nbsp;
+                          <strong>{gbp(merchTotal)}</strong>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-xs shadow-md backdrop-blur-md invisible">
+                          Spent:&nbsp;
+                          <strong>0</strong>
+                        </span>
+                      )}
+                    </p>
+
+                    <p className="pt-0.5 flex flex-wrap items-center gap-2">
+                      <span>
                         Collect for <strong>FREE</strong>
                       </span>
-                    </p>                    
+                    </p>
+                    
                   </div>
                 </div>
                 
@@ -1293,6 +1174,10 @@ export default function App(){
                         );
                       })}
                     </div>
+                  
+                    <p className="mt-2 text-xs text-white leading-relaxed">
+                      <strong>MIX</strong> contains 2 BFC, 3 STR, and 2 MNG
+                    </p>
 
                     <p className="mt-2 text-xs text-white leading-relaxed">
                       Standard weekly delivery charge of <strong>£4.95</strong>
