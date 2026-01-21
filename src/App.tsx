@@ -928,98 +928,6 @@ export default function App(){
             const ids = { PLN: "PLN", BFC: "BFC", STR: "STR", MNG: "MNG" };
       
             const qty = (id: string) => cart[id] || 0;
-
-            const PACKS = [
-              {
-                key: "TASTER",
-                label: "Taster",
-                priceLabel: "£11.50",
-                bg: "TASTER_STRIPES",
-                contents: { PLN: 1, BFC: 1, STR: 1, MNG: 1 },
-              },
-              {
-                key: "PLN",
-                label: "PLN (plain)",
-                priceLabel: "£15",
-                bg: "bg-white/15",
-                contents: { PLN: 7 },
-              },
-              {
-                key: "BFC",
-                label: "BFC (black forest)",
-                priceLabel: "£18",
-                bg: "bg-rose-900/40",
-                contents: { BFC: 7 },
-              },
-              {
-                key: "STR",
-                label: "STR (strawberry)",
-                priceLabel: "£18",
-                bg: "bg-pink-500/35",
-                contents: { STR: 7 },
-              },
-              {
-                key: "MNG",
-                label: "MNG (mango)",
-                priceLabel: "£18",
-                bg: "bg-amber-300/45",
-                contents: { MNG: 7 },
-              },
-              {
-                key: "MIX",
-                label: "MIX",
-                priceLabel: "£18",
-                bg: "MIX_STRIPES",
-                contents: { BFC: 2, STR: 3, MNG: 2 },
-              },
-            ] as const;
-            
-            function addPack(p: (typeof PACKS)[number]) {
-              setCart((c) => {
-                const n = { ...c };
-                for (const [k, v] of Object.entries(p.contents)) {
-                  const id = k as keyof typeof ids; // PLN/BFC/STR/MNG
-                  if (!ids[id]) continue;
-                  n[ids[id]] = (n[ids[id]] || 0) + Number(v || 0);
-                }
-                return n;
-              });
-            }
-            
-            function subPack(p: (typeof PACKS)[number]) {
-              setCart((c) => {
-                const n: Record<string, number> = { ...c };
-                for (const [k, v] of Object.entries(p.contents)) {
-                  const id = k as keyof typeof ids;
-                  const key = ids[id];
-                  if (!key) continue;
-                  const next = (n[key] || 0) - Number(v || 0);
-                  if (next > 0) n[key] = next;
-                  else delete n[key];
-                }
-                return n;
-              });
-            }
-
-            function packCountFromCart(p: (typeof PACKS)[number], cart: Record<string, number>) {
-              let count = Infinity;
-            
-              for (const [k, v] of Object.entries(p.contents)) {
-                const id = k as keyof typeof ids;     // PLN/BFC/STR/MNG
-                const key = ids[id];                  // actual cart key
-                if (!key) return 0;
-            
-                const have = Number(cart[key] || 0);
-                const need = Number(v || 0);
-                if (need <= 0) continue;
-            
-                count = Math.min(count, Math.floor(have / need));
-              }
-            
-              return count === Infinity ? 0 : count;
-            }
-
-            const packCount = packCountFromCart(p, cart);
       
             const totalPlain = qty(ids.PLN);
             const totalFlavoured = qty(ids.BFC) + qty(ids.STR) + qty(ids.MNG);
@@ -1061,10 +969,10 @@ export default function App(){
                   {/* 2-row cards per flavour: header + controls */}
                   <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-px text-sm text-white">
                     {[
-                      { id: ids.PLN, label: "7 PLN (plain)", bg: "bg-white/15", nutritionSrc: "/pln_nutrition.png" },
-                      { id: ids.BFC, label: "7 BFC (black forest)", bg: "bg-rose-900/40", nutritionSrc: "/bfc_nutrition.png" },
-                      { id: ids.STR, label: "7 STR (strawberry)", bg: "bg-pink-500/35", nutritionSrc: "/str_nutrition.png" },
-                      { id: ids.MNG, label: "7 MNG (mango)", bg: "bg-amber-300/45", nutritionSrc: "/mng_nutrition.png" },
+                      { id: ids.PLN, label: "PLN (plain)", bg: "bg-white/15", nutritionSrc: "/pln_nutrition.png" },
+                      { id: ids.BFC, label: "BFC (black forest)", bg: "bg-rose-900/40", nutritionSrc: "/bfc_nutrition.png" },
+                      { id: ids.STR, label: "STR (strawberry)", bg: "bg-pink-500/35", nutritionSrc: "/str_nutrition.png" },
+                      { id: ids.MNG, label: "MNG (mango)", bg: "bg-amber-300/45", nutritionSrc: "/mng_nutrition.png" },
                     ].map((f) => {
                       const currentQty = qty(f.id);
                   
@@ -1097,7 +1005,7 @@ export default function App(){
                             </button>
                   
                             <span className="w-6 text-center text-sm font-semibold qty-flash">
-                              {packCount}
+                              {currentQty}
                             </span>
                   
                             <button
