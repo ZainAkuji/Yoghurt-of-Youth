@@ -91,51 +91,108 @@ function computeTotals(
     })
     .filter(Boolean) as Array<(typeof PRODUCTS)[number] & { qty: number }>;
 
+  // --- qty breakdown by flavour id (pack pricing is based on ids) ---
+  const plnQty = Number(cart["PLN"] || 0);
+  const bfcQty = Number(cart["BFC"] || 0);
+  const strQty = Number(cart["STR"] || 0);
+  const mngQty = Number(cart["MNG"] || 0);
+
   // ✅ bottles count includes gift STR
-  const qtyTotal = items.reduce((s, i) => s + i.qty, 0) + (giftStrQty || 0);
+  const qtyTotal = plnQty + bfcQty + strQty + mngQty + (giftStrQty || 0);
 
-  // classify by price: £2.50 = "plain", £3 = "flavoured"
-  const plainItems = items.filter((i) => i.price === 2.5);
-  const flavItems = items.filter((i) => i.price === 3);
+  // --- PACK PRICING ---
+  // Recipes:
+  // Taster: 1 PLN, 1 BFC, 1 STR, 1 MNG  => £11.50
+  // PLN:    7 PLN                        => £15
+  // BFC:    7 BFC                        => £18
+  // STR:    7 STR                        => £18
+  // MNG:    7 MNG                        => £18
+  // MIX:    2 BFC, 3 STR, 2 MNG          => £18
+  const PACK_PRICE = {
+    TASTER: 11.5,
+    PLN: 15,
+    BFC: 18,
+    STR: 18,
+    MNG: 18,
+    MIX: 18,
+  } as const;
 
-  const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
-  const flavQty  = flavItems.reduce((s, i) => s + i.qty, 0);
+  function packDecomposeExact() {
+    const maxTaster = Math.min(plnQty, bfcQty, strQty, mngQty);
 
-  // unit prices (taken from products so it's future-proof)
-  const plainUnit = plainItems[0]?.price ?? 2.5;
-  const flavUnit  = flavItems[0]?.price ?? 3;
+    // MIX uses BFC/STR/MNG only; compute upper bound (we'll also apply after taster subtraction)
+    for (let taster = 0; taster <= maxTaster; taster++) {
+      const bfcAfterT = bfcQty - taster;
+      const strAfterT = strQty - taster;
+      const mngAfterT = mngQty - taster;
 
-  // "no bundle" full price (for savings display)
-  const plainSubtotalRaw = plainQty * plainUnit;
-  const flavSubtotalRaw  = flavQty * flavUnit;
+      const maxMix = Math.min(
+        Math.floor(bfcAfterT / 2),
+        Math.floor(strAfterT / 3),
+        Math.floor(mngAfterT / 2)
+      );
 
-  // ── DEAL: 7 for the price of 6, separately for plain and flavoured ──
-  const plainBundles   = Math.floor(plainQty / 7);
-  const plainRemainder = plainQty % 7;
-  const plainBundleTotal =
-    plainBundles * 6 * plainUnit + plainRemainder * plainUnit;
+      for (let mix = 0; mix <= maxMix; mix++) {
+        const remPln = plnQty - taster;
+        const remBfc = bfcQty - taster - 2 * mix;
+        const remStr = strQty - taster - 3 * mix;
+        const remMng = mngQty - taster - 2 * mix;
 
-  const flavBundles   = Math.floor(flavQty / 7);
-  const flavRemainder = flavQty % 7;
-  const flavBundleTotal =
-    flavBundles * 6 * flavUnit + flavRemainder * flavUnit;
+        if (remPln < 0 || remBfc < 0 || remStr < 0 || remMng < 0) continue;
 
-  // discounted merchandise total (bottles only, no delivery)
-  const merchTotal = plainBundleTotal + flavBundleTotal;
+        // remaining must be divisible into 7-packs
+        if (
+          remPln % 7 === 0 &&
+          remBfc % 7 === 0 &&
+          remStr % 7 === 0 &&
+          remMng % 7 === 0
+        ) {
+          const packs = {
+            TASTER: taster,
+            MIX: mix,
+            PLN: remPln / 7,
+            BFC: remBfc / 7,
+            STR: remStr / 7,
+            MNG: remMng / 7,
+          };
 
-  // "full price" if no bundles at all (also bottles only)
-  const fullPrice = plainSubtotalRaw + flavSubtotalRaw;
+          const merchTotal =
+            packs.TASTER * PACK_PRICE.TASTER +
+            packs.MIX * PACK_PRICE.MIX +
+            packs.PLN * PACK_PRICE.PLN +
+            packs.BFC * PACK_PRICE.BFC +
+            packs.STR * PACK_PRICE.STR +
+            packs.MNG * PACK_PRICE.MNG;
 
-  const savings = Math.max(0, fullPrice - merchTotal);
+          return { packs, merchTotal };
+        }
+      }
+    }
+
+    return null; // if somehow cart isn't an exact pack-combo
+  }
+
+  const packResult = packDecomposeExact();
+
+  // If we can decompose exactly (normal case), use pack pricing.
+  // If not, fall back to old per-bottle pricing so the site never breaks.
+  let merchTotal = 0;
+
+  if (packResult) {
+    merchTotal = packResult.merchTotal;
+  } else {
+    // fallback: sum per-product prices
+    merchTotal = items.reduce((s, i) => s + Number(i.price || 0) * i.qty, 0);
+  }
+
+  // savings no longer applies (packs are the price)
+  const savings = 0;
 
   // ---- DELIVERY LOGIC ----
+  // (Keep as you currently have it in App.tsx(5).txt)
   const FREE_DELIVERY_THRESHOLD = 1000;
+  const freeDeliveryUnlocked = merchTotal >= FREE_DELIVERY_THRESHOLD;
 
-  // ✅ collection = no delivery fee, ever
-  const freeDeliveryUnlocked =
-    delivery_method === "collection" ? true : merchTotal >= FREE_DELIVERY_THRESHOLD;
-
-  // ✅ collection = £0, delivery = existing logic
   const deliveryFee =
     delivery_method === "collection"
       ? 0
@@ -145,12 +202,20 @@ function computeTotals(
           ? 0
           : 4.95;
 
-  // final amount customer pays (bottles + delivery)
   const total = merchTotal + deliveryFee;
 
-  // legacy combined bundle/remainder if you still show them anywhere
-  const bundles   = plainBundles + flavBundles;
-  const remainder = plainRemainder + flavRemainder;
+  // Keep legacy fields so your existing UI + metadata doesn’t explode
+  const plainQty = plnQty;
+  const flavQty = bfcQty + strQty + mngQty;
+
+  // “bundle” fields are now meaningless; keep them stable as 0
+  const plainBundles = 0;
+  const flavBundles = 0;
+  const plainRemainder = 0;
+  const flavRemainder = 0;
+
+  const bundles = 0;
+  const remainder = 0;
 
   return {
     items,
@@ -161,11 +226,10 @@ function computeTotals(
     // money
     total,
     savings,
-    plainSubtotal: fullPrice,
+    plainSubtotal: merchTotal, // keep key, now equals merchTotal
     merchTotal,
     deliveryFee,
     freeDeliveryUnlocked,
-    delivery_method,
 
     // breakdown
     plainQty,
@@ -177,6 +241,9 @@ function computeTotals(
 
     // ✅ gift
     giftStrQty,
+
+    // (optional extra, harmless to include)
+    packs: packResult?.packs || null,
   };
 }
 
