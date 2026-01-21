@@ -982,7 +982,7 @@ export default function App(){
                           <button
                             type="button"
                             onClick={() => setNutritionModal({ title: `${f.label} – Nutrition`, src: f.nutritionSrc })}
-                            className="bg-black/70 px-2 py-1.5 font-semibold text-center hover:bg-black/60 transition"
+                            className="bg-black/70 px-2 py-1.5 font-semibold text-center hover:bg-black/50 hover:text-amber-300 transition-colors"
                           >
                             {f.label}
                           </button>
