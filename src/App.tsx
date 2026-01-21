@@ -963,6 +963,7 @@ export default function App(){
                   <div className="text-sm sm:text-base text-white max-w-4xl space-y-1.5">
                     <p>Browse our selection.</p>
                     <p>Click on a flavour header to view the nutrition information.</p>
+                    <p>Click on the <strong>basket icon</strong> on the top right to complete your purchase.</p>
                   </div>
                   
                   {/* 2-row cards per flavour: header + controls */}
@@ -1077,35 +1078,10 @@ export default function App(){
                     {/* Delivery info + "Spent" badge */}
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        Chilled Next Day Delivery charge of <strong>£4.95</strong>
-                      </span>
-      
-                      {merchTotal > 0 ? (
-                        <span
-                          className={cn(
-                            "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs shadow-md backdrop-blur-md",
-                            freeDeliveryUnlocked
-                              ? "bg-emerald-500/80 text-slate-900"
-                              : "bg-black/60 text-white"
-                          )}
-                        >
-                          Spent:&nbsp;
-                          <strong>{gbp(merchTotal)}</strong>
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center rounded-full bg-black/60 px-2.5 py-0.5 text-xs shadow-md backdrop-blur-md invisible">
-                          Spent:&nbsp;
-                          <strong>0</strong>
-                        </span>
-                      )}
-                    </p>
-
-                    <p className="pt-0.5 flex flex-wrap items-center gap-2">
-                      <span>
+                        Chilled Next Day Delivery charge of <strong>£4.95</strong> ·{" "}
                         Collect for <strong>FREE</strong>
                       </span>
-                    </p>
-                    
+                    </p>                    
                   </div>
                 </div>
                 
