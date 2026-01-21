@@ -1128,25 +1128,23 @@ export default function App(){
                       return (
                         <div key={p.key} className="grid grid-rows-[auto,auto] gap-px">
                           {/* header cell */}
-                          <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
-                            {nutritionKey ? (
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  // use whatever you already had for nutrition modal state
-                                  // If you used setNutritionModal({ title, src }), swap to that here.
-                                  setNutritionKey(nutritionKey);
-                                  setNutritionOpen(true);
-                                }}
-                                className="w-full hover:text-amber-300 transition-colors"
-                                aria-label={`${p.label} nutrition`}
-                              >
-                                {p.label}
-                              </button>
-                            ) : (
-                              <span>{p.label}</span>
-                            )}
-                          </div>
+                          {nutritionKey ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const n = nutrition[nutritionKey];
+                                if (n) setNutritionModal(n);
+                              }}
+                              className="bg-black/70 px-2 py-1.5 font-semibold text-center hover:bg-black/60 transition w-full"
+                              aria-label={`${p.label} nutrition`}
+                            >
+                              {p.label}
+                            </button>
+                          ) : (
+                            <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
+                              {p.label}
+                            </div>
+                          )}
                   
                           {/* controls cell */}
                           <div
