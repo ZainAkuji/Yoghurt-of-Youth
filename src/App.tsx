@@ -979,7 +979,7 @@ export default function App(){
                       { id: ids.MNG, label: "MNG (mango)", bg: "bg-amber-300/45", nutritionSrc: "/mng_nutrition.png" },
                     
                       // --- MIX (new) ---
-                      { id: "MIX", label: "MIX (2/3/2)", bg: "MIX_STRIPES" as const },
+                      { id: "MIX", label: "Mixed (2/3/2)", bg: "MIX_STRIPES" as const },
                     ].map((f) => {
                       const qPLN = qty(ids.PLN);
                       const qBFC = qty(ids.BFC);
@@ -1100,6 +1100,13 @@ export default function App(){
                               onClick={() => {
                                 if (f.id === "TASTER") return decPreset("TASTER");
                                 if (f.id === "MIX") return decPreset("MIX");
+
+                                // ✅ PLN/BFC/STR work in 7-packs
+                                if (f.id === ids.PLN || f.id === ids.BFC || f.id === ids.STR) {
+                                  const cur = qty(f.id);
+                                  return setQty(f.id, Math.max(0, cur - 7));
+                                }
+
                                 return sub(f.id);
                               }}
                               className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-black/30 text-white hover:bg-black/40 transition leading-none"
