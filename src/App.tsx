@@ -1061,10 +1061,10 @@ export default function App(){
                   {/* 2-row cards per flavour: header + controls */}
                   <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-px text-sm text-white">
                     {[
-                      { id: ids.PLN, label: "PLN (plain)", bg: "bg-white/15", nutritionSrc: "/pln_nutrition.png" },
-                      { id: ids.BFC, label: "BFC (black forest)", bg: "bg-rose-900/40", nutritionSrc: "/bfc_nutrition.png" },
-                      { id: ids.STR, label: "STR (strawberry)", bg: "bg-pink-500/35", nutritionSrc: "/str_nutrition.png" },
-                      { id: ids.MNG, label: "MNG (mango)", bg: "bg-amber-300/45", nutritionSrc: "/mng_nutrition.png" },
+                      { id: ids.PLN, label: "7 PLN (plain)", bg: "bg-white/15", nutritionSrc: "/pln_nutrition.png" },
+                      { id: ids.BFC, label: "7 BFC (black forest)", bg: "bg-rose-900/40", nutritionSrc: "/bfc_nutrition.png" },
+                      { id: ids.STR, label: "7 STR (strawberry)", bg: "bg-pink-500/35", nutritionSrc: "/str_nutrition.png" },
+                      { id: ids.MNG, label: "7 MNG (mango)", bg: "bg-amber-300/45", nutritionSrc: "/mng_nutrition.png" },
                     ].map((f) => {
                       const currentQty = qty(f.id);
                   
