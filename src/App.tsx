@@ -1120,31 +1120,34 @@ export default function App(){
                   
                       const currentQty = denom > 0 ? Math.max(0, Math.floor(numer / denom)) : 0;
                   
-                      const nutritionKey =
-                        p.key === "PLN" || p.key === "BFC" || p.key === "STR" || p.key === "MNG"
-                          ? p.key
-                          : null;
+                      const nutritionSrc =
+                        p.key === "PLN"
+                          ? "/pln_nutrition.png"
+                          : p.key === "BFC"
+                          ? "/bfc_nutrition.png"
+                          : p.key === "STR"
+                          ? "/str_nutrition.png"
+                          : p.key === "MNG"
+                          ? "/mng_nutrition.png"
+                          : "";
                   
                       return (
                         <div key={p.key} className="grid grid-rows-[auto,auto] gap-px">
                           {/* header cell */}
-                          {nutritionKey ? (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const n = nutrition[nutritionKey];
-                                if (n) setNutritionModal(n);
-                              }}
-                              className="bg-black/70 px-2 py-1.5 font-semibold text-center hover:bg-black/60 transition w-full"
-                              aria-label={`${p.label} nutrition`}
-                            >
-                              {p.label}
-                            </button>
-                          ) : (
-                            <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
-                              {p.label}
-                            </div>
-                          )}
+                          <div className="bg-black/70 px-2 py-1.5 font-semibold text-center">
+                            {nutritionSrc ? (
+                              <button
+                                type="button"
+                                onClick={() => setNutritionModal({ title: `${p.label} nutrition`, src: nutritionSrc })}
+                                className="w-full hover:text-amber-300 transition-colors"
+                                aria-label={`${p.label} nutrition`}
+                              >
+                                {p.label}
+                              </button>
+                            ) : (
+                              <span>{p.label}</span>
+                            )}
+                          </div>
                   
                           {/* controls cell */}
                           <div
