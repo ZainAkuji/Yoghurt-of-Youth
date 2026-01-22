@@ -997,6 +997,11 @@ export default function App(){
                         f.id === "TASTER" ? (tasterSelected ? 1 : 0)
                         : f.id === "MIX" ? (mixSelected ? 1 : 0)
                         : qty(f.id);
+
+                      const displayQty =
+                        (f.id === ids.PLN || f.id === ids.BFC || f.id === ids.STR || f.id === ids.MNG)
+                          ? Math.floor((currentQty || 0) / 7)
+                          : (currentQty || 0);
                     
                       function setQty(id: string, n: number) {
                         setCart((c) => {
@@ -1114,11 +1119,6 @@ export default function App(){
                             >
                               <span className="translate-y-[-1px] text-sm font-semibold">−</span>
                             </button>
-
-                            const displayQty =
-                              (f.id === ids.PLN || f.id === ids.BFC || f.id === ids.STR || f.id === ids.MNG)
-                                ? Math.floor((currentQty || 0) / 7)
-                                : (currentQty || 0);
                     
                             <span className="relative z-10 w-6 text-center text-sm font-semibold qty-flash">
                               {displayQty}
@@ -1126,7 +1126,6 @@ export default function App(){
                     
                             <button
                               onClick={() => {
-                                // ✅ your requested “+ behaviour”
                                 if (f.id === ids.PLN) return setQty(ids.PLN, 7);
                                 if (f.id === ids.BFC) return setQty(ids.BFC, 7);
                                 if (f.id === ids.STR) return setQty(ids.STR, 7);
