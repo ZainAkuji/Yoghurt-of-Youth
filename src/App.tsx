@@ -633,7 +633,6 @@ export default function App(){
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [reserveOpen, setReserveOpen] = useState(false);
   const [nutritionModal, setNutritionModal] = React.useState<null | { title: string; src: string }>(null);
-  const [presetCounts, setPresetCounts] = useState({ TASTER: 0, MIX: 0 });
   
   useEffect(()=>{ localStorage.setItem("yoy_cart", JSON.stringify(cart)); }, [cart]);
 
@@ -993,27 +992,11 @@ export default function App(){
                     
                       const tasterSelected = qPLN >= 1 && qBFC >= 1 && qSTR >= 1 && qMNG >= 1;
                       const mixSelected = qBFC >= 2 && qSTR >= 3 && qMNG >= 2;
-
-                      function presetQty(kind: "TASTER" | "MIX") {
-                        if (kind === "TASTER") {
-                          return Math.min(qty(ids.PLN), qty(ids.BFC), qty(ids.STR), qty(ids.MNG));
-                        }
-                        // MIX = 2 BFC, 3 STR, 2 MNG
-                        return Math.min(
-                          Math.floor(qty(ids.BFC) / 2),
-                          Math.floor(qty(ids.STR) / 3),
-                          Math.floor(qty(ids.MNG) / 2)
-                        );
-                      }
                     
                       const currentQty =
-                        f.id === "TASTER" ? presetCounts.TASTER
-                        : f.id === "MIX" ? presetCounts.MIX
-                        : (f.id === ids.PLN || f.id === ids.BFC || f.id === ids.STR || f.id === ids.MNG)
-                          ? Math.floor(qty(f.id) / 7)
-                          : qty(f.id);
-
-                      const displayQty = currentQty || 0;
+                        f.id === "TASTER" ? (tasterSelected ? 1 : 0)
+                        : f.id === "MIX" ? (mixSelected ? 1 : 0)
+                        : qty(f.id);
                     
                       function setQty(id: string, n: number) {
                         setCart((c) => {
@@ -1023,7 +1006,7 @@ export default function App(){
                           return next;
                         });
                       }
-
+                    
                       function decPreset(kind: "TASTER" | "MIX") {
                         setCart((c) => {
                           const next = { ...c };
@@ -1032,39 +1015,42 @@ export default function App(){
                             if (v <= 0) delete next[id];
                             else next[id] = v;
                           };
-                      
+                    
                           if (kind === "TASTER") {
+                            // remove one set: 1 of each
                             dec(ids.PLN, 1);
                             dec(ids.BFC, 1);
                             dec(ids.STR, 1);
                             dec(ids.MNG, 1);
                           } else {
+                            // remove one set: 2 BFC, 3 STR, 2 MNG
                             dec(ids.BFC, 2);
                             dec(ids.STR, 3);
                             dec(ids.MNG, 2);
                           }
-                      
                           return next;
                         });
-                      
-                        setPresetCounts((p) => ({ ...p, [kind]: Math.max(0, (p as any)[kind] - 1) }));
                       }
-
+                    
                       function incPreset(kind: "TASTER" | "MIX") {
-                        const preset =
-                          kind === "TASTER"
-                            ? { [ids.PLN]: 1, [ids.BFC]: 1, [ids.STR]: 1, [ids.MNG]: 1 }
-                            : { [ids.BFC]: 2, [ids.STR]: 3, [ids.MNG]: 2 };
-                      
                         setCart((c) => {
                           const next = { ...c };
-                          for (const [id, addQty] of Object.entries(preset)) {
-                            next[id] = (next[id] || 0) + Number(addQty);
+                          const put = (id: string, n: number) => { next[id] = n; };
+                    
+                          if (kind === "TASTER") {
+                            // set to exact 1 each
+                            put(ids.PLN, 1);
+                            put(ids.BFC, 1);
+                            put(ids.STR, 1);
+                            put(ids.MNG, 1);
+                          } else {
+                            // set to exact 2/3/2
+                            put(ids.BFC, 2);
+                            put(ids.STR, 3);
+                            put(ids.MNG, 2);
                           }
                           return next;
                         });
-                      
-                        setPresetCounts((p) => ({ ...p, [kind]: (p as any)[kind] + 1 }));
                       }
                     
                       return (
@@ -1130,15 +1116,15 @@ export default function App(){
                             </button>
                     
                             <span className="relative z-10 w-6 text-center text-sm font-semibold qty-flash">
-                              {displayQty}
+                              {currentQty}
                             </span>
                     
                             <button
                               onClick={() => {
-                                if (f.id === ids.PLN) return setQty(ids.PLN, qty(ids.PLN) + 7);
-                                if (f.id === ids.BFC) return setQty(ids.BFC, qty(ids.BFC) + 7);
-                                if (f.id === ids.STR) return setQty(ids.STR, qty(ids.STR) + 7);
-                                if (f.id === ids.MNG) return setQty(ids.MNG, qty(ids.MNG) + 7);
+                                if (f.id === ids.PLN) return setQty(ids.PLN, 7);
+                                if (f.id === ids.BFC) return setQty(ids.BFC, 7);
+                                if (f.id === ids.STR) return setQty(ids.STR, 7);
+                                if (f.id === ids.MNG) return setQty(ids.MNG, 7);
                     
                                 // presets
                                 if (f.id === "TASTER") return incPreset("TASTER");
