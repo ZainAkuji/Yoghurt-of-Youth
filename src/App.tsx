@@ -981,23 +981,10 @@ export default function App(){
                     
                       // --- MIX (new) ---
                       { id: "MIX", label: "Mixed (2/3/2)", bg: "MIX_STRIPES" as const },
-                    ].map((f) => {
-                      const qPLN = qty(ids.PLN);
-                      const qBFC = qty(ids.BFC);
-                      const qSTR = qty(ids.STR);
-                      const qMNG = qty(ids.MNG);
-                    
+                    ].map((f) => {                   
                       const isPreset = f.id === "TASTER" || f.id === "MIX";
                       const isMix = f.bg === "MIX_STRIPES";
                       const isTaster = f.bg === "TASTER_STRIPES";
-                    
-                      const tasterSelected = qPLN >= 1 && qBFC >= 1 && qSTR >= 1 && qMNG >= 1;
-                      const mixSelected = qBFC >= 2 && qSTR >= 3 && qMNG >= 2;
-                    
-                      const currentQty =
-                        f.id === "TASTER" ? (tasterSelected ? 1 : 0)
-                        : f.id === "MIX" ? (mixSelected ? 1 : 0)
-                        : qty(f.id);
                     
                       function setQty(id: string, n: number) {
                         setCart((c) => {
