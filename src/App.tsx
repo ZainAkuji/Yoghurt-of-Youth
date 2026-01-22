@@ -968,6 +968,9 @@ export default function App(){
                 <div className="mt-6 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
                   <div className="text-sm sm:text-base text-white max-w-4xl space-y-1.5">
                     <p>Browse our selection.</p>
+                    <p><strong>Taster</strong> consists of 1 of each flavour.
+                      Each flavour option consists of <strong>7 bottles</strong>.
+                      <strong>Mixed</strong> consists of 2 BFC (black forest chocolate), 3 STR (strawberry, and 2 MNG (mango).</p>
                     <p>Click on a flavour header to view the nutrition information.</p>
                     <p>Click on the <strong>basket icon</strong> on the top right to complete your purchase.</p>
                   </div>
@@ -976,7 +979,7 @@ export default function App(){
                   <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-px text-sm text-white">
                     {[
                       // --- TASTER (new) ---
-                      { id: "TASTER", label: "Taster (1 each)", bg: "TASTER_STRIPES" as const },
+                      { id: "TASTER", label: "Taster", bg: "TASTER_STRIPES" as const },
                     
                       // existing flavours (unchanged labels + nutrition)
                       { id: ids.PLN, label: "PLN (plain)", bg: "bg-white/15", nutritionSrc: "/pln_nutrition.png" },
@@ -985,7 +988,7 @@ export default function App(){
                       { id: ids.MNG, label: "MNG (mango)", bg: "bg-amber-300/45", nutritionSrc: "/mng_nutrition.png" },
                     
                       // --- MIX (new) ---
-                      { id: "MIX", label: "Mixed (2/3/2)", bg: "MIX_STRIPES" as const },
+                      { id: "MIX", label: "Mixed", bg: "MIX_STRIPES" as const },
                     ].map((f) => {                   
                       const isPreset = f.id === "TASTER" || f.id === "MIX";
                       const isMix = f.bg === "MIX_STRIPES";
