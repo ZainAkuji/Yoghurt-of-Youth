@@ -1021,49 +1021,53 @@ export default function App(){
                       function decPreset(kind: "TASTER" | "MIX") {
                         setCart((c) => {
                           const next = { ...c };
+                      
                           const dec = (id: string, by: number) => {
                             const v = Number(next[id] || 0) - by;
                             if (v <= 0) delete next[id];
                             else next[id] = v;
                           };
-                          bumpDisplay(kind, -1);
-                    
+                      
                           if (kind === "TASTER") {
-                            // remove one set: 1 of each
                             dec(ids.PLN, 1);
                             dec(ids.BFC, 1);
                             dec(ids.STR, 1);
                             dec(ids.MNG, 1);
                           } else {
-                            // remove one set: 2 BFC, 3 STR, 2 MNG
                             dec(ids.BFC, 2);
                             dec(ids.STR, 3);
                             dec(ids.MNG, 2);
                           }
+                      
                           return next;
                         });
+                      
+                        bumpDisplay(kind, -1);
                       }
-                    
+                      
                       function incPreset(kind: "TASTER" | "MIX") {
                         setCart((c) => {
                           const next = { ...c };
-                          const put = (id: string, n: number) => { next[id] = n; };
-                          bumpDisplay(kind, 1);
-                    
+                      
+                          const inc = (id: string, by: number) => {
+                            next[id] = Number(next[id] || 0) + by;
+                          };
+                      
                           if (kind === "TASTER") {
-                            // set to exact 1 each
-                            put(ids.PLN, 1);
-                            put(ids.BFC, 1);
-                            put(ids.STR, 1);
-                            put(ids.MNG, 1);
+                            inc(ids.PLN, 1);
+                            inc(ids.BFC, 1);
+                            inc(ids.STR, 1);
+                            inc(ids.MNG, 1);
                           } else {
-                            // set to exact 2/3/2
-                            put(ids.BFC, 2);
-                            put(ids.STR, 3);
-                            put(ids.MNG, 2);
+                            inc(ids.BFC, 2);
+                            inc(ids.STR, 3);
+                            inc(ids.MNG, 2);
                           }
+                      
                           return next;
                         });
+                      
+                        bumpDisplay(kind, 1);
                       }
                     
                       return (
