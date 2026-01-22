@@ -1036,23 +1036,17 @@ export default function App(){
                           return next;
                         });
                       }
-                    
+
                       function incPreset(kind: "TASTER" | "MIX") {
+                        const preset =
+                          kind === "TASTER"
+                            ? { [ids.PLN]: 1, [ids.BFC]: 1, [ids.STR]: 1, [ids.MNG]: 1 }
+                            : { [ids.BFC]: 2, [ids.STR]: 3, [ids.MNG]: 2 };
+                      
                         setCart((c) => {
                           const next = { ...c };
-                          const put = (id: string, n: number) => { next[id] = n; };
-                    
-                          if (kind === "TASTER") {
-                            // set to exact 1 each
-                            put(ids.PLN, 1);
-                            put(ids.BFC, 1);
-                            put(ids.STR, 1);
-                            put(ids.MNG, 1);
-                          } else {
-                            // set to exact 2/3/2
-                            put(ids.BFC, 2);
-                            put(ids.STR, 3);
-                            put(ids.MNG, 2);
+                          for (const [id, addQty] of Object.entries(preset)) {
+                            next[id] = (next[id] || 0) + Number(addQty);
                           }
                           return next;
                         });
