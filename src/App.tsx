@@ -1026,7 +1026,7 @@ export default function App(){
                             if (v <= 0) delete next[id];
                             else next[id] = v;
                           };
-                          bumpDisplay(kind, 1);
+                          bumpDisplay(kind, -1);
                     
                           if (kind === "TASTER") {
                             // remove one set: 1 of each
