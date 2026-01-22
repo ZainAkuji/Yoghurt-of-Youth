@@ -992,10 +992,22 @@ export default function App(){
                     
                       const tasterSelected = qPLN >= 1 && qBFC >= 1 && qSTR >= 1 && qMNG >= 1;
                       const mixSelected = qBFC >= 2 && qSTR >= 3 && qMNG >= 2;
+
+                      function presetQty(kind: "TASTER" | "MIX") {
+                        if (kind === "TASTER") {
+                          return Math.min(qty(ids.PLN), qty(ids.BFC), qty(ids.STR), qty(ids.MNG));
+                        }
+                        // MIX = 2 BFC, 3 STR, 2 MNG
+                        return Math.min(
+                          Math.floor(qty(ids.BFC) / 2),
+                          Math.floor(qty(ids.STR) / 3),
+                          Math.floor(qty(ids.MNG) / 2)
+                        );
+                      }
                     
                       const currentQty =
-                        f.id === "TASTER" ? (tasterSelected ? 1 : 0)
-                        : f.id === "MIX" ? (mixSelected ? 1 : 0)
+                        f.id === "TASTER" ? presetQty("TASTER")
+                        : f.id === "MIX" ? presetQty("MIX")
                         : qty(f.id);
 
                       const displayQty =
