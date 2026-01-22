@@ -1126,10 +1126,10 @@ export default function App(){
                     
                             <button
                               onClick={() => {
-                                if (f.id === ids.PLN) return setQty(ids.PLN, 7);
-                                if (f.id === ids.BFC) return setQty(ids.BFC, 7);
-                                if (f.id === ids.STR) return setQty(ids.STR, 7);
-                                if (f.id === ids.MNG) return setQty(ids.MNG, 7);
+                                if (f.id === ids.PLN) return setQty(ids.PLN, qty(ids.PLN) + 7);
+                                if (f.id === ids.BFC) return setQty(ids.BFC, qty(ids.BFC) + 7);
+                                if (f.id === ids.STR) return setQty(ids.STR, qty(ids.STR) + 7);
+                                if (f.id === ids.MNG) return setQty(ids.MNG, qty(ids.MNG) + 7);
                     
                                 // presets
                                 if (f.id === "TASTER") return incPreset("TASTER");
