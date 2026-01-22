@@ -633,6 +633,7 @@ export default function App(){
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [reserveOpen, setReserveOpen] = useState(false);
   const [nutritionModal, setNutritionModal] = React.useState<null | { title: string; src: string }>(null);
+  const [presetCounts, setPresetCounts] = useState({ TASTER: 0, MIX: 0 });
   
   useEffect(()=>{ localStorage.setItem("yoy_cart", JSON.stringify(cart)); }, [cart]);
 
@@ -1006,10 +1007,10 @@ export default function App(){
                       }
                     
                       const currentQty =
-                        f.id === "TASTER" ? presetQty("TASTER")
-                        : f.id === "MIX" ? presetQty("MIX")
+                        f.id === "TASTER" ? presetCounts.TASTER
+                        : f.id === "MIX" ? presetCounts.MIX
                         : (f.id === ids.PLN || f.id === ids.BFC || f.id === ids.STR || f.id === ids.MNG)
-                          ? Math.floor(qty(f.id) / 7)   // ✅ show “packs”, not bottles
+                          ? Math.floor(qty(f.id) / 7)
                           : qty(f.id);
 
                       const displayQty = currentQty || 0;
@@ -1022,7 +1023,7 @@ export default function App(){
                           return next;
                         });
                       }
-                    
+
                       function decPreset(kind: "TASTER" | "MIX") {
                         setCart((c) => {
                           const next = { ...c };
@@ -1031,21 +1032,22 @@ export default function App(){
                             if (v <= 0) delete next[id];
                             else next[id] = v;
                           };
-                    
+                      
                           if (kind === "TASTER") {
-                            // remove one set: 1 of each
                             dec(ids.PLN, 1);
                             dec(ids.BFC, 1);
                             dec(ids.STR, 1);
                             dec(ids.MNG, 1);
                           } else {
-                            // remove one set: 2 BFC, 3 STR, 2 MNG
                             dec(ids.BFC, 2);
                             dec(ids.STR, 3);
                             dec(ids.MNG, 2);
                           }
+                      
                           return next;
                         });
+                      
+                        setPresetCounts((p) => ({ ...p, [kind]: Math.max(0, (p as any)[kind] - 1) }));
                       }
 
                       function incPreset(kind: "TASTER" | "MIX") {
@@ -1061,6 +1063,8 @@ export default function App(){
                           }
                           return next;
                         });
+                      
+                        setPresetCounts((p) => ({ ...p, [kind]: (p as any)[kind] + 1 }));
                       }
                     
                       return (
