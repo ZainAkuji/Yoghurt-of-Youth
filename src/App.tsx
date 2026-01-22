@@ -688,6 +688,7 @@ export default function App(){
         // clear basket AFTER success (only for one-off checkout)
         if (provider === "stripe" || provider === "paypal") {
           setCart({});
+          setDisplayQty({});
           localStorage.removeItem("yoy_cart");
         }
         
@@ -774,7 +775,11 @@ export default function App(){
   const add = (id:string)=> setCart(c=>({ ...c, [id]: (c[id]||0)+1 }));
   const sub = (id:string)=> setCart(c=>{ const n={...c}; if(!n[id]) return n; n[id]--; if(n[id]<=0) delete n[id]; return n; });
   const remove = (id:string)=> setCart(c=>{ const n={...c}; delete n[id]; return n; });
-  const clear = ()=> setCart({});
+  const clear = () => {
+    setCart({});
+    setDisplayQty({});
+    localStorage.removeItem("yoy_cart");
+  };
 
   const SUBSCRIPTION_PLANS = [
     { key: "PLN", label: "PLN (plain)", priceLabel: "£13.50", bg: "bg-white/15" },
