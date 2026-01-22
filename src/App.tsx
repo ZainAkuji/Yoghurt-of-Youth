@@ -969,7 +969,7 @@ export default function App(){
                   <div className="text-sm sm:text-base text-white max-w-4xl space-y-1.5">
                     <p>Browse our selection.</p>
                     <p><strong>Taster</strong> consists of 1 of each flavour.
-                      Each flavour option consists of <strong>7 bottles</strong>.
+                      Each flavour option consists of <strong>7 bottles</strong>.{" "}
                       <strong>Mixed</strong> consists of 2 BFC (black forest chocolate), 3 STR (strawberry, and 2 MNG (mango).</p>
                     <p>Click on a flavour header to view the nutrition information.</p>
                     <p>Click on the <strong>basket icon</strong> on the top right to complete your purchase.</p>
