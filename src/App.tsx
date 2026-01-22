@@ -1008,7 +1008,9 @@ export default function App(){
                       const currentQty =
                         f.id === "TASTER" ? presetQty("TASTER")
                         : f.id === "MIX" ? presetQty("MIX")
-                        : qty(f.id);
+                        : (f.id === ids.PLN || f.id === ids.BFC || f.id === ids.STR || f.id === ids.MNG)
+                          ? Math.floor(qty(f.id) / 7)   // ✅ show “packs”, not bottles
+                          : qty(f.id);
 
                       const displayQty =
                         (f.id === ids.PLN || f.id === ids.BFC || f.id === ids.STR || f.id === ids.MNG)
