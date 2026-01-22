@@ -1102,7 +1102,7 @@ export default function App(){
                                 if (f.id === "MIX") return decPreset("MIX");
 
                                 // ✅ PLN/BFC/STR work in 7-packs
-                                if (f.id === ids.PLN || f.id === ids.BFC || f.id === ids.STR) {
+                                if (f.id === ids.PLN || f.id === ids.BFC || f.id === ids.STR || f.id === ids.MNG) {
                                   const cur = qty(f.id);
                                   return setQty(f.id, Math.max(0, cur - 7));
                                 }
@@ -1114,9 +1114,14 @@ export default function App(){
                             >
                               <span className="translate-y-[-1px] text-sm font-semibold">−</span>
                             </button>
+
+                            const displayQty =
+                              (f.id === ids.PLN || f.id === ids.BFC || f.id === ids.STR || f.id === ids.MNG)
+                                ? Math.floor((currentQty || 0) / 7)
+                                : (currentQty || 0);
                     
                             <span className="relative z-10 w-6 text-center text-sm font-semibold qty-flash">
-                              {currentQty}
+                              {displayQty}
                             </span>
                     
                             <button
@@ -1125,9 +1130,7 @@ export default function App(){
                                 if (f.id === ids.PLN) return setQty(ids.PLN, 7);
                                 if (f.id === ids.BFC) return setQty(ids.BFC, 7);
                                 if (f.id === ids.STR) return setQty(ids.STR, 7);
-                    
-                                // keep MNG normal (you didn’t ask to change it)
-                                if (f.id === ids.MNG) return add(ids.MNG);
+                                if (f.id === ids.MNG) return setQty(ids.MNG, 7);
                     
                                 // presets
                                 if (f.id === "TASTER") return incPreset("TASTER");
