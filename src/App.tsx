@@ -1012,10 +1012,7 @@ export default function App(){
                           ? Math.floor(qty(f.id) / 7)   // ✅ show “packs”, not bottles
                           : qty(f.id);
 
-                      const displayQty =
-                        (f.id === ids.PLN || f.id === ids.BFC || f.id === ids.STR || f.id === ids.MNG)
-                          ? Math.floor((currentQty || 0) / 7)
-                          : (currentQty || 0);
+                      const displayQty = currentQty || 0;
                     
                       function setQty(id: string, n: number) {
                         setCart((c) => {
