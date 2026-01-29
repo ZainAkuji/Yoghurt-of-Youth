@@ -1,3 +1,25 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.yoghurtofyouth.co.uk"
+        }
+      ],
+      "destination": "https://yoghurtofyouth.co.uk/:path*",
+      "permanent": true
+    },
+    {
+      "source": "http://:path*",
+      "destination": "https://yoghurtofyouth.co.uk/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*/",
+      "destination": "/:path*",
+      "permanent": true
+    }
+  ]
 }
