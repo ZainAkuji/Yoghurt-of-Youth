@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 
+const BRAND = "Yoghurt of Youth";
 const OWNER_EMAIL = "zainul_a@hotmail.co.uk";
 const OWNER_PHONE = "+44 7756231844";
 
