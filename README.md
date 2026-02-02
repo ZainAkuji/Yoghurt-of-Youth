@@ -1,4 +1,4 @@
-# Yoghurt of Youth — Reserve & Collect (React + Vite + Tailwind)  
+# Yoghurt of Youth — Reserve & Collect (React + Vite + Tailwind)
 
 ## Quick start (local)
 ```
