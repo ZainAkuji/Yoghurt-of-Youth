@@ -10,11 +10,6 @@
       ],
       "destination": "https://yoghurtofyouth.co.uk/:path*",
       "permanent": true
-    },
-    {
-      "source": "/:path*/",
-      "destination": "/:path*",
-      "permanent": true
     }
   ]
 }
