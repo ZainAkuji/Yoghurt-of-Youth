@@ -1888,8 +1888,8 @@ function PayModal({
   
       const addr = String(draft?.customer?.address || "");
       const parts = addr.split(",");
-      setPostcode((parts.slice(2).join(",") || "").trim());
       setStreetAddress((parts[0] || "").trim());
+      setPostcode((parts.slice(2).join(",") || "").trim());
       setTownCity((parts.slice(1).join(",") || "").trim());
   
       // Only restore date for ONE-OFF drafts
@@ -1942,9 +1942,9 @@ function PayModal({
             className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
           <input value={phone} onChange={(e) => setPhone(e.target.value)} required type="tel" placeholder="Mobile number"
             className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-          <input value={postcode} onChange={(e) => setPostcode(e.target.value)} required placeholder="Postcode (UK)"
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
           <input value={streetAddress} onChange={(e) => setStreetAddress(e.target.value)} required placeholder="Street address"
+            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
+          <input value={postcode} onChange={(e) => setPostcode(e.target.value)} required placeholder="Postcode (UK)"
             className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
           <input value={townCity} onChange={(e) => setTownCity(e.target.value)} required placeholder="Town/City"
             className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
@@ -2357,15 +2357,15 @@ function PayModal({
         {delivery_method === "delivery" && (
           <>
             <input
-              value={postcode}
-              onChange={(e) => setPostcode(e.target.value)}
-              required placeholder="Postcode (UK)"
-              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
-            />
-            <input
               value={streetAddress}
               onChange={(e) => setStreetAddress(e.target.value)}
               required placeholder="Street address"
+              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
+            />
+            <input
+              value={postcode}
+              onChange={(e) => setPostcode(e.target.value)}
+              required placeholder="Postcode (UK)"
               className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
             />
             <input
