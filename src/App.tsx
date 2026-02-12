@@ -1888,8 +1888,9 @@ function PayModal({
   
       const addr = String(draft?.customer?.address || "");
       const parts = addr.split(",");
+      setPostcode((parts.slice(2).join(",") || "").trim());
       setStreetAddress((parts[0] || "").trim());
-      setPostcode((parts.slice(1).join(",") || "").trim());
+      setTownCity((parts.slice(1).join(",") || "").trim());
   
       // Only restore date for ONE-OFF drafts
       if (draft?.kind !== "subscription" && draft?.delivery_date_iso) {
