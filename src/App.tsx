@@ -782,7 +782,7 @@ export default function App(){
   };
 
   const SUBSCRIPTION_PLANS = [
-    { key: "PLN", label: "PLN (plain)", priceLabel: "£13.50", bg: "bg-white/15" },
+    { key: "PLN", label: "PLN (plain)", priceLabel: "£18.45", bg: "bg-white/15" },
     { key: "BFC", label: "BFC (black forest)", priceLabel: "£23.85", bg: "bg-rose-900/40" },
     { key: "STR", label: "STR (strawberry)", priceLabel: "£23.85", bg: "bg-pink-500/35" },
     { key: "MNG", label: "MNG (mango)", priceLabel: "£23.85", bg: "bg-amber-300/45" },
