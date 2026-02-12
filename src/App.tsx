@@ -41,9 +41,9 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 
 const PRODUCTS = [
   { id: "PLN", name: "PLN", price: 2.5, size: "250 mL", img: "/plain.png" },
-  { id: "BFC", name: "BFC", price: 3, size: "250 mL", img: "/bfc.png" },
-  { id: "STR", name: "STR", price: 3, size: "250 mL", img: "/str.png" },
-  { id: "MNG", name: "MNG", price: 3, size: "250 mL", img: "/mng.png" },
+  { id: "BFC", name: "BFC", price: 3.5, size: "250 mL", img: "/bfc.png" },
+  { id: "STR", name: "STR", price: 3.5, size: "250 mL", img: "/str.png" },
+  { id: "MNG", name: "MNG", price: 3.5, size: "250 mL", img: "/mng.png" },
 ];
 
 const GROUPED = [
@@ -94,16 +94,16 @@ function computeTotals(
   // ✅ bottles count includes gift STR
   const qtyTotal = items.reduce((s, i) => s + i.qty, 0) + (giftStrQty || 0);
 
-  // classify by price: £2.50 = "plain", £3 = "flavoured"
+  // classify by price: £2.50 = "plain", £3.50 = "flavoured"
   const plainItems = items.filter((i) => i.price === 2.5);
-  const flavItems = items.filter((i) => i.price === 3);
+  const flavItems = items.filter((i) => i.price === 3.5);
 
   const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
   const flavQty  = flavItems.reduce((s, i) => s + i.qty, 0);
 
   // unit prices (taken from products so it's future-proof)
   const plainUnit = plainItems[0]?.price ?? 2.5;
-  const flavUnit  = flavItems[0]?.price ?? 3;
+  const flavUnit  = flavItems[0]?.price ?? 3.5;
 
   // "no bundle" full price (for savings display)
   const plainSubtotalRaw = plainQty * plainUnit;
@@ -970,7 +970,8 @@ export default function App(){
                     <p>Browse our selection.</p>
                     <p><strong>Taster</strong> consists of 1 of each flavour.
                       Each flavour option consists of <strong>7 bottles</strong>.{" "}
-                      <strong>Mixed</strong> consists of 2 BFC (black forest chocolate), 3 STR (strawberry, and 2 MNG (mango).</p>
+                      <strong>Mixed</strong> consists of <strong>2 BFC</strong> (black forest chocolate),{" "}
+                      <strong>3 STR</strong> (strawberry), and <strong>2 MNG</strong> (mango).</p>
                     <p>Click on a flavour header to view the nutrition information.</p>
                     <p>Click on the <strong>basket icon</strong> on the top right to complete your purchase.</p>
                   </div>
@@ -1185,7 +1186,7 @@ export default function App(){
       
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        BFC, STR &amp; MNG: <strong>£3.00</strong> each ·{" "}
+                        BFC, STR &amp; MNG: <strong>£3.50</strong> each ·{" "}
                         <strong>7 for the price of 6</strong>
                       </span>
                       {totalFlavoured > 0 ? (
@@ -1643,7 +1644,7 @@ function Basket({
         {flavRemainder > 0 && (
           <div className="flex justify-between">
             <span>Flavoured</span>
-            <span>{flavRemainder} × £3.00</span>
+            <span>{flavRemainder} × £3.50</span>
           </div>
         )}
 
@@ -2439,7 +2440,7 @@ function PayModal({
               <div className="mb-1">Bottles: {qtyTotal}</div>
               {plainRemainder > 0 && <div>PLN: {plainRemainder} × £2.50</div>}
               {plainBundles > 0 && <div>Free PLN (7 for 6): {plainBundles}</div>}
-              {flavRemainder > 0 && <div>Flavoured: {flavRemainder} × £3.00</div>}
+              {flavRemainder > 0 && <div>Flavoured: {flavRemainder} × £3.50</div>}
               {flavBundles > 0 && <div>Free flavoured (7 for 6): {flavBundles}</div>}
 
               {deliveryFee > 0 && !freeDeliveryUnlocked && (
