@@ -1887,10 +1887,13 @@ function PayModal({
       setGiftCode(draft?.gift_code || "");
   
       const addr = String(draft?.customer?.address || "");
-      const parts = addr.split(",");
-      setStreetAddress((parts[0] || "").trim());
-      setPostcode((parts.slice(2).join(",") || "").trim());
-      setTownCity((parts.slice(1).join(",") || "").trim());
+      const parts = addr
+        .split(',')
+        .map(part => part.trim())
+        .filter(part => part.length > 0);
+      setStreetAddress(parts[0]);
+      setPostcode(parts[2]);
+      setTownCity(parts[1]);
   
       // Only restore date for ONE-OFF drafts
       if (draft?.kind !== "subscription" && draft?.delivery_date_iso) {
