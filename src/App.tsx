@@ -782,10 +782,10 @@ export default function App(){
   };
 
   const SUBSCRIPTION_PLANS = [
-    { key: "PLN", label: "PLN (plain)", priceLabel: "£18.45", bg: "bg-white/15" },
-    { key: "BFC", label: "BFC (black forest)", priceLabel: "£23.85", bg: "bg-rose-900/40" },
-    { key: "STR", label: "STR (strawberry)", priceLabel: "£23.85", bg: "bg-pink-500/35" },
-    { key: "MNG", label: "MNG (mango)", priceLabel: "£23.85", bg: "bg-amber-300/45" },
+    { key: "PLN", label: "PLN (plain)", priceLabel: "£13.50", bg: "bg-white/15" },
+    { key: "BFC", label: "BFC (black forest)", priceLabel: "£18.90", bg: "bg-rose-900/40" },
+    { key: "STR", label: "STR (strawberry)", priceLabel: "£18.90", bg: "bg-pink-500/35" },
+    { key: "MNG", label: "MNG (mango)", priceLabel: "£18.90", bg: "bg-amber-300/45" },
     { key: "MIX", label: "MIX (mixed)", priceLabel: "£23.85", bg: "MIX_STRIPES" },
   ] as const;
   
@@ -1933,7 +1933,7 @@ function PayModal({
         <p className="text-sm text-white">
           You’re subscribing to <span className="font-semibold">{subscriptionPlan.label}</span> Weekly Gut Punch.
           We dispatch your first batch on {" "}<span className="font-semibold">{firstText}</span> then every following <span className="font-semibold">Monday</span>.
-          We deliver UK-wide, and use Evri Next Day delivery.
+          We deliver UK-wide, and use DPD Next Day delivery.
           The weekly delivery charge is <span className="font-semibold">£4.95</span>.
           Please fill in the details below.
         </p>
@@ -2300,7 +2300,7 @@ function PayModal({
         Please fill in the details below then select your payment method.
         We deliver UK-wide,
         dispatch every <span className="font-semibold">Monday</span> & <span className="font-semibold">Thursday</span>,
-        and use Evri Next Day delivery.
+        and use DPD Next Day delivery.
       </p>
 
       {/* customer details */}
