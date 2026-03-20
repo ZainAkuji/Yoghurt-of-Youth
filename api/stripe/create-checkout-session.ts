@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import Stripe from "stripe";
-import { Redis } from "@upstash/redis";
-import { createClient } from "@upstash/redis";
+import { kv } from "@vercel/kv";
+import { Redis } from "@upstash/redis";  // ← correct import
 
 // If your totals are in GBP pounds (e.g. 12.50), convert to pence (1250)
 function poundsToPence(amount: number) {
