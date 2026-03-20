@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { kv } from "@vercel/kv";
+import { Redis } from "@upstash/redis";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
@@ -9,10 +9,9 @@ export const config = {
 };
 
 function weekdayFromDMY(dmy: string) {
-  // expects "dd/mm/yyyy"
   const [d, m, y] = dmy.split("/").map(Number);
   const dt = new Date(y, m - 1, d);
-  return dt.toLocaleDateString("en-GB", { weekday: "long" }); // Monday/Thursday etc
+  return dt.toLocaleDateString("en-GB", { weekday: "long" });
 }
 
 function fmtGbp(v: any) {
@@ -32,7 +31,6 @@ function formatDateUKFromUnixSeconds(unixSeconds: number) {
 }
 
 function safeJoinAddress(addr: any) {
-  // Stripe customer_details.address is an object
   if (!addr || typeof addr !== "object") return "";
   const parts = [
     addr.line1,
@@ -60,41 +58,46 @@ async function sendEmailJS(templateId: string, templateParams: EmailPayload) {
   const serviceId = process.env.EMAILJS_SERVICE_ID;
   const publicKey = process.env.EMAILJS_PUBLIC_KEY;
   const privateKey = process.env.EMAILJS_PRIVATE_KEY;
-
   if (!serviceId || !publicKey || !privateKey) {
-    throw new Error("Missing EmailJS env vars (SERVICE_ID / PUBLIC_KEY / PRIVATE_KEY).");
+    console.error("Missing EmailJS env vars");
+    return; // fail silently to avoid blocking webhook response
   }
-
-  const r = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      service_id: serviceId,
-      template_id: templateId,
-      user_id: publicKey,
-      accessToken: privateKey,
-      template_params: templateParams,
-    }),
-  });
-
-  const text = await r.text();
-  console.log("EmailJS response:", r.status, text);
-
-  if (!r.ok) {
-    throw new Error(`EmailJS failed: ${r.status} ${text}`);
+  try {
+    const r = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        service_id: serviceId,
+        template_id: templateId,
+        user_id: publicKey,
+        accessToken: privateKey,
+        template_params: templateParams,
+      }),
+    });
+    const text = await r.text();
+    console.log("EmailJS response:", r.status, text);
+    if (!r.ok) throw new Error(`EmailJS failed: ${r.status} ${text}`);
+  } catch (err) {
+    console.error("EmailJS send failed:", err);
+    // Do not throw — allow webhook to return 200 to Stripe
   }
 }
 
+// Create Redis client once (using your active STORAGE2 vars)
+const redis = new Redis({
+  url: process.env.STORAGE2_KV_REST_API_URL || "",
+  token: process.env.STORAGE2_KV_REST_API_TOKEN || "",
+});
+
 async function alreadyProcessedOnce(key: string) {
   try {
-    const hit = await kv.get(key);
+    const hit = await redis.get(key);
     if (hit) return true;
-    await kv.set(key, "1", { ex: 60 * 60 * 24 * 7 }); // 7 days
+    await redis.set(key, "1", { ex: 60 * 60 * 24 * 7 }); // 7 days expiry
     return false;
   } catch (e) {
-    // If KV fails, do not block sending (better to send than lose emails)
-    console.warn("KV idempotency check failed:", e);
-    return false;
+    console.warn("Redis idempotency check failed:", e);
+    return false; // fail open — better to send email than block
   }
 }
 
@@ -106,7 +109,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const rawBody = await readRawBody(req);
-
     const event = stripe.webhooks.constructEvent(
       rawBody,
       sig,
@@ -121,26 +123,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
-
       const ownerEmail = process.env.OWNER_EMAIL || "zainul_a@hotmail.co.uk";
 
-      // ----------------------------
       // SUBSCRIPTION (Weekly Gut Punch)
-      // ----------------------------
       if (session.mode === "subscription") {
-        // Pull metadata from the *subscription*, because you set it in subscription_data.metadata
         const subId = typeof session.subscription === "string" ? session.subscription : "";
         let sub: Stripe.Subscription | null = null;
-
         if (subId) {
           sub = await stripe.subscriptions.retrieve(subId);
         }
-
         const sm = sub?.metadata || {};
         const planKey = String(sm.planKey || "");
         const linesArr = subscriptionLinesFromPlanKey(planKey);
 
-        // get weekly price from line item price amount (more reliable than guessing)
         let weeklyPriceText = "";
         try {
           const li = await stripe.checkout.sessions.listLineItems(session.id, { limit: 5 });
@@ -148,7 +143,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           const unitAmount = first?.price?.unit_amount;
           const currency = (first?.price?.currency || "gbp").toUpperCase();
           if (typeof unitAmount === "number") {
-            // Stripe unit_amount is in minor currency units (pence)
             const v = unitAmount / 100;
             weeklyPriceText =
               currency === "GBP"
@@ -159,149 +153,109 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           console.warn("Could not read subscription line items:", e);
         }
 
-        // customer details: prefer Stripe customer_details (filled at checkout)
-        const cd = (session.customer_details || {}) as any;
+        const cd = session.customer_details || {};
+        const customer_name = String(sm.name || cd.name || "");
+        const customer_email = String(cd.email || session.customer_email || "");
+        const customer_phone = String(sm.phone || cd.phone || "");
+        const customer_address = String(sm.address || "") || safeJoinAddress(cd.address) || "";
 
-        const customer_name = String(sm.name || cd?.name || "");
-        const customer_email = String(cd?.email || session.customer_email || "");
-        const customer_phone = String(sm.phone || cd?.phone || "");
-        const customer_address =
-          String(sm.address || "") ||
-          safeJoinAddress(cd?.address) ||
-          "";
-
-        // first delivery: you set trial_end to Monday 21:00; we can display it as "dd/mm/yyyy (Monday)"
         const firstDelivery = sub?.trial_end ? formatDateUKFromUnixSeconds(sub.trial_end) : "";
 
-        // Build template params (match your naming style)
         const templateParams = {
           brand: "Yoghurt of Youth",
           owner_email: ownerEmail,
-
           customer_name,
           customer_email,
           customer_phone,
           customer_address,
-
-          // subscription-focused fields (use existing names where possible)
-          order_id: subId || session.id || "", // "Subscription reference" in templates
+          order_id: subId || session.id || "",
           payment_method: "Stripe (Subscription)",
-
-          // “Delivery” style fields re-used by templates
-          delivery_date: firstDelivery,              // “First delivery”
-          delivery_window: "18:30–20:00",            // fixed in your modal
-
-          // quantities / pricing
+          delivery_date: firstDelivery,
+          delivery_window: "18:30–20:00",
           bottles: 7,
-          total_paid: weeklyPriceText || "",         // “Weekly price” on customer email
-          merchandise_total: "",                      // not applicable
-          delivery_fee: "FREE",                       // subscription is free delivery
-
-          // lines
+          total_paid: weeklyPriceText || "",
+          merchandise_total: "",
+          delivery_fee: "FREE",
           order_lines: linesArr.join("\n"),
-
-          // optional
           note: String(sm.note || ""),
         };
 
-        // Owner email
         const ownerTpl = process.env.EMAILJS_TEMPLATE_SUB_OWNER as string;
         const custTpl = process.env.EMAILJS_TEMPLATE_SUB_CUSTOMER as string;
 
-        if (!ownerTpl) throw new Error("Missing EMAILJS_TEMPLATE_SUB_OWNER");
-        if (!custTpl) throw new Error("Missing EMAILJS_TEMPLATE_SUB_CUSTOMER");
-
-        await sendEmailJS(ownerTpl, {
-          ...templateParams,
-          to_email: ownerEmail,
-        });
-
-        if (customer_email) {
-          await sendEmailJS(custTpl, {
-            ...templateParams,
-            to_email: customer_email,
-          });
+        if (ownerTpl) {
+          await sendEmailJS(ownerTpl, { ...templateParams, to_email: ownerEmail });
+        }
+        if (customer_email && custTpl) {
+          await sendEmailJS(custTpl, { ...templateParams, to_email: customer_email });
         }
 
         return res.status(200).json({ received: true });
       }
 
-      // ----------------------------
-      // ONE-OFF (existing behaviour)
-      // ----------------------------
-      {
-        const m = session.metadata || {};
+      // ONE-OFF ORDER
+      const m = session.metadata || {};
+      let orderLinesPretty = "";
+      try {
+        orderLinesPretty = JSON.parse(m.order_lines || "[]").join("\n");
+      } catch {
+        orderLinesPretty = String(m.order_lines || "");
+      }
 
-        let orderLinesPretty = "";
-        try {
-          orderLinesPretty = JSON.parse(m.order_lines || "[]").join("\n");
-        } catch {
-          orderLinesPretty = String(m.order_lines || "");
-        }
+      const deliveryWeekday = m.delivery_date ? weekdayFromDMY(m.delivery_date) : "";
+      const deliveryDatePretty = deliveryWeekday
+        ? `${deliveryWeekday} ${m.delivery_date}`
+        : (m.delivery_date || "");
 
-        const deliveryWeekday = m.delivery_date ? weekdayFromDMY(m.delivery_date) : "";
-        const deliveryDatePretty = deliveryWeekday
-          ? `${deliveryWeekday} ${m.delivery_date}`
-          : (m.delivery_date || "");
+      const templateParams = {
+        brand: "Yoghurt of Youth",
+        owner_email: ownerEmail,
+        customer_name: m.customer_name || "",
+        customer_email: m.customer_email || "",
+        customer_phone: m.customer_phone || "",
+        customer_address: m.customer_address || "",
+        delivery_date: deliveryDatePretty,
+        delivery_window: m.delivery_window || "",
+        note: m.note || "",
+        is_collection: m.delivery_method === "collection" ? "1" : "",
+        order_id: m.order_id || "",
+        payment_method: "Stripe",
+        order_lines: orderLinesPretty,
+        bottles: m.bottles || "",
+        yoghurt_strain: m.yoghurt_strain || "",
+        plain_qty: m.plain_qty || "",
+        flav_qty: m.flav_qty || "",
+        plain_bundles: m.plain_bundles || "",
+        flav_bundles: m.flav_bundles || "",
+        plain_remainder: m.plain_remainder || "",
+        flav_remainder: m.flav_remainder || "",
+        merchandise_total: fmtGbp(m.merchandise_total),
+        delivery_fee: fmtGbp(m.delivery_fee),
+        total_paid: fmtGbp(m.total_paid),
+      };
 
-        const templateParams = {
-          brand: "Yoghurt of Youth",
-          owner_email: ownerEmail,
+      // Gift code marking (after payment success)
+      const giftCode = String(m.gift_code || "").trim().toUpperCase();
+      const giftStrQty = Number(m.gift_str_qty || 0);
+      const emailKey = String(m.customer_email || "").trim().toLowerCase();
 
-          customer_name: m.customer_name || "",
-          customer_email: m.customer_email || "",
-          customer_phone: m.customer_phone || "",
-          customer_address: m.customer_address || "",
-
-          delivery_date: deliveryDatePretty,
-          delivery_window: m.delivery_window || "",
-          note: m.note || "",
-          is_collection: m.delivery_method === "collection" ? "1" : "",
-
+      if (giftStrQty > 0 && giftCode && emailKey) {
+        const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
+        await redis.set(usedKey, {
           order_id: m.order_id || "",
-          payment_method: "Stripe",
+          session_id: session.id || "",
+          usedAt: Date.now(),
+        }, { ex: 60 * 60 * 24 * 30 }); // 30 days expiry
+      }
 
-          order_lines: orderLinesPretty,
-          bottles: m.bottles || "",
-          yoghurt_strain: m.yoghurt_strain || "",
+      const ownerTpl = process.env.EMAILJS_TEMPLATE_ID as string;
+      const custTpl = process.env.EMAILJS_CUSTOMER_TEMPLATE_ID as string;
 
-          plain_qty: m.plain_qty || "",
-          flav_qty: m.flav_qty || "",
-          plain_bundles: m.plain_bundles || "",
-          flav_bundles: m.flav_bundles || "",
-          plain_remainder: m.plain_remainder || "",
-          flav_remainder: m.flav_remainder || "",
-
-          merchandise_total: fmtGbp(m.merchandise_total),
-          delivery_fee: fmtGbp(m.delivery_fee),
-          total_paid: fmtGbp(m.total_paid),
-        };
-
-        // ---- Gift code: mark one-time use (per email) after successful payment ----
-        const giftCode = String(m.gift_code || "").trim().toUpperCase();
-        const giftStrQty = Number(m.gift_str_qty || 0);
-        const emailKey = String(m.customer_email || "").trim().toLowerCase();
-        
-        if (giftStrQty > 0 && giftCode && emailKey) {
-          const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
-          await kv.set(usedKey, {
-            order_id: m.order_id || "",
-            session_id: session.id || "",
-            usedAt: Date.now(),
-          });
-        }
-
-        await sendEmailJS(process.env.EMAILJS_TEMPLATE_ID as string, {
-          ...templateParams,
-          to_email: ownerEmail,
-        });
-
-        if (m.customer_email) {
-          await sendEmailJS(process.env.EMAILJS_CUSTOMER_TEMPLATE_ID as string, {
-            ...templateParams,
-            to_email: m.customer_email,
-          });
-        }
+      if (ownerTpl) {
+        await sendEmailJS(ownerTpl, { ...templateParams, to_email: ownerEmail });
+      }
+      if (m.customer_email && custTpl) {
+        await sendEmailJS(custTpl, { ...templateParams, to_email: m.customer_email });
       }
     }
 
