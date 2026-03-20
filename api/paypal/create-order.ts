@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { kv } from "@vercel/kv";
+import { Redis } from "@upstash/redis";
 
 function normalizeSiteUrl(url: string) {
   const u = String(url || "").trim();
@@ -39,7 +40,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const emailKey = String(customer?.email || "").trim().toLowerCase();
     const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
   
-    const alreadyUsed = await kv.get(usedKey);
+    const redis = new Redis({
+      url: process.env.STORAGE2_KV_REST_API_URL || "",
+      token: process.env.STORAGE2_KV_REST_API_TOKEN || "",
+    });
+  
+    const alreadyUsed = await redis.get(usedKey);
     if (alreadyUsed) {
       return res.status(400).json({ error: "Gift code already used for this email." });
     }
