@@ -154,10 +154,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         const cd = session.customer_details || {};
-        const customer_name = String(sm.name || cd.name || "");
-        const customer_email = String(cd.email || session.customer_email || "");
-        const customer_phone = String(sm.phone || cd.phone || "");
-        const customer_address = String(sm.address || "") || safeJoinAddress(cd.address) || "";
+        const customer_name = String((sm as any).name || (cd as any).name || "");
+        const customer_email = String((cd as any).email || session.customer_email || "");
+        const customer_phone = String((sm as any).phone || (cd as any).phone || "");
+        const customer_address = String((sm as any).address || "") || safeJoinAddress((cd as any).address) || "";
 
         const firstDelivery = sub?.trial_end ? formatDateUKFromUnixSeconds(sub.trial_end) : "";
 
