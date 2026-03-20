@@ -40,7 +40,7 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  { id: "PLN", name: "PLN", price: 2.5, size: "250 mL", img: "/plain.png" },
+  { id: "PLN", name: "PLN", price: 0.1, size: "250 mL", img: "/plain.png" },
   { id: "BFC", name: "BFC", price: 3.5, size: "250 mL", img: "/bfc.png" },
   { id: "STR", name: "STR", price: 3.5, size: "250 mL", img: "/str.png" },
   { id: "MNG", name: "MNG", price: 3.5, size: "250 mL", img: "/mng.png" },
@@ -95,14 +95,14 @@ function computeTotals(
   const qtyTotal = items.reduce((s, i) => s + i.qty, 0) + (giftStrQty || 0);
 
   // classify by price: £2.50 = "plain", £3.50 = "flavoured"
-  const plainItems = items.filter((i) => i.price === 2.5);
+  const plainItems = items.filter((i) => i.price === 0.1);
   const flavItems = items.filter((i) => i.price === 3.5);
 
   const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
   const flavQty  = flavItems.reduce((s, i) => s + i.qty, 0);
 
   // unit prices (taken from products so it's future-proof)
-  const plainUnit = plainItems[0]?.price ?? 2.5;
+  const plainUnit = plainItems[0]?.price ?? 0.1;
   const flavUnit  = flavItems[0]?.price ?? 3.5;
 
   // "no bundle" full price (for savings display)
@@ -143,7 +143,7 @@ function computeTotals(
         ? 0
         : freeDeliveryUnlocked
           ? 0
-          : 4.95;
+          : 0.1;
 
   // final amount customer pays (bottles + delivery)
   const total = merchTotal + deliveryFee;
