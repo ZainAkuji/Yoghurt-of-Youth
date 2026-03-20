@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import Stripe from "stripe";
 import { kv } from "@vercel/kv";
+import { createClient } from "@upstash/redis";
 
 // If your totals are in GBP pounds (e.g. 12.50), convert to pence (1250)
 function poundsToPence(amount: number) {
