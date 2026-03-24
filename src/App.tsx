@@ -1886,14 +1886,16 @@ function PayModal({
       setDeliveryMethod(draft?.delivery_method || "delivery");
       setGiftCode(draft?.gift_code || "");
   
-      const addr = String(draft?.customer?.address || "");
-      const parts = addr
+      // Restore address fields safely
+      const savedAddress = String(draft?.customer?.address || "");
+      const parts = savedAddress
         .split(',')
-        .map(part => part.trim())
+        .map(part => String(part || "").trim())
         .filter(part => part.length > 0);
-      setStreetAddress(parts[0]);
-      setPostcode(parts[2]);
-      setTownCity(parts[1]);
+  
+      setStreetAddress(parts[0] || "");
+      setTownCity(parts[1] || "");
+      setPostcode(parts[2] || "");
   
       // Only restore date for ONE-OFF drafts
       if (draft?.kind !== "subscription" && draft?.delivery_date_iso) {
