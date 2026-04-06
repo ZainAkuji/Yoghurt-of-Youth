@@ -824,7 +824,7 @@ export default function App(){
         {/* Video background */}
         <video
           className="absolute inset-0 w-full h-full object-cover"
-          src="/breaking.mp4"
+          src="/hero_bg.mp4"
           autoPlay
           loop
           muted
