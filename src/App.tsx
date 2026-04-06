@@ -220,7 +220,7 @@ function AboutSection() {
       style={{
         backgroundImage: "linear-gradient(rgba(0,0,0,0.50), rgba(0,0,0,0.50)), url('/about_bg.png')",
         backgroundSize: "cover",
-        backgroundPosition: "78% center",
+        backgroundPosition: "50% center",
         backgroundRepeat: "no-repeat",
       }}
     >
