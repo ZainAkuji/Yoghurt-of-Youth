@@ -1396,7 +1396,7 @@ function Header({ brand, itemsCount, openCart }) {
           group-hover:h-32
         `}
         style={{
-          backgroundImage: "url('skyline.png')",
+          backgroundImage: "url('header_bg.png')",
           backgroundSize: "cover",
           backgroundPosition: `center ${scrolled ? "50%" : "50%"}`, // tweak for horizon
           backgroundRepeat: "no-repeat",
