@@ -2299,7 +2299,7 @@ function PayModal({
   return (
     <Modal onClose={onClose} title="Checkout & Delivery">
       <p className="text-sm text-white/80">
-        Please fill in the details below then select your payment method.
+        Please fill in the details below then select the payment button.
         We deliver UK-wide,
         dispatch every <span className="font-semibold">Monday</span> & <span className="font-semibold">Thursday</span>,
         and use DPD Next Day delivery.
@@ -2569,7 +2569,7 @@ function PayModal({
         </button>
 
         {/* PAYPAL */}
-        <button
+        {/*<button
           disabled={sending}
           onClick={async () => {
             if (!validateBeforePay()) return;
@@ -2647,7 +2647,7 @@ function PayModal({
             alt="Pay with PayPal"
             className="h-6"
            />
-        </button>
+        </button>*/}
 
         <button
           onClick={onClose}
