@@ -40,7 +40,7 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  { id: "PLN", name: "PLN", price: 2.5, size: "250 mL", img: "/plain.png" },
+  { id: "PLN", name: "PLN", price: 3.0, size: "250 mL", img: "/plain.png" },
   { id: "BFC", name: "BFC", price: 3.5, size: "250 mL", img: "/bfc.png" },
   { id: "STR", name: "STR", price: 3.5, size: "250 mL", img: "/str.png" },
   { id: "MNG", name: "MNG", price: 3.5, size: "250 mL", img: "/mng.png" },
@@ -94,15 +94,15 @@ function computeTotals(
   // ✅ bottles count includes gift STR
   const qtyTotal = items.reduce((s, i) => s + i.qty, 0) + (giftStrQty || 0);
 
-  // classify by price: £2.50 = "plain", £3.50 = "flavoured"
-  const plainItems = items.filter((i) => i.price === 2.5);
+  // classify by price: £3.00 = "plain", £3.50 = "flavoured"
+  const plainItems = items.filter((i) => i.price === 3.0);
   const flavItems = items.filter((i) => i.price === 3.5);
 
   const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
   const flavQty  = flavItems.reduce((s, i) => s + i.qty, 0);
 
   // unit prices (taken from products so it's future-proof)
-  const plainUnit = plainItems[0]?.price ?? 2.5;
+  const plainUnit = plainItems[0]?.price ?? 3.0;
   const flavUnit  = flavItems[0]?.price ?? 3.5;
 
   // "no bundle" full price (for savings display)
@@ -1161,7 +1161,7 @@ export default function App(){
                   <div className="mt-2 text-xs text-white space-y-1.5">
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        PLN: <strong>£2.50</strong> each ·{" "}
+                        PLN: <strong>£3.00</strong> each ·{" "}
                         <strong>7 for the price of 6</strong>
                       </span>
                       {totalPlain > 0 ? (
@@ -1630,7 +1630,7 @@ function Basket({
         {plainRemainder > 0 && (
           <div className="flex justify-between">
             <span>PLN</span>
-            <span>{plainRemainder} × £2.50</span>
+            <span>{plainRemainder} × £3.00</span>
           </div>
         )}
 
@@ -2444,7 +2444,7 @@ function PayModal({
             </div>
             <div>
               <div className="mb-1">Bottles: {qtyTotal}</div>
-              {plainRemainder > 0 && <div>PLN: {plainRemainder} × £2.50</div>}
+              {plainRemainder > 0 && <div>PLN: {plainRemainder} × £3.00</div>}
               {plainBundles > 0 && <div>Free PLN (7 for 6): {plainBundles}</div>}
               {flavRemainder > 0 && <div>Flavoured: {flavRemainder} × £3.50</div>}
               {flavBundles > 0 && <div>Free flavoured (7 for 6): {flavBundles}</div>}
