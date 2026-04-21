@@ -1596,14 +1596,14 @@ function Basket({
             </div>
 
             <div className="mt-2 flex items-center gap-2">
-              <button
+              {/*<button
                 onClick={() => sub(i.id)}
                 className="w-7 h-7 rounded-lg bg-white/10 text-white hover:bg-white/20 transition"
               >
                 −
-              </button>
+              </button>*/}
               <span className="w-8 text-center text-sm">{i.qty}</span>
-              <button
+              {/*<button
                 onClick={() => add(i.id)}
                 className="w-7 h-7 rounded-lg bg-white text-slate-900 font-semibold hover:bg-amber-300 transition"
               >
@@ -1614,7 +1614,7 @@ function Basket({
                 className="ml-auto text-xs text-white/60 hover:text-white transition"
               >
                 Remove
-              </button>
+              </button>*/}
             </div>
           </div>
         </div>
