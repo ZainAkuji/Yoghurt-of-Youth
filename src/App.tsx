@@ -1602,7 +1602,7 @@ function Basket({
               >
                 −
               </button>*/}
-              <span className="w-8 text-center text-sm">{i.qty}</span>
+              <span className="w-8 text-sm">{i.qty}</span>
               {/*<button
                 onClick={() => add(i.id)}
                 className="w-7 h-7 rounded-lg bg-white text-slate-900 font-semibold hover:bg-amber-300 transition"
