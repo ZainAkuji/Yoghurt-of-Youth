@@ -782,11 +782,11 @@ export default function App(){
   };
 
   const SUBSCRIPTION_PLANS = [
-    { key: "PLN", label: "PLN (plain)", priceLabel: "£16.20", bg: "bg-white/15" },
-    { key: "BFC", label: "BFC (black forest)", priceLabel: "£18.90", bg: "bg-rose-900/40" },
-    { key: "STR", label: "STR (strawberry)", priceLabel: "£18.90", bg: "bg-pink-500/35" },
-    { key: "MNG", label: "MNG (mango)", priceLabel: "£18.90", bg: "bg-amber-300/45" },
-    { key: "MIX", label: "MIX (mixed)", priceLabel: "£18.90", bg: "MIX_STRIPES" },
+    { key: "PLN", label: "PLN (plain)", priceLabel: "£14.55", bg: "bg-white/15" },
+    { key: "BFC", label: "BFC (black forest)", priceLabel: "£15.15", bg: "bg-rose-900/40" },
+    { key: "STR", label: "STR (strawberry)", priceLabel: "£15.15", bg: "bg-pink-500/35" },
+    { key: "MNG", label: "MNG (mango)", priceLabel: "£15.15", bg: "bg-amber-300/45" },
+    { key: "MIX", label: "MIX (mixed)", priceLabel: "£15.15", bg: "MIX_STRIPES" },
   ] as const;
   
   type SubscriptionPlanKey = typeof SUBSCRIPTION_PLANS[number]["key"];
