@@ -48,7 +48,7 @@ function safeJoinAddress(addr: any) {
 function subscriptionLinesFromPlanKey(planKey: string) {
   const key = String(planKey || "").toUpperCase();
   if (key === "MIX") {
-    return ["Weekly box: 2× BFC, 3× STR, 3× MNG (7 bottles)"];
+    return ["Weekly box: 2× BFC, 3× STR, 2× MNG (7 bottles)"];
   }
   if (key) {
     return [`Weekly box: 7× ${key} (7 bottles)`];
