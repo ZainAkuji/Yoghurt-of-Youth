@@ -1680,7 +1680,7 @@ function Basket({
               : "bg-white/10 text-white/40 cursor-not-allowed"
           )}
         >
-          Pay and choose delivery day
+          Pay and choose dispatch day
         </button>
         <button
           onClick={clear}
@@ -1858,7 +1858,7 @@ function PayModal({
     }
     if (!isSubscription) {
       if (!deliveryOptions.includes(date)) {
-        setError("Please choose a valid delivery date (Monday or Thursday).");
+        setError("Please choose a valid dispatch date (Monday or Thursday).");
         return false;
       }
     }
@@ -2383,7 +2383,7 @@ function PayModal({
         )}
 
         <div className="mt-2 text-sm text-white/80">
-          {delivery_method === "delivery" ? "Please select delivery date" : "Please select collection date"}
+          {delivery_method === "delivery" ? "Please select dispatch date" : "Please select collection date"}
         </div>
 
         {!isSubscription && (
