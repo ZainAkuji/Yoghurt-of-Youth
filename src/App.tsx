@@ -2194,6 +2194,29 @@ function PayModal({
       <Modal onClose={onClose} title="Order confirmed">
         {/* Confetti */}
         <ConfettiOverlay />
+
+        {/* ✅ KLAVIYO PLACED ORDER TRACKING */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              var _learnq = _learnq || [];
+              _learnq.push(['track', 'Placed Order', {
+                "$event_id": "${order.orderId || 'unknown'}",
+                "$value": ${order.total || 0},
+                "OrderId": "${order.orderId || 'unknown'}",
+                "Currency": "GBP",
+                "Items": ${JSON.stringify(
+                  (order.lines || []).map((line, index) => ({
+                    ProductName: line,
+                    ProductID: `item-${index}`,
+                    Quantity: 1,
+                    ItemPrice: 0 // You can improve this later if needed
+                  }))
+                )}
+              }]);
+            `,
+          }}
+        />
   
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
