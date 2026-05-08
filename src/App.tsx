@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+<script type="text/javascript" async src="https://static.klaviyo.com/onsite/js/VxBsdc/klaviyo.js"></script>
 
 const BRAND = "Yoghurt of Youth";
 const OWNER_EMAIL = "zainul_a@hotmail.co.uk";
