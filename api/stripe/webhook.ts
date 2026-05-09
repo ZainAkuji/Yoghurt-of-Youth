@@ -88,7 +88,7 @@ async function sendEmailJS(templateId: string, templateParams: EmailPayload) {
   }
 }
 
-async function trackKlaviyo(eventName: string, properties: any, email: string) {
+{/*async function trackKlaviyo(eventName: string, properties: any, email: string) {
   if (!KLAVIYO_PRIVATE_KEY || !email) return;
 
   try {
@@ -120,7 +120,7 @@ async function trackKlaviyo(eventName: string, properties: any, email: string) {
     console.error("Klaviyo tracking error:", err);
     // Fail silently — do not block the webhook
   }
-}
+}*/}
 
 // Create Redis client once (using your active STORAGE2 vars)
 const redis = new Redis({
@@ -230,7 +230,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         // After sending EmailJS for subscription
-        await trackKlaviyo('Successfully Paid', {
+        {/*await trackKlaviyo('Successfully Paid', {
           SubscriptionType: "weekly",
           Subscription: true,
           OrderId: subId || session.id,
@@ -238,7 +238,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           Currency: "GBP",
           Items: linesArr,
           // Add any other useful fields
-        }, customer_email);
+        }, customer_email);*/}
 
         return res.status(200).json({ received: true });
       }
@@ -309,7 +309,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       // After sending EmailJS for one-off
-      await trackKlaviyo('Successfully Paid', {
+      {/*await trackKlaviyo('Successfully Paid', {
         SubscriptionType: "one-off",
         Subscription: false,
         OrderId: m.order_id || session.id,
@@ -318,7 +318,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         Items: orderLinesPretty ? orderLinesPretty.split("\n") : [],
         DeliveryMethod: m.delivery_method || "delivery",
         // Add more fields from m. as needed
-      }, m.customer_email);
+      }, m.customer_email);*/}
     }
 
     return res.status(200).json({ received: true });
