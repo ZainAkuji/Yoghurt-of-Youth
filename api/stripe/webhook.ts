@@ -3,6 +3,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { Redis } from "@upstash/redis";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+const KLAVIYO_PRIVATE_KEY = process.env.KLAVIYO_PRIVATE_API_KEY as string;
 
 export const config = {
   api: { bodyParser: false },
@@ -84,6 +85,40 @@ async function sendEmailJS(templateId: string, templateParams: EmailPayload) {
   } catch (err) {
     console.error("EmailJS send failed:", err);
     // Do not throw — allow webhook to return 200 to Stripe
+  }
+}
+
+async function trackKlaviyo(eventName: string, properties: any, email: string) {
+  if (!KLAVIYO_PRIVATE_KEY || !email) return;
+
+  try {
+    const response = await fetch('https://a.klaviyo.com/api/events', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Klaviyo-API-Key ${KLAVIYO_PRIVATE_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        data: {
+          type: 'event',
+          attributes: {
+            metric: { name: eventName },
+            profile: { email: email },
+            properties: {
+              ...properties,
+              "Source": "Stripe Webhook"
+            }
+          }
+        }
+      })
+    });
+
+    if (!response.ok) {
+      console.warn(`Klaviyo track failed: ${response.status}`);
+    }
+  } catch (err) {
+    console.error("Klaviyo tracking error:", err);
+    // Fail silently — do not block the webhook
   }
 }
 
@@ -194,6 +229,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           await sendEmailJS(custTpl, { ...templateParams, to_email: customer_email });
         }
 
+        // After sending EmailJS for subscription
+        await trackKlaviyo('Successfully Paid', {
+          SubscriptionType: "weekly",
+          Subscription: true,
+          OrderId: subId || session.id,
+          "$value": session.amount_total ? session.amount_total / 100 : 0,
+          Currency: "GBP",
+          Items: linesArr,
+          // Add any other useful fields
+        }, customer_email);
+
         return res.status(200).json({ received: true });
       }
 
@@ -261,6 +307,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (m.customer_email && custTpl) {
         await sendEmailJS(custTpl, { ...templateParams, to_email: m.customer_email });
       }
+
+      // After sending EmailJS for one-off
+      await trackKlaviyo('Successfully Paid', {
+        SubscriptionType: "one-off",
+        Subscription: false,
+        OrderId: m.order_id || session.id,
+        "$value": Number(m.total_paid || 0),
+        Currency: "GBP",
+        Items: orderLinesPretty ? orderLinesPretty.split("\n") : [],
+        DeliveryMethod: m.delivery_method || "delivery",
+        // Add more fields from m. as needed
+      }, m.customer_email);
     }
 
     return res.status(200).json({ received: true });
