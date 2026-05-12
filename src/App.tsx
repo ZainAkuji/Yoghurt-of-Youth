@@ -1228,7 +1228,9 @@ export default function App(){
                       at a <strong>discount</strong>,
                       fermented the day before dispatch for freshness.</p>
                     <p>Your first batch will be dispatched on the coming <strong>available Monday</strong>. Book by <strong>Saturday evening</strong> for the <strong>coming Monday</strong>.</p>
-                    <p><strong>Minimum 3 weeks</strong> order. You will be charged <strong>every week</strong> on the day of dispatch.</p>
+                    You will be charged <strong>every week</strong> on the day of dispatch. Pause or cancel anytime by emailing <a href="mailto:support@yoghurtofyouth.co.uk" className="underline hover:text-slate-900">
+                        support@yoghurtofyouth.co.uk
+                      </a></p>
                     <p>We alternate between <strong>PRCXN</strong> and <strong>SPCTRL</strong> yoghurt variants every week.</p>
                     <p>Tap a plan below to subscribe.</p>
                   </div>
@@ -1291,12 +1293,6 @@ export default function App(){
 
                     <p className="mt-2 text-xs text-white leading-relaxed">
                       Standard weekly delivery charge of <strong>£4.95</strong>
-                    </p>
-
-                    <p className="mt-2 text-xs text-white leading-relaxed">
-                      To cancel, please email <a href="mailto:support@yoghurtofyouth.co.uk" className="underline hover:text-slate-900">
-                        support@yoghurtofyouth.co.uk
-                      </a>
                     </p>
                   </div>
 
