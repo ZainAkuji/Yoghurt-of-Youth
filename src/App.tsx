@@ -1802,7 +1802,7 @@ function PayModal({
 
   const normalizedGiftCode = giftCode.trim().toUpperCase();
   const giftStrQty =
-    normalizedGiftCode === "YOY25"
+    normalizedGiftCode === "MINUS10"
       ? 1
       : 0;
 
