@@ -1323,11 +1323,11 @@ export default function App(){
       
         {/* Content on top */}
         <div className="relative z-10 h-full flex flex-col justify-start items-start text-left max-w-lg px-8 md:px-12 text-white">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6 drop-shadow-md">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-6 drop-shadow-md">
             How It's Made
           </h2>
           
-          <p className="max-w-2xl text-lg md:text-xl leading-relaxed drop-shadow-sm">
+          <p className="max-w-2xl text-base sm:text-lg md:text-xl md:text-xl leading-relaxed drop-shadow-sm">
             Behind the scenes: watch how we ferment Yoghurt of Youth with live 
             <em> L. reuteri</em> strains in small batches for maximum potency and freshness.
           </p>
