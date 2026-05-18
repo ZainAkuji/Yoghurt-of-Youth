@@ -1325,18 +1325,7 @@ export default function App(){
         <div className="relative z-10 h-full flex flex-col justify-start items-start text-left max-w-lg px-8 md:px-12 pt-12 text-white">
           <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-6 drop-shadow-md">
             How It's Made
-          </h2>
-          
-          <p className="max-w-2xl text-base sm:text-lg md:text-xl md:text-xl leading-relaxed drop-shadow-sm">
-            Behind the scenes: watch how we ferment Yoghurt of Youth with live 
-            <em> L. reuteri</em> strains in small batches for maximum potency and freshness.
-          </p>
-      
-          {/* Optional subtle play indicator (since it's autoplaying) */}
-          <div className="mt-8 flex items-center gap-3 text-sm opacity-75">
-            <div className="w-3 h-3 bg-white rounded-full animate-pulse" />
-            Playing • Behind the scenes
-          </div>
+          </h2>      
         </div>
       </section>
 
