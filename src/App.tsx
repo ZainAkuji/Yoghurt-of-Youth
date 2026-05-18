@@ -1322,7 +1322,7 @@ export default function App(){
         />
       
         {/* Content on top */}
-        <div className="relative z-10 h-full flex flex-col justify-start items-start text-left max-w-3xl px-6 md:px-12 py-12 pt-16 md:pt-24 text-white">
+        <div className="relative z-10 h-full flex flex-col justify-start items-start text-left max-w-lg px-6 md:px-12 py-12 pt-16 md:pt-24 text-white">
           <h2 className="text-3xl md:text-5xl font-bold mb-6 drop-shadow-md">
             How It's Made
           </h2>
