@@ -1305,6 +1305,44 @@ export default function App(){
         </div>
       </section>
 
+      {/* Behind the scenes */}
+      <section
+        id="bts"
+        className="relative w-full overflow-hidden bg-black scroll-mt-32 md:scroll-mt-24"
+        style={{ aspectRatio: "16 / 9" }}
+      >
+        {/* Video background - full edge-to-edge like Hero */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src="/bts.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+      
+        {/* Simple dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/0" />
+      
+        {/* Content on top */}
+        <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-6 py-12 text-white">
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 drop-shadow-md">
+            How It's Made
+          </h2>
+          
+          <p className="max-w-2xl text-lg md:text-xl leading-relaxed drop-shadow-sm">
+            Behind the scenes: watch how we ferment Yoghurt of Youth with live 
+            <em> L. reuteri</em> strains in small batches for maximum potency and freshness.
+          </p>
+      
+          {/* Optional subtle play indicator (since it's autoplaying) */}
+          <div className="mt-8 flex items-center gap-3 text-sm opacity-75">
+            <div className="w-3 h-3 bg-white rounded-full animate-pulse" />
+            Playing • Behind the scenes
+          </div>
+        </div>
+      </section>
+
       {nutritionModal && (
         <Modal
           title={nutritionModal.title}
