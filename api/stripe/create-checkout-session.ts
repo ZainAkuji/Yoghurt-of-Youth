@@ -22,7 +22,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed." });
 
   try {
-    const { cart, totals, customer, delivery_method, delivery_date, delivery_window, note, lines, gift_code, gift_str_qty } = req.body as {
+    const { cart, totals, customer, delivery_method, delivery_date, delivery_window, note, lines, gift_code, discount_percent } = req.body as {
       cart: Record<string, number>;
       totals: any;
       customer: { name: string; email: string; phone: string; address: string };
@@ -31,7 +31,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       note?: string;
       lines?: string[];
       gift_code?: string;
-      gift_str_qty?: number;
+      discount_percent?: number;
       delivery_method?: "delivery" | "collection";
     };
 
@@ -39,28 +39,40 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: "Missing required checkout data." });
     }
 
-    // ---- Gift code: one-time per email (enforced server-side) ----
+    // ---- Gift code: validate and enforce 10% discount server-side ----
     const giftCode = String(gift_code || "").trim().toUpperCase();
-    const giftStrQty = Number(gift_str_qty || 0);
-    
-    if (giftStrQty > 0) {
+    const clientDiscountPercent = Number(discount_percent || 0);
+
+    // Server independently decides the discount — never trust the client amount
+    const validDiscountPercent = giftCode === "MINUS10" ? 10 : 0;
+
+    if (clientDiscountPercent > 0 && validDiscountPercent === 0) {
+      return res.status(400).json({ error: "Invalid gift code." });
+    }
+
+    if (validDiscountPercent > 0) {
       const emailKey = String(customer.email || "").trim().toLowerCase();
       const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
-    
+
       const redis = new Redis({
         url: process.env.STORAGE2_KV_REST_API_URL || '',
         token: process.env.STORAGE2_KV_REST_API_TOKEN || '',
       });
-      
+
       const alreadyUsed = await redis.get(usedKey);
-      
+
       if (alreadyUsed) {
         return res.status(400).json({ error: "Gift code already used for this email." });
       }
     }
 
-    // ✅ Your computeTotals looks like pounds (because you do gbp(total) in UI)
-    const totalPounds = Number(totals.total || 0);
+    // Recalculate server-side to prevent tampering
+    const merchTotal = Number(totals.merchTotal || 0);
+    const deliveryFee = Number(totals.deliveryFee || 0);
+    const discountAmount = validDiscountPercent > 0
+      ? Math.round(merchTotal * validDiscountPercent) / 100
+      : 0;
+    const totalPounds = Math.max(0, merchTotal - discountAmount + deliveryFee);
     const amountPence = poundsToPence(totalPounds);
 
     if (amountPence < 50) {
@@ -105,9 +117,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       delivery_fee: String(totals.deliveryFee ?? ""),
       total_paid: String(totals.total ?? ""),
 
-      // gift fields
+      // gift / discount fields
       gift_code: giftCode,
-      gift_str_qty: String(giftStrQty || 0),
+      discount_percent: String(validDiscountPercent || 0),
+      discount_amount: String(discountAmount.toFixed(2)),
 
       // internal id you like
       order_id: orderId,
@@ -138,6 +151,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       cancel_url: `${siteUrl}/?pay=cancel&provider=stripe`,
       metadata,
     });
+
+    // Mark gift code as used (after successful session creation only)
+    if (validDiscountPercent > 0 && giftCode) {
+      const emailKey = String(customer.email || "").trim().toLowerCase();
+      const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
+
+      const redis = new Redis({
+        url: process.env.STORAGE2_KV_REST_API_URL || '',
+        token: process.env.STORAGE2_KV_REST_API_TOKEN || '',
+      });
+
+      await redis.set(usedKey, "1");
+    }
 
     return res.status(200).json({ url: session.url, id: session.id });
   } catch (e: any) {
