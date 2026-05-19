@@ -1818,15 +1818,24 @@ function PayModal({
   const [giftCode, setGiftCode] = useState("");
 
   const normalizedGiftCode = giftCode.trim().toUpperCase();
-  const giftStrQty =
-    normalizedGiftCode === "MINUS10"
-      ? 1
-      : 0;
+  
+  // ── NEW: 10% off logic ──
+  const isMinus10 = normalizedGiftCode === "MINUS10";
+  const discountPercent = isMinus10 ? 10 : 0;
+  
+  // Apply discount to the merchandise total only (before delivery)
+  const discountedMerchTotal = totals.merchTotal * (1 - discountPercent / 100);
+  
+  const totalsWithDiscount = {
+    ...totals,
+    merchTotal: Math.max(0, Math.round(discountedMerchTotal * 100) / 100), // round to 2 decimals
+    total: Math.max(0, Math.round((discountedMerchTotal + totals.deliveryFee) * 100) / 100),
+    savings: isMinus10 
+      ? Math.round((totals.merchTotal - discountedMerchTotal) * 100) / 100 
+      : totals.savings,
+  };
 
-  // ✅ Use totals that include the gift bottle count (but not price)
-  const totalsWithGift = useMemo(() => {
-    return computeTotals(cart, giftStrQty, delivery_method);
-  }, [cart, giftStrQty, delivery_method]);
+  const totalsWithGift = useMemo(() => totalsWithDiscount, [totalsWithDiscount]);
 
   const {
     qtyTotal,
@@ -1847,8 +1856,8 @@ function PayModal({
     return `${p?.name ?? id} × ${qty}`;
   });
 
-  if (giftStrQty > 0) {
-    lines.push(`STR × 1 (FREE — ${normalizedGiftCode})`);
+  if (isMinus10) {
+    lines.push(`10% discount applied (${normalizedGiftCode})`);
   }
 
   const normalizedPostcode = postcode.trim().toUpperCase();
