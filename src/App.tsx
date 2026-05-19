@@ -960,7 +960,7 @@ export default function App(){
                     Dispatched on <strong>Monday</strong> and <strong>Thursday</strong>.
                   </p>
                   <p>
-                    Collection available at our Blackburn premises on <strong>Monday</strong> and <strong>Thursday</strong> from 12:00-21:00.
+                    Collection available at our <strong>Blackburn</strong> premises on <strong>Monday</strong> and <strong>Thursday</strong> from 12:00-21:00.
                     Please ensure you can collect within the specified window. UK-wide delivery is recommended for distant locations.
                   </p>
                   <p>Fermented on the day before dispatch / collection for freshness.</p>
@@ -1226,7 +1226,7 @@ export default function App(){
                 
                   <div className="text-sm sm:text-base text-white max-w-4xl space-y-1.5">
                     <p><strong>Subscribe and save.</strong> Receive <strong>7 bottle of yoghurts every week</strong>{" "}
-                      at a <strong>discount</strong>,
+                      at a <strong>10% discount</strong>,
                       fermented the day before dispatch for freshness.</p>
                     <p>Your first batch will be dispatched on the coming <strong>available Monday</strong>. Book by <strong>Saturday evening</strong> for the <strong>coming Monday</strong>.</p>
                     <p>You will be charged <strong>every week</strong> on the day of dispatch. Pause or cancel anytime by emailing <a href="mailto:support@yoghurtofyouth.co.uk" className="underline hover:text-slate-900">
