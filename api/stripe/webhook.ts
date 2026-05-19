@@ -88,40 +88,6 @@ async function sendEmailJS(templateId: string, templateParams: EmailPayload) {
   }
 }
 
-{/*async function trackKlaviyo(eventName: string, properties: any, email: string) {
-  if (!KLAVIYO_PRIVATE_KEY || !email) return;
-
-  try {
-    const response = await fetch('https://a.klaviyo.com/api/events', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Klaviyo-API-Key ${KLAVIYO_PRIVATE_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        data: {
-          type: 'event',
-          attributes: {
-            metric: { name: eventName },
-            profile: { email: email },
-            properties: {
-              ...properties,
-              "Source": "Stripe Webhook"
-            }
-          }
-        }
-      })
-    });
-
-    if (!response.ok) {
-      console.warn(`Klaviyo track failed: ${response.status}`);
-    }
-  } catch (err) {
-    console.error("Klaviyo tracking error:", err);
-    // Fail silently — do not block the webhook
-  }
-}*/}
-
 // Create Redis client once (using your active STORAGE2 vars)
 const redis = new Redis({
   url: process.env.STORAGE2_KV_REST_API_URL || "",
@@ -229,17 +195,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           await sendEmailJS(custTpl, { ...templateParams, to_email: customer_email });
         }
 
-        // After sending EmailJS for subscription
-        {/*await trackKlaviyo('Successfully Paid', {
-          SubscriptionType: "weekly",
-          Subscription: true,
-          OrderId: subId || session.id,
-          "$value": session.amount_total ? session.amount_total / 100 : 0,
-          Currency: "GBP",
-          Items: linesArr,
-          // Add any other useful fields
-        }, customer_email);*/}
-
         return res.status(200).json({ received: true });
       }
 
@@ -286,10 +241,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       // Gift code marking (after payment success)
       const giftCode = String(m.gift_code || "").trim().toUpperCase();
-      const giftStrQty = Number(m.gift_str_qty || 0);
+      const discountPercent = Number(m.discount_percent || 0);
       const emailKey = String(m.customer_email || "").trim().toLowerCase();
 
-      if (giftStrQty > 0 && giftCode && emailKey) {
+      if (discountPercent > 0 && giftCode && emailKey) {
         const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
         await redis.set(usedKey, {
           order_id: m.order_id || "",
@@ -307,19 +262,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (m.customer_email && custTpl) {
         await sendEmailJS(custTpl, { ...templateParams, to_email: m.customer_email });
       }
-
-      // After sending EmailJS for one-off
-      {/*await trackKlaviyo('Successfully Paid', {
-        SubscriptionType: "one-off",
-        Subscription: false,
-        OrderId: m.order_id || session.id,
-        "$value": Number(m.total_paid || 0),
-        Currency: "GBP",
-        Items: orderLinesPretty ? orderLinesPretty.split("\n") : [],
-        DeliveryMethod: m.delivery_method || "delivery",
-        // Add more fields from m. as needed
-      }, m.customer_email);*/}
-    }
 
     return res.status(200).json({ received: true });
   } catch (err: any) {
