@@ -152,19 +152,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       metadata,
     });
 
-    // Mark gift code as used (after successful session creation only)
-    if (validDiscountPercent > 0 && giftCode) {
-      const emailKey = String(customer.email || "").trim().toLowerCase();
-      const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
-
-      const redis = new Redis({
-        url: process.env.STORAGE2_KV_REST_API_URL || '',
-        token: process.env.STORAGE2_KV_REST_API_TOKEN || '',
-      });
-
-      await redis.set(usedKey, "1");
-    }
-
     return res.status(200).json({ url: session.url, id: session.id });
   } catch (e: any) {
     console.error(e);
