@@ -17,5 +17,16 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://connect.facebook.net https://www.facebook.com https://static.klaviyo.com https://static-tracking.klaviyo.com https://a.klaviyo.com; connect-src 'self' https://www.facebook.com https://connect.facebook.net https://a.klaviyo.com https://api.stripe.com; img-src 'self' data: https://www.facebook.com https://www.google-analytics.com; frame-src https://js.stripe.com https://hooks.stripe.com; style-src 'self' 'unsafe-inline';"
+        }
+      ]
+    }
   ]
 }
