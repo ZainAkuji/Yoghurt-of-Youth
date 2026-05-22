@@ -11,5 +11,11 @@
       "destination": "https://yoghurtofyouth.co.uk/:path*",
       "permanent": true
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
