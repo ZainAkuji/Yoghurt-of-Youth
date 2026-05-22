@@ -685,6 +685,17 @@ export default function App(){
         setConfirmedOrder(order);
         setPayMode("success");
         setReserveOpen(true);
+
+        // Meta Pixel - Purchase event
+        if (typeof window !== 'undefined' && window.fbq) {
+          const orderValue = order?.totalText
+            ? parseFloat(order.totalText.replace(/[^0-9.]/g, ''))
+            : 0;
+          window.fbq('track', 'Purchase', {
+            value: orderValue,
+            currency: 'GBP',
+          });
+        }
   
         // clear basket AFTER success (only for one-off checkout)
         if (provider === "stripe" || provider === "paypal") {
@@ -773,7 +784,17 @@ export default function App(){
     flavQty,
   } = totals;
 
-  const add = (id:string)=> setCart(c=>({ ...c, [id]: (c[id]||0)+1 }));
+  const add = (id:string)=> {
+    setCart(c=>({ ...c, [id]: (c[id]||0)+1 }));
+    if (typeof window !== 'undefined' && window.fbq) {
+      const product = PRODUCTS.find(p => p.id === id);
+      window.fbq('track', 'AddToCart', {
+        content_name: product?.name ?? id,
+        value: product?.price ?? 0,
+        currency: 'GBP',
+      });
+    }
+  };
   const sub = (id:string)=> setCart(c=>{ const n={...c}; if(!n[id]) return n; n[id]--; if(n[id]<=0) delete n[id]; return n; });
   const remove = (id:string)=> setCart(c=>{ const n={...c}; delete n[id]; return n; });
   const clear = () => {
@@ -1366,7 +1387,16 @@ export default function App(){
           sub={sub}
           remove={remove}
           clear={clear}
-          onReserve={() => openCheckout("checkout")}
+          onReserve={() => {
+            if (typeof window !== 'undefined' && window.fbq) {
+              window.fbq('track', 'InitiateCheckout', {
+                value: total,
+                currency: 'GBP',
+                num_items: qtyTotal,
+              });
+            }
+            openCheckout("checkout");
+          }}
         />
       </Drawer>
 
