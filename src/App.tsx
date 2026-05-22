@@ -1307,12 +1307,11 @@ export default function App(){
       </section>
 
       {/* Behind the scenes */}
-      <section
+      {/*<section
         id="bts"
         className="relative w-full overflow-hidden bg-black scroll-mt-32 md:scroll-mt-24"
         style={{ aspectRatio: "16 / 9" }}
       >
-        {/* Video background - full edge-to-edge like Hero */}
         <video
           className="absolute inset-0 w-full h-full object-cover"
           src="/bts.mp4"
@@ -1321,7 +1320,7 @@ export default function App(){
           muted
           playsInline
         />
-      </section>
+      </section>*/}
 
       {nutritionModal && (
         <Modal
