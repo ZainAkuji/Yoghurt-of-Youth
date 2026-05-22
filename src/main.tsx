@@ -1,9 +1,9 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App';
+import App from './App.tsx';
 import './index.css';
 
-// Meta Pixel Base Code
+// Meta Pixel Setup
 const pixelId = import.meta.env.VITE_META_PIXEL_ID || '1639585477324656';
 
 if (typeof window !== 'undefined') {
@@ -33,5 +33,8 @@ if (typeof window !== 'undefined') {
   window.fbq('track', 'PageView');
 }
 
-const el = document.getElementById('root')!;
-createRoot(el).render(<App />);
+createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
