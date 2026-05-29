@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import { sendCAPIEvent } from "./capi";
 
 declare global {
   interface Window {
@@ -34,8 +35,8 @@ async function sendCAPIEvent(
   }
 }
 
-// Fire a server-side PageView once, sharing the pixel's event ID so Meta dedupes them
-sendCAPIEvent('PageView', {}, window.__fbPageViewId);
+// Server-side PageView, sharing the pixel's ID (set in index.html) so it dedupes
+sendCAPIEvent("PageView", { eventId: window.__fbPageViewId });
 // ------------------------------------------------------------------
 
 createRoot(document.getElementById('root')!).render(
