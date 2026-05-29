@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { sendCAPIEvent, newEventId } from "./capi";
 
 const BRAND = "Yoghurt of Youth";
 const OWNER_EMAIL = "zainul_a@hotmail.co.uk";
@@ -694,7 +695,7 @@ export default function App(){
           window.fbq('track', 'Purchase', {
             value: orderValue,
             currency: 'GBP',
-          });
+          }, { eventID: order.orderId });
         }
   
         // clear basket AFTER success (only for one-off checkout)
@@ -784,15 +785,19 @@ export default function App(){
     flavQty,
   } = totals;
 
+  function trackAddToCart(contentName: string, value: number, numItems: number) {
+    const eventId = newEventId();
+    const data = { content_name: contentName, content_type: "product", value, currency: "GBP", num_items: numItems };
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("track", "AddToCart", data, { eventID: eventId });
+    }
+    sendCAPIEvent("AddToCart", { eventId, customData: data });
+  }
+
   const add = (id:string)=> {
     setCart(c=>({ ...c, [id]: (c[id]||0)+1 }));
     if (typeof window !== 'undefined' && window.fbq) {
       const product = PRODUCTS.find(p => p.id === id);
-      window.fbq('track', 'AddToCart', {
-        content_name: product?.name ?? id,
-        value: product?.price ?? 0,
-        currency: 'GBP',
-      });
     }
   };
   const sub = (id:string)=> setCart(c=>{ const n={...c}; if(!n[id]) return n; n[id]--; if(n[id]<=0) delete n[id]; return n; });
@@ -1159,14 +1164,13 @@ export default function App(){
                     
                             <button
                               onClick={() => {
-                                if (f.id === ids.PLN) { setQty(ids.PLN, qty(ids.PLN) + 7); bumpDisplay(f.id, 1); return; }
-                                if (f.id === ids.BFC) { setQty(ids.BFC, qty(ids.BFC) + 7); bumpDisplay(f.id, 1); return; }
-                                if (f.id === ids.STR) { setQty(ids.STR, qty(ids.STR) + 7); bumpDisplay(f.id, 1); return; }
-                                if (f.id === ids.MNG) { setQty(ids.MNG, qty(ids.MNG) + 7); bumpDisplay(f.id, 1); return; }
-                    
-                                // presets
-                                if (f.id === "TASTER") return incPreset("TASTER");
-                                if (f.id === "MIX") return incPreset("MIX");
+                                if (f.id === ids.PLN) { setQty(ids.PLN, qty(ids.PLN) + 7); bumpDisplay(f.id, 1); trackAddToCart("PLN", 7 * 2.7, 7); return; }
+                                if (f.id === ids.BFC) { setQty(ids.BFC, qty(ids.BFC) + 7); bumpDisplay(f.id, 1); trackAddToCart("BFC", 7 * 2.8, 7); return; }
+                                if (f.id === ids.STR) { setQty(ids.STR, qty(ids.STR) + 7); bumpDisplay(f.id, 1); trackAddToCart("STR", 7 * 2.8, 7); return; }
+                                if (f.id === ids.MNG) { setQty(ids.MNG, qty(ids.MNG) + 7); bumpDisplay(f.id, 1); trackAddToCart("MNG", 7 * 2.8, 7); return; }
+                                
+                                if (f.id === "TASTER") { incPreset("TASTER"); trackAddToCart("Taster", 2.7 + 2.8 * 3, 4); return; }
+                                if (f.id === "MIX") { incPreset("MIX"); trackAddToCart("Mixed", 2.8 * 7, 7); return; }
                               }}
                               className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
                               aria-label="Add"
@@ -1388,13 +1392,12 @@ export default function App(){
           remove={remove}
           clear={clear}
           onReserve={() => {
-            if (typeof window !== 'undefined' && window.fbq) {
-              window.fbq('track', 'InitiateCheckout', {
-                value: total,
-                currency: 'GBP',
-                num_items: qtyTotal,
-              });
+            const eventId = newEventId();
+            const data = { value: total, currency: "GBP", num_items: qtyTotal };
+            if (typeof window !== "undefined" && window.fbq) {
+              window.fbq("track", "InitiateCheckout", data, { eventID: eventId });
             }
+            sendCAPIEvent("InitiateCheckout", { eventId, customData: data });
             openCheckout("checkout");
           }}
         />
