@@ -310,6 +310,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (m.customer_email && custTpl) {
         await sendEmailJS(custTpl, { ...templateParams, to_email: m.customer_email });
       }
+    }
 
     return res.status(200).json({ received: true });
   } catch (err: any) {
