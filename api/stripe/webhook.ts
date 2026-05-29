@@ -5,6 +5,47 @@ import { Redis } from "@upstash/redis";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const KLAVIYO_PRIVATE_KEY = process.env.KLAVIYO_PRIVATE_API_KEY as string;
 
+import crypto from "crypto";
+
+const META_PIXEL_ID = "1639585477324656";
+const META_CAPI_TOKEN = process.env.META_CAPI_ACCESS_TOKEN as string;
+
+const sha256 = (v: string) => crypto.createHash("sha256").update(v).digest("hex");
+const normEmail = (e: string) => String(e || "").trim().toLowerCase();
+const normPhone = (p: string) => {
+  let d = String(p || "").replace(/\D/g, "");
+  if (d.startsWith("0")) d = "44" + d.slice(1); // UK
+  return d;
+};
+
+async function sendMetaPurchaseCAPI(opts: { orderId: string; email?: string; phone?: string; value: number }) {
+  if (!META_CAPI_TOKEN) return;
+  try {
+    const user_data: Record<string, any> = {};
+    if (opts.email) user_data.em = [sha256(normEmail(opts.email))];
+    if (opts.phone) user_data.ph = [sha256(normPhone(opts.phone))];
+
+    const payload = {
+      data: [{
+        event_name: "Purchase",
+        event_time: Math.floor(Date.now() / 1000),
+        action_source: "website",
+        event_id: opts.orderId, // <-- same ID as the browser pixel Purchase
+        user_data,
+        custom_data: { currency: "GBP", value: opts.value || 0 },
+      }],
+    };
+
+    const r = await fetch(
+      `https://graph.facebook.com/v21.0/${META_PIXEL_ID}/events?access_token=${META_CAPI_TOKEN}`,
+      { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }
+    );
+    if (!r.ok) console.error("CAPI Purchase error:", JSON.stringify(await r.json()));
+  } catch (e) {
+    console.error("CAPI Purchase failed:", e);
+  }
+}
+
 export const config = {
   api: { bodyParser: false },
 };
@@ -243,6 +284,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const giftCode = String(m.gift_code || "").trim().toUpperCase();
       const discountPercent = Number(m.discount_percent || 0);
       const emailKey = String(m.customer_email || "").trim().toLowerCase();
+
+      await sendMetaPurchaseCAPI({
+        orderId: m.order_id || session.id || "",
+        email: m.customer_email,
+        phone: m.customer_phone,
+        value: Number(m.total_paid || 0),
+      });
 
       if (discountPercent > 0 && giftCode && emailKey) {
         const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
