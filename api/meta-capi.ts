@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-const PIXEL_ID = "1639585477324656";
+const PIXEL_ID = "2464598340648858";
 const ACCESS_TOKEN = process.env.META_CAPI_ACCESS_TOKEN as string;
 const GRAPH_VERSION = "v21.0";
 
