@@ -7,7 +7,7 @@ const KLAVIYO_PRIVATE_KEY = process.env.KLAVIYO_PRIVATE_API_KEY as string;
 
 import crypto from "crypto";
 
-const META_PIXEL_ID = "1639585477324656";
+const META_PIXEL_ID = "2464598340648858";
 const META_CAPI_TOKEN = process.env.META_CAPI_ACCESS_TOKEN as string;
 
 const sha256 = (v: string) => crypto.createHash("sha256").update(v).digest("hex");
