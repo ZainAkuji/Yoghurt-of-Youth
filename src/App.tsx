@@ -41,10 +41,10 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  { id: "PLN", name: "PLN", price: 2.7, size: "250 mL", img: "/plain.png" },
-  { id: "BFC", name: "BFC", price: 2.8, size: "250 mL", img: "/bfc.png" },
-  { id: "STR", name: "STR", price: 2.8, size: "250 mL", img: "/str.png" },
-  { id: "MNG", name: "MNG", price: 2.8, size: "250 mL", img: "/mng.png" },
+  { id: "PLN", name: "PLN", price: 3.4, size: "250 mL", img: "/plain.png" },
+  { id: "BFC", name: "BFC", price: 3.5, size: "250 mL", img: "/bfc.png" },
+  { id: "STR", name: "STR", price: 3.5, size: "250 mL", img: "/str.png" },
+  { id: "MNG", name: "MNG", price: 3.5, size: "250 mL", img: "/mng.png" },
 ];
 
 const GROUPED = [
@@ -95,16 +95,16 @@ function computeTotals(
   // ✅ bottles count includes gift STR
   const qtyTotal = items.reduce((s, i) => s + i.qty, 0);
 
-  // classify by price: £2.70 = "plain", £2.80 = "flavoured"
-  const plainItems = items.filter((i) => i.price === 2.7);
-  const flavItems = items.filter((i) => i.price === 2.8);
+  // classify by price: £3.40 = "plain", £3.50 = "flavoured"
+  const plainItems = items.filter((i) => i.price === 3.4);
+  const flavItems = items.filter((i) => i.price === 3.5);
 
   const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
   const flavQty  = flavItems.reduce((s, i) => s + i.qty, 0);
 
   // unit prices (taken from products so it's future-proof)
-  const plainUnit = plainItems[0]?.price ?? 2.7;
-  const flavUnit  = flavItems[0]?.price ?? 2.8;
+  const plainUnit = plainItems[0]?.price ?? 3.4;
+  const flavUnit  = flavItems[0]?.price ?? 3.5;
 
   // "no bundle" full price (for savings display)
   const plainSubtotalRaw = plainQty * plainUnit;
@@ -804,11 +804,11 @@ export default function App(){
   };
 
   const SUBSCRIPTION_PLANS = [
-    { key: "PLN", label: "PLN (plain)", priceLabel: "£14.55", bg: "bg-white/15" },
-    { key: "BFC", label: "BFC (black forest)", priceLabel: "£15.15", bg: "bg-rose-900/40" },
-    { key: "STR", label: "STR (strawberry)", priceLabel: "£15.15", bg: "bg-pink-500/35" },
-    { key: "MNG", label: "MNG (mango)", priceLabel: "£15.15", bg: "bg-amber-300/45" },
-    { key: "MIX", label: "MIX (mixed)", priceLabel: "£15.15", bg: "MIX_STRIPES" },
+    { key: "PLN", label: "PLN (plain)", priceLabel: "£18.36", bg: "bg-white/15" },
+    { key: "BFC", label: "BFC (black forest)", priceLabel: "£18.90", bg: "bg-rose-900/40" },
+    { key: "STR", label: "STR (strawberry)", priceLabel: "£18.90", bg: "bg-pink-500/35" },
+    { key: "MNG", label: "MNG (mango)", priceLabel: "£18.90", bg: "bg-amber-300/45" },
+    { key: "MIX", label: "MIX (mixed)", priceLabel: "£18.90", bg: "MIX_STRIPES" },
   ] as const;
   
   type SubscriptionPlanKey = typeof SUBSCRIPTION_PLANS[number]["key"];
@@ -1159,13 +1159,13 @@ export default function App(){
                     
                             <button
                               onClick={() => {
-                                if (f.id === ids.PLN) { setQty(ids.PLN, qty(ids.PLN) + 7); bumpDisplay(f.id, 1); trackAddToCart("PLN", 7 * 2.7, 7); return; }
-                                if (f.id === ids.BFC) { setQty(ids.BFC, qty(ids.BFC) + 7); bumpDisplay(f.id, 1); trackAddToCart("BFC", 7 * 2.8, 7); return; }
-                                if (f.id === ids.STR) { setQty(ids.STR, qty(ids.STR) + 7); bumpDisplay(f.id, 1); trackAddToCart("STR", 7 * 2.8, 7); return; }
-                                if (f.id === ids.MNG) { setQty(ids.MNG, qty(ids.MNG) + 7); bumpDisplay(f.id, 1); trackAddToCart("MNG", 7 * 2.8, 7); return; }
+                                if (f.id === ids.PLN) { setQty(ids.PLN, qty(ids.PLN) + 7); bumpDisplay(f.id, 1); trackAddToCart("PLN", 7 * 3.4, 7); return; }
+                                if (f.id === ids.BFC) { setQty(ids.BFC, qty(ids.BFC) + 7); bumpDisplay(f.id, 1); trackAddToCart("BFC", 7 * 3.5, 7); return; }
+                                if (f.id === ids.STR) { setQty(ids.STR, qty(ids.STR) + 7); bumpDisplay(f.id, 1); trackAddToCart("STR", 7 * 3.5, 7); return; }
+                                if (f.id === ids.MNG) { setQty(ids.MNG, qty(ids.MNG) + 7); bumpDisplay(f.id, 1); trackAddToCart("MNG", 7 * 3.5, 7); return; }
                                 
-                                if (f.id === "TASTER") { incPreset("TASTER"); trackAddToCart("Taster", 2.7 + 2.8 * 3, 4); return; }
-                                if (f.id === "MIX") { incPreset("MIX"); trackAddToCart("Mixed", 2.8 * 7, 7); return; }
+                                if (f.id === "TASTER") { incPreset("TASTER"); trackAddToCart("Taster", 3.4 + 3.5 * 3, 4); return; }
+                                if (f.id === "MIX") { incPreset("MIX"); trackAddToCart("Mixed", 3.5 * 7, 7); return; }
                               }}
                               className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
                               aria-label="Add"
@@ -1182,7 +1182,7 @@ export default function App(){
                   <div className="mt-2 text-xs text-white space-y-1.5">
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        PLN: <strong>£2.70</strong> each ·{" "}
+                        PLN: <strong>£3.40</strong> each ·{" "}
                         <strong>7 for the price of 6</strong>
                       </span>
                       {totalPlain > 0 ? (
@@ -1207,7 +1207,7 @@ export default function App(){
       
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        BFC, STR &amp; MNG: <strong>£2.80</strong> each ·{" "}
+                        BFC, STR &amp; MNG: <strong>£3.50</strong> each ·{" "}
                         <strong>7 for the price of 6</strong>
                       </span>
                       {totalFlavoured > 0 ? (
@@ -1672,7 +1672,7 @@ function Basket({
         {plainRemainder > 0 && (
           <div className="flex justify-between">
             <span>PLN</span>
-            <span>{plainRemainder} × £2.70</span>
+            <span>{plainRemainder} × £3.40</span>
           </div>
         )}
 
@@ -1686,7 +1686,7 @@ function Basket({
         {flavRemainder > 0 && (
           <div className="flex justify-between">
             <span>Flavoured</span>
-            <span>{flavRemainder} × £2.80</span>
+            <span>{flavRemainder} × £3.50</span>
           </div>
         )}
 
@@ -2506,9 +2506,9 @@ function PayModal({
             </div>
             <div>
               <div className="mb-1">Bottles: {qtyTotal}</div>
-              {plainRemainder > 0 && <div>PLN: {plainRemainder} × £2.70</div>}
+              {plainRemainder > 0 && <div>PLN: {plainRemainder} × £3.40</div>}
               {plainBundles > 0 && <div>Free PLN (7 for 6): {plainBundles}</div>}
-              {flavRemainder > 0 && <div>Flavoured: {flavRemainder} × £2.80</div>}
+              {flavRemainder > 0 && <div>Flavoured: {flavRemainder} × £3.50</div>}
               {flavBundles > 0 && <div>Free flavoured (7 for 6): {flavBundles}</div>}
 
               {deliveryFee > 0 && !freeDeliveryUnlocked && (
