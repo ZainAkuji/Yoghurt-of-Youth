@@ -44,7 +44,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const clientDiscountPercent = Number(discount_percent || 0);
 
     // Server independently decides the discount — never trust the client amount
-    const validDiscountPercent = giftCode === "MINUS10" ? 10 : 0;
+    const validDiscountPercent = giftCode === "YOY25" ? 10 : 0;
 
     if (clientDiscountPercent > 0 && validDiscountPercent === 0) {
       return res.status(400).json({ error: "Invalid gift code." });
