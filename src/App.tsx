@@ -1847,7 +1847,7 @@ function PayModal({
 
   const normalizedGiftCode = giftCode.trim().toUpperCase();
   const discountPercent =
-    normalizedGiftCode === "MINUS10" ? 10 : 0;
+    normalizedGiftCode === "YOY25" ? 10 : 0;
 
   const totalsWithGift = useMemo(() => {
     return computeTotals(cart, discountPercent, delivery_method);
@@ -2523,7 +2523,7 @@ function PayModal({
 
               {totalsWithGift.discount > 0 && (
                 <div className="flex justify-between text-emerald-400 mt-1">
-                  <span>MINUS10 (10% off)</span>
+                  <span>YOY25 (10% off)</span>
                   <span>−{gbp(totalsWithGift.discount)}</span>
                 </div>
               )}
