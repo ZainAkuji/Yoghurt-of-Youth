@@ -1,5 +1,3 @@
-// src/capi.ts
-
 // One ID we attach to BOTH the pixel event and its CAPI twin, so Meta dedupes them.
 export function newEventId(): string {
   return (self.crypto && "randomUUID" in crypto)
