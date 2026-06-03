@@ -22,7 +22,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed." });
 
   try {
-    const { cart, totals, customer, delivery_method, delivery_date, delivery_window, note, lines, gift_code, discount_percent } = req.body as {
+    const { cart, totals, customer, delivery_method, delivery_date, delivery_window, note, lines, gift_code, discount_percent, gift_str_qty } = req.body as {
       cart: Record<string, number>;
       totals: any;
       customer: { name: string; email: string; phone: string; address: string };
@@ -32,6 +32,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       lines?: string[];
       gift_code?: string;
       discount_percent?: number;
+      gift_str_qty?: number;
       delivery_method?: "delivery" | "collection";
     };
 
@@ -42,15 +43,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // ---- Gift code: validate and enforce 10% discount server-side ----
     const giftCode = String(gift_code || "").trim().toUpperCase();
     const clientDiscountPercent = Number(discount_percent || 0);
+    const clientGiftStrQty = Number(gift_str_qty || 0);
 
-    // Server independently decides the discount — never trust the client amount
-    const validDiscountPercent = giftCode === "YOY25" ? 10 : 0;
+    // Server decides the benefit — never trust the client values
+    const validDiscountPercent = giftCode === "MINUS10" ? 10 : 0;
+    const validGiftStrQty = giftCode === "YOY25" ? 1 : 0;
+    const giftApplies = validDiscountPercent > 0 || validGiftStrQty > 0;
 
-    if (clientDiscountPercent > 0 && validDiscountPercent === 0) {
+    if ((clientDiscountPercent > 0 || clientGiftStrQty > 0) && !giftApplies) {
       return res.status(400).json({ error: "Invalid gift code." });
     }
 
-    if (validDiscountPercent > 0) {
+    if (giftApplies) {
       const emailKey = String(customer.email || "").trim().toLowerCase();
       const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
 
@@ -121,6 +125,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       gift_code: giftCode,
       discount_percent: String(validDiscountPercent || 0),
       discount_amount: String(discountAmount.toFixed(2)),
+      gift_str_qty: String(validGiftStrQty || 0),
 
       // internal id you like
       order_id: orderId,
