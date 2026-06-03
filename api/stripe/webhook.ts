@@ -283,6 +283,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // Gift code marking (after payment success)
       const giftCode = String(m.gift_code || "").trim().toUpperCase();
       const discountPercent = Number(m.discount_percent || 0);
+      const giftStrQty = Number(m.gift_str_qty || 0);
       const emailKey = String(m.customer_email || "").trim().toLowerCase();
 
       await sendMetaPurchaseCAPI({
@@ -292,7 +293,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         value: Number(m.total_paid || 0),
       });
 
-      if (discountPercent > 0 && giftCode && emailKey) {
+      if ((discountPercent > 0 || giftStrQty > 0) && giftCode && emailKey) {
         const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
         await redis.set(usedKey, {
           order_id: m.order_id || "",
