@@ -81,7 +81,8 @@ const GROUPED = [
 function computeTotals(
   cart: Record<string, number>,
   discountPercent: number = 0,
-  delivery_method: "delivery" | "collection" = "delivery"
+  delivery_method: "delivery" | "collection" = "delivery",
+  giftStrQty: number = 0
 ) {
   // expand cart into full product objects + qty
   const items = Object.entries(cart)
@@ -93,7 +94,7 @@ function computeTotals(
     .filter(Boolean) as Array<(typeof PRODUCTS)[number] & { qty: number }>;
 
   // ✅ bottles count includes gift STR
-  const qtyTotal = items.reduce((s, i) => s + i.qty, 0);
+  const qtyTotal = items.reduce((s, i) => s + i.qty, 0) + (giftStrQty || 0);
 
   // classify by price: £2.10 = "plain", £2.20 = "flavoured"
   const plainItems = items.filter((i) => i.price === 2.1);
@@ -179,6 +180,7 @@ function computeTotals(
 
     discount,
     discountPercent,
+    giftStrQty,
   };
 }
 
@@ -1847,11 +1849,13 @@ function PayModal({
 
   const normalizedGiftCode = giftCode.trim().toUpperCase();
   const discountPercent =
-    normalizedGiftCode === "YOY25" ? 10 : 0;
+    normalizedGiftCode === "MINUS10" ? 10 : 0;
+  const giftStrQty =
+    normalizedGiftCode === "YOY25" ? 1 : 0;
 
   const totalsWithGift = useMemo(() => {
-    return computeTotals(cart, discountPercent, delivery_method);
-  }, [cart, discountPercent, delivery_method]);
+    return computeTotals(cart, discountPercent, delivery_method, giftStrQty);
+  }, [cart, discountPercent, delivery_method, giftStrQty]);
 
   const {
     qtyTotal,
@@ -1874,6 +1878,9 @@ function PayModal({
 
   if (discountPercent > 0) {
     lines.push(`10% discount applied (${normalizedGiftCode})`);
+  }
+  if (giftStrQty > 0) {
+    lines.push(`STR × 1 (FREE — ${normalizedGiftCode})`);
   }
   
   const normalizedPostcode = postcode.trim().toUpperCase();
@@ -2068,6 +2075,7 @@ function PayModal({
                   lines,
                   gift_code: normalizedGiftCode,
                   discount_percent: discountPercent,
+                  gift_str_qty: giftStrQty,
                   savedAt: Date.now(),
                   provider: "stripe",
                 };
@@ -2087,6 +2095,7 @@ function PayModal({
                     note,
                     gift_code: normalizedGiftCode,
                     discount_percent: discountPercent,
+                    gift_str_qty: giftStrQty,
                   }),
                 });
           
@@ -2485,6 +2494,10 @@ function PayModal({
               <div className="px-3 py-2 rounded-xl bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-sm font-semibold">
                 Applied: 10% off
               </div>
+            ) : giftStrQty > 0 ? (
+              <div className="px-3 py-2 rounded-xl bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-sm font-semibold">
+                Applied: +1 free STR
+              </div>
             ) : (
               <div className="px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-white/60 text-sm">
                 Not applied
@@ -2523,7 +2536,7 @@ function PayModal({
 
               {totalsWithGift.discount > 0 && (
                 <div className="flex justify-between text-emerald-400 mt-1">
-                  <span>YOY25 (10% off)</span>
+                  <span>{normalizedGiftCode} (10% off)</span>
                   <span>−{gbp(totalsWithGift.discount)}</span>
                 </div>
               )}
@@ -2572,6 +2585,7 @@ function PayModal({
                 lines,
                 gift_code: normalizedGiftCode,
                 discount_percent: discountPercent,
+                gift_str_qty: giftStrQty,
                 savedAt: Date.now(),
                 provider: "stripe",
               };
@@ -2601,6 +2615,7 @@ function PayModal({
                   note,
                   gift_code: normalizedGiftCode,
                   discount_percent: discountPercent,
+                  gift_str_qty: giftStrQty,
                 }),
               });
 
@@ -2665,6 +2680,7 @@ function PayModal({
                 lines,
                 gift_code: normalizedGiftCode,
                 discount_percent: discountPercent,
+                gift_str_qty: giftStrQty,
                 savedAt: Date.now(),
                 provider: "paypal",
               };
@@ -2684,6 +2700,7 @@ function PayModal({
                   note,
                   gift_code: normalizedGiftCode,
                   discount_percent: discountPercent,
+                  gift_str_qty: giftStrQty,
                 }),
               });
           
