@@ -1329,7 +1329,7 @@ export default function App(){
       </section>
 
       {/* Behind the scenes */}
-      {/*<section
+      <section
         id="bts"
         className="relative w-full overflow-hidden bg-black scroll-mt-32 md:scroll-mt-24"
         style={{ aspectRatio: "16 / 9" }}
@@ -1342,7 +1342,7 @@ export default function App(){
           muted
           playsInline
         />
-      </section>*/}
+      </section>
 
       {nutritionModal && (
         <Modal
