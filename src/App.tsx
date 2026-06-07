@@ -1991,7 +1991,7 @@ function PayModal({
             className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
           <input value={email} onChange={(e) => setEmail(e.target.value)} required type="email" placeholder="Email"
             className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-          <input value={phone} onChange={(e) => setPhone(e.target.value)} required type="tel" placeholder="Mobile number"
+          <input value={phone} onChange={(e) => setPhone(e.target.value)} required type="tel" placeholder="Mobile number (for dispatch information)"
             className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
           <input value={streetAddress} onChange={(e) => setStreetAddress(e.target.value)} required placeholder="Street address"
             className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
