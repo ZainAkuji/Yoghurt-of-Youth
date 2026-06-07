@@ -2132,7 +2132,7 @@ function PayModal({
       typeof order.delivery_method === "string" &&
       order.delivery_method.toLowerCase() === "collection";
     
-    const dateLabel = isCollection ? "Collection date" : "Dispatch date";
+    const dateLabel = isCollection ? "Collection date:" : "Dispatch date:";
     const addressLabel = isCollection ? "Collection address" : "Delivery address";
     
     const collectionMapsUrl =
@@ -2439,13 +2439,12 @@ function PayModal({
           </>
         )}
 
-        <div className="mt-2 text-sm text-white/80">
-          {delivery_method === "delivery" ? "Dispatch date" : "Collection date"}
-        </div>
-
         {!isSubscription && (
-          <div className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white">
-            {formatDateUK(date)} ({weekdayFromISO(date)})
+          <div className="md:col-span-2 mt-2 pl-1 text-sm text-white/80">
+            {delivery_method === "delivery" ? "Dispatch date" : "Collection date"}:{" "}
+            <span className="font-semibold text-white">
+              {formatDateUK(date)} ({weekdayFromISO(date)})
+            </span>
           </div>
         )}
 
