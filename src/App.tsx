@@ -2118,10 +2118,10 @@ function PayModal({
                 setSending(false);
               }
             }}
-            className="sm:w-72 h-12 rounded-2xl px-1 text-sm font-semibold text-slate-900 bg-[#635BFF] hover:bg-[#5147ff] transition flex items-center justify-center"
+            className="sm:w-72 h-12 rounded-2xl px-1 text-sm font-semibold text-white bg-[#635BFF] hover:bg-[#5147ff] transition flex items-center justify-center"
           >
             <img src="/stripe_logo.png" alt="Stripe" className="h-14" />
-            <span className="text-white/40">|</span>
+            <span className="text-white/40 ml-2">|</span>
             <span>{sending ? "Processing…" : "Subscribe"}</span>
           </button>
           
@@ -2648,10 +2648,10 @@ function PayModal({
               setSending(false);
             }
           }}
-          className="sm:w-72 h-12 rounded-2xl px-1 text-sm font-semibold text-slate-900 bg-[#635BFF] hover:bg-[#5147ff] transition flex items-center justify-center"
+          className="sm:w-72 h-12 rounded-2xl px-1 text-sm font-semibold text-white bg-[#635BFF] hover:bg-[#5147ff] transition flex items-center justify-center"
         >
           <img src="/stripe_logo.png" alt="Stripe" className="h-14" />
-          <span className="text-white/40">|</span>
+          <span className="text-white/40 ml-2">|</span>
           <span>{sending ? "Processing…" : `Pay ${gbp(total)}`}</span>
         </button>
 
