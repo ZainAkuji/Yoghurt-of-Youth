@@ -1801,6 +1801,18 @@ function weekdayFromISO(iso: string) {
   return names[date.getDay()];
 }
 
+function nextDispatchISO(): string {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  const day = d.getDay(); // 0 Sun .. 6 Sat
+  // Wed–Sat -> next Monday;  Sun–Tue -> next Thursday
+  const target = (day >= 3 && day <= 6) ? 1 : 4;
+  let add = (target - day + 7) % 7;
+  if (add === 0) add = 7; // never today
+  d.setDate(d.getDate() + add);
+  return toISODate(d);
+}
+
 function PayModal({
   onClose,
   cart,
@@ -1822,9 +1834,6 @@ function PayModal({
 
   const isSubscription = payKind === "subscription" && !!subscriptionPlan;
 
-  const deliveryOptions = deliveryDateOptions();
-  const initialDate = deliveryOptions[0] || "";
-
   const [delivery_method, setDeliveryMethod] = useState<"delivery" | "collection">("delivery");
 
   const firstISO = nextEligibleMondayISO();
@@ -1837,7 +1846,7 @@ function PayModal({
   const [streetAddress, setStreetAddress] = useState("");
   const [townCity, setTownCity] = useState("");
 
-  const [date, setDate] = useState(initialDate);
+  const date = nextDispatchISO();
   const formattedDate = formatDateUK(date);
   const deliveryWindow = "18:30–20:00";
 
@@ -1902,12 +1911,6 @@ function PayModal({
       setError("Please complete all required fields first.");
       return false;
     }
-    if (!isSubscription) {
-      if (!deliveryOptions.includes(date)) {
-        setError("Please choose a valid dispatch date (Monday or Thursday).");
-        return false;
-      }
-    }
     if (isSubscription && !subscriptionPlan) {
       setError("Please choose a subscription plan.");
       return false;
@@ -1943,10 +1946,6 @@ function PayModal({
       setTownCity(parts[1] || "");
       setPostcode(parts[2] || "");
   
-      // Only restore date for ONE-OFF drafts
-      if (draft?.kind !== "subscription" && draft?.delivery_date_iso) {
-        setDate(draft.delivery_date_iso);
-      }
     } catch (e) {
       console.error("Failed to restore checkout draft", e);
     }
@@ -2459,21 +2458,13 @@ function PayModal({
         )}
 
         <div className="mt-2 text-sm text-white/80">
-          {delivery_method === "delivery" ? "Please select dispatch date" : "Please select collection date"}
+          {delivery_method === "delivery" ? "Dispatch date" : "Collection date"}
         </div>
 
         {!isSubscription && (
-          <select
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/40"
-          >
-            {deliveryOptions.map((d) => (
-              <option key={d} value={d} className="bg-slate-900 text-white">
-                {formatDateUK(d)} ({weekdayFromISO(d)})
-              </option>
-            ))}
-          </select>
+          <div className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white">
+            {formatDateUK(date)} ({weekdayFromISO(date)})
+          </div>
         )}
 
         <input
