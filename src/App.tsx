@@ -2440,7 +2440,7 @@ function PayModal({
         )}
 
         {!isSubscription && (
-          <div className="mt-2 pl-3 text-sm text-white/80">
+          <div className="md:col-span-2 pl-3 text-sm text-white/80">
             {delivery_method === "delivery" ? "Dispatch date" : "Collection date"}:{" "}
             <span className="font-semibold text-white">
               {formatDateUK(date)} ({weekdayFromISO(date)})
