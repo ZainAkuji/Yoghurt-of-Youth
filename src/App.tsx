@@ -1762,24 +1762,6 @@ function nextDeliveryOnOrAfter(start: Date) {
   return d;
 }
 
-// Create a list of allowed delivery dates (e.g. next ~10 slots)
-function deliveryDateOptions(): string[] {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  // must be at least 2 days from today
-  const minDate = addDays(today, 2);
-  const options: string[] = [];
-
-  let current = nextDeliveryOnOrAfter(minDate);
-  for (let i = 0; i < 10; i++) {
-    options.push(toISODate(current));
-    current = nextDeliveryOnOrAfter(addDays(current, 1));
-  }
-
-  return options;
-}
-
 function formatDateUK(iso: string) {
   if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso || "";
   const [y, m, d] = iso.split("-");
