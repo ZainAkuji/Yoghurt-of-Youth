@@ -1955,6 +1955,23 @@ function PayModal({
     sessionStorage.setItem("yoy_checkout_draft", JSON.stringify(updated));
   }, [name, email, phone, fullAddress, note, delivery_method, giftCode]);
 
+  // Tell Klaviyo who this is + that they started checkout (powers abandoned-cart flow)
+  useEffect(() => {
+    if (isSubscription) return;
+    if (!email || !email.includes("@")) return;   // wait for a real-ish email
+    if (qtyTotal <= 0) return;
+
+    const _learnq = (window as any)._learnq || [];
+    _learnq.push(["identify", { $email: email, $first_name: name || "" }]);
+    _learnq.push(["track", "Started Checkout", {
+      $value: total,
+      ItemNames: lines,
+      Items: lines,
+      Bottles: qtyTotal,
+      CheckoutURL: "https://yoghurtofyouth.co.uk/",
+    }]);
+  }, [email, qtyTotal, total]);  // fires when email/cart settle
+
   // ✅ SUBSCRIPTION MODE (Weekly Gut Punch)
   if (isSubscription && subscriptionPlan) {
     return (
