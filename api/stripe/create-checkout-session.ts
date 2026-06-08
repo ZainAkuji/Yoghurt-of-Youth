@@ -142,6 +142,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       customer_email: customer.email,
+      customer_creation: "always",
+      billing_address_collection: "required",
+      phone_number_collection: { enabled: true },
+      // Only ask Stripe for a shipping address when it's actually a delivery
+      ...(delivery_method === "collection"
+        ? {}
+        : { shipping_address_collection: { allowed_countries: ["GB"] } }),
       line_items: [
         {
           price_data: {
