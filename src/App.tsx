@@ -1881,12 +1881,10 @@ function PayModal({
       ? "Collection"
       : [streetAddress.trim(), townCity.trim(), normalizedPostcode].filter(Boolean).join(", ");
 
-  const valid =
-    !!name &&
-    !!email &&
-    !!phone &&
-    (isSubscription ? true : (qtyTotal > 0 && !!date)) &&
-    (isSubscription ? true : (delivery_method === "delivery" ? (!!postcode && !!streetAddress && !!townCity) : true));
+  const valid = isSubscription
+    ? (!!name && !!email && !!phone &&
+       (delivery_method === "delivery" ? (!!postcode && !!streetAddress && !!townCity) : true))
+    : (qtyTotal > 0 && !!date);
 
   function validateBeforePay(): boolean {
     if (!valid) {
@@ -2356,38 +2354,13 @@ function PayModal({
   return (
     <Modal onClose={onClose} title="Checkout & Delivery">
       <p className="text-sm text-white/80">
-        Please fill in the details below then select the payment button.
-        We deliver UK-wide,
-        dispatch every <span className="font-semibold">Monday</span> & <span className="font-semibold">Thursday</span>,
+        Choose your options below, then continue to payment.
+        You'll enter your contact and delivery details securely on the next step.
+        We deliver UK-wide, dispatch every <span className="font-semibold">Monday</span> & <span className="font-semibold">Thursday</span>,
         and use DPD Next Day delivery.
       </p>
 
-      {/* customer details */}
       <div className="mt-4 grid md:grid-cols-2 gap-4">
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          placeholder="Full name"
-          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
-        />
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          type="email"
-          placeholder="Email"
-          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
-        />
-        <input
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          required
-          type="tel"
-          placeholder="Mobile number (for dispatch information)"
-          className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
-        />
-
         <div className="flex gap-2">
           <button
             type="button"
@@ -2415,29 +2388,6 @@ function PayModal({
             Collection
           </button>
         </div>
-
-        {delivery_method === "delivery" && (
-          <>
-            <input
-              value={streetAddress}
-              onChange={(e) => setStreetAddress(e.target.value)}
-              required placeholder="Street address"
-              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
-            />
-            <input
-              value={postcode}
-              onChange={(e) => setPostcode(e.target.value)}
-              required placeholder="Postcode (UK)"
-              className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
-            />
-            <input
-             value={townCity}
-             onChange={(e) => setTownCity(e.target.value)}
-             required placeholder="Town/City"
-             className="md:col-span-2 rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40"
-            />
-          </>
-        )}
 
         {!isSubscription && (
           <div className="md:col-span-2 pl-3 text-sm text-white/80">
