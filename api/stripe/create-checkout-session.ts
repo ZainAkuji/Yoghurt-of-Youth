@@ -36,7 +36,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       delivery_method?: "delivery" | "collection";
     };
 
-    if (!cart || !totals || !customer?.email) {
+    if (!cart || !totals) {
       return res.status(400).json({ error: "Missing required checkout data." });
     }
 
@@ -52,22 +52,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if ((clientDiscountPercent > 0 || clientGiftStrQty > 0) && !giftApplies) {
       return res.status(400).json({ error: "Invalid gift code." });
-    }
-
-    if (giftApplies) {
-      const emailKey = String(customer.email || "").trim().toLowerCase();
-      const usedKey = `yoy_gift_used:${giftCode}:${emailKey}`;
-
-      const redis = new Redis({
-        url: process.env.STORAGE2_KV_REST_API_URL || '',
-        token: process.env.STORAGE2_KV_REST_API_TOKEN || '',
-      });
-
-      const alreadyUsed = await redis.get(usedKey);
-
-      if (alreadyUsed) {
-        return res.status(400).json({ error: "Gift code already used for this email." });
-      }
     }
 
     // Recalculate server-side to prevent tampering
@@ -141,7 +125,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      customer_email: customer.email,
       customer_creation: "always",
       billing_address_collection: "required",
       phone_number_collection: { enabled: true },
