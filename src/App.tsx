@@ -2137,7 +2137,7 @@ function PayModal({
             <div className="font-mono font-semibold tracking-wide break-all">
               {order.orderId || "—"}
             </div>
-          </div>0
+          </div>
   
           <div className="my-4 border-t border-white/20" />
   
