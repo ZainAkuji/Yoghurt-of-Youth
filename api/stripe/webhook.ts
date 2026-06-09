@@ -253,13 +253,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         ? `${deliveryWeekday} ${m.delivery_date}`
         : (m.delivery_date || "");
 
+      // Prefer details Stripe collected; fall back to form metadata
+      const cd = session.customer_details || ({} as any);
+      const isCollectionOrder = m.delivery_method === "collection";
+
+      const customerName = String(m.customer_name || cd.name || "");
+      const customerEmail = String(m.customer_email || cd.email || session.customer_email || "");
+      const customerPhone = String(m.customer_phone || cd.phone || "");
+
+      // Shipping address (delivery) lives on shipping_details; collection has none
+      const shippingAddr =
+        (session as any).shipping_details?.address ||
+        (session as any).collected_information?.shipping_details?.address ||
+        null;
+      const stripeAddress = isCollectionOrder
+        ? "Collection"
+        : safeJoinAddress(shippingAddr) || safeJoinAddress(cd.address);
+
+      const customerAddress = String(m.customer_address || stripeAddress || "");
+
       const templateParams = {
         brand: "Yoghurt of Youth",
         owner_email: ownerEmail,
-        customer_name: m.customer_name || "",
-        customer_email: m.customer_email || "",
-        customer_phone: m.customer_phone || "",
-        customer_address: m.customer_address || "",
+        customer_name: customerName,
+        customer_email: customerEmail,
+        customer_phone: customerPhone,
+        customer_address: customerAddress,
         delivery_date: deliveryDatePretty,
         delivery_window: m.delivery_window || "",
         note: m.note || "",
@@ -284,12 +303,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const giftCode = String(m.gift_code || "").trim().toUpperCase();
       const discountPercent = Number(m.discount_percent || 0);
       const giftStrQty = Number(m.gift_str_qty || 0);
-      const emailKey = String(m.customer_email || "").trim().toLowerCase();
+      const emailKey = customerEmail.trim().toLowerCase();
 
       await sendMetaPurchaseCAPI({
         orderId: m.order_id || session.id || "",
-        email: m.customer_email,
-        phone: m.customer_phone,
+        email: customerEmail,
+        phone: customerPhone,
         value: Number(m.total_paid || 0),
       });
 
@@ -308,8 +327,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (ownerTpl) {
         await sendEmailJS(ownerTpl, { ...templateParams, to_email: ownerEmail });
       }
-      if (m.customer_email && custTpl) {
-        await sendEmailJS(custTpl, { ...templateParams, to_email: m.customer_email });
+      if (customerEmail && custTpl) {
+        await sendEmailJS(custTpl, { ...templateParams, to_email: customerEmail });
       }
     }
 
