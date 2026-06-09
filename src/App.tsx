@@ -656,6 +656,8 @@ export default function App(){
       try {
         let paid = false;
         let orderId = "";
+        let stripeName = "";
+        let stripeAddress = "";
   
         if (provider === "stripe" || provider === "stripe_sub") {
           const sessionId = params.get("session_id");
@@ -669,6 +671,8 @@ export default function App(){
   
           paid = true;
           orderId = data.order_id || "";
+          stripeName = data.customer_name || "";
+          stripeAddress = data.customer_address || "";
         }
   
         if (!paid) return;
@@ -684,6 +688,12 @@ export default function App(){
         );
   
         if (!order) return;
+
+        // Use the details Stripe collected (the trimmed form no longer has them)
+        if (stripeName) order.name = stripeName;
+        if (order.delivery_method !== "collection" && stripeAddress) {
+          order.address = stripeAddress;
+        }
   
         setConfirmedOrder(order);
         setPayMode("success");
