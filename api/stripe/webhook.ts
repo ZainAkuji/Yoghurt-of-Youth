@@ -199,11 +199,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           console.warn("Could not read subscription line items:", e);
         }
 
-        const cd = session.customer_details || {};
-        const customer_name = String((sm as any).name || (cd as any).name || "");
-        const customer_email = String((cd as any).email || session.customer_email || "");
-        const customer_phone = String((sm as any).phone || (cd as any).phone || "");
-        const customer_address = String((sm as any).address || "") || safeJoinAddress((cd as any).address) || "";
+        const cd = session.customer_details || ({} as any);
+        const customer_name = String((sm as any).name || cd.name || "");
+        const customer_email = String(cd.email || session.customer_email || "");
+        const customer_phone = String((sm as any).phone || cd.phone || "");
+        const subShippingAddr =
+          (session as any).shipping_details?.address ||
+          (session as any).collected_information?.shipping_details?.address ||
+          null;
+        const customer_address =
+          String((sm as any).address || "") ||
+          safeJoinAddress(subShippingAddr) ||
+          safeJoinAddress(cd.address) ||
+          "";
 
         const firstDelivery = sub?.trial_end ? formatDateUKFromUnixSeconds(sub.trial_end) : "";
 

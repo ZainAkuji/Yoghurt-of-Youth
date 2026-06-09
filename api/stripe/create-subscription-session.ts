@@ -50,7 +50,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const { planKey, customer, note } = req.body || {};
     if (!planKey) return res.status(400).json({ error: "Missing planKey" });
-    if (!customer?.email) return res.status(400).json({ error: "Missing customer email" });
 
     const price = getPriceId(String(planKey));
     
@@ -61,10 +60,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       line_items: [{ price, quantity: 1 }],
-      customer_email: String(customer.email),
-
       phone_number_collection: { enabled: true },
       billing_address_collection: "required",
+      shipping_address_collection: { allowed_countries: ["GB"] },
 
       subscription_data: {
         // ✅ first charge occurs at trial_end; repeats weekly because Price is weekly
