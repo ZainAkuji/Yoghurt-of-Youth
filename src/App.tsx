@@ -1882,8 +1882,7 @@ function PayModal({
       : [streetAddress.trim(), townCity.trim(), normalizedPostcode].filter(Boolean).join(", ");
 
   const valid = isSubscription
-    ? (!!name && !!email && !!phone &&
-       (delivery_method === "delivery" ? (!!postcode && !!streetAddress && !!townCity) : true))
+    ? true
     : (qtyTotal > 0 && !!date);
 
   function validateBeforePay(): boolean {
@@ -1962,25 +1961,8 @@ function PayModal({
           We dispatch your first batch on {" "}<span className="font-semibold">{firstText}</span> then every following <span className="font-semibold">Monday</span>.
           We deliver UK-wide, and use DPD Next Day delivery.
           The weekly delivery charge is <span className="font-semibold">£4.95</span>.
-          Please fill in the details below.
+          Please fill in your contact and delivery details securely on the next step.
         </p>
-
-        <div className="mt-4 grid md:grid-cols-2 gap-4">
-          <input value={name} onChange={(e) => setName(e.target.value)} required placeholder="Full name"
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-          <input value={email} onChange={(e) => setEmail(e.target.value)} required type="email" placeholder="Email"
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-          <input value={phone} onChange={(e) => setPhone(e.target.value)} required type="tel" placeholder="Mobile number (for dispatch information)"
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-          <input value={streetAddress} onChange={(e) => setStreetAddress(e.target.value)} required placeholder="Street address"
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-          <input value={postcode} onChange={(e) => setPostcode(e.target.value)} required placeholder="Postcode (UK)"
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-          <input value={townCity} onChange={(e) => setTownCity(e.target.value)} required placeholder="Town/City"
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40" />
-          <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Order note (optional)"
-            className="rounded-xl border border-white/30 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/40 md:col-span-2" />
-        </div>
 
         {error && <p className="mt-3 text-sm text-rose-300">{error}</p>}
 
