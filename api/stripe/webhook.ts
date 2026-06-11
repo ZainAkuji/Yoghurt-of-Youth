@@ -265,7 +265,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const cd = session.customer_details || ({} as any);
       const isCollectionOrder = m.delivery_method === "collection";
 
-      const customerName = String(m.customer_name || cd.name || "");
+      const shipName =
+        (session as any).shipping_details?.name ||
+        (session as any).collected_information?.shipping_details?.name ||
+        "";
+      const customerName = String(m.customer_name || cd.name || shipName || "");
       const customerEmail = String(m.customer_email || cd.email || session.customer_email || "");
       const customerPhone = String(m.customer_phone || cd.phone || "");
 
