@@ -32,7 +32,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       (session as any).collected_information?.shipping_details?.address ||
       null;
 
-    const customer_name = String(cd.name || "");
+    const shipName =
+      (session as any).shipping_details?.name ||
+      (session as any).collected_information?.shipping_details?.name ||
+      "";
+    const customer_name = String(cd.name || shipName || "");
     const customer_address = safeJoinAddress(shippingAddr) || safeJoinAddress(cd.address) || "";
 
     return res.status(200).json({ paid, order_id, customer_name, customer_address });
