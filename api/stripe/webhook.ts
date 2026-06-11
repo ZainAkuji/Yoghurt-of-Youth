@@ -200,7 +200,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         const cd = session.customer_details || ({} as any);
-        const customer_name = String((sm as any).name || cd.name || "");
+        const subShipName =
+          (session as any).shipping_details?.name ||
+          (session as any).collected_information?.shipping_details?.name ||
+          "";
+        const customer_name = String((sm as any).name || cd.name || subShipName || "");
         const customer_email = String(cd.email || session.customer_email || "");
         const customer_phone = String((sm as any).phone || cd.phone || "");
         const subShippingAddr =
