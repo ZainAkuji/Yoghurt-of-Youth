@@ -1,6 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import Stripe from "stripe";
-import { kv } from "@vercel/kv";
 import { Redis } from "@upstash/redis";  // ← correct import
 
 // If your totals are in GBP pounds (e.g. 12.50), convert to pence (1250)
