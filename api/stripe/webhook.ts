@@ -100,35 +100,6 @@ function subscriptionLinesFromPlanKey(planKey: string) {
 
 type EmailPayload = Record<string, any>;
 
-async function sendEmailJS(templateId: string, templateParams: EmailPayload) {
-  const serviceId = process.env.EMAILJS_SERVICE_ID;
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
-  if (!serviceId || !publicKey || !privateKey) {
-    console.error("Missing EmailJS env vars");
-    return; // fail silently to avoid blocking webhook response
-  }
-  try {
-    const r = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        service_id: serviceId,
-        template_id: templateId,
-        user_id: publicKey,
-        accessToken: privateKey,
-        template_params: templateParams,
-      }),
-    });
-    const text = await r.text();
-    console.log("EmailJS response:", r.status, text);
-    if (!r.ok) throw new Error(`EmailJS failed: ${r.status} ${text}`);
-  } catch (err) {
-    console.error("EmailJS send failed:", err);
-    // Do not throw — allow webhook to return 200 to Stripe
-  }
-}
-
 async function sendResend(to: string, subject: string, html: string) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
@@ -203,7 +174,7 @@ function buildOneOffCustomerHtml(p: {
       <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tbody><tr>
         <td style="vertical-align:middle;"><img src="https://yoghurtofyouth.co.uk/logo.png" alt="Yoghurt of Youth" height="32" style="display:block;"></td>
         <td style="vertical-align:middle;padding-left:8px;font-size:18px;font-weight:700;">Yoghurt of Youth</td>
-      </tbody></tr></table>
+      </tr></tbody></table>
     </div>
     <div style="padding:20px;">
       <p style="margin:0 0 12px;">Dear ${p.customerName},</p>
@@ -240,6 +211,168 @@ function buildOneOffCustomerHtml(p: {
     <div style="padding:12px;text-align:center;font-size:12px;color:#777;border-top:1px solid #e2e8f0;">
       This confirmation was sent to ${p.customerEmail}<br>
       Yoghurt of Youth · Blackburn, Lancashire
+    </div>
+  </div>
+</div>`;
+}
+
+function buildOneOffOwnerHtml(p: {
+  customerName: string; customerEmail: string; customerPhone: string;
+  customerAddress: string; isCollection: boolean; orderId: string;
+  deliveryDate: string; bottles: string; merchandiseTotal: string;
+  deliveryFee: string; paymentMethod: string; totalPaid: string;
+  orderLines: string; note: string;
+}) {
+  const sectionTitle = p.isCollection ? "Collection" : "Delivery";
+  const dateLabel = p.isCollection ? "Collection date" : "Dispatch date";
+  const addressRow = p.isCollection ? "" :
+    `<tr><td style="padding:6px 0;color:#555;"><strong>Address:</strong></td><td style="padding:6px 0;">${p.customerAddress}</td></tr>`;
+  const deliveryFeeRow = p.isCollection ? "" :
+    `<tr><td style="padding:6px 0;color:#555;"><strong>Delivery fee:</strong></td><td style="padding:6px 0;">${p.deliveryFee}</td></tr>`;
+  const noteHtml = p.note ?
+    `<div style="margin-top:14px;background:#fff7ed;border:1px solid #fed7aa;padding:12px;"><strong>Customer note:</strong><br>${p.note}</div>` : "";
+  return `<div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;color:#333;padding:16px;background-color:#f5f5f5;">
+  <div style="max-width:600px;margin:auto;background-color:#fff;border-top:6px solid #1e293b;">
+    <div style="padding:16px;background-color:#f9fafb;border-bottom:1px solid #e2e8f0;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tbody><tr>
+        <td style="vertical-align:middle;"><img src="https://yoghurtofyouth.co.uk/logo.png" alt="Yoghurt of Youth" height="32" style="display:block;"></td>
+        <td style="vertical-align:middle;padding-left:8px;font-size:18px;font-weight:700;">Yoghurt of Youth</td>
+      </tr></tbody></table>
+    </div>
+    <div style="padding:20px;">
+      <p style="margin:0 0 14px;">New order received.</p>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;padding:12px;margin-bottom:16px;">
+        <strong>Order reference:</strong><br><span style="font-size:16px;font-weight:700;letter-spacing:0.3px;">${p.orderId}</span>
+      </div>
+      <h4 style="margin:0 0 8px;font-size:16px;">${sectionTitle}</h4>
+      <table role="presentation" style="border-collapse:collapse;width:100%;margin-bottom:14px;"><tbody>
+        <tr><td style="padding:6px 0;width:45%;color:#555;"><strong>${dateLabel}:</strong></td><td style="padding:6px 0;">${p.deliveryDate}</td></tr>
+        ${addressRow}
+      </tbody></table>
+      <h4 style="margin:0 0 8px;font-size:16px;">Customer</h4>
+      <table role="presentation" style="border-collapse:collapse;width:100%;margin-bottom:14px;"><tbody>
+        <tr><td style="padding:6px 0;width:45%;color:#555;"><strong>Name:</strong></td><td style="padding:6px 0;">${p.customerName}</td></tr>
+        <tr><td style="padding:6px 0;color:#555;"><strong>Mobile:</strong></td><td style="padding:6px 0;">${p.customerPhone}</td></tr>
+        <tr><td style="padding:6px 0;color:#555;"><strong>Email:</strong></td><td style="padding:6px 0;">${p.customerEmail}</td></tr>
+      </tbody></table>
+      <h4 style="margin:0 0 8px;font-size:16px;">Items</h4>
+      <pre style="background:#f8fafc;padding:10px;border:1px solid #e2e8f0;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin:0 0 14px;">${p.orderLines}</pre>
+      <h4 style="margin:0 0 8px;font-size:16px;">Pricing &amp; breakdown</h4>
+      <table role="presentation" style="border-collapse:collapse;width:100%;"><tbody>
+        <tr><td style="padding:6px 0;width:45%;color:#555;"><strong>Total bottles:</strong></td><td style="padding:6px 0;">${p.bottles}</td></tr>
+        <tr><td style="padding:6px 0;color:#555;"><strong>Merchandise total:</strong></td><td style="padding:6px 0;">${p.merchandiseTotal}</td></tr>
+        ${deliveryFeeRow}
+        <tr><td style="padding:6px 0;color:#555;"><strong>Payment method:</strong></td><td style="padding:6px 0;">${p.paymentMethod}</td></tr>
+        <tr><td style="padding:10px 0;border-top:1px solid #e2e8f0;"><strong>Total paid:</strong></td><td style="padding:10px 0;border-top:1px solid #e2e8f0;"><strong>${p.totalPaid}</strong></td></tr>
+      </tbody></table>
+      ${noteHtml}
+      <p style="margin:16px 0 0;"><strong>– Yoghurt of Youth</strong></p>
+    </div>
+    <div style="padding:12px;text-align:center;font-size:12px;color:#777;border-top:1px solid #e2e8f0;">
+      Owner notification · Yoghurt of Youth · Blackburn, Lancashire
+    </div>
+  </div>
+</div>`;
+}
+
+function buildSubCustomerHtml(p: {
+  customerName: string; customerEmail: string; customerAddress: string;
+  orderId: string; deliveryDate: string; totalPaid: string;
+  orderLines: string; note: string;
+}) {
+  const noteHtml = p.note ? `<p style="margin:12px 0 0;"><strong>Order note:</strong><br>${p.note}</p>` : "";
+  return `<div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;color:#333;padding:16px;background-color:#f5f5f5;">
+  <div style="max-width:600px;margin:auto;background-color:#fff;border-top:6px solid #1e293b;">
+    <div style="padding:16px;background-color:#f9fafb;border-bottom:1px solid #e2e8f0;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tbody><tr>
+        <td style="vertical-align:middle;"><img src="https://yoghurtofyouth.co.uk/logo.png" alt="Yoghurt of Youth" height="32" style="display:block;"></td>
+        <td style="vertical-align:middle;padding-left:8px;font-size:18px;font-weight:700;">Yoghurt of Youth</td>
+      </tr></tbody></table>
+    </div>
+    <div style="padding:20px;">
+      <p style="margin:0 0 12px;">Dear ${p.customerName},</p>
+      <p style="margin:0 0 14px;">Thank you for subscribing to <strong>Yoghurt of Youth</strong>. Your <strong>Weekly Gut Punch</strong> subscription is now live. Your yoghurts are fermented on the day before dispatch for freshness.</p>
+      <p style="margin:0 0 14px;">Your order will be sent via DPD Next Day delivery and should arrive the next day. The package is insulated and chilled to maintain the correct temperature for the products during transit.</p>
+      <p style="margin:0 0 14px;">Please ensure someone is available to receive the parcel, or select a safe place if preferred.</p>
+      <p style="margin:0 0 14px;">After the first dispatch day, your Weekly Gut Punch will be dispatched every following Monday.</p>
+      <p style="margin:0 0 18px;">Below are the full details of your subscription.</p>
+      <p style="margin:0 0 18px;">Please leave us a review on Google and follow us on Instagram. Links are down below.</p>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;padding:12px;margin-bottom:16px;">
+        <strong>Subscription reference:</strong><br><span style="font-size:14px;font-weight:700;letter-spacing:0.2px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;word-break:break-all;">${p.orderId}</span>
+      </div>
+      <table role="presentation" style="border-collapse:collapse;width:100%;"><tbody>
+        <tr><td style="padding:6px 0;width:45%;color:#555;"><strong>First dispatch:</strong></td><td style="padding:6px 0;">${p.deliveryDate}</td></tr>
+        <tr><td style="padding:6px 0;color:#555;"><strong>Billing:</strong></td><td style="padding:6px 0;">Weekly · charged on <strong>Monday</strong></td></tr>
+        <tr><td style="padding:6px 0;color:#555;"><strong>Delivery address:</strong></td><td style="padding:6px 0;">${p.customerAddress}</td></tr>
+        <tr><td style="padding:10px 0;border-top:1px solid #e2e8f0;"><strong>Weekly price:</strong></td><td style="padding:10px 0;border-top:1px solid #e2e8f0;"><strong>${p.totalPaid}</strong></td></tr>
+      </tbody></table>
+      <h4 style="margin:20px 0 8px;font-size:16px;">What you'll receive each week</h4>
+      <pre style="background:#f8fafc;padding:10px;border:1px solid #e2e8f0;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;">${p.orderLines}</pre>
+      ${noteHtml}
+      <p style="margin:18px 0 0;">We alternate <strong>PRCXN</strong> and <strong>SPCTRL</strong> by week.</p>
+      <p style="margin:14px 0 0;">You will receive a text when your order is dispatched.</p>
+      <p style="margin:14px 0 0;">If you have any questions, please email <a href="mailto:support@yoghurtofyouth.co.uk" style="color:#0ea5e9;font-weight:600;text-decoration:none;">support@yoghurtofyouth.co.uk</a>.</p>
+      <p style="margin:14px 0 0;">To cancel, please email <a href="mailto:support@yoghurtofyouth.co.uk" style="color:#0ea5e9;font-weight:600;text-decoration:none;">support@yoghurtofyouth.co.uk</a> and include your <strong>name</strong> and <strong>address</strong>. We will cancel your subscription shortly.</p>
+      <p style="margin:16px 0 0;"><strong>– The Yoghurt of Youth Team</strong></p>
+    </div>
+    <div style="border-top:1px solid #e2e8f0;margin:0 20px;"></div>
+    <div style="padding:20px;text-align:center;background-color:#f9fafb;">
+      <p style="margin:0 0 12px;font-weight:600;">Enjoyed your experience?</p>
+      <p style="margin:0 0 16px;color:#555;">Your feedback helps us grow and continue producing exceptional yoghurt.</p>
+      <a href="https://g.page/r/CWkxtud6iKYlEAE/review" style="display:inline-block;background:#1e293b;color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;font-weight:600;">⭐ Leave a Google Review</a>
+      <p style="margin:14px 0 0;"><a href="https://www.instagram.com/yoghurtofyouth" style="color:#0ea5e9;font-weight:600;text-decoration:none;">📸 Follow us on Instagram</a></p>
+    </div>
+    <div style="padding:12px;text-align:center;font-size:12px;color:#777;border-top:1px solid #e2e8f0;">
+      This confirmation was sent to ${p.customerEmail}<br>
+      Yoghurt of Youth · Blackburn, Lancashire
+    </div>
+  </div>
+</div>`;
+}
+
+function buildSubOwnerHtml(p: {
+  customerName: string; customerEmail: string; customerPhone: string;
+  customerAddress: string; orderId: string; deliveryDate: string;
+  totalPaid: string; orderLines: string; note: string;
+}) {
+  const noteHtml = p.note ? `<div style="margin-top:14px;background:#fff7ed;border:1px solid #fed7aa;padding:12px;"><strong>Customer note:</strong><br>${p.note}</div>` : "";
+  return `<div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;color:#333;padding:16px;background-color:#f5f5f5;">
+  <div style="max-width:600px;margin:auto;background-color:#fff;border-top:6px solid #1e293b;">
+    <div style="padding:16px;background-color:#f9fafb;border-bottom:1px solid #e2e8f0;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tbody><tr>
+        <td style="vertical-align:middle;"><img src="https://yoghurtofyouth.co.uk/logo.png" alt="Yoghurt of Youth" height="32" style="display:block;"></td>
+        <td style="vertical-align:middle;padding-left:8px;font-size:18px;font-weight:700;">Yoghurt of Youth</td>
+      </tr></tbody></table>
+    </div>
+    <div style="padding:20px;">
+      <p style="margin:0 0 14px;"><strong>New Weekly Gut Punch subscription created.</strong></p>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;padding:12px;margin-bottom:16px;">
+        <strong>Subscription reference:</strong><br><span style="font-size:14px;font-weight:700;letter-spacing:0.2px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;word-break:break-all;">${p.orderId}</span>
+      </div>
+      <h4 style="margin:0 0 8px;font-size:16px;">Delivery</h4>
+      <table role="presentation" style="border-collapse:collapse;width:100%;margin-bottom:14px;"><tbody>
+        <tr><td style="padding:6px 0;width:45%;color:#555;"><strong>First dispatch:</strong></td><td style="padding:6px 0;">${p.deliveryDate}</td></tr>
+        <tr><td style="padding:6px 0;color:#555;"><strong>Address:</strong></td><td style="padding:6px 0;">${p.customerAddress}</td></tr>
+      </tbody></table>
+      <h4 style="margin:0 0 8px;font-size:16px;">Billing</h4>
+      <table role="presentation" style="border-collapse:collapse;width:100%;margin-bottom:14px;"><tbody>
+        <tr><td style="padding:6px 0;width:45%;color:#555;"><strong>Schedule:</strong></td><td style="padding:6px 0;">Weekly · charged Mondays</td></tr>
+        <tr><td style="padding:6px 0;color:#555;"><strong>Weekly price:</strong></td><td style="padding:6px 0;"><strong>${p.totalPaid}</strong></td></tr>
+        <tr><td style="padding:6px 0;color:#555;"><strong>Payment method:</strong></td><td style="padding:6px 0;">Stripe (subscription)</td></tr>
+      </tbody></table>
+      <h4 style="margin:0 0 8px;font-size:16px;">Customer</h4>
+      <table role="presentation" style="border-collapse:collapse;width:100%;margin-bottom:14px;"><tbody>
+        <tr><td style="padding:6px 0;width:45%;color:#555;"><strong>Name:</strong></td><td style="padding:6px 0;">${p.customerName}</td></tr>
+        <tr><td style="padding:6px 0;color:#555;"><strong>Mobile:</strong></td><td style="padding:6px 0;">${p.customerPhone}</td></tr>
+        <tr><td style="padding:6px 0;color:#555;"><strong>Email:</strong></td><td style="padding:6px 0;">${p.customerEmail}</td></tr>
+      </tbody></table>
+      <h4 style="margin:0 0 8px;font-size:16px;">Weekly contents</h4>
+      <pre style="background:#f8fafc;padding:10px;border:1px solid #e2e8f0;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin:0 0 14px;">${p.orderLines}</pre>
+      ${noteHtml}
+      <p style="margin:16px 0 0;"><strong>– Yoghurt of Youth</strong></p>
+    </div>
+    <div style="padding:12px;text-align:center;font-size:12px;color:#777;border-top:1px solid #e2e8f0;">
+      Owner notification · Yoghurt of Youth · Blackburn, Lancashire
     </div>
   </div>
 </div>`;
@@ -335,52 +468,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         const firstDelivery = sub?.trial_end ? formatDateUKFromUnixSeconds(sub.trial_end) : "";
 
-        const templateParams = {
-          brand: "Yoghurt of Youth",
-          owner_email: ownerEmail,
-          customer_name,
-          customer_email,
-          customer_phone,
-          customer_address,
-          order_id: subId || session.id || "",
-          payment_method: "Stripe (Subscription)",
-          delivery_date: firstDelivery,
-          delivery_window: "18:30–20:00",
-          bottles: 7,
-          total_paid: weeklyPriceText || "",
-          merchandise_total: "",
-          delivery_fee: "FREE",
-          order_lines: linesArr.join("\n"),
+        const subOwnerHtml = buildSubOwnerHtml({
+          customerName: customer_name,
+          customerEmail: customer_email,
+          customerPhone: customer_phone,
+          customerAddress: customer_address,
+          orderId: subId || session.id || "",
+          deliveryDate: firstDelivery,
+          totalPaid: weeklyPriceText || "",
+          orderLines: linesArr.join("\n"),
           note: String(sm.note || ""),
-        };
+        });
+        await sendResend(ownerEmail, "New Weekly Gut Punch subscription", subOwnerHtml);
 
-        const ownerTpl = process.env.EMAILJS_TEMPLATE_ID as string;
-
-        // Owner email still via EmailJS for now
-        if (ownerTpl) {
-          await sendEmailJS(ownerTpl, { ...templateParams, to_email: ownerEmail });
-        }
-  
-        // Customer email now via Resend
-        if (customerEmail) {
-          const customerHtml = buildOneOffCustomerHtml({
-            customerName,
-            customerEmail,
-            customerAddress,
-            isCollection: isCollectionOrder,
-            orderId: m.order_id || "",
-            deliveryDate: deliveryDatePretty,
-            bottles: String(m.bottles || ""),
-            paymentMethod: "Stripe",
-            totalPaid: fmtGbp(m.total_paid),
-            orderLines: orderLinesPretty,
-            note: String(m.note || ""),
+        if (customer_email) {
+          const subCustomerHtml = buildSubCustomerHtml({
+            customerName: customer_name,
+            customerEmail: customer_email,
+            customerAddress: customer_address,
+            orderId: subId || session.id || "",
+            deliveryDate: firstDelivery,
+            totalPaid: weeklyPriceText || "",
+            orderLines: linesArr.join("\n"),
+            note: String(sm.note || ""),
           });
-          await sendResend(
-            customerEmail,
-            "Your Yoghurt of Youth order confirmation",
-            customerHtml
-          );
+          await sendResend(customer_email, "Your Weekly Gut Punch subscription is live", subCustomerHtml);
         }
 
         return res.status(200).json({ received: true });
@@ -423,33 +535,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       const customerAddress = String(m.customer_address || stripeAddress || "");
 
-      const templateParams = {
-        brand: "Yoghurt of Youth",
-        owner_email: ownerEmail,
-        customer_name: customerName,
-        customer_email: customerEmail,
-        customer_phone: customerPhone,
-        customer_address: customerAddress,
-        delivery_date: deliveryDatePretty,
-        delivery_window: m.delivery_window || "",
-        note: m.note || "",
-        is_collection: m.delivery_method === "collection" ? "1" : "",
-        order_id: m.order_id || "",
-        payment_method: "Stripe",
-        order_lines: orderLinesPretty,
-        bottles: m.bottles || "",
-        yoghurt_strain: m.yoghurt_strain || "",
-        plain_qty: m.plain_qty || "",
-        flav_qty: m.flav_qty || "",
-        plain_bundles: m.plain_bundles || "",
-        flav_bundles: m.flav_bundles || "",
-        plain_remainder: m.plain_remainder || "",
-        flav_remainder: m.flav_remainder || "",
-        merchandise_total: fmtGbp(m.merchandise_total),
-        delivery_fee: fmtGbp(m.delivery_fee),
-        total_paid: fmtGbp(m.total_paid),
-      };
-
       // Gift code marking (after payment success)
       const giftCode = String(m.gift_code || "").trim().toUpperCase();
       const discountPercent = Number(m.discount_percent || 0);
@@ -472,14 +557,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }, { ex: 60 * 60 * 24 * 30 }); // 30 days expiry
       }
 
-      const ownerTpl = process.env.EMAILJS_TEMPLATE_ID as string;
-      const custTpl = process.env.EMAILJS_CUSTOMER_TEMPLATE_ID as string;
+      const oneOffOwnerHtml = buildOneOffOwnerHtml({
+        customerName,
+        customerEmail,
+        customerPhone,
+        customerAddress,
+        isCollection: isCollectionOrder,
+        orderId: m.order_id || "",
+        deliveryDate: deliveryDatePretty,
+        bottles: String(m.bottles || ""),
+        merchandiseTotal: fmtGbp(m.merchandise_total),
+        deliveryFee: fmtGbp(m.delivery_fee),
+        paymentMethod: "Stripe",
+        totalPaid: fmtGbp(m.total_paid),
+        orderLines: orderLinesPretty,
+        note: String(m.note || ""),
+      });
+      await sendResend(ownerEmail, "New order received", oneOffOwnerHtml);
 
-      if (ownerTpl) {
-        await sendEmailJS(ownerTpl, { ...templateParams, to_email: ownerEmail });
-      }
-      if (customerEmail && custTpl) {
-        await sendEmailJS(custTpl, { ...templateParams, to_email: customerEmail });
+      if (customerEmail) {
+        const customerHtml = buildOneOffCustomerHtml({
+          customerName,
+          customerEmail,
+          customerAddress,
+          isCollection: isCollectionOrder,
+          orderId: m.order_id || "",
+          deliveryDate: deliveryDatePretty,
+          bottles: String(m.bottles || ""),
+          paymentMethod: "Stripe",
+          totalPaid: fmtGbp(m.total_paid),
+          orderLines: orderLinesPretty,
+          note: String(m.note || ""),
+        });
+        await sendResend(customerEmail, "Your Yoghurt of Youth order confirmation", customerHtml);
       }
     }
 
