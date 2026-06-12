@@ -129,35 +129,6 @@ async function sendEmailJS(templateId: string, templateParams: EmailPayload) {
   }
 }
 
-async function sendResend(to: string, subject: string, html: string) {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.error("Missing RESEND_API_KEY");
-    return;
-  }
-  try {
-    const r = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: "Yoghurt of Youth <orders@yoghurtofyouth.co.uk>",
-        to,
-        subject,
-        html,
-      }),
-    });
-    const text = await r.text();
-    console.log("Resend response:", r.status, text);
-    if (!r.ok) throw new Error(`Resend failed: ${r.status} ${text}`);
-  } catch (err) {
-    console.error("Resend send failed:", err);
-    // Don't throw — let the webhook still return 200 to Stripe
-  }
-}
-
 // Create Redis client once (using your active STORAGE2 vars)
 const redis = new Redis({
   url: process.env.STORAGE2_KV_REST_API_URL || "",
