@@ -41,10 +41,10 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  { id: "PLN", name: "PLN", price: 2.1, size: "250 mL", img: "/plain.png" },
-  { id: "BFC", name: "BFC", price: 2.2, size: "250 mL", img: "/bfc.png" },
-  { id: "STR", name: "STR", price: 2.2, size: "250 mL", img: "/str.png" },
-  { id: "MNG", name: "MNG", price: 2.2, size: "250 mL", img: "/mng.png" },
+  { id: "PLN", name: "PLN", price: 2.1, size: "250 mL", img: "/plain.webp" },
+  { id: "BFC", name: "BFC", price: 2.2, size: "250 mL", img: "/bfc.webp" },
+  { id: "STR", name: "STR", price: 2.2, size: "250 mL", img: "/str.webp" },
+  { id: "MNG", name: "MNG", price: 2.2, size: "250 mL", img: "/mng.webp" },
 ];
 
 const GROUPED = [
@@ -59,7 +59,7 @@ const GROUPED = [
       Lactose-free.<br />
       250ml.
     </>,
-    img: "prcxn.png",
+    img: "prcxn.webp",
     variants: [],
   },
   {
@@ -73,7 +73,7 @@ const GROUPED = [
       Lactose-free.<br />
       250ml.
     </>,
-    img: "spctrl.png",
+    img: "spctrl.webp",
     variants: [],
   },
 ];
@@ -222,7 +222,7 @@ function AboutSection() {
       id="about"
       className="relative scroll-mt-32 md:scroll-mt-24 text-white py-12"
       style={{
-        backgroundImage: "linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('/about_bg.png')",
+        backgroundImage: "linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('/about_bg.webp')",
         backgroundSize: "cover",
         backgroundPosition: "50% center",
         backgroundRepeat: "no-repeat",
@@ -858,7 +858,7 @@ export default function App(){
         {/* Video background */}
         <video
           className="absolute inset-0 w-full h-full object-cover"
-          src="/hero_bg.mp4"
+          src="/hero_bg.webp"
           autoPlay
           loop
           muted
@@ -954,7 +954,7 @@ export default function App(){
         className="scroll-mt-32 md:scroll-mt-24 w-full py-12 relative text-white"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('/flavour_bg.png')",
+            "linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('/flavour_bg.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -1339,7 +1339,7 @@ export default function App(){
       </section>
 
       {/* Behind the scenes */}
-      <section
+      {/*<section
         id="bts"
         className="relative w-full overflow-hidden bg-black scroll-mt-32 md:scroll-mt-24"
         style={{ aspectRatio: "16 / 9" }}
@@ -1352,7 +1352,7 @@ export default function App(){
           muted
           playsInline
         />
-      </section>
+      </section>*/}
 
       {nutritionModal && (
         <Modal
@@ -1450,7 +1450,7 @@ function Header({ brand, itemsCount, openCart }) {
           group-hover:h-32
         `}
         style={{
-          backgroundImage: "url('header_bg.png')",
+          backgroundImage: "url('header_bg.webp')",
           backgroundSize: "cover",
           backgroundPosition: `center ${scrolled ? "50%" : "50%"}`, // tweak for horizon
           backgroundRepeat: "no-repeat",
@@ -2752,7 +2752,7 @@ function Footer() {
     <footer
       className="relative aspect-[5120/1078] bg-no-repeat bg-contain bg-center text-white flex items-center"
       style={{
-        backgroundImage: "url('/footer_bg.png')",
+        backgroundImage: "url('/footer_bg.webp')",
       }}
     >
       {/* Dark overlay for contrast */}
