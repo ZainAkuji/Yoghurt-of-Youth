@@ -200,8 +200,10 @@ function buildOneOffCustomerHtml(p: {
   return `<div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;color:#333;padding:16px;background-color:#f5f5f5;">
   <div style="max-width:600px;margin:auto;background-color:#fff;border-top:6px solid #1e293b;">
     <div style="padding:16px;background-color:#f9fafb;border-bottom:1px solid #e2e8f0;">
-      <img src="https://yoghurtofyouth.co.uk/logo.png" alt="Yoghurt of Youth" height="32" style="vertical-align:middle;">
-      <span style="font-size:18px;font-weight:700;margin-left:8px;vertical-align:middle;">Yoghurt of Youth</span>
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tbody><tr>
+        <td style="vertical-align:middle;"><img src="https://yoghurtofyouth.co.uk/logo.png" alt="Yoghurt of Youth" height="32" style="display:block;"></td>
+        <td style="vertical-align:middle;padding-left:8px;font-size:18px;font-weight:700;">Yoghurt of Youth</td>
+      </tbody></tr></table>
     </div>
     <div style="padding:20px;">
       <p style="margin:0 0 12px;">Dear ${p.customerName},</p>
