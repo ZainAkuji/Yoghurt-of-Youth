@@ -114,7 +114,7 @@ async function sendResend(to: string, subject: string, html: string) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Yoghurt of Youth <orders@yoghurtofyouth.co.uk>",
+        from: "Yoghurt of Youth <support@yoghurtofyouth.co.uk>",
         to,
         subject,
         html,
