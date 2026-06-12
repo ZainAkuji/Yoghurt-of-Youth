@@ -684,7 +684,7 @@ export default function App(){
         const order = buildConfirmOrderFromDraft(
           draft,
           orderId,
-          provider === "stripe" ? "Stripe" : provider === "stripe_sub" ? "Weekly Gut Punch (Stripe)" : "PayPal"
+          provider === "stripe" ? "Stripe" : provider === "stripe_sub" ? "Weekly Gut Punch (Stripe)" : "Stripe"
         );
   
         if (!order) return;
@@ -711,7 +711,7 @@ export default function App(){
         }
   
         // clear basket AFTER success (only for one-off checkout)
-        if (provider === "stripe" || provider === "paypal") {
+        if (provider === "stripe") {
           setCart({});
           setDisplayQty({});
           localStorage.removeItem("yoy_cart");
