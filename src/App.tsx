@@ -856,13 +856,10 @@ export default function App(){
         style={{ aspectRatio: "16 / 9" }} // keeps proportions clean during load
       >
         {/* Video background */}
-        <video
+        <img
           className="absolute inset-0 w-full h-full object-cover"
           src="/hero_bg.webp"
-          autoPlay
-          loop
-          muted
-          playsInline
+          alt=""
         />
       
         {/* Optional dark overlay for logo contrast */}
