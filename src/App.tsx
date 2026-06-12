@@ -41,7 +41,7 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  { id: "PLN", name: "PLN", price: 2.1, size: "250 mL", img: "/plain.webp" },
+  { id: "PLN", name: "PLN", price: 0.01, size: "250 mL", img: "/plain.webp" },
   { id: "BFC", name: "BFC", price: 2.2, size: "250 mL", img: "/bfc.webp" },
   { id: "STR", name: "STR", price: 2.2, size: "250 mL", img: "/str.webp" },
   { id: "MNG", name: "MNG", price: 2.2, size: "250 mL", img: "/mng.webp" },
@@ -97,14 +97,14 @@ function computeTotals(
   const qtyTotal = items.reduce((s, i) => s + i.qty, 0) + (giftStrQty || 0);
 
   // classify by price: £2.10 = "plain", £2.20 = "flavoured"
-  const plainItems = items.filter((i) => i.price === 2.1);
+  const plainItems = items.filter((i) => i.price === 0.01);
   const flavItems = items.filter((i) => i.price === 2.2);
 
   const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
   const flavQty  = flavItems.reduce((s, i) => s + i.qty, 0);
 
   // unit prices (taken from products so it's future-proof)
-  const plainUnit = plainItems[0]?.price ?? 2.1;
+  const plainUnit = plainItems[0]?.price ?? 0.01;
   const flavUnit  = flavItems[0]?.price ?? 2.2;
 
   // "no bundle" full price (for savings display)
@@ -145,7 +145,7 @@ function computeTotals(
         ? 0
         : freeDeliveryUnlocked
           ? 0
-          : 4.95;
+          : 0.51;
 
   // final amount customer pays (bottles + delivery)
   const discount = discountPercent > 0 ? Math.round(merchTotal * discountPercent) / 100 : 0;
@@ -1168,12 +1168,12 @@ export default function App(){
                     
                             <button
                               onClick={() => {
-                                if (f.id === ids.PLN) { setQty(ids.PLN, qty(ids.PLN) + 7); bumpDisplay(f.id, 1); trackAddToCart("PLN", 7 * 2.1, 7); return; }
+                                if (f.id === ids.PLN) { setQty(ids.PLN, qty(ids.PLN) + 7); bumpDisplay(f.id, 1); trackAddToCart("PLN", 7 * 0.01, 7); return; }
                                 if (f.id === ids.BFC) { setQty(ids.BFC, qty(ids.BFC) + 7); bumpDisplay(f.id, 1); trackAddToCart("BFC", 7 * 2.2, 7); return; }
                                 if (f.id === ids.STR) { setQty(ids.STR, qty(ids.STR) + 7); bumpDisplay(f.id, 1); trackAddToCart("STR", 7 * 2.2, 7); return; }
                                 if (f.id === ids.MNG) { setQty(ids.MNG, qty(ids.MNG) + 7); bumpDisplay(f.id, 1); trackAddToCart("MNG", 7 * 2.2, 7); return; }
                                 
-                                if (f.id === "TASTER") { incPreset("TASTER"); trackAddToCart("Taster", 2.1 + 2.2 * 3, 4); return; }
+                                if (f.id === "TASTER") { incPreset("TASTER"); trackAddToCart("Taster", 0.01 + 2.2 * 3, 4); return; }
                                 if (f.id === "MIX") { incPreset("MIX"); trackAddToCart("Mixed", 2.2 * 7, 7); return; }
                               }}
                               className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
