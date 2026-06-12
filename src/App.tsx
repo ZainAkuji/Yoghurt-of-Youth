@@ -1336,20 +1336,17 @@ export default function App(){
       </section>
 
       {/* Behind the scenes */}
-      {/*<section
+      <section
         id="bts"
         className="relative w-full overflow-hidden bg-black scroll-mt-32 md:scroll-mt-24"
-        style={{ aspectRatio: "16 / 9" }}
+        style={{ aspectRatio: "2880 / 1080" }}
       >
-        <video
+        <img
           className="absolute inset-0 w-full h-full object-cover"
-          src="/bts.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
+          src="/bts.webp"
+          alt="How a small batch of Yoghurt of Youth is made"
         />
-      </section>*/}
+      </section>
 
       {nutritionModal && (
         <Modal
