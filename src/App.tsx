@@ -1339,10 +1339,16 @@ export default function App(){
       <section
         id="bts"
         className="relative w-full overflow-hidden bg-black scroll-mt-32 md:scroll-mt-24"
-        style={{ aspectRatio: "2880 / 1080" }}
       >
+        {/* Mobile image (shown below md) */}
         <img
-          className="absolute inset-0 w-full h-full object-cover"
+          className="block md:hidden w-full h-auto"
+          src="/bts_mobile.webp"
+          alt="How a small batch of Yoghurt of Youth is made"
+        />
+        {/* Desktop image (shown md and up) */}
+        <img
+          className="hidden md:block w-full h-auto"
           src="/bts.webp"
           alt="How a small batch of Yoghurt of Youth is made"
         />
