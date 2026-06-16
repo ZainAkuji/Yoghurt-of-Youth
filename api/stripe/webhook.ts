@@ -513,7 +513,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const customerEmail = String(m.customer_email || cd.email || session.customer_email || "");
       const customerPhone = String(m.customer_phone || cd.phone || "");
 
-      // Shipping address (delivery) lives on shipping_details; collection has none
+      // Shipping address (delivery) lives on shipping_details
       const shippingAddr =
         (session as any).shipping_details?.address ||
         (session as any).collected_information?.shipping_details?.address ||
