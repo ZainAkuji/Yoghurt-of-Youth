@@ -133,7 +133,6 @@ function buildOneOffCustomerHtml(p: {
   customerName: string;
   customerEmail: string;
   customerAddress: string;
-  isCollection: boolean;
   orderId: string;
   deliveryDate: string;
   bottles: string;
@@ -142,31 +141,22 @@ function buildOneOffCustomerHtml(p: {
   orderLines: string;
   note: string;
 }) {
-  const introHtml = p.isCollection
-    ? `<p style="margin:0 0 14px;">Thank you for your order with <strong>Yoghurt of Youth</strong>. Your payment has been successfully received. Your yoghurts will be fermented on the day before collection for freshness.</p>`
-    : `<p style="margin:0 0 14px;">Thank you for your order with <strong>Yoghurt of Youth</strong>. Your payment has been successfully received. Your yoghurts will be fermented on the day before dispatch for freshness.</p>
+  const introHtml = `<p style="margin:0 0 14px;">Thank you for your order with <strong>Yoghurt of Youth</strong>. Your payment has been successfully received. Your yoghurts will be fermented on the day before dispatch for freshness.</p>
        <p style="margin:0 0 14px;">Your order will be sent via DPD Next Day delivery and should arrive the next day. The package is insulated and chilled to maintain the correct temperature for the products during transit.</p>
        <p style="margin:0 0 14px;">Please ensure someone is available to receive the parcel, or select a safe place if preferred.</p>`;
 
-  const dateLabel = p.isCollection ? "Collection date" : "Dispatch date";
+  const dateLabel = "Dispatch date";
 
-  const windowRow = p.isCollection
-    ? `<tr><td style="padding:6px 0;color:#555;"><strong>Collection window:</strong></td><td style="padding:6px 0;">12:00pm–9:00pm</td></tr>`
-    : "";
+  const windowRow = "";
 
-  const addressRow = p.isCollection
-    ? `<tr><td style="padding:6px 0;color:#555;"><strong>Collection address:</strong></td>
-         <td style="padding:6px 0;"><a href="https://www.google.com/maps/search/?api=1&query=11+Billinge+Avenue,+Blackburn,+Lancashire,+BB2+6SD" style="color:#0ea5e9;font-weight:600;text-decoration:none;" target="_blank" rel="noreferrer">11 Billinge Avenue, Blackburn, Lancashire, BB2 6SD</a></td></tr>`
-    : `<tr><td style="padding:6px 0;color:#555;"><strong>Delivery address:</strong></td>
+  const addressRow = `<tr><td style="padding:6px 0;color:#555;"><strong>Delivery address:</strong></td>
          <td style="padding:6px 0;">${p.customerAddress}</td></tr>`;
 
   const noteHtml = p.note
     ? `<p style="margin:12px 0 0;"><strong>Order note:</strong><br>${p.note}</p>`
     : "";
 
-  const closingHtml = p.isCollection
-    ? `<p style="margin:18px 0 0;">You will receive a text when your order is ready for collection. If possible, please call, text or email us when you are heading out to collect your order. If you need to make any changes, please reply to this email.</p>`
-    : `<p style="margin:18px 0 0;">You will receive a text when your order is dispatched. If you need to make any changes, please reply to this email.</p>`;
+  const closingHtml = `<p style="margin:18px 0 0;">You will receive a text when your order is dispatched. If you need to make any changes, please reply to this email.</p>`;
 
   return `<div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;color:#333;padding:16px;background-color:#f5f5f5;">
   <div style="max-width:600px;margin:auto;background-color:#fff;border-top:6px solid #1e293b;">
@@ -218,16 +208,16 @@ function buildOneOffCustomerHtml(p: {
 
 function buildOneOffOwnerHtml(p: {
   customerName: string; customerEmail: string; customerPhone: string;
-  customerAddress: string; isCollection: boolean; orderId: string;
+  customerAddress: string; orderId: string;
   deliveryDate: string; bottles: string; merchandiseTotal: string;
   deliveryFee: string; paymentMethod: string; totalPaid: string;
   orderLines: string; note: string;
 }) {
-  const sectionTitle = p.isCollection ? "Collection" : "Delivery";
-  const dateLabel = p.isCollection ? "Collection date" : "Dispatch date";
-  const addressRow = p.isCollection ? "" :
+  const sectionTitle = "Delivery";
+  const dateLabel = "Dispatch date";
+  const addressRow =
     `<tr><td style="padding:6px 0;color:#555;"><strong>Address:</strong></td><td style="padding:6px 0;">${p.customerAddress}</td></tr>`;
-  const deliveryFeeRow = p.isCollection ? "" :
+  const deliveryFeeRow =
     `<tr><td style="padding:6px 0;color:#555;"><strong>Delivery fee:</strong></td><td style="padding:6px 0;">${p.deliveryFee}</td></tr>`;
   const noteHtml = p.note ?
     `<div style="margin-top:14px;background:#fff7ed;border:1px solid #fed7aa;padding:12px;"><strong>Customer note:</strong><br>${p.note}</div>` : "";
@@ -514,7 +504,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
       // Prefer details Stripe collected; fall back to form metadata
       const cd = session.customer_details || ({} as any);
-      const isCollectionOrder = m.delivery_method === "collection";
 
       const shipName =
         (session as any).shipping_details?.name ||
@@ -529,9 +518,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         (session as any).shipping_details?.address ||
         (session as any).collected_information?.shipping_details?.address ||
         null;
-      const stripeAddress = isCollectionOrder
-        ? "Collection"
-        : safeJoinAddress(shippingAddr) || safeJoinAddress(cd.address);
+      const stripeAddress = safeJoinAddress(shippingAddr) || safeJoinAddress(cd.address);
 
       const customerAddress = String(m.customer_address || stripeAddress || "");
 
@@ -562,7 +549,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         customerEmail,
         customerPhone,
         customerAddress,
-        isCollection: isCollectionOrder,
         orderId: m.order_id || "",
         deliveryDate: deliveryDatePretty,
         bottles: String(m.bottles || ""),
@@ -580,7 +566,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           customerName,
           customerEmail,
           customerAddress,
-          isCollection: isCollectionOrder,
           orderId: m.order_id || "",
           deliveryDate: deliveryDatePretty,
           bottles: String(m.bottles || ""),
