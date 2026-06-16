@@ -497,7 +497,7 @@ type ConfirmOrder = {
   address: string;
   name: string;
   paymentMethod: string;
-  delivery_method?: "delivery" | "collection";
+  delivery_method?: "delivery";
 };
 
 function buildConfirmOrderFromDraft(
@@ -677,7 +677,7 @@ export default function App(){
 
         // Use the details Stripe collected (the trimmed form no longer has them)
         if (stripeName) order.name = stripeName;
-        if (order.delivery_method !== "collection" && stripeAddress) {
+        if (stripeAddress) {
           order.address = stripeAddress;
         }
   
@@ -778,7 +778,7 @@ export default function App(){
     flavRemainder,
     merchTotal,
     deliveryFee,
-    freeDeliveryUnlocked: delivery_method === "collection",
+    freeDeliveryUnlocked: false,
     plainQty,
     flavQty,
   } = totals;
@@ -1577,7 +1577,7 @@ function Basket({
   flavRemainder,
   merchTotal,          // bottles only, after bundles (if you want to show it later)
   deliveryFee,
-  freeDeliveryUnlocked: delivery_method === "collection",
+  freeDeliveryUnlocked: false,
   add,
   sub,
   remove,
@@ -1851,7 +1851,7 @@ function PayModal({
     plainRemainder,
     flavRemainder,
     deliveryFee,
-    freeDeliveryUnlocked: delivery_method === "collection",
+    freeDeliveryUnlocked: false,
   } = totalsWithGift;
 
   const lines = Object.entries(cart).map(([id, qty]) => {
@@ -2017,7 +2017,7 @@ function PayModal({
                   cart,
                   totals: totalsWithGift,
                   customer,
-                  delivery_method,
+                  delivery_method: "delivery",
                   delivery_date_iso: date,
                   delivery_date: formattedDate,
                   delivery_window: deliveryWindow,
@@ -2039,7 +2039,7 @@ function PayModal({
                     totals: totalsWithGift,
                     lines,
                     customer,
-                    delivery_method,
+                    delivery_method: "delivery",
                     delivery_date: formattedDate,
                     delivery_window: deliveryWindow,
                     note,
