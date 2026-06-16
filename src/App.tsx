@@ -81,7 +81,6 @@ const GROUPED = [
 function computeTotals(
   cart: Record<string, number>,
   discountPercent: number = 0,
-  delivery_method: "delivery" | "collection" = "delivery",
   giftStrQty: number = 0
 ) {
   // expand cart into full product objects + qty
@@ -131,14 +130,8 @@ function computeTotals(
   const savings = Math.max(0, fullPrice - merchTotal);
 
   // ---- DELIVERY LOGIC ----
-  // Flat £4.95 delivery on every order (no free-delivery threshold).
-  // collection still forces £0 here; the collection option is removed in Phase 2.
-  const deliveryFee =
-    delivery_method === "collection"
-      ? 0
-      : merchTotal === 0
-        ? 0
-        : 4.95;
+  // Flat £4.95 delivery on every order (£0 only when basket is empty).
+  const deliveryFee = merchTotal === 0 ? 0 : 4.95;
 
   // final amount customer pays (bottles + delivery)
   const discount = discountPercent > 0 ? Math.round(merchTotal * discountPercent) / 100 : 0;
@@ -160,8 +153,8 @@ function computeTotals(
     plainSubtotal: fullPrice,
     merchTotal,
     deliveryFee,
-    freeDeliveryUnlocked: delivery_method === "collection",
-    delivery_method,
+    freeDeliveryUnlocked: false,
+    delivery_method: "delivery",
 
     // breakdown
     plainQty,
@@ -1231,13 +1224,12 @@ export default function App(){
                       )}
                     </p>
       
-                    {/* Delivery info + "Spent" badge */}
+                    {/* Delivery info */}
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        Chilled Next Day Delivery charge of <strong>£4.95</strong> ·{" "}
-                        Collect for <strong>FREE</strong>
+                        Chilled Next Day Delivery charge of <strong>£4.95</strong>
                       </span>
-                    </p>                    
+                    </p>                   
                   </div>
                 </div>
                 
@@ -1818,8 +1810,6 @@ function PayModal({
 
   const isSubscription = payKind === "subscription" && !!subscriptionPlan;
 
-  const [delivery_method, setDeliveryMethod] = useState<"delivery" | "collection">("delivery");
-
   const firstISO = nextEligibleMondayISO();
   const firstText = `${formatDateUK(firstISO)} (${weekdayFromISO(firstISO)})`;
 
@@ -1847,8 +1837,8 @@ function PayModal({
     normalizedGiftCode === "YOY25" ? 1 : 0;
 
   const totalsWithGift = useMemo(() => {
-    return computeTotals(cart, discountPercent, delivery_method, giftStrQty);
-  }, [cart, discountPercent, delivery_method, giftStrQty]);
+    return computeTotals(cart, discountPercent, giftStrQty);
+  }, [cart, discountPercent, giftStrQty]);
 
   const {
     qtyTotal,
@@ -1879,9 +1869,7 @@ function PayModal({
   const normalizedPostcode = postcode.trim().toUpperCase();
 
   const fullAddress =
-    delivery_method === "collection"
-      ? "Collection"
-      : [streetAddress.trim(), townCity.trim(), normalizedPostcode].filter(Boolean).join(", ");
+    [streetAddress.trim(), townCity.trim(), normalizedPostcode].filter(Boolean).join(", ");
 
   const valid = isSubscription
     ? true
@@ -1913,7 +1901,6 @@ function PayModal({
       setEmail(draft?.customer?.email || "");
       setPhone(draft?.customer?.phone || "");
       setNote(draft?.note || "");
-      setDeliveryMethod(draft?.delivery_method || "delivery");
       setGiftCode(draft?.gift_code || "");
   
       // Restore address fields safely
@@ -1948,11 +1935,11 @@ function PayModal({
       },
       note,
       gift_code: giftCode,
-      delivery_method,
+      delivery_method: "delivery",
     };
   
     sessionStorage.setItem("yoy_checkout_draft", JSON.stringify(updated));
-  }, [name, email, phone, fullAddress, note, delivery_method, giftCode]);
+  }, [name, email, phone, fullAddress, note, giftCode]);
 
   // ✅ SUBSCRIPTION MODE (Weekly Gut Punch)
   if (isSubscription && subscriptionPlan) {
@@ -2110,15 +2097,8 @@ function PayModal({
   if (mode === "success" && confirmedOrder) {
     const order = confirmedOrder;
 
-    const isCollection =
-      typeof order.delivery_method === "string" &&
-      order.delivery_method.toLowerCase() === "collection";
-    
-    const dateLabel = isCollection ? "Collection date:" : "Dispatch date:";
-    const addressLabel = isCollection ? "Collection address" : "Delivery address";
-    
-    const collectionMapsUrl =
-      "https://www.google.com/maps/search/?api=1&query=11+Billinge+Avenue,+Blackburn,+Lancashire,+BB2+6SD";
+    const dateLabel = "Dispatch date:";
+    const addressLabel = "Delivery address";
   
     const isSubscriptionSuccess =
       typeof order.paymentMethod === "string" &&
@@ -2260,13 +2240,6 @@ function PayModal({
             <div className="font-medium">{order.formattedDate}</div>
           </div>
   
-          {isCollection && (
-            <div>
-              <div className="text-white/60">Collection window</div>
-              <div className="font-medium">12:00–21:00</div>
-            </div>
-          )}
-  
           <div>
             <div className="text-white/60">Payment method</div>
             <div className="font-medium">{order.paymentMethod}</div>
@@ -2283,19 +2256,7 @@ function PayModal({
         {/* Address */}
         <div className="mt-4 text-sm">
           <div className="text-white/60 mb-1">{addressLabel}</div>
-        
-          {isCollection ? (
-            <a
-              href={collectionMapsUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="leading-relaxed underline underline-offset-2 hover:text-amber-300 transition"
-            >
-              11 Billinge Avenue, Blackburn, Lancashire, BB2 6SD
-            </a>
-          ) : (
-            <div className="leading-relaxed">{order.address}</div>
-          )}
+          <div className="leading-relaxed">{order.address}</div>
         </div>
   
         {/* Items */}
@@ -2311,17 +2272,10 @@ function PayModal({
   
         {/* Email notice */}
         <p className="mt-4 text-xs text-white/70 leading-relaxed">
-          {isCollection ? (
-            <>Your yoghurt is fermented on the day before collection for freshness.
-              You’ll receive an email receipt with full order details shortly.
-              If it doesn’t arrive within 5 minutes, please check spam.
-              If you have any questions, please email support@yoghurtofyouth.co.uk.</>
-          ) : (
-            <>Your yoghurt is fermented on the day before dispatch for freshness.
-              You’ll receive an email receipt with full order details shortly.
-              If it doesn’t arrive within 5 minutes, please check spam.
-              If you have any questions, please email support@yoghurtofyouth.co.uk.</>
-          )}
+          Your yoghurt is fermented on the day before dispatch for freshness.
+          You’ll receive an email receipt with full order details shortly.
+          If it doesn’t arrive within 5 minutes, please check spam.
+          If you have any questions, please email support@yoghurtofyouth.co.uk.
         </p>
   
         {/* Close */}
@@ -2344,37 +2298,9 @@ function PayModal({
       </p>
 
       <div className="mt-4 grid md:grid-cols-2 gap-4">
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => setDeliveryMethod("delivery")}
-            className={
-              "flex-1 rounded-xl border px-3 py-2 text-sm font-semibold transition " +
-              (delivery_method === "delivery"
-                ? "border-white/60 bg-white/15 text-white"
-                : "border-white/25 bg-black/20 text-white/80 hover:bg-white/10")
-            }
-          >
-            Delivery
-          </button>
-        
-          <button
-            type="button"
-            onClick={() => setDeliveryMethod("collection")}
-            className={
-              "flex-1 rounded-xl border px-3 py-2 text-sm font-semibold transition " +
-              (delivery_method === "collection"
-                ? "border-white/60 bg-white/15 text-white"
-                : "border-white/25 bg-black/20 text-white/80 hover:bg-white/10")
-            }
-          >
-            Collection
-          </button>
-        </div>
-
         {!isSubscription && (
           <div className="md:col-span-2 pl-3 text-sm text-white/80">
-            {delivery_method === "delivery" ? "Dispatch date" : "Collection date"}:{" "}
+            Dispatch date:{" "}
             <span className="font-semibold text-white">
               {formatDateUK(date)} ({weekdayFromISO(date)})
             </span>
@@ -2481,7 +2407,7 @@ function PayModal({
                   phone,
                   address: fullAddress,
                 },
-                delivery_method,
+                delivery_method: "delivery",
                 delivery_date_iso: date,       // important for restoring <select>
                 delivery_date: formattedDate,  // optional, nice for emails/records
                 delivery_window: deliveryWindow,
@@ -2513,7 +2439,7 @@ function PayModal({
                     phone,
                     address: fullAddress,
                   },
-                  delivery_method,
+                  delivery_method: "delivery",
                   delivery_date: formattedDate,
                   delivery_window: deliveryWindow,
                   note,
