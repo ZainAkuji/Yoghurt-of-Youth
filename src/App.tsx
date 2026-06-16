@@ -778,7 +778,7 @@ export default function App(){
     flavRemainder,
     merchTotal,
     deliveryFee,
-    freeDeliveryUnlocked: false,
+    freeDeliveryUnlocked,
     plainQty,
     flavQty,
   } = totals;
