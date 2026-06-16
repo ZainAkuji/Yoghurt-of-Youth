@@ -41,10 +41,10 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  { id: "PLN", name: "PLN", price: 2.1, size: "250 mL", img: "/plain.webp" },
-  { id: "BFC", name: "BFC", price: 2.2, size: "250 mL", img: "/bfc.webp" },
-  { id: "STR", name: "STR", price: 2.2, size: "250 mL", img: "/str.webp" },
-  { id: "MNG", name: "MNG", price: 2.2, size: "250 mL", img: "/mng.webp" },
+  { id: "PLN", name: "PLN", price: 1.95, size: "250 mL", img: "/plain.webp" },
+  { id: "BFC", name: "BFC", price: 2.05, size: "250 mL", img: "/bfc.webp" },
+  { id: "STR", name: "STR", price: 2.05, size: "250 mL", img: "/str.webp" },
+  { id: "MNG", name: "MNG", price: 2.05, size: "250 mL", img: "/mng.webp" },
 ];
 
 const GROUPED = [
@@ -95,16 +95,16 @@ function computeTotals(
   // ✅ bottles count includes gift STR
   const qtyTotal = items.reduce((s, i) => s + i.qty, 0) + (giftStrQty || 0);
 
-  // classify by price: £2.10 = "plain", £2.20 = "flavoured"
-  const plainItems = items.filter((i) => i.price === 2.1);
-  const flavItems = items.filter((i) => i.price === 2.2);
+  // classify by price: £1.95 = "plain", £2.05 = "flavoured"
+  const plainItems = items.filter((i) => i.price === 1.95);
+  const flavItems = items.filter((i) => i.price === 2.05);
 
   const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
   const flavQty  = flavItems.reduce((s, i) => s + i.qty, 0);
 
   // unit prices (taken from products so it's future-proof)
-  const plainUnit = plainItems[0]?.price ?? 2.1;
-  const flavUnit  = flavItems[0]?.price ?? 2.2;
+  const plainUnit = plainItems[0]?.price ?? 1.95;
+  const flavUnit  = flavItems[0]?.price ?? 2.05;
 
   // "no bundle" full price (for savings display)
   const plainSubtotalRaw = plainQty * plainUnit;
@@ -1149,13 +1149,13 @@ export default function App(){
                     
                             <button
                               onClick={() => {
-                                if (f.id === ids.PLN) { setQty(ids.PLN, qty(ids.PLN) + 7); bumpDisplay(f.id, 1); trackAddToCart("PLN", 7 * 2.1, 7); return; }
-                                if (f.id === ids.BFC) { setQty(ids.BFC, qty(ids.BFC) + 7); bumpDisplay(f.id, 1); trackAddToCart("BFC", 7 * 2.2, 7); return; }
-                                if (f.id === ids.STR) { setQty(ids.STR, qty(ids.STR) + 7); bumpDisplay(f.id, 1); trackAddToCart("STR", 7 * 2.2, 7); return; }
-                                if (f.id === ids.MNG) { setQty(ids.MNG, qty(ids.MNG) + 7); bumpDisplay(f.id, 1); trackAddToCart("MNG", 7 * 2.2, 7); return; }
+                                if (f.id === ids.PLN) { setQty(ids.PLN, qty(ids.PLN) + 7); bumpDisplay(f.id, 1); trackAddToCart("PLN", 7 * 1.95, 7); return; }
+                                if (f.id === ids.BFC) { setQty(ids.BFC, qty(ids.BFC) + 7); bumpDisplay(f.id, 1); trackAddToCart("BFC", 7 * 2.05, 7); return; }
+                                if (f.id === ids.STR) { setQty(ids.STR, qty(ids.STR) + 7); bumpDisplay(f.id, 1); trackAddToCart("STR", 7 * 2.05, 7); return; }
+                                if (f.id === ids.MNG) { setQty(ids.MNG, qty(ids.MNG) + 7); bumpDisplay(f.id, 1); trackAddToCart("MNG", 7 * 2.05, 7); return; }
                                 
-                                if (f.id === "TASTER") { incPreset("TASTER"); trackAddToCart("Taster", 2.1 + 2.2 * 3, 4); return; }
-                                if (f.id === "MIX") { incPreset("MIX"); trackAddToCart("Mixed", 2.2 * 7, 7); return; }
+                                if (f.id === "TASTER") { incPreset("TASTER"); trackAddToCart("Taster", 1.95 + 2.05 * 3, 4); return; }
+                                if (f.id === "MIX") { incPreset("MIX"); trackAddToCart("Mixed", 2.05 * 7, 7); return; }
                               }}
                               className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
                               aria-label="Add"
@@ -1172,7 +1172,7 @@ export default function App(){
                   <div className="mt-2 text-xs text-white space-y-1.5">
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        PLN: <strong>£2.10</strong> each ·{" "}
+                        PLN: <strong>£1.95</strong> each ·{" "}
                         <strong>7 for the price of 6</strong>
                       </span>
                       {totalPlain > 0 ? (
@@ -1197,7 +1197,7 @@ export default function App(){
       
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        BFC, STR &amp; MNG: <strong>£2.20</strong> each ·{" "}
+                        BFC, STR &amp; MNG: <strong>£2.05</strong> each ·{" "}
                         <strong>7 for the price of 6</strong>
                       </span>
                       {totalFlavoured > 0 ? (
@@ -1664,7 +1664,7 @@ function Basket({
         {plainRemainder > 0 && (
           <div className="flex justify-between">
             <span>PLN</span>
-            <span>{plainRemainder} × £2.10</span>
+            <span>{plainRemainder} × £1.95</span>
           </div>
         )}
 
@@ -1678,7 +1678,7 @@ function Basket({
         {flavRemainder > 0 && (
           <div className="flex justify-between">
             <span>Flavoured</span>
-            <span>{flavRemainder} × £2.20</span>
+            <span>{flavRemainder} × £2.05</span>
           </div>
         )}
 
@@ -2351,9 +2351,9 @@ function PayModal({
             </div>
             <div>
               <div className="mb-1">Bottles: {qtyTotal}</div>
-              {plainRemainder > 0 && <div>PLN: {plainRemainder} × £2.10</div>}
+              {plainRemainder > 0 && <div>PLN: {plainRemainder} × £1.95</div>}
               {plainBundles > 0 && <div>Free PLN (7 for 6): {plainBundles}</div>}
-              {flavRemainder > 0 && <div>Flavoured: {flavRemainder} × £2.20</div>}
+              {flavRemainder > 0 && <div>Flavoured: {flavRemainder} × £2.05</div>}
               {flavBundles > 0 && <div>Free flavoured (7 for 6): {flavBundles}</div>}
 
               {deliveryFee > 0 && !freeDeliveryUnlocked && (
