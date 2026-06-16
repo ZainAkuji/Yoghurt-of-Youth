@@ -974,7 +974,7 @@ export default function App(){
                     UK-wide chilled next-day delivery available for <strong>£4.95</strong>.
                     Dispatched on <strong>Monday</strong> and <strong>Thursday</strong>.
                   </p>
-                  <p>Fermented on the day before dispatch / collection for freshness.</p>
+                  <p>Fermented on the day before dispatch for freshness.</p>
                 </div>
       
                 <div className="mt-6 bg-black/40 rounded-2xl border border-white/10 p-3 sm:p-4 backdrop-blur-sm">
