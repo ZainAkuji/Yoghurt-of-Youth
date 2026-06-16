@@ -1847,7 +1847,7 @@ function PayModal({
     plainRemainder,
     flavRemainder,
     deliveryFee,
-    freeDeliveryUnlocked: false,
+    freeDeliveryUnlocked,
   } = totalsWithGift;
 
   const lines = Object.entries(cart).map(([id, qty]) => {
