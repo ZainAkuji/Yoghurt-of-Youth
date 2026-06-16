@@ -32,7 +32,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       gift_code?: string;
       discount_percent?: number;
       gift_str_qty?: number;
-      delivery_method?: "delivery" | "collection";
+      delivery_method?: "delivery";
     };
 
     if (!cart || !totals) {
