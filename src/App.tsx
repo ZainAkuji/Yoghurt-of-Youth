@@ -131,21 +131,14 @@ function computeTotals(
   const savings = Math.max(0, fullPrice - merchTotal);
 
   // ---- DELIVERY LOGIC ----
-  const FREE_DELIVERY_THRESHOLD = 1000;
-
-  // ✅ collection = no delivery fee, ever
-  const freeDeliveryUnlocked =
-    delivery_method === "collection" ? true : merchTotal >= FREE_DELIVERY_THRESHOLD;
-
-  // ✅ collection = £0, delivery = existing logic
+  // Flat £4.95 delivery on every order (no free-delivery threshold).
+  // collection still forces £0 here; the collection option is removed in Phase 2.
   const deliveryFee =
     delivery_method === "collection"
       ? 0
       : merchTotal === 0
         ? 0
-        : freeDeliveryUnlocked
-          ? 0
-          : 4.95;
+        : 4.95;
 
   // final amount customer pays (bottles + delivery)
   const discount = discountPercent > 0 ? Math.round(merchTotal * discountPercent) / 100 : 0;
@@ -167,7 +160,7 @@ function computeTotals(
     plainSubtotal: fullPrice,
     merchTotal,
     deliveryFee,
-    freeDeliveryUnlocked,
+    freeDeliveryUnlocked: delivery_method === "collection",
     delivery_method,
 
     // breakdown
@@ -792,7 +785,7 @@ export default function App(){
     flavRemainder,
     merchTotal,
     deliveryFee,
-    freeDeliveryUnlocked,
+    freeDeliveryUnlocked: delivery_method === "collection",
     plainQty,
     flavQty,
   } = totals;
@@ -971,7 +964,6 @@ export default function App(){
       
             const plainOnBundle = totalPlain >= 7;
             const flavOnBundle = totalFlavoured >= 7;
-            const freeDeliveryUnlocked = merchTotal >= 20;
       
             return (
               <>
@@ -1593,7 +1585,7 @@ function Basket({
   flavRemainder,
   merchTotal,          // bottles only, after bundles (if you want to show it later)
   deliveryFee,
-  freeDeliveryUnlocked,
+  freeDeliveryUnlocked: delivery_method === "collection",
   add,
   sub,
   remove,
@@ -1869,7 +1861,7 @@ function PayModal({
     plainRemainder,
     flavRemainder,
     deliveryFee,
-    freeDeliveryUnlocked,
+    freeDeliveryUnlocked: delivery_method === "collection",
   } = totalsWithGift;
 
   const lines = Object.entries(cart).map(([id, qty]) => {
@@ -2444,12 +2436,6 @@ function PayModal({
 
               {deliveryFee > 0 && !freeDeliveryUnlocked && (
                 <div className="mt-1">Delivery: {gbp(deliveryFee)}</div>
-              )}
-
-              {delivery_method === "delivery" && freeDeliveryUnlocked && (
-                <div className="mt-1 text-emerald-400">
-                  Free delivery unlocked (orders over £50)
-                </div>
               )}
 
               {totalsWithGift.discount > 0 && (
