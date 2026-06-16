@@ -1573,7 +1573,7 @@ function Basket({
   flavRemainder,
   merchTotal,          // bottles only, after bundles (if you want to show it later)
   deliveryFee,
-  freeDeliveryUnlocked: false,
+  freeDeliveryUnlocked,
   add,
   sub,
   remove,
