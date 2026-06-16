@@ -88,8 +88,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       delivery_window: delivery_window || "",
       note: note || "",
 
-      delivery_method: String(delivery_method || "delivery"),
-      delivery_label: delivery_method === "collection" ? "Collection" : "Delivery",
+      delivery_method: "delivery",
+      delivery_label: "Delivery",
 
       // order summary fields used by your EmailJS template
       order_lines: JSON.stringify(orderLines).slice(0, 480), // safety cap
@@ -127,10 +127,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       customer_creation: "always",
       billing_address_collection: "required",
       phone_number_collection: { enabled: true },
-      // Only ask Stripe for a shipping address when it's actually a delivery
-      ...(delivery_method === "collection"
-        ? {}
-        : { shipping_address_collection: { allowed_countries: ["GB"] } }),
+      shipping_address_collection: { allowed_countries: ["GB"] },
       line_items: [
         {
           price_data: {
