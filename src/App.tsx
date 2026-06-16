@@ -974,10 +974,6 @@ export default function App(){
                     UK-wide chilled next-day delivery available.
                     Dispatched on <strong>Monday</strong> and <strong>Thursday</strong>.
                   </p>
-                  <p>
-                    Collection available at our <strong>Blackburn</strong> premises on <strong>Monday</strong> and <strong>Thursday</strong> from 12:00-21:00.
-                    Please ensure you can collect within the specified window. UK-wide delivery is recommended for distant locations.
-                  </p>
                   <p>Fermented on the day before dispatch / collection for freshness.</p>
                 </div>
       
