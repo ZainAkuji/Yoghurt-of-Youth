@@ -971,7 +971,7 @@ export default function App(){
                     <strong>{nextWeekBrand}</strong> week.
                   </p>
                   <p>
-                    UK-wide chilled next-day delivery available.
+                    UK-wide chilled next-day delivery available for <strong>£4.95</strong>.
                     Dispatched on <strong>Monday</strong> and <strong>Thursday</strong>.
                   </p>
                   <p>Fermented on the day before dispatch / collection for freshness.</p>
@@ -2288,7 +2288,7 @@ function PayModal({
   return (
     <Modal onClose={onClose} title="Checkout & Delivery">
       <p className="text-sm text-white/80">
-        Choose below, then continue to payment, where you will also enter your contact and delivery details.
+        Fill in below, then continue to payment, where you will also enter your contact and delivery details.
         We deliver UK-wide, dispatch every <span className="font-semibold">Monday</span> & <span className="font-semibold">Thursday</span>,
         and use DPD Next Day delivery.
       </p>
@@ -2586,7 +2586,7 @@ function Footer() {
       <div
         className="
           relative z-10 mx-auto max-w-6xl
-          grid grid-cols-4
+          grid grid-cols-3
           gap-3 sm:gap-4 md:gap-8
           px-3 sm:px-4 md:px-6
           items-center
@@ -2630,20 +2630,6 @@ function Footer() {
           </a>
         </div>
 
-        {/* Google Maps link */}
-        <div className="flex justify-center md:justify-end">
-          <a
-            href="https://www.google.com/maps/search/?api=1&query=11+Billinge+Avenue,+Blackburn,+Lancashire,+BB2+6SD"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <img
-              src="maps_icon.png"
-              alt="Google Maps"
-              className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 opacity-90 hover:opacity-100 transition"
-            />
-          </a>
-        </div>
       </div>
     </footer>
   );
