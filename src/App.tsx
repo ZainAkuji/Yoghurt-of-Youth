@@ -41,10 +41,10 @@ function placeholder(text: string, bg = "#f8fafc", fg = "#334155") {
 }
 
 const PRODUCTS = [
-  { id: "PLN", name: "PLN", price: 3.6, size: "250 mL", img: "/plain.webp" },
-  { id: "BFC", name: "BFC", price: 3.7, size: "250 mL", img: "/bfc.webp" },
-  { id: "STR", name: "STR", price: 3.7, size: "250 mL", img: "/str.webp" },
-  { id: "MNG", name: "MNG", price: 3.7, size: "250 mL", img: "/mng.webp" },
+  { id: "PLN", name: "PLN", price: 2.8, size: "250 mL", img: "/plain.webp" },
+  { id: "BFC", name: "BFC", price: 2.9, size: "250 mL", img: "/bfc.webp" },
+  { id: "STR", name: "STR", price: 2.9, size: "250 mL", img: "/str.webp" },
+  { id: "MNG", name: "MNG", price: 2.9, size: "250 mL", img: "/mng.webp" },
 ];
 
 const GROUPED = [
@@ -95,16 +95,16 @@ function computeTotals(
   // ✅ bottles count includes gift STR
   const qtyTotal = items.reduce((s, i) => s + i.qty, 0) + (giftStrQty || 0);
 
-  // classify by price: £3.60 = "plain", £3.70 = "flavoured"
-  const plainItems = items.filter((i) => i.price === 3.6);
-  const flavItems = items.filter((i) => i.price === 3.7);
+  // classify by price: £2.80 = "plain", £2.90 = "flavoured"
+  const plainItems = items.filter((i) => i.price === 2.8);
+  const flavItems = items.filter((i) => i.price === 2.9);
 
   const plainQty = plainItems.reduce((s, i) => s + i.qty, 0);
   const flavQty  = flavItems.reduce((s, i) => s + i.qty, 0);
 
   // unit prices (taken from products so it's future-proof)
-  const plainUnit = plainItems[0]?.price ?? 3.6;
-  const flavUnit  = flavItems[0]?.price ?? 3.7;
+  const plainUnit = plainItems[0]?.price ?? 2.8;
+  const flavUnit  = flavItems[0]?.price ?? 2.9;
 
   // "no bundle" full price (for savings display)
   const plainSubtotalRaw = plainQty * plainUnit;
@@ -802,11 +802,11 @@ export default function App(){
   };
 
   const SUBSCRIPTION_PLANS = [
-    { key: "PLN", label: "PLN (plain)", priceLabel: "£19.44", bg: "bg-white/15" },
-    { key: "BFC", label: "BFC (black forest)", priceLabel: "£19.98", bg: "bg-rose-900/40" },
-    { key: "STR", label: "STR (strawberry)", priceLabel: "£19.98", bg: "bg-pink-500/35" },
-    { key: "MNG", label: "MNG (mango)", priceLabel: "£19.98", bg: "bg-amber-300/45" },
-    { key: "MIX", label: "MIX (mixed)", priceLabel: "£19.98", bg: "MIX_STRIPES" },
+    { key: "PLN", label: "PLN (plain)", priceLabel: "£15.12", bg: "bg-white/15" },
+    { key: "BFC", label: "BFC (black forest)", priceLabel: "£15.66", bg: "bg-rose-900/40" },
+    { key: "STR", label: "STR (strawberry)", priceLabel: "£15.66", bg: "bg-pink-500/35" },
+    { key: "MNG", label: "MNG (mango)", priceLabel: "£15.66", bg: "bg-amber-300/45" },
+    { key: "MIX", label: "MIX (mixed)", priceLabel: "£15.66", bg: "MIX_STRIPES" },
   ] as const;
   
   type SubscriptionPlanKey = typeof SUBSCRIPTION_PLANS[number]["key"];
@@ -1149,13 +1149,13 @@ export default function App(){
                     
                             <button
                               onClick={() => {
-                                if (f.id === ids.PLN) { setQty(ids.PLN, qty(ids.PLN) + 7); bumpDisplay(f.id, 1); trackAddToCart("PLN", 7 * 3.6, 7); return; }
-                                if (f.id === ids.BFC) { setQty(ids.BFC, qty(ids.BFC) + 7); bumpDisplay(f.id, 1); trackAddToCart("BFC", 7 * 3.7, 7); return; }
-                                if (f.id === ids.STR) { setQty(ids.STR, qty(ids.STR) + 7); bumpDisplay(f.id, 1); trackAddToCart("STR", 7 * 3.7, 7); return; }
-                                if (f.id === ids.MNG) { setQty(ids.MNG, qty(ids.MNG) + 7); bumpDisplay(f.id, 1); trackAddToCart("MNG", 7 * 3.7, 7); return; }
+                                if (f.id === ids.PLN) { setQty(ids.PLN, qty(ids.PLN) + 7); bumpDisplay(f.id, 1); trackAddToCart("PLN", 7 * 2.8, 7); return; }
+                                if (f.id === ids.BFC) { setQty(ids.BFC, qty(ids.BFC) + 7); bumpDisplay(f.id, 1); trackAddToCart("BFC", 7 * 2.9, 7); return; }
+                                if (f.id === ids.STR) { setQty(ids.STR, qty(ids.STR) + 7); bumpDisplay(f.id, 1); trackAddToCart("STR", 7 * 2.9, 7); return; }
+                                if (f.id === ids.MNG) { setQty(ids.MNG, qty(ids.MNG) + 7); bumpDisplay(f.id, 1); trackAddToCart("MNG", 7 * 2.9, 7); return; }
                                 
-                                if (f.id === "TASTER") { incPreset("TASTER"); trackAddToCart("Taster", 3.6 + 3.7 * 3, 4); return; }
-                                if (f.id === "MIX") { incPreset("MIX"); trackAddToCart("Mixed", 3.7 * 7, 7); return; }
+                                if (f.id === "TASTER") { incPreset("TASTER"); trackAddToCart("Taster", 2.8 + 2.9 * 3, 4); return; }
+                                if (f.id === "MIX") { incPreset("MIX"); trackAddToCart("Mixed", 2.9 * 7, 7); return; }
                               }}
                               className="relative z-10 w-5 h-5 sm:w-6 sm:h-6 grid place-items-center rounded-lg bg-white text-slate-900 hover:bg-slate-200 transition leading-none"
                               aria-label="Add"
@@ -1172,7 +1172,7 @@ export default function App(){
                   <div className="mt-2 text-xs text-white space-y-1.5">
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        PLN: <strong>£3.60</strong> each ·{" "}
+                        PLN: <strong>£2.80</strong> each ·{" "}
                         <strong>7 for the price of 6</strong>
                       </span>
                       {totalPlain > 0 ? (
@@ -1197,7 +1197,7 @@ export default function App(){
       
                     <p className="flex flex-wrap items-center gap-2">
                       <span>
-                        BFC, STR &amp; MNG: <strong>£3.70</strong> each ·{" "}
+                        BFC, STR &amp; MNG: <strong>£2.90</strong> each ·{" "}
                         <strong>7 for the price of 6</strong>
                       </span>
                       {totalFlavoured > 0 ? (
@@ -1664,7 +1664,7 @@ function Basket({
         {plainRemainder > 0 && (
           <div className="flex justify-between">
             <span>PLN</span>
-            <span>{plainRemainder} × £3.60</span>
+            <span>{plainRemainder} × £2.80</span>
           </div>
         )}
 
@@ -1678,7 +1678,7 @@ function Basket({
         {flavRemainder > 0 && (
           <div className="flex justify-between">
             <span>Flavoured</span>
-            <span>{flavRemainder} × £3.70</span>
+            <span>{flavRemainder} × £2.90</span>
           </div>
         )}
 
@@ -2081,7 +2081,7 @@ function PayModal({
 
         <p className="mt-3 text-center text-xs text-white/50 flex items-center justify-center gap-1.5">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5">
-            <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clipRule="evenodd" />
+            <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm2.95 8.25v-3a2.95 2.95 0 1 0-7.5 0v3h7.5Z" clipRule="evenodd" />
           </svg>
           Secure checkout · payments processed by Stripe
         </p>
@@ -2351,9 +2351,9 @@ function PayModal({
             </div>
             <div>
               <div className="mb-1">Bottles: {qtyTotal}</div>
-              {plainRemainder > 0 && <div>PLN: {plainRemainder} × £3.60</div>}
+              {plainRemainder > 0 && <div>PLN: {plainRemainder} × £2.80</div>}
               {plainBundles > 0 && <div>Free PLN (7 for 6): {plainBundles}</div>}
-              {flavRemainder > 0 && <div>Flavoured: {flavRemainder} × £3.70</div>}
+              {flavRemainder > 0 && <div>Flavoured: {flavRemainder} × £2.90</div>}
               {flavBundles > 0 && <div>Free flavoured (7 for 6): {flavBundles}</div>}
 
               {deliveryFee > 0 && !freeDeliveryUnlocked && (
@@ -2486,7 +2486,7 @@ function PayModal({
 
       <p className="mt-3 text-center text-xs text-white/50 flex items-center justify-center gap-1.5">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5">
-          <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clipRule="evenodd" />
+          <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm2.95 8.25v-3a2.95 2.95 0 1 0-7.5 0v3h7.5Z" clipRule="evenodd" />
         </svg>
         Secure checkout · payments processed by Stripe
       </p>
